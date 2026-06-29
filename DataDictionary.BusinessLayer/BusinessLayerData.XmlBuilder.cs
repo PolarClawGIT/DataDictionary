@@ -26,14 +26,15 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <returns></returns>
         protected XmlBuilderDictionary InitXmlBuilders()
-        {
+        {   //TODO: Once working, move to various classes?
+
             List<XmlBuilder> result = new List<XmlBuilder>();
 
-            XmlBuilder attributes = new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute);
-            result.Add(attributes);
+            result.Add(new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute));
+            result.Add(new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties));
 
-            XmlBuilder attributeProperty = new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties);
-            result.Add(attributeProperty);
+            result.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
+            result.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
 
             return new XmlBuilderDictionary(result);
         }

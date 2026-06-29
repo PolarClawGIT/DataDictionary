@@ -259,16 +259,7 @@ namespace DataDictionary.Main.Forms.Model
             }
 
             public XElement GetXElement()
-            {
-                XElement? build = BusinessData.XmlBuilders.Build<AttributeValue, IAttributeIndex>(
-                    ScopeType.ModelAttribute, Attribute,
-                        (ScopeType.ModelAttributeProperty, Properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c))),
-                        (ScopeType.ModelAttributeDefinition, Definitions, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c)))
-                    );
-
-                if (build is XElement) { return build; }
-                else { return new XElement(ScopeType.ModelAttribute.GetName()); }
-            }
+            { return BusinessData.XmlBuilders.Build(Attribute, Properties); }
         }
     }
 }

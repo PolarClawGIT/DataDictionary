@@ -15,6 +15,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete("Being replaced")]
     partial class SchemaNode : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();

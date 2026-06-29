@@ -14,14 +14,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public partial class XmlBuilder
     {
         /// <summary>
-        /// Path to the Object to be Rendered. This is normally a Property of the Object.
-        /// </summary>
-        public PathIndex ObjectPath { get; private set; }
-
-        /// <summary>
         /// Scope of the Object to be Rendered. This is normally the owning Object Scope Type.
         /// </summary>
         protected ScopeType ObjectScope { get; private set; } = ScopeType.Null;
+
+        /// <summary>
+        /// Path to the Object to be Rendered. This is normally a Property of the Object.
+        /// </summary>
+        public PathIndex ObjectPath { get; private set; }
 
         /// <inheritdoc cref="INodeRenderAs.NodeRenderAs"/>
         public NodeRenderAsType NodeRenderAs { get; set; } = NodeRenderAsType.Element;
@@ -87,7 +87,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <returns></returns>
         /// <remarks>
         /// Override this method to return something other then ToString.
-        /// Overloads handle specfic data types.
+        /// Overloads handle specific data types.
         /// When calling use: GetValueDelegate((dynamic)objectValue);
         /// </remarks>
         protected virtual String? GetValueDelegate(Object value)
@@ -95,14 +95,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             if (value is null) { return null; }
             else { return value.ToString(); }
         }
-
-        /// <summary>
-        /// GetValue function to handle ScopeType.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        protected virtual String? GetValueDelegate(ScopeType value)
-        { return value.GetName(); }
 
         /// <summary>
         /// Build an XML Object using the builder for the Object passed.

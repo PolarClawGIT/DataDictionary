@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 
@@ -18,6 +19,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         //public required TryGetProperty GetProperty { get; init; } 
         //public required TryGetDefinition GetDefinition { get; init; }
 
+        /// <summary>
+        /// Constructor that build a list of XML Builders.
+        /// </summary>
+        /// <param name="builders"></param>
         public XmlBuilderDictionary(IEnumerable<XmlBuilder> builders) : base()
         {
             foreach (XmlBuilder item in builders)
@@ -128,5 +133,51 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return root;
         }
 
+    }
+
+    /// <summary>
+    /// Default Builders for the different supported objects.
+    /// </summary>
+    public static class XmlBuilderExtension
+    {   // TODO: These can be moved to the various classes, once things are working.
+
+
+        /// <summary>
+        /// Execute the XML Builders for AttributeValue.
+        /// </summary>
+        /// <param name="builders"></param>
+        /// <param name="attributes"></param>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        public static XElement Build(this XmlBuilderDictionary builders,
+            IEnumerable<AttributeValue> attributes,
+            IEnumerable<AttributePropertyValue> properties)
+        {
+            XElement? result = builders.Build<AttributeValue, IAttributeIndex>(ScopeType.ModelAttribute, attributes,
+                        (ScopeType.ModelAttributeProperty, properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c)))
+                        );
+
+            if(result is XElement) { return result; }
+            else { return new XElement(ScopeType.ModelAttribute.GetName()); }
+        }
+
+        /// <summary>
+        /// Execute the XML Builders for EntityValue.
+        /// </summary>
+        /// <param name="builders"></param>
+        /// <param name="entities"></param>
+        /// <param name="properties"></param>
+        /// <returns></returns>
+        public static XElement Build(this XmlBuilderDictionary builders,
+            IEnumerable<EntityValue> entities,
+            IEnumerable<EntityPropertyValue> properties)
+        {
+            XElement? result = builders.Build<EntityValue, IEntityIndex>(ScopeType.ModelEntity, entities,
+                        (ScopeType.ModelEntityProperty, properties, (r, c) => new EntityIndex(r).Equals(new EntityIndex(c)))
+                        );
+
+            if (result is XElement) { return result; }
+            else { return new XElement(ScopeType.ModelAttribute.GetName()); }
+        }
     }
 }

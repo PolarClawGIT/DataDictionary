@@ -37,8 +37,6 @@
             Label fileBaseName;
             GroupBox nodeGroup;
             TableLayoutPanel nodeLayout;
-            GroupBox nodeDetailGroup;
-            TableLayoutPanel nodeSummaryLayout;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTabs = new TabControl();
             schemaTab = new TabPage();
@@ -50,7 +48,6 @@
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
             nodesTree = new TreeView();
             forEachScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            rootNodeData = new DataDictionary.Main.Controls.TextBoxData();
             documentTab = new TabPage();
             fileLayout = new TableLayoutPanel();
             documentToolStrip = new ToolStrip();
@@ -66,11 +63,6 @@
             folderBrowserDialog = new FolderBrowserDialog();
             nodeMenu = new ContextMenuStrip(components);
             openNodeCommand = new ToolStripMenuItem();
-            nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
-            nodeRenderAsData = new DataDictionary.Main.Controls.ComboBoxData();
-            isObjectValueData = new RadioButton();
-            isObjectProperty = new RadioButton();
-            isFixedValue = new RadioButton();
             schemaLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -78,8 +70,6 @@
             fileBaseName = new Label();
             nodeGroup = new GroupBox();
             nodeLayout = new TableLayoutPanel();
-            nodeDetailGroup = new GroupBox();
-            nodeSummaryLayout = new TableLayoutPanel();
             schemaLayout.SuspendLayout();
             schemaTabs.SuspendLayout();
             schemaTab.SuspendLayout();
@@ -95,8 +85,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             nodeMenu.SuspendLayout();
-            nodeDetailGroup.SuspendLayout();
-            nodeSummaryLayout.SuspendLayout();
             SuspendLayout();
             // 
             // schemaLayout
@@ -316,8 +304,6 @@
             nodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             nodeLayout.Controls.Add(nodesTree, 0, 1);
             nodeLayout.Controls.Add(forEachScopeData, 0, 0);
-            nodeLayout.Controls.Add(rootNodeData, 1, 0);
-            nodeLayout.Controls.Add(nodeDetailGroup, 1, 1);
             nodeLayout.Dock = DockStyle.Fill;
             nodeLayout.Location = new Point(3, 19);
             nodeLayout.Name = "nodeLayout";
@@ -347,19 +333,6 @@
             forEachScopeData.ReadOnly = false;
             forEachScopeData.Size = new Size(270, 46);
             forEachScopeData.TabIndex = 1;
-            // 
-            // rootNodeData
-            // 
-            rootNodeData.AutoSize = true;
-            rootNodeData.Dock = DockStyle.Fill;
-            rootNodeData.HeaderText = "Root Node Name (override)";
-            rootNodeData.Location = new Point(279, 3);
-            rootNodeData.Multiline = false;
-            rootNodeData.Name = "rootNodeData";
-            rootNodeData.ReadOnly = false;
-            rootNodeData.Size = new Size(270, 46);
-            rootNodeData.TabIndex = 0;
-            rootNodeData.WordWrap = true;
             // 
             // documentTab
             // 
@@ -480,98 +453,6 @@
             openNodeCommand.Text = "Node Details";
             openNodeCommand.Click += OpenNodeCommand_Click;
             // 
-            // nodeDetailGroup
-            // 
-            nodeDetailGroup.AutoSize = true;
-            nodeDetailGroup.Controls.Add(nodeSummaryLayout);
-            nodeDetailGroup.Dock = DockStyle.Fill;
-            nodeDetailGroup.Location = new Point(279, 55);
-            nodeDetailGroup.Name = "nodeDetailGroup";
-            nodeDetailGroup.Size = new Size(270, 238);
-            nodeDetailGroup.TabIndex = 3;
-            nodeDetailGroup.TabStop = false;
-            nodeDetailGroup.Text = "Node Summary";
-            // 
-            // nodeSummaryLayout
-            // 
-            nodeSummaryLayout.ColumnCount = 1;
-            nodeSummaryLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            nodeSummaryLayout.Controls.Add(isFixedValue, 0, 4);
-            nodeSummaryLayout.Controls.Add(isObjectValueData, 0, 2);
-            nodeSummaryLayout.Controls.Add(nodeRenderAsData, 0, 1);
-            nodeSummaryLayout.Controls.Add(nodeNameData, 0, 0);
-            nodeSummaryLayout.Controls.Add(isObjectProperty, 0, 3);
-            nodeSummaryLayout.Dock = DockStyle.Fill;
-            nodeSummaryLayout.Location = new Point(3, 19);
-            nodeSummaryLayout.Name = "nodeSummaryLayout";
-            nodeSummaryLayout.RowCount = 5;
-            nodeSummaryLayout.RowStyles.Add(new RowStyle());
-            nodeSummaryLayout.RowStyles.Add(new RowStyle());
-            nodeSummaryLayout.RowStyles.Add(new RowStyle());
-            nodeSummaryLayout.RowStyles.Add(new RowStyle());
-            nodeSummaryLayout.RowStyles.Add(new RowStyle());
-            nodeSummaryLayout.Size = new Size(264, 216);
-            nodeSummaryLayout.TabIndex = 0;
-            // 
-            // nodeNameData
-            // 
-            nodeNameData.AutoSize = true;
-            nodeNameData.Dock = DockStyle.Fill;
-            nodeNameData.HeaderText = "Node Name";
-            nodeNameData.Location = new Point(3, 3);
-            nodeNameData.Multiline = false;
-            nodeNameData.Name = "nodeNameData";
-            nodeNameData.ReadOnly = true;
-            nodeNameData.Size = new Size(258, 44);
-            nodeNameData.TabIndex = 16;
-            nodeNameData.WordWrap = true;
-            // 
-            // nodeRenderAsData
-            // 
-            nodeRenderAsData.AutoSize = true;
-            nodeRenderAsData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nodeRenderAsData.Dock = DockStyle.Fill;
-            nodeRenderAsData.DropDownStyle = ComboBoxStyle.DropDownList;
-            nodeRenderAsData.HeaderText = "Render Value As";
-            nodeRenderAsData.Location = new Point(3, 53);
-            nodeRenderAsData.Name = "nodeRenderAsData";
-            nodeRenderAsData.ReadOnly = true;
-            nodeRenderAsData.Size = new Size(258, 46);
-            nodeRenderAsData.TabIndex = 17;
-            // 
-            // isObjectValueData
-            // 
-            isObjectValueData.AutoSize = true;
-            isObjectValueData.Location = new Point(3, 105);
-            isObjectValueData.Name = "isObjectValueData";
-            isObjectValueData.Size = new Size(102, 19);
-            isObjectValueData.TabIndex = 20;
-            isObjectValueData.TabStop = true;
-            isObjectValueData.Text = "is Object Value";
-            isObjectValueData.UseVisualStyleBackColor = true;
-            // 
-            // isObjectProperty
-            // 
-            isObjectProperty.AutoSize = true;
-            isObjectProperty.Location = new Point(3, 130);
-            isObjectProperty.Name = "isObjectProperty";
-            isObjectProperty.Size = new Size(112, 19);
-            isObjectProperty.TabIndex = 21;
-            isObjectProperty.TabStop = true;
-            isObjectProperty.Text = "is Property Value";
-            isObjectProperty.UseVisualStyleBackColor = true;
-            // 
-            // isFixedValue
-            // 
-            isFixedValue.AutoSize = true;
-            isFixedValue.Location = new Point(3, 155);
-            isFixedValue.Name = "isFixedValue";
-            isFixedValue.Size = new Size(94, 19);
-            isFixedValue.TabIndex = 22;
-            isFixedValue.TabStop = true;
-            isFixedValue.Text = "is Fixed Value";
-            isFixedValue.UseVisualStyleBackColor = true;
-            // 
             // SchemaDefinition
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -605,9 +486,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             nodeMenu.ResumeLayout(false);
-            nodeDetailGroup.ResumeLayout(false);
-            nodeSummaryLayout.ResumeLayout(false);
-            nodeSummaryLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -617,7 +495,6 @@
         private TableLayoutPanel schemaLayout;
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData schemaTitleData;
-        private Controls.TextBoxData rootNodeData;
         private Controls.ComboBoxData forEachScopeData;
         private Controls.ComboBoxData rootFolderData;
         private Controls.SelectTextBoxData relativePathData;
@@ -646,10 +523,5 @@
         private ContextMenuStrip nodeMenu;
         private ToolStripMenuItem openNodeCommand;
         private ToolStripButton documentBuildCommand;
-        private Controls.TextBoxData nodeNameData;
-        private Controls.ComboBoxData nodeRenderAsData;
-        private RadioButton isFixedValue;
-        private RadioButton isObjectValueData;
-        private RadioButton isObjectProperty;
     }
 }
