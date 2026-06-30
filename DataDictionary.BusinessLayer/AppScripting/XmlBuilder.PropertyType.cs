@@ -58,6 +58,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 }
             }
 
+            /// <inheritdoc cref="XmlBuilder(XmlBuilder)"/>
+            public PropertyType(PropertyType source) : base(source)
+            {
+                foreach (var item in source.Children)
+                { Children.Add(item.Key, new XmlBuilder(item.Value)); }
+            }
+
             /// <inheritdoc/>
             public override XObject? Build<TMethod>(TMethod value)
             {

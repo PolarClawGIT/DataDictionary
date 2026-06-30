@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <summary>
-        /// Specialized GetValue function that useing refelection.
+        /// Specialized GetValue function that using reflection.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="property"></param>
@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Uses reflection to get the PropertyInfo.
         /// </summary>
         public class ValueType : XmlBuilder
-            //where TValue : class, IScopeType
+        //where TValue : class, IScopeType
         {
             /// <summary>
             /// List of Child Properties of the Class and the builders to go with them.
@@ -52,14 +52,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
             /// <param name="properties"></param>
             public ValueType(Type source, ScopeType scope, params IEnumerable<String> properties) : base(scope)
             {
-                GetValue = (value) => GetValueDelegate((dynamic)value);
-                
+                //GetValue = (value) => GetValueDelegate((dynamic)value);
+
                 foreach (PropertyInfo item in source.GetProperties().
                     Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
                 {
                     XmlBuilder child = new XmlBuilder(ObjectScope, item);
                     Properties.Add(item, child);
                 }
+            }
+
+            /// <inheritdoc cref="XmlBuilder(XmlBuilder)"/>
+            public ValueType(ValueType source) : base(source)
+            {
+                foreach (var item in source.Properties)
+                { Properties.Add(item.Key, new XmlBuilder(item.Value)); }
             }
 
             /// <inheritdoc/>
@@ -74,7 +81,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                     return result;
                 }
-                else if(result is null) { return result; }
+                else if (result is null) { return result; }
                 else
                 {
                     Exception ex = new InvalidOperationException("XmlBuilder.Build returned something other then an XElement");

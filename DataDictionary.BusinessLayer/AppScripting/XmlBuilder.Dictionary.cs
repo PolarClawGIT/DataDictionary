@@ -20,10 +20,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         //public required TryGetDefinition GetDefinition { get; init; }
 
         /// <summary>
+        /// Constructor used for initialization only.
+        /// </summary>
+        internal XmlBuilderDictionary() : base() { }
+
+        /// <summary>
         /// Constructor that build a list of XML Builders.
         /// </summary>
         /// <param name="builders"></param>
-        public XmlBuilderDictionary(IEnumerable<XmlBuilder> builders) : base()
+        public XmlBuilderDictionary(IEnumerable<XmlBuilder> builders) : this()
         {
             foreach (XmlBuilder item in builders)
             {
@@ -42,6 +47,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
 
             }
+        }
+
+        /// <summary>
+        /// Does a deep-copy/clone of the XmlBuilderDictionary.
+        /// </summary>
+        /// <param name="source"></param>
+        public XmlBuilderDictionary(XmlBuilderDictionary source) : base()
+        {
+            foreach (var item in source)
+            { Add(item.Key, item.Value.Clone()); }
         }
 
         /// <summary>
@@ -141,7 +156,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public static class XmlBuilderExtension
     {   // TODO: These can be moved to the various classes, once things are working.
 
-
         /// <summary>
         /// Execute the XML Builders for AttributeValue.
         /// </summary>
@@ -157,7 +171,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         (ScopeType.ModelAttributeProperty, properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c)))
                         );
 
-            if(result is XElement) { return result; }
+            if (result is XElement) { return result; }
             else { return new XElement(ScopeType.ModelAttribute.GetName()); }
         }
 

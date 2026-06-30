@@ -81,6 +81,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <summary>
+        /// Creates a Clone of the XML Builder
+        /// </summary>
+        /// <param name="source"></param>
+        public XmlBuilder(XmlBuilder source) : this(source.ObjectScope)
+        {
+            ObjectPath = new PathIndex(source.ObjectPath);
+            NodeRenderAs = source.NodeRenderAs;
+            NodeName = source.NodeName;
+            GetValue = source.GetValue;
+        }
+
+        /// <summary>
         /// GetValue function that returns the ToString of the object passed.
         /// </summary>
         /// <param name="value"></param>
@@ -158,5 +170,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public override String ToString()
         { return ObjectPath.MemberFullPath; }
 
+        /// <inheritdoc cref="ICloneable.Clone"/>
+        public XmlBuilder Clone()
+        {
+            if(this is ValueType valueType) { return new ValueType(valueType); }
+            else if (this is PropertyType propertyType){ return new PropertyType(propertyType); }
+            else { return new XmlBuilder(this); }
+        }
     }
 }
