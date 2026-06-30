@@ -13,6 +13,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface ISchemaNodeValue : ISchemaNodeItem, ISchemaNodeIndex, ISchemaComposite,
         IScopeType, ITemporal
     {
+        /* Not being Supported
+        // TODO: Remove?
+
         /// <inheritdoc cref="SchemaNodeFixedValue"/>
         SchemaNodeFixedValue FixedNodeValue { get; }
 
@@ -38,9 +41,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         Boolean IsFixedValue { get; }
 
         /// <summary>
-        /// Is the Node Name to be Overriden
+        /// Is the Node Name to be Overridden
         /// </summary>
         Boolean IsNameOverride { get; }
+        */
     }
 
     /// <inheritdoc/>
@@ -59,6 +63,37 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingNode; } }
+
+        /// <summary>
+        /// XML Builder for this Node.<br/>
+        /// Used to override the default builder and connect the builder to the data object.<br/>
+        /// The passed Builder is Cloned and is not retained by reference.
+        /// </summary>
+        public XmlBuilder? Builder
+        {
+            get { return field; }
+
+            set
+            {
+                if (value is XmlBuilder builder)
+                {
+                    field = new XmlBuilder(builder)
+                    {
+                        GetRenderAs = () => RenderValueAs,
+                        SetRenderAs = (value) => RenderValueAs = value,
+                        GetScope = () => ObjectScope,
+                        SetScope = (value) => ObjectScope = value,
+                        GetName = () => NodeName??String.Empty,
+                        SetName = (value) => { NodeName = value; }
+                    };
+                }
+                else { field = null; }
+            }
+
+        }
+
+        /* Not being supported
+        // TODO: Remove?
 
         /// <inheritdoc/>
         public SchemaNodeFixedValue FixedNodeValue { get; }
@@ -139,7 +174,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 field = value;
                 this.OnPropertyChanged(PropertyChanged, nameof(IsObjectValue));
             }
-        }
+        }*/
 
         /// <inheritdoc/>
         public SchemaNodeValue() : base()
@@ -154,6 +189,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
+            /* Not being supported
+            // TODO: Remove?
+
             FixedNodeValue = new SchemaNodeFixedValue(this);
             ObjectNodeValue = new SchemaNodeObjectValue(this);
             PropertyNodeValue = new SchemaNodePropertyValue(this);
@@ -166,7 +204,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             { IsFixedValue = true; }
 
             if(!String.IsNullOrWhiteSpace(FixedValue))
-            { IsNameOverride = true; }
+            { IsNameOverride = true; }*/
         }
 
         /// <inheritdoc cref="SchemaNodeItem.SchemaNodeItem(ITemplateKey, ISchemaDefinitionKey)"/>
@@ -182,6 +220,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
+            /* Not being supported
+            // TODO: Remove?
+
             FixedNodeValue = new SchemaNodeFixedValue(this);
             ObjectNodeValue = new SchemaNodeObjectValue(this);
             PropertyNodeValue = new SchemaNodePropertyValue(this);
@@ -194,7 +235,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             { IsFixedValue = true; }
 
             if (!String.IsNullOrWhiteSpace(FixedValue))
-            { IsNameOverride = true; }
+            { IsNameOverride = true; }*/
         }
 
         /// <inheritdoc/>

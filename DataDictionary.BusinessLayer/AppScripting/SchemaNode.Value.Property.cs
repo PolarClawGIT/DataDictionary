@@ -9,6 +9,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Subtype of SchemaNodeValue for a Property Value.
     /// </summary>
     /// <remarks>This is a wrapper class around SchemaNodeValue</remarks>
+    [Obsolete("Not being supported/needed",true)]
     public sealed class SchemaNodePropertyValue: ISchemaNodePropertyValue, IBindingPropertyChanged
     {
         SchemaNodeValue baseValue;
@@ -28,11 +29,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public Guid? PropertyId
-        {
-            get { return baseValue.PropertyId; }
-            set { baseValue.PropertyId = value; }
-        }
+        public Guid? PropertyId { get; set; }
 
         /// <inheritdoc/>
         public Int32? NodeOrder

@@ -90,27 +90,27 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
                 formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
 
-                formBinding.NodeData.AddBinding(isNameOverrideData, e => e.IsNameOverride);
+                //formBinding.NodeData.AddBinding(isNameOverrideData, e => e.IsNameOverride);
 
                 RenderValueAsList.Load(nodeRenderAsData);
                 formBinding.NodeData.AddBinding(nodeRenderAsData, e => e.RenderValueAs);
                 formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.NodeOrder);
 
-                formBinding.NodeData.AddBinding(isObjectValueData, e => e.IsObjectValue);
-                formBinding.NodeData.AddBinding(isPropertyValueData, e => e.IsPropertyValue);
-                formBinding.NodeData.AddBinding(isFixedValueData, e => e.IsFixedValue);
+                //formBinding.NodeData.AddBinding(isObjectValueData, e => e.IsObjectValue);
+                //formBinding.NodeData.AddBinding(isPropertyValueData, e => e.IsPropertyValue);
+                //formBinding.NodeData.AddBinding(isFixedValueData, e => e.IsFixedValue);
 
                 //XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
-                formBinding.NodeData.AddBinding(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
-                formBinding.NodeData.AddBinding(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
+                //formBinding.NodeData.AddBinding(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
+                //formBinding.NodeData.AddBinding(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
 
                 //XScopeList.Load(nodePropertyScopeData, formBinding.Builders, "(n/a)");
                 //formBinding.NodeData.AddBinding(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
 
-                PropertyNameList.Load(nodePropertyData, "(n/a)");
-                formBinding.NodeData.AddBinding(nodePropertyData, e => e.PropertyNodeValue.PropertyId, PropertyNameList.NullValue);
+                //PropertyNameList.Load(nodePropertyData, "(n/a)");
+                //formBinding.NodeData.AddBinding(nodePropertyData, e => e.PropertyNodeValue.PropertyId, PropertyNameList.NullValue);
 
-                formBinding.NodeData.AddBinding(nodeFixedValueData, e => e.FixedNodeValue.FixedValue);
+                //formBinding.NodeData.AddBinding(nodeFixedValueData, e => e.FixedNodeValue.FixedValue);
 
                 formBinding.NodeData.LoadCombBox(nodeOwnerColumn, e => e.NodeId, e => e.NodeName);
                 formBinding.OwnerData.AddBinding(nodeOwnerColumn, e => e.NodeOwnerId);

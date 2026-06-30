@@ -32,17 +32,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             foreach (XmlBuilder item in builders)
             {
-                Add(item.ObjectPath, item);
+                Add(item.NodePath, item);
 
                 if (item is XmlBuilder.PropertyType propType)
                 {
                     foreach (var child in propType.Children.Values)
-                    { Add(child.ObjectPath, child); }
+                    { Add(child.NodePath, child); }
                 }
                 else if (item is XmlBuilder.ValueType valType)
                 {
                     foreach (var child in valType.Properties.Values)
-                    { Add(child.ObjectPath, child); }
+                    { Add(child.NodePath, child); }
                 }
 
 

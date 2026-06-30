@@ -153,7 +153,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                 if(XmlBuilders.TryGetValue(key, out XmlBuilder? builder))
                 {
-                    builder.NodeRenderAs = item.RenderValueAs;
+                    builder.RenderValueAs = item.RenderValueAs;
                     builder.NodeName = item.NodeName??String.Empty;
                 }
             }

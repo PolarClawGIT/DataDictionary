@@ -9,6 +9,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Subtype of SchemaNodeValue for a Object Value.
     /// </summary>
     /// <remarks>This is a wrapper class around SchemaNodeValue</remarks>
+    [Obsolete("Not being supported/needed",true)]
     public sealed class SchemaNodeObjectValue : ISchemaNodeObjectValue, IBindingPropertyChanged
     {
         SchemaNodeValue baseValue;
@@ -51,11 +52,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public String? ObjectProperty
-        {
-            get { return baseValue.ObjectProperty; }
-            set { baseValue.ObjectProperty = value; }
-        }
+        public String? ObjectProperty { get; set; }
 
 
         internal SchemaNodeObjectValue(SchemaNodeValue value) : base()

@@ -30,6 +30,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Fixed Value SchemaNode (sub-type)
     /// </summary>
+    [Obsolete("Not being supported/needed")]
     public interface ISchemaNodeFixedValue : ISchemaNodeBaseValue
     {
         /// <summary>
@@ -53,6 +54,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Object Value SchemaNode (sub-type)
     /// </summary>
+    [Obsolete("Not being supported/needed")]
     public interface ISchemaNodeObjectValue : ISchemaNodeObjectScopeValue
     {
         /// <summary>
@@ -64,6 +66,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Property Value SchemaNode (sub-type)
     /// </summary>
+    [Obsolete("Not being supported/needed")]
     public interface ISchemaNodePropertyValue : ISchemaNodeObjectScopeValue, IPropertyKey
     { }
 
@@ -71,7 +74,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting SchemaNode (super-type)
     /// </summary>
     public interface ISchemaNodeItem : ISchemaNodeKey, ISchemaDefinitionKey, ITemplateKey,
-        ISchemaNodeBaseValue, ISchemaNodeFixedValue, ISchemaNodeObjectValue, ISchemaNodePropertyValue
+        ISchemaNodeBaseValue, ISchemaNodeObjectScopeValue
     { }
 
     /// <summary>
@@ -102,21 +105,21 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? NodeName
+        public virtual String? NodeName
         {
             get { return GetValue(nameof(NodeName)); }
             set { SetValue(nameof(NodeName), value); }
         }
 
         /// <inheritdoc/>
-        public Int32? NodeOrder
+        public virtual Int32? NodeOrder
         {
             get { return GetValue<Int32>(nameof(NodeOrder)); }
             set { SetValue(nameof(NodeOrder), value); }
         }
 
         /// <inheritdoc/>
-        public NodeRenderAsType RenderValueAs
+        public virtual NodeRenderAsType RenderValueAs
         {
             get
             {
@@ -134,14 +137,15 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? FixedValue
+        [Obsolete("Not being supported/needed")]
+        protected String? FixedValue
         {
             get { return GetValue(nameof(FixedValue)); }
             set { SetValue(nameof(FixedValue), value); }
         }
 
         /// <inheritdoc/>
-        public ScopeType ObjectScope
+        public virtual ScopeType ObjectScope
         {
             get
             {
@@ -155,14 +159,16 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? ObjectProperty
+        [Obsolete("Not being supported/needed")]
+        protected String? ObjectProperty
         {
             get { return GetValue(nameof(ObjectProperty)); }
             set { SetValue(nameof(ObjectProperty), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? PropertyId
+        [Obsolete("Not being supported/needed")]
+        protected Guid? PropertyId
         {
             get { return GetValue<Guid>(nameof(PropertyId)); }
             set { SetValue(nameof(PropertyId), value); }
@@ -179,6 +185,7 @@ namespace DataDictionary.DataLayer.AppScript
         {
             if (NodeId is null) { NodeId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(NodeName)) { NodeName = "(new Node)"; }
+            NodeOrder = 0;
 
             Temporal = new TemporalItem()
             {

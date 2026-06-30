@@ -9,6 +9,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Subtype of SchemaNodeValue for a fixed Value.
     /// </summary>
     /// <remarks>This is a wrapper class around SchemaNodeValue</remarks>
+    [Obsolete("Not being supported/needed", true)]
     public sealed class SchemaNodeFixedValue : ISchemaNodeFixedValue, IBindingPropertyChanged
     {
         SchemaNodeValue baseValue;
@@ -21,11 +22,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public String? FixedValue
-        {
-            get { return baseValue.FixedValue; }
-            set { baseValue.FixedValue = value; }
-        }
+        public String? FixedValue { get; set; }
 
         /// <inheritdoc/>
         public Int32? NodeOrder
