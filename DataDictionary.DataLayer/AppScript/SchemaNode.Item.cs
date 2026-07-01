@@ -40,21 +40,20 @@ namespace DataDictionary.DataLayer.AppScript
     }
 
     /// <summary>
-    /// Interface for the Scripting Object Scope Value SchemaNode (sub-type)
+    /// Interface for the Scripting Object Scope Value SchemaNode
     /// </summary>
     /// <remarks>Use ISchemaNodeObjectValue or ISchemaNodePropertyValue</remarks>
     public interface ISchemaNodeObjectScopeValue : ISchemaNodeBaseValue
     {
         /// <summary>
-        /// Object Scope of the item to be rendered. (not fixed value)
+        /// Object Scope of the item to be rendered.
         /// </summary>
         ScopeType ObjectScope { get; }
     }
 
     /// <summary>
-    /// Interface for the Scripting Object Value SchemaNode (sub-type)
+    /// Interface for the Scripting Object Value SchemaNode
     /// </summary>
-    [Obsolete("Not being supported/needed")]
     public interface ISchemaNodeObjectValue : ISchemaNodeObjectScopeValue
     {
         /// <summary>
@@ -74,7 +73,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting SchemaNode (super-type)
     /// </summary>
     public interface ISchemaNodeItem : ISchemaNodeKey, ISchemaDefinitionKey, ITemplateKey,
-        ISchemaNodeBaseValue, ISchemaNodeObjectScopeValue
+        ISchemaNodeBaseValue, ISchemaNodeObjectValue
     { }
 
     /// <summary>
@@ -159,8 +158,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        [Obsolete("Not being supported/needed")]
-        protected String? ObjectProperty
+        public virtual String? ObjectProperty
         {
             get { return GetValue(nameof(ObjectProperty)); }
             set { SetValue(nameof(ObjectProperty), value); }
