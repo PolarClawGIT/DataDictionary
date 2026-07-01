@@ -9,7 +9,7 @@
 	[FixedValue]			NVarChar(250) Null,
 	[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
 	[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
-	[ModelPropertyId]		UniqueIdentifier NULL,
+	[PropertyId]			UniqueIdentifier NULL,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

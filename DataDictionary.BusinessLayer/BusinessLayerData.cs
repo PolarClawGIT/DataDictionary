@@ -47,6 +47,8 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         public Int32? MaxMessages { get; init; } = 250;
 
+
+
         /// <summary>
         /// Constructor for the Business Layer Data Object
         /// </summary>
@@ -75,7 +77,6 @@ namespace DataDictionary.BusinessLayer
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new AppLibrary.LibraryModel();
-
             templateValues = new AppScripting.TemplateData();
         }
 

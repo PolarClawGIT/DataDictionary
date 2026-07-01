@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -39,7 +40,7 @@ namespace DataDictionary.Main.Controls
 
             data = new NamedScopeTreeViewData(treeViewData);
             treeViewData.ImageList = new ImageList();
-            treeViewData.ImageList.AddImages();
+            treeViewData.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
         }
 
         /// <summary>

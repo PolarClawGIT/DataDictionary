@@ -18,6 +18,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="SchemaNodeOwnerKey(ISchemaNodeOwnerKey)"/>
         public SchemaNodeOwnerIndex(ISchemaNodeOwnerIndex source) : base(source) { }
 
+        /// <inheritdoc cref="SchemaNodeOwnerKey(ISchemaNodeKey)"/>
+        public SchemaNodeOwnerIndex(ISchemaNodeIndex source) : base(source) { }
+
         /// <inheritdoc/>
         public Boolean Equals(ISchemaNodeOwnerIndex? other)
         { return other is ISchemaNodeOwnerKey key && Equals(new SchemaNodeOwnerKey(key)); }

@@ -8,6 +8,7 @@ using System.Data;
 using System.Text;
 using System.ComponentModel;
 using ButtonType = DataDictionary.Main.Enumerations.ButtonType;
+using System.Linq.Expressions;
 
 namespace DataDictionary.Main.Forms
 {
@@ -55,56 +56,56 @@ namespace DataDictionary.Main.Forms
             new CommandState(browseCommand)
             {
                 Command = ButtonType.Browse,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(selectCommand)
             {
                 Command = ButtonType.Select,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(newCommand)
             {
                 Command = ButtonType.Add,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(deleteCommand)
             {
                 Command = ButtonType.Delete,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(saveCommand)
             {
                 Command = ButtonType.Save,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(openCommand)
             {
                 Command = ButtonType.Open,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(importCommand)
             {
                 Command = ButtonType.Import,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(exportCommand)
             {
                 Command = ButtonType.Export,
-                IsVisible = false,
+                Visible = false,
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
@@ -114,8 +115,8 @@ namespace DataDictionary.Main.Forms
             {
                 Scope = ScopeType.Database,
                 Command = ButtonType.OpenDatabase,
-                IsVisible = true,
-                IsEnabled = false,
+                Visible = true,
+                Enabled = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
@@ -124,8 +125,8 @@ namespace DataDictionary.Main.Forms
             {
                 Scope = ScopeType.Database,
                 Command = ButtonType.SaveDatabase,
-                IsVisible = true,
-                IsEnabled = false,
+                Visible = true,
+                Enabled = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Detached),
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
@@ -134,8 +135,8 @@ namespace DataDictionary.Main.Forms
             {
                 Scope = ScopeType.Database,
                 Command = ButtonType.DeleteDatabase,
-                IsVisible = true,
-                IsEnabled = false,
+                Visible = true,
+                Enabled = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
@@ -144,8 +145,8 @@ namespace DataDictionary.Main.Forms
             {
                 Scope = ScopeType.Security,
                 Command = ButtonType.SecurityDatabase,
-                IsVisible = false,
-                IsEnabled = false,
+                Visible = false,
+                Enabled = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
@@ -154,8 +155,8 @@ namespace DataDictionary.Main.Forms
             {
                 Scope = ScopeType.ApplicationTimeLine,
                 Command = ButtonType.HistoryDatabase,
-                IsVisible = false,
-                IsEnabled = false,
+                Visible = false,
+                Enabled = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
@@ -189,7 +190,65 @@ namespace DataDictionary.Main.Forms
                 item.CurrentItemChanged += Item_CurrentItemChanged;
                 item.CurrentChanged += Item_CurrentChanged;
                 item.DataSourceChanged += Item_DataSourceChanged;
+                item.BindingComplete += Item_BindingComplete;
+                item.DataError += Item_DataError;
                 item.Disposed += Item_Disposed;
+
+                void Item_CurrentItemChanged(Object? sender, EventArgs e)
+                {
+                    rowStateCommand.Image = GetToolImage();
+                    rowStateCommand.ToolTipText = GetToolTip();
+                }
+
+                void Item_CurrentChanged(Object? sender, EventArgs e)
+                { // Update the RowState of the form to reflect the RowState of the first binding.
+                    if (sender is BindingSource binding
+                        && ReferenceEquals(bindings.FirstOrDefault(), binding))
+                    {
+                        BindingRowState rowState = binding.GetRowState();
+                        RowState = rowState.AsDataRowState();
+
+                        if (rowState is BindingRowState.Null or BindingRowState.Detached or BindingRowState.Deleted)
+                        { IsLocked(true); }
+                        else { IsLocked(false); }
+                    }
+                }
+
+                void Item_DataSourceChanged(Object? sender, EventArgs e)
+                {
+                    item.CurrentItemChanged -= Item_CurrentItemChanged;
+                    item.CurrentChanged -= Item_CurrentChanged;
+                    item.DataSourceChanged -= Item_DataSourceChanged;
+                    item.Disposed -= Item_Disposed;
+
+                    item.CurrentItemChanged += Item_CurrentItemChanged;
+                    item.CurrentChanged += Item_CurrentChanged;
+                    item.DataSourceChanged += Item_DataSourceChanged;
+                    item.Disposed += Item_Disposed;
+                }
+
+                void Item_DataError(Object? sender, BindingManagerDataErrorEventArgs e)
+                {   // This is only a basic trap to try to get more information when binding errors occur.
+                    // Currently this is not providing useful information.
+                    e.Exception.Data.Add(nameof(item), item.GetType().Name);
+                }
+
+                void Item_BindingComplete(Object? sender, BindingCompleteEventArgs e)
+                {   // This is only a basic trap to try to get more information when binding errors occur.
+                    // Currently this is not providing useful information.
+                    if (e.Exception is not null)
+                    { e.Exception.Data.Add(nameof(item), item.GetType().Name); }
+                }
+
+                void Item_Disposed(Object? sender, EventArgs e)
+                {
+                    item.CurrentItemChanged -= Item_CurrentItemChanged;
+                    item.CurrentChanged -= Item_CurrentChanged;
+                    item.Disposed -= Item_Disposed;
+                    item.DataSourceChanged -= Item_DataSourceChanged;
+                    item.BindingComplete -= Item_BindingComplete;
+                    item.DataError -= Item_DataError;
+                }
             }
 
             rowStateCommand.Visible = true;
@@ -275,53 +334,14 @@ namespace DataDictionary.Main.Forms
                 else { return result.GetImage(); }
             }
 
-            void Item_CurrentItemChanged(Object? sender, EventArgs e)
-            {
-                rowStateCommand.Image = GetToolImage();
-                rowStateCommand.ToolTipText = GetToolTip();
-            }
 
-            void Item_CurrentChanged(Object? sender, EventArgs e)
-            { // Update the RowState of the form to reflect the RowState of the first binding.
-                if (sender is BindingSource binding
-                    && ReferenceEquals(bindings.FirstOrDefault(), binding))
-                {
-                    BindingRowState rowState = binding.GetRowState();
-                    RowState = rowState.AsDataRowState();
 
-                    if (rowState is BindingRowState.Null or BindingRowState.Detached or BindingRowState.Deleted)
-                    { IsLocked(true); }
-                    else { IsLocked(false); }
-                }
-            }
 
-            void Item_DataSourceChanged(Object? sender, EventArgs e)
-            {
-                if (sender is BindingSource binding)
-                {
-                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
-                    binding.CurrentChanged -= Item_CurrentChanged;
-                    binding.DataSourceChanged -= Item_DataSourceChanged;
-                    binding.Disposed -= Item_Disposed;
 
-                    binding.CurrentItemChanged += Item_CurrentItemChanged;
-                    binding.CurrentChanged += Item_CurrentChanged;
-                    binding.DataSourceChanged += Item_DataSourceChanged;
-                    binding.Disposed += Item_Disposed;
-                }
-            }
 
-            void Item_Disposed(Object? sender, EventArgs e)
-            {
-                if (sender is BindingSource binding)
-                {
-                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
-                    binding.CurrentChanged -= Item_CurrentChanged;
-                    binding.Disposed -= Item_Disposed;
-                    binding.DataSourceChanged -= Item_DataSourceChanged;
-                }
-            }
         }
+
+
 
         /// <summary>
         /// Sets the Title based on the BindingSource provided.
@@ -404,7 +424,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         /// <remarks>This applies icon that is expected to be static.</remarks>
         protected void SetIcon(ScopeType scope)
-        { 
+        {
             Icon = scope.GetIcon();
 
             foreach (var item in CommandButtons.Values)
@@ -427,8 +447,8 @@ namespace DataDictionary.Main.Forms
                 {
                     if (CommandButtons.TryGetValue(item, out CommandState? value))
                     {
-                        value.IsVisible = true;
-                        value.IsEnabled = true;
+                        value.Visible = true;
+                        value.Enabled = true;
                     }
                 }
             }
@@ -509,6 +529,21 @@ namespace DataDictionary.Main.Forms
             }
 
             return result;
+        }
+
+        [Obsolete("Don't think this will be needed. Use DataBinding.AddBinding instead.")]
+        public virtual String NavigationPath<T, TProperty>(Expression<Func<T, TProperty>> expression)
+        {
+            var members = new Stack<string>();
+            var memberExpr = expression.Body as MemberExpression;
+
+            while (memberExpr != null)
+            {
+                members.Push(memberExpr.Member.Name);
+                memberExpr = memberExpr.Expression as MemberExpression;
+            }
+
+            return string.Join(".", members);
         }
 
         private void ToolStrip_VisibleChanged(object? sender, EventArgs e)

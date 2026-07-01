@@ -72,13 +72,13 @@ namespace DataDictionary.Main.Forms.Security
 
                 if (isAuthorized(securableKey))
                 {
-                    CommandButtons[Enumerations.ButtonType.SaveDatabase].IsEnabled = true;
-                    CommandButtons[Enumerations.ButtonType.DeleteDatabase].IsEnabled = true;
+                    CommandButtons[Enumerations.ButtonType.SaveDatabase].Enabled = true;
+                    CommandButtons[Enumerations.ButtonType.DeleteDatabase].Enabled = true;
                 }
                 else
                 {
-                    CommandButtons[Enumerations.ButtonType.SaveDatabase].IsEnabled = false;
-                    CommandButtons[Enumerations.ButtonType.DeleteDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.ButtonType.SaveDatabase].Enabled = false;
+                    CommandButtons[Enumerations.ButtonType.DeleteDatabase].Enabled = false;
                 }
             }
         }

@@ -15,6 +15,9 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc cref="PropertyKey(IPropertyKey)"/>
         public PropertyIndex(IPropertyIndex source) : base(source) { }
 
+        /// <inheritdoc cref="PropertyKey(IPropertyKey)"/>
+        public PropertyIndex(IPropertySubType source) : base(source) { }
+
         /// <inheritdoc/>
         public Boolean Equals(IPropertyIndex? other)
         { return other is IPropertyKey key && Equals(new PropertyKey(key)); }

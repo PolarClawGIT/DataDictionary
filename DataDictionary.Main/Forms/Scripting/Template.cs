@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingTransform,
                 bindingDocument);
             SetTitle(bindingTemplate);
-            SetIcon(ScopeType.ScriptingTemplate);
+            SetIcon(bindingTemplate);
 
             SetCommand(
                 ButtonType.Delete,
@@ -90,8 +90,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (args.Error is null)
                 {
                     formBinding.LoadValue(templateIndex);
-                    CommandButtons[ButtonType.Delete].IsEnabled = false;
-                    CommandButtons[ButtonType.DeleteDatabase].IsEnabled = false;
+                    CommandButtons[ButtonType.Delete].Enabled = false;
+                    CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
 
                     if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
                     { DoBinding(); }
@@ -101,8 +101,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
-                formBinding.TemplateData.AddBinding(templateDescriptionData, nameof(ITemplateValue.TemplateDescription));
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.TemplateData.AddBinding(templateDescriptionData, e => e.TemplateDescription);
 
                 schemaData.AutoGenerateColumns = false;
                 schemaData.DataSource = bindingSchema;

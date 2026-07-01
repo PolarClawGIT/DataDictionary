@@ -1,13 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -21,8 +13,6 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<SchemaNodeValue> NodeData { get; }
             public DataBinding<SchemaNodeOwnerValue> OwnerData { get; }
-
-            public IXElementBuilderList Builders { get; } = BusinessData.Templates.SchemataNodes.Builders;
 
             public FormBinding(
                 BindingSource templateBinding,
@@ -38,6 +28,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
+            public Boolean TryGetValue([NotNullWhen(true)] out SchemaNodeValue? result)
+            {
+                if (NodeData.TryGetValue(out SchemaNodeValue? value))
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
             public override void LoadValue(SchemaDefinitionIndex key)
             {
                 TemplateIndex templateKey = new TemplateIndex();
@@ -49,6 +46,23 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
                 NodeData.LoadBinding(w => key.Equals(w));
                 OwnerData.LoadBinding(w => key.Equals(w));
+            }
+
+            public void AddNew(ITemplateIndex template, ISchemaDefinitionIndex schema)
+            { NodeData.Add(new SchemaNodeValue(template, schema)); }
+
+            public void RemoveCurrent()
+            {
+                if (NodeData.TryGetValue(out SchemaNodeValue? node))
+                {
+                    SchemaNodeIndex key = new SchemaNodeIndex(node);
+                    SchemaNodeOwnerIndex owner = new SchemaNodeOwnerIndex(node);
+
+                    foreach (var item in OwnerData.Where(w => key.Equals(w) || owner.Equals(w)).ToList())
+                    { OwnerData.Remove(item); }
+
+                    NodeData.Remove(node);
+                }
             }
         }
     }

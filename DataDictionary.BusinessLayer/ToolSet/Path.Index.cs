@@ -400,8 +400,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// Delimiter placed between names.
         /// Default is "."</param>
         /// <returns></returns>
-        public virtual String Format(string pattern = "[{0}]", string delimiter = ".")
-        { return string.Join(delimiter, pathParts.Select(s => string.Format(pattern, s))); }
+        public virtual String Format(String pattern = "[{0}]", String delimiter = ".")
+        { return String.Join(delimiter, pathParts.Select(s => String.Format(pattern, s))); }
 
         /// <summary>
         /// Groups the Path based on Hierarchy.

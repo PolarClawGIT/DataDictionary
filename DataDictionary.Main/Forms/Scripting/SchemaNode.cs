@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls.ComboBoxList;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -14,6 +15,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete("Being replaced")]
     partial class SchemaNode : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();
@@ -38,11 +40,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingNode,
                 bindingNodeOwner);
             SetTitle(bindingNode);
-            SetIcon(bindingNode, ScopeType.ScriptingNode);
+            SetIcon(bindingNode);
 
             SetCommand(
-                Enumerations.ButtonType.Add,
-                Enumerations.ButtonType.Delete);
+                ButtonType.Add,
+                ButtonType.Delete);
+
+            nodeTreeView.ImageList = new ImageList();
+            nodeTreeView.ImageList.AddImages(Enum.GetValues<NodeRenderAsType>().ToList());
+
+            CommandButtons[ButtonType.Delete].Enabled = false;
+            IsEnabled(false);
         }
 
 
@@ -78,20 +86,38 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
-                formBinding.SchemaData.AddBinding(schemaTitleData, nameof(ISchemaDefinitionValue.SchemaTitle));
-                formBinding.NodeData.AddBinding(nodeNameData, nameof(ISchemaNodeValue.NodeName));
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
+                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+
+                //formBinding.NodeData.AddBinding(isNameOverrideData, e => e.IsNameOverride);
 
                 RenderValueAsList.Load(nodeRenderAsData);
-                formBinding.NodeData.AddBinding(nodeRenderAsData, nameof(ISchemaNodeValue.RenderValueAs), RenderValueAsList.NullValue);
-                formBinding.NodeData.AddBinding(nodeRenderOrderData, nameof(ISchemaNodeValue.NodeOrder));
+                formBinding.NodeData.AddBinding(nodeRenderAsData, e => e.RenderValueAs);
+                formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.NodeOrder);
 
-                XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
-                formBinding.NodeData.AddBinding(nodeObjectScopeData, nameof(ISchemaNodeValue.ObjectScope), ScopeNameList.NullValue);
-                formBinding.NodeData.AddBinding(nodeObjectPropertyData, nameof(ISchemaNodeValue.ObjectProperty));
+                //formBinding.NodeData.AddBinding(isObjectValueData, e => e.IsObjectValue);
+                //formBinding.NodeData.AddBinding(isPropertyValueData, e => e.IsPropertyValue);
+                //formBinding.NodeData.AddBinding(isFixedValueData, e => e.IsFixedValue);
 
-                PropertyNameList.Load(nodeModelPropertyData, "(n/a)");
-                formBinding.NodeData.AddBinding(nodeModelPropertyData, nameof(ISchemaNodeValue.ModelPropertyId), PropertyNameList.NullValue);
+                //XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
+                //formBinding.NodeData.AddBinding(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
+                //formBinding.NodeData.AddBinding(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
+
+                //XScopeList.Load(nodePropertyScopeData, formBinding.Builders, "(n/a)");
+                //formBinding.NodeData.AddBinding(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
+
+                //PropertyNameList.Load(nodePropertyData, "(n/a)");
+                //formBinding.NodeData.AddBinding(nodePropertyData, e => e.PropertyNodeValue.PropertyId, PropertyNameList.NullValue);
+
+                //formBinding.NodeData.AddBinding(nodeFixedValueData, e => e.FixedNodeValue.FixedValue);
+
+                formBinding.NodeData.LoadCombBox(nodeOwnerColumn, e => e.NodeId, e => e.NodeName);
+                formBinding.OwnerData.AddBinding(nodeOwnerColumn, e => e.NodeOwnerId);
+                nodeOwnershipData.AutoGenerateColumns = false;
+                nodeOwnershipData.DataSource = formBinding.OwnerData;
+
+                BuildTree();
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -103,32 +129,15 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            formBinding.AddNew(templateIndex, schemaIndex);
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            formBinding.RemoveCurrent();
         }
 
-        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.OpenFromDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.SaveToDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-        }
 
         protected override void HandleMessage(RefreshRow message)
         {
@@ -137,6 +146,61 @@ namespace DataDictionary.Main.Forms.Scripting
             if (message is RefreshRow<SchemaDefinitionIndex> rowMessage
                 && rowMessage.Key.Equals(schemaIndex))
             { formBinding.LoadValue(schemaIndex); }
+        }
+
+        private void BindingNode_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.NodeData.TryGetValue(out SchemaNodeValue? value))
+            {
+                CommandButtons[ButtonType.Delete].Enabled = true;
+                IsEnabled(true);
+            }
+            else
+            {
+                CommandButtons[ButtonType.Delete].Enabled = false;
+                IsEnabled(false);
+            }
+        }
+
+        void IsEnabled(Boolean newState)
+        {
+            foreach (Control item in nodeOverviewLayout.Controls)
+            { item.Enabled = newState; }
+
+            foreach (Control item in valueSourceLayout.Controls)
+            { item.Enabled = newState; }
+
+            nodeTabs.Enabled = newState;
+        }
+
+        void BuildTree()
+        {
+            // TODO: Currently simple, just list the nodes
+
+            nodeTreeView.BeginUpdate();
+            nodeTreeView.Nodes.Clear();
+
+            foreach (SchemaNodeValue item in
+                formBinding.NodeData.
+                OrderBy(o => o.NodeOrder).
+                ThenBy(o => o.NodeName ?? String.Empty))
+            {
+                TreeNode newNode = new TreeNode(item.NodeName ?? "(no node name)")
+                {
+                    ImageKey = Enum.GetName<NodeRenderAsType>(item.RenderValueAs),
+                    SelectedImageKey = Enum.GetName<NodeRenderAsType>(item.RenderValueAs)
+                };
+
+                nodeTreeView.Nodes.Add(newNode);
+            }
+
+            nodeTreeView.EndUpdate();
+        }
+
+        private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if(formBinding.TryGetValue(out _))
+            { BuildTree(); }
         }
     }
 }

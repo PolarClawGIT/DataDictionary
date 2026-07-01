@@ -20,7 +20,7 @@ Select	D.[NodeId], -- PK
 		D.[FixedValue],
 		D.[ObjectScope],
 		D.[ObjectProperty],
-		D.[ModelPropertyId],
+		D.[PropertyId],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

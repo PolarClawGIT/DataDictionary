@@ -288,7 +288,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public void Import(DataSet source)
-        { 
+        {
             this.Import(source);
             schemaDefinitionValues.Load(source);
             schemaNodeValues.Load(source);
@@ -297,6 +297,5 @@ namespace DataDictionary.BusinessLayer.AppScripting
             transformValues.Load(source);
             transformDocumentValues.Load(source);
         }
-
     }
 }

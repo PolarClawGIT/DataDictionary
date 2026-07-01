@@ -5592,4 +5592,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[procSetTemplateObject]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="b333e84e-f76b-4ae1-a34f-9cbf84e2804c" ChangeDateTime="06/04/2026 16:44:46">
+    <Property Name="ElementName" Value="[AppScript].[SchemaNode].[ModelPropertyId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[SchemaNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PropertyId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="38ef202b-4ddd-4a9f-9217-dd399ea742b3" ChangeDateTime="06/04/2026 16:48:00">
+    <Property Name="ElementName" Value="[HsScript].[SchemaNode].[ModelPropertyId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[SchemaNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PropertyId]" />
+  </Operation>
 </Operations>

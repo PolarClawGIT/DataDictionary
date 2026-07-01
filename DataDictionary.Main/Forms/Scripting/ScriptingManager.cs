@@ -138,21 +138,21 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                CommandButtons[ButtonType.Delete].IsEnabled = binding.InModel;
-                CommandButtons[ButtonType.Open].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.Delete].Enabled = binding.InModel;
+                CommandButtons[ButtonType.Open].Enabled = binding.InModel;
 
-                CommandButtons[ButtonType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
-                CommandButtons[ButtonType.SaveDatabase].IsEnabled = binding.InModel;
-                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = binding.InDatabase;
+                CommandButtons[ButtonType.OpenDatabase].Enabled = binding.InDatabase && !binding.InModel;
+                CommandButtons[ButtonType.SaveDatabase].Enabled = binding.InModel;
+                CommandButtons[ButtonType.DeleteDatabase].Enabled = binding.InDatabase;
             }
             else
             {
-                CommandButtons[ButtonType.Delete].IsEnabled = false;
-                CommandButtons[ButtonType.Open].IsEnabled = false;
+                CommandButtons[ButtonType.Delete].Enabled = false;
+                CommandButtons[ButtonType.Open].Enabled = false;
 
-                CommandButtons[ButtonType.OpenDatabase].IsEnabled = false;
-                CommandButtons[ButtonType.SaveDatabase].IsEnabled = false;
-                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = false;
+                CommandButtons[ButtonType.OpenDatabase].Enabled = false;
+                CommandButtons[ButtonType.SaveDatabase].Enabled = false;
+                CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
             }
 
             SetAuthorization(formBinding.Authorize);

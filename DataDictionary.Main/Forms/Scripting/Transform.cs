@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetRowState(bindingTransform);
             SetTitle(bindingTransform);
-            SetIcon(ScopeType.ScriptingTransform);
+            SetIcon(bindingTransform);
 
             SetCommand(ButtonType.Delete);
 
@@ -79,16 +79,16 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
-                formBinding.TransformData.AddBinding(transformTitleData, nameof(ITransformValue.TransformTitle));
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.TransformData.AddBinding(transformTitleData, e => e.TransformTitle);
 
                 DirectoryTypeList.Load(rootFolderData);
-                formBinding.TransformData.AddBinding(rootFolderData, nameof(ISchemaDefinitionValue.RootFolder));
+                formBinding.TransformData.AddBinding(rootFolderData, e => e.RootFolder, DirectoryTypeList.NullValue);
 
-                formBinding.TransformData.AddBinding(relativePathData, nameof(ISchemaDefinitionValue.RelativePath));
-                formBinding.TransformData.AddBinding(filePrefixData, nameof(ISchemaDefinitionValue.FilePrefix));
-                formBinding.TransformData.AddBinding(fileSuffixData, nameof(ISchemaDefinitionValue.FileSuffix));
-                formBinding.TransformData.AddBinding(fileExtensionData, nameof(ISchemaDefinitionValue.FileExtension));
+                formBinding.TransformData.AddBinding(relativePathData, e => e.RelativePath);
+                formBinding.TransformData.AddBinding(filePrefixData, e => e.FilePrefix);
+                formBinding.TransformData.AddBinding(fileSuffixData, e => e.FileSuffix);
+                formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension);
 
                 // Security
                 IsLocked(formBinding.GetLocked());

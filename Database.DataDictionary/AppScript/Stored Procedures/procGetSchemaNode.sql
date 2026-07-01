@@ -15,7 +15,7 @@ Select	[NodeId],
 		[FixedValue],
 		[ObjectScope],
 		[ObjectProperty],
-		[ModelPropertyId],
+		[PropertyId],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

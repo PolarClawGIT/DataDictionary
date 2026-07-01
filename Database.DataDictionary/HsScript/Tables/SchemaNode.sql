@@ -7,7 +7,7 @@
 	[FixedValue]			NVarChar(250) Null,
 	[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
 	[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
-	[ModelPropertyId]		UniqueIdentifier NULL,
+	[PropertyId]			UniqueIdentifier NULL,
 	-- Temporal History Support
 	[SysStart]				DateTime2 (7) Not Null,
 	[SysEnd]				DateTime2 (7) Not Null,
