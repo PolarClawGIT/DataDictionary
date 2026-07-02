@@ -6,20 +6,13 @@ namespace DataDictionary.BusinessLayer
 {
     partial class BusinessLayerData
     {
+        //TODO: How to move this into TemplateData?
+
         /// <summary>
         /// List of XmlBuilders supported by the application.
         /// </summary>
         /// <remarks>Initialized when the Get is first called.</remarks>
-        public XmlBuilderDictionary XmlBuilders
-        {
-            get
-            {
-                if (field is null || field.Count == 0)
-                { field = InitXmlBuilders(); }
-
-                return field;
-            }
-        }
+        public XmlBuilderDictionary XmlBuilders { get; }
 
         /// <summary>
         /// Initializes all the XML Builders.
@@ -28,15 +21,15 @@ namespace DataDictionary.BusinessLayer
         protected XmlBuilderDictionary InitXmlBuilders()
         {   //TODO: Once working, move to various classes?
 
-            List<XmlBuilder> result = new List<XmlBuilder>();
+            List<XmlBuilder> builders = new List<XmlBuilder>();
 
-            result.Add(new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute));
-            result.Add(new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties));
+            builders.Add(new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute));
+            builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties));
 
-            result.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
-            result.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
+            builders.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
+            builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
 
-            return new XmlBuilderDictionary(result);
+            return new XmlBuilderDictionary(builders);
         }
     }
 }

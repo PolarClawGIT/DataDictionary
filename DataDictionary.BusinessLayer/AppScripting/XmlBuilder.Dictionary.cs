@@ -1,11 +1,19 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
-
+    /// <summary>
+    /// Delegate definition to get a XML Builder from the Key.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <seealso cref="Dictionary{TKey, TValue}.TryGetValue(TKey, out TValue)"/>
+    public delegate Boolean TryGetXmlBuilder(PathIndex key, [NotNullWhen(true)] out XmlBuilder? value);
 
     /// <summary>
     /// Provides a list of XML Builders.
@@ -32,17 +40,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             foreach (XmlBuilder item in builders)
             {
-                Add(item.NodePath, item);
+                Add(item.BuilderPath, item);
 
                 if (item is XmlBuilder.PropertyType propType)
                 {
                     foreach (var child in propType.Children.Values)
-                    { Add(child.NodePath, child); }
+                    { Add(child.BuilderPath, child); }
                 }
                 else if (item is XmlBuilder.ValueType valType)
                 {
                     foreach (var child in valType.Properties.Values)
-                    { Add(child.NodePath, child); }
+                    { Add(child.BuilderPath, child); }
                 }
 
 
@@ -58,6 +66,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             foreach (var item in source)
             { Add(item.Key, item.Value.Clone()); }
         }
+       
 
         /// <summary>
         /// Uses the XMLBuilder to create an XML Element.

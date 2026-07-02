@@ -1,7 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -11,64 +14,57 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Definition to Build an Xml Element
     /// </summary>
-    public partial class XmlBuilder
+    public partial class XmlBuilder : ISchemaNodeObjectValue, IBindingPropertyChanged
     {
         /// <summary>
-        /// Scope of the Object to be Rendered. This is normally the owning Object Scope Type.
+        /// Path to the Object to be Rendered. This is normally a Property of the Object.
         /// </summary>
-        public ScopeType ObjectScope
+        public virtual PathIndex BuilderPath
         {
-            get
+            get;
+            private set
             {
-                if (GetScope is not null)
-                { field = GetScope(); }
-
-                return field;
-            }
-            set
-            {
-                // Remember the current Node Name, if it is different then the MemberName of the NodePath.
-                String nodeName = NodeName; 
-
                 field = value;
-                NodePath = new PathIndex(PathIndex.Parse(field.GetName()));
-                NodeName = nodeName; // Reset the NodeName
-
-                if (SetScope is not null)
-                { SetScope(value); }
+                this.OnPropertyChanged(PropertyChanged, nameof(BuilderPath));
             }
         }
 
-        /// <summary>
-        /// Delegate used to assign a call back when Get ObjectScope is called.
-        /// </summary>
-        public Func<ScopeType>? GetScope { protected get; init; }
-
-        /// <summary>
-        /// Delegate used to assign a call back when Get ObjectScope is called.
-        /// </summary>
-        public Action<ScopeType>? SetScope { protected get; init; }
-
-        /// <summary>
-        /// The Name of the Node. Default is the MemberName of the NodePath.
-        /// </summary>
-        public String NodeName
+        /// <inheritdoc/>
+        public virtual ScopeType ObjectScope
         {
-            get
+            get;
+            protected set
             {
-                if (GetName is not null)
-                { field = GetName(); }
+                field = value;
+                List<String> path = PathIndex.Parse(field.GetName());
+                if (!String.IsNullOrWhiteSpace(ObjectProperty))
+                { path.Add(ObjectProperty); }
 
-                String value = field ?? String.Empty;
-
-                if (String.IsNullOrWhiteSpace(value) && NodePath is not null)
-                {   // Use the ObjectPath after it has been cleaned up for XML.
-                    value = String.Concat(NodePath.Member.Where(c => !Char.IsWhiteSpace(c)));
-                    value = XmlConvert.EncodeName(value);
-                }
-
-                return value;
+                BuilderPath = new PathIndex(path);
+                this.OnPropertyChanged(PropertyChanged, nameof(ObjectScope));
             }
+        }
+
+        /// <inheritdoc/>
+        public virtual String? ObjectProperty
+        {
+            get;
+            protected set
+            {
+                field = value;
+                List<String> path = PathIndex.Parse(ObjectScope.GetName());
+                if (!String.IsNullOrWhiteSpace(value))
+                { path.Add(value); }
+
+                BuilderPath = new PathIndex(path);
+                this.OnPropertyChanged(PropertyChanged, nameof(ObjectProperty));
+            }
+        }
+
+        /// <inheritdoc/>
+        public virtual String NodeName
+        {
+            get;
             set
             {
                 if (String.IsNullOrWhiteSpace(value))
@@ -79,62 +75,39 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     value = XmlConvert.EncodeName(value);
 
                     // compare this to the ObjectPath
-                    String path = String.Concat(NodePath.Member.Where(c => !Char.IsWhiteSpace(c)));
+                    String path = String.Concat(BuilderPath.Member.Where(c => !Char.IsWhiteSpace(c)));
                     path = XmlConvert.EncodeName(value);
 
                     if (value == path) // Set to use the ObjectPath instead.
                     { field = String.Empty; }
                     else { field = value; }
-
-                    if (SetName is not null)
-                    { SetName(value); }
                 }
+
+                this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
             }
         }
 
-        /// <summary>
-        /// Delegate used to assign a call back when Get NodeName is called.
-        /// </summary>
-        public Func<String>? GetName { protected get; init; }
-
-        /// <summary>
-        /// Delegate used to assign a call back when Set NodeName is called.
-        /// </summary>
-        public Action<String>? SetName { protected get; init; }
-
-        /// <summary>
-        /// Path to the Object to be Rendered. This is normally a Property of the Object.
-        /// </summary>
-        public PathIndex NodePath { get; private set; }
-
-        /// <inheritdoc cref="INodeRenderAs.NodeRenderAs"/>
-        public NodeRenderAsType RenderValueAs
+        /// <inheritdoc/>
+        public virtual Int32? NodeOrder
         {
-            get
-            {
-                if (GetRenderAs is not null)
-                { field = GetRenderAs(); }
-
-                return field;
-            }
+            get;
             set
             {
                 field = value;
-
-                if (SetRenderAs is not null)
-                { SetRenderAs(value); }
+                this.OnPropertyChanged(PropertyChanged, nameof(NodeOrder));
             }
         }
 
-        /// <summary>
-        /// Delegate used to assign a call back when Get RenderValueAs is called.
-        /// </summary>
-        public Func<NodeRenderAsType>? GetRenderAs { protected get; init; }
-
-        /// <summary>
-        /// Delegate used to assign a call back when Set RenderValueAs is called.
-        /// </summary>
-        public Action<NodeRenderAsType>? SetRenderAs { protected get; init; }
+        /// <inheritdoc/>
+        public virtual NodeRenderAsType RenderValueAs
+        {
+            get;
+            set
+            {
+                field = value;
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderValueAs));
+            }
+        }
 
         /// <summary>
         /// Function that returns the NodeValue.
@@ -148,8 +121,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public XmlBuilder(ScopeType scope) : base()
         {
             ObjectScope = scope;
-            NodePath = new PathIndex(PathIndex.Parse(scope.GetName()));
+            BuilderPath = new PathIndex(PathIndex.Parse(scope.GetName()));
             RenderValueAs = NodeRenderAsType.Element;
+            NodeName = String.Empty;
 
             GetValue = (value) => GetValueDelegate((dynamic)value);
         }
@@ -160,11 +134,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="source"></param>
         public XmlBuilder(XmlBuilder source) : this(source.ObjectScope)
         {
-            NodePath = new PathIndex(source.NodePath);
+            BuilderPath = new PathIndex(source.BuilderPath);
             RenderValueAs = source.RenderValueAs;
             NodeName = source.NodeName;
             GetValue = source.GetValue;
         }
+
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// GetValue function that returns the ToString of the object passed.
@@ -242,7 +219,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public override String ToString()
-        { return NodePath.MemberFullPath; }
+        { return BuilderPath.MemberFullPath; }
 
         /// <inheritdoc cref="ICloneable.Clone"/>
         public XmlBuilder Clone()

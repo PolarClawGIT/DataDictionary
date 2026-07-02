@@ -50,6 +50,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public class SchemaNodeValue : SchemaNodeItem, ISchemaNodeValue, IPathValue, INamedScopeSourceValue
     {
+        /// <summary>
+        /// Delegate to get the XML Builder for the SchemaNode
+        /// </summary>
+        /// <remarks>Set this before creating instances of SchemaNodeValue.</remarks>
+        internal static TryGetXmlBuilder? TryGetBuilder;
+
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
@@ -66,30 +72,30 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <summary>
         /// XML Builder for this Node.<br/>
-        /// Used to override the default builder and connect the builder to the data object.<br/>
-        /// The passed Builder is Cloned and is not retained by reference.
+        /// Used to override the default builder and connect the builder to the data object.
         /// </summary>
-        public XmlBuilder? Builder
+        /// <remarks>
+        /// This may not return the same object on each call.<br/>
+        /// If the Object Scope or Property changes, a new XmlBuilder is needed.<br/>
+        /// This is dependent on the static delegate TryGetBuilder.</remarks>
+        public XmlBuilder Builder
         {
-            get { return field; }
-
-            set
+            get
             {
-                if (value is XmlBuilder builder)
-                {
-                    field = new XmlBuilder(builder)
-                    {
-                        GetRenderAs = () => RenderValueAs,
-                        SetRenderAs = (value) => RenderValueAs = value,
-                        GetScope = () => ObjectScope,
-                        SetScope = (value) => ObjectScope = value,
-                        GetName = () => NodeName??String.Empty,
-                        SetName = (value) => { NodeName = value; }
-                    };
-                }
-                else { field = null; }
-            }
+                List<String> path = PathIndex.Parse(ObjectScope.GetName());
+                if (!String.IsNullOrWhiteSpace(ObjectProperty))
+                { path.Add(ObjectProperty); }
+                PathIndex key = new PathIndex(path);
 
+                if (TryGetBuilder is not null
+                    && TryGetBuilder(key, out XmlBuilder? builder))
+                {   // Does the builder need to be reset?
+                    if (field is null || !key.Equals(field.BuilderPath))
+                    { field = new SchemaXmlBuilder(builder, this); }
+                }
+
+                return field;
+            }
         }
 
         /* Not being supported
@@ -189,6 +195,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
+            Builder = new SchemaXmlBuilder(new XmlBuilder(ObjectScope), this);
+
             /* Not being supported
             // TODO: Remove?
 
@@ -219,6 +227,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsPathChanged = (e) => e.PropertyName is nameof(NodeName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
+
+            Builder = new SchemaXmlBuilder(new XmlBuilder(ObjectScope), this);
+
 
             /* Not being supported
             // TODO: Remove?

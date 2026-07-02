@@ -74,6 +74,11 @@ namespace DataDictionary.BusinessLayer
 
             applicationValues = new AppGeneral.ApplicationData();
 
+            // This needs to be done before the database is called.
+            XmlBuilders = InitXmlBuilders(); 
+            if (AppScripting.SchemaNodeValue.TryGetBuilder is null)
+            { AppScripting.SchemaNodeValue.TryGetBuilder = XmlBuilders.TryGetValue; }
+
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new AppLibrary.LibraryModel();
