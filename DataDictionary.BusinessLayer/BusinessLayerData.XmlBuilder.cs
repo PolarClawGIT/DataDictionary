@@ -6,21 +6,17 @@ namespace DataDictionary.BusinessLayer
 {
     partial class BusinessLayerData
     {
-        //TODO: How to move this into TemplateData?
-
         /// <summary>
-        /// List of XmlBuilders supported by the application.
-        /// </summary>
-        /// <remarks>Initialized when the Get is first called.</remarks>
-        public XmlBuilderDictionary XmlBuilders { get; }
-
-        /// <summary>
-        /// Initializes all the XML Builders.
+        /// Generates a list of <b>default</b> XmlBuilders.
         /// </summary>
         /// <returns></returns>
-        protected XmlBuilderDictionary InitXmlBuilders()
+        /// <example><![CDATA[
+        ///     templateValues = new AppScripting.TemplateData()
+        ///     { XmlBuilders = new AppScripting.XmlBuilderDictionary(GetXmlBuilders()) };]]>
+        ///</example>
+        public List<XmlBuilder> GetXmlBuilders()
         {   //TODO: Once working, move to various classes?
-
+            
             List<XmlBuilder> builders = new List<XmlBuilder>();
 
             builders.Add(new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute));
@@ -29,7 +25,7 @@ namespace DataDictionary.BusinessLayer
             builders.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
             builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
 
-            return new XmlBuilderDictionary(builders);
+            return builders;
         }
     }
 }

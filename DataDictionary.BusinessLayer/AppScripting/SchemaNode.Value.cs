@@ -195,7 +195,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
-            Builder = new SchemaXmlBuilder(new XmlBuilder(ObjectScope), this);
+            Builder = new SchemaXmlBuilder(new XmlBuilder(ScopeType.Null), this);
 
             /* Not being supported
             // TODO: Remove?

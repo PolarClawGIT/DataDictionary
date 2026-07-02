@@ -50,6 +50,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ITransformDocumentData TransformDocuments { get; }
 
         /// <summary>
+        /// List of <b>default</b> XmlBuilders supported by the application.
+        /// </summary>
+        XmlBuilderDictionary XmlBuilders { get; }
+
+        /// <summary>
         /// Creates an empty ITemplateData.
         /// </summary>
         /// <returns></returns>
@@ -83,6 +88,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ITransformDocumentData TransformDocuments { get { return transformDocumentValues; } }
         TransformDocumentData transformDocumentValues;
+
+        /// <inheritdoc/>
+        public XmlBuilderDictionary XmlBuilders { get; init; } = new XmlBuilderDictionary();
 
         public TemplateData() : base()
         {
