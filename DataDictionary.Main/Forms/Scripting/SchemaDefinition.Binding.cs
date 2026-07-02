@@ -43,6 +43,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 GetData().SchemaDocuments.Remove(key);
                 throw new NotImplementedException();
             }
+
+            public IEnumerable<XmlBuilder> GetBuilders()
+            { return GetData().XmlBuilders.Values; }
         }
     }
 }

@@ -16,7 +16,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
             set
             {
                 base.NodeName = value;
-                baseValue.NodeName = base.NodeName;
+
+                if (baseValue is not null)
+                {   baseValue.NodeName = base.NodeName; }
             }
         }
 
@@ -27,7 +29,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
             set
             {
                 base.NodeOrder = value;
-                baseValue.NodeOrder = base.NodeOrder;
+
+                if (baseValue is not null)
+                { baseValue.NodeOrder = base.NodeOrder; }
             }
         }
 
@@ -38,7 +42,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
             set
             {
                 base.RenderValueAs = value;
-                baseValue.RenderValueAs = base.RenderValueAs;
+
+                if (baseValue is not null)
+                { baseValue.RenderValueAs = base.RenderValueAs; }
             }
         }
 

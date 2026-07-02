@@ -14,20 +14,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Definition to Build an Xml Element
     /// </summary>
-    public partial class XmlBuilder : ISchemaNodeObjectValue, IBindingPropertyChanged
+    public partial class XmlBuilder : ISchemaNodeObjectValue
     {
         /// <summary>
         /// Path to the Object to be Rendered. This is normally a Property of the Object.
         /// </summary>
-        public virtual PathIndex BuilderPath
-        {
-            get;
-            private set
-            {
-                field = value;
-                this.OnPropertyChanged(PropertyChanged, nameof(BuilderPath));
-            }
-        }
+        public virtual PathIndex BuilderPath { get; set; }
 
         /// <inheritdoc/>
         public virtual ScopeType ObjectScope
@@ -41,7 +33,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 { path.Add(ObjectProperty); }
 
                 BuilderPath = new PathIndex(path);
-                this.OnPropertyChanged(PropertyChanged, nameof(ObjectScope));
             }
         }
 
@@ -57,7 +48,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 { path.Add(value); }
 
                 BuilderPath = new PathIndex(path);
-                this.OnPropertyChanged(PropertyChanged, nameof(ObjectProperty));
             }
         }
 
@@ -83,31 +73,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     else { field = value; }
                 }
 
-                this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
+                //this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
             }
         }
 
         /// <inheritdoc/>
-        public virtual Int32? NodeOrder
-        {
-            get;
-            set
-            {
-                field = value;
-                this.OnPropertyChanged(PropertyChanged, nameof(NodeOrder));
-            }
-        }
+        public virtual Int32? NodeOrder { get; set; }
 
         /// <inheritdoc/>
-        public virtual NodeRenderAsType RenderValueAs
-        {
-            get;
-            set
-            {
-                field = value;
-                this.OnPropertyChanged(PropertyChanged, nameof(RenderValueAs));
-            }
-        }
+        public virtual NodeRenderAsType RenderValueAs { get; set; }
 
         /// <summary>
         /// Function that returns the NodeValue.
@@ -139,9 +113,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             NodeName = source.NodeName;
             GetValue = source.GetValue;
         }
-
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// GetValue function that returns the ToString of the object passed.

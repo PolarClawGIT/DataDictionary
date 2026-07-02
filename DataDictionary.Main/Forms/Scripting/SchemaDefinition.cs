@@ -98,6 +98,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
 
+                XmlBuilderList.Load(nodesTree, formBinding.GetBuilders());
+                
+
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
