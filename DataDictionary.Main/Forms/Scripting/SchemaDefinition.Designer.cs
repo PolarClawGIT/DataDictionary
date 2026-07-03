@@ -61,8 +61,6 @@
             bindingSchema = new BindingSource(components);
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
-            nodeMenu = new ContextMenuStrip(components);
-            openNodeCommand = new ToolStripMenuItem();
             schemaLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -84,7 +82,6 @@
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
-            nodeMenu.SuspendLayout();
             SuspendLayout();
             // 
             // schemaLayout
@@ -440,19 +437,6 @@
             schemaTitleData.TabIndex = 1;
             schemaTitleData.WordWrap = true;
             // 
-            // nodeMenu
-            // 
-            nodeMenu.Items.AddRange(new ToolStripItem[] { openNodeCommand });
-            nodeMenu.Name = "nodeMenu";
-            nodeMenu.Size = new Size(142, 26);
-            // 
-            // openNodeCommand
-            // 
-            openNodeCommand.Name = "openNodeCommand";
-            openNodeCommand.Size = new Size(141, 22);
-            openNodeCommand.Text = "Node Details";
-            openNodeCommand.Click += OpenNodeCommand_Click;
-            // 
             // SchemaDefinition
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -485,7 +469,6 @@
             ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
-            nodeMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -520,8 +503,6 @@
         private DataGridViewTextBoxColumn objectNameColumn;
         private DataGridViewTextBoxColumn FileNameColumn;
         private TableLayoutPanel nodeLayout;
-        private ContextMenuStrip nodeMenu;
-        private ToolStripMenuItem openNodeCommand;
         private ToolStripButton documentBuildCommand;
     }
 }

@@ -27,10 +27,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(bindingSchema);
 
             SetCommand(ButtonType.Delete);
-            AddCommands(nodeMenu);
 
-            openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
-            openNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
@@ -99,7 +96,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
 
                 XmlBuilderList.Load(nodesTree, formBinding.GetBuilders());
-                
 
                 // Security
                 IsLocked(formBinding.GetLocked());

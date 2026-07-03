@@ -1,5 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
@@ -21,7 +23,11 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
         public static void Load(TreeView control, IEnumerable<XmlBuilder> builders)
         {
+            // TODO: Need image for fields.
+
             control.BeginUpdate();
+            control.ImageList =  new ImageList();
+            control.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
 
             foreach (XmlBuilder item in builders.
                 Where(w => !builders.Any(a => a.BuilderPath.Equals(w.BuilderPath.ParentPath))).
@@ -29,6 +35,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             {
                 TreeNode node = new TreeNode(item.BuilderPath.Member);
                 node.Tag = item;
+                node.ImageKey = item.ObjectScope.GetEnumeration().Name;
+                node.SelectedImageKey = item.ObjectScope.GetEnumeration().Name;
                 control.Nodes.Add(node);
 
                 BuildChildren(node, item.BuilderPath);
@@ -42,6 +50,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                 {
                     TreeNode childNode = new TreeNode(item.BuilderPath.Member);
                     childNode.Tag = item;
+                    childNode.ImageKey = item.ObjectScope.GetEnumeration().Name;
+                    childNode.SelectedImageKey = item.ObjectScope.GetEnumeration().Name;
                     parentNode.Nodes.Add(childNode);
 
                     BuildChildren(childNode, item.BuilderPath);
