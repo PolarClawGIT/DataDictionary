@@ -23,8 +23,6 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         {
             control.BeginUpdate();
 
-            //TODO: Not getting child of the Model Property.
-
             foreach (XmlBuilder item in builders.
                 Where(w => !builders.Any(a => a.BuilderPath.Equals(w.BuilderPath.ParentPath))).
                 OrderBy(o => o.BuilderPath))
@@ -45,6 +43,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                     TreeNode childNode = new TreeNode(item.BuilderPath.Member);
                     childNode.Tag = item;
                     parentNode.Nodes.Add(childNode);
+
+                    BuildChildren(childNode, item.BuilderPath);
                 }
             }
         }

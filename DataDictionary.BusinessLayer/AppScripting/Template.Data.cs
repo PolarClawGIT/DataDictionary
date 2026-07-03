@@ -90,8 +90,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         TransformDocumentData transformDocumentValues;
 
         /// <inheritdoc/>
-        public XmlBuilderDictionary XmlBuilders { get; init; } = new XmlBuilderDictionary();
+        public XmlBuilderDictionary XmlBuilders { get; } = new XmlBuilderDictionary();
 
+        /// <inheritdoc cref="TemplateCollection{TItem}.TemplateCollection"/>
         public TemplateData() : base()
         {
             schemaDefinitionValues = new SchemaDefinitionData();

@@ -133,30 +133,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
         }
 
-        public XmlBuilderDictionary XmlBuilders { get; private set; } = new XmlBuilderDictionary();
-
-        /// <summary>
-        /// Used to add the XML Builders.
-        /// </summary>
-        /// <param name="source"></param>
-        public void CreateXmlBuilders(XmlBuilderDictionary source)
-        {
-            // TODO: How will this be invoked?
-            XmlBuilders = new XmlBuilderDictionary(source);
-
-            foreach (var item in this)
-            {
-                PathIndex key = new PathIndex(item.ObjectScope);
-                
-                // TODO: More work is needed.
-                // The SchemaNode needs to match structure and implement two-way binding such that the builders.
-
-                if(XmlBuilders.TryGetValue(key, out XmlBuilder? builder))
-                {
-                    builder.RenderValueAs = item.RenderValueAs;
-                    builder.NodeName = item.NodeName??String.Empty;
-                }
-            }
-        }
+        //public XmlBuilderDictionary XmlBuilders { get; private set; } = new XmlBuilderDictionary();
     }
 }

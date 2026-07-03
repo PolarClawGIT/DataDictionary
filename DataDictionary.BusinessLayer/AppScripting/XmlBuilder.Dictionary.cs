@@ -1,8 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -18,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Provides a list of XML Builders.
     /// </summary>
-    public class XmlBuilderDictionary : Dictionary<PathIndex, XmlBuilder>
+    public class XmlBuilderDictionary : IReadOnlyDictionary<PathIndex, XmlBuilder>
     {
         // TODO: Need to return a list including children so a tree structure can be built.
         // TODO: Need a way to load and save to the database. Rebuild into SchemaNode?
@@ -27,46 +29,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         //public required TryGetProperty GetProperty { get; init; } 
         //public required TryGetDefinition GetDefinition { get; init; }
 
+        Dictionary<PathIndex, XmlBuilder> data = new Dictionary<PathIndex, XmlBuilder>();
+
         /// <summary>
         /// Constructor used for initialization only.
         /// </summary>
-        internal XmlBuilderDictionary() : base() { }
-
-        /// <summary>
-        /// Constructor that build a list of XML Builders.
-        /// </summary>
-        /// <param name="builders"></param>
-        public XmlBuilderDictionary(IEnumerable<XmlBuilder> builders) : this()
-        {
-            foreach (XmlBuilder item in builders)
-            {
-                Add(item.BuilderPath, item);
-
-                if (item is XmlBuilder.PropertyType propType)
-                {
-                    foreach (var child in propType.Children.Values)
-                    { Add(child.BuilderPath, child); }
-                }
-                else if (item is XmlBuilder.ValueType valType)
-                {
-                    foreach (var child in valType.Properties.Values)
-                    { Add(child.BuilderPath, child); }
-                }
-
-
-            }
-        }
-
-        /// <summary>
-        /// Does a deep-copy/clone of the XmlBuilderDictionary.
-        /// </summary>
-        /// <param name="source"></param>
-        public XmlBuilderDictionary(XmlBuilderDictionary source) : base()
-        {
-            foreach (var item in source)
-            { Add(item.Key, item.Value.Clone()); }
-        }
-       
+        public XmlBuilderDictionary() : base() { }
 
         /// <summary>
         /// Uses the XMLBuilder to create an XML Element.
@@ -157,6 +125,70 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return root;
         }
 
+        /// <summary>
+        /// Creates WorkItems to load the XML Builder list.
+        /// </summary>
+        /// <param name="getBuilders"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Load(Func<IEnumerable<XmlBuilder>> getBuilders)
+        {   // Should be called after Model Properties and Model Definitions are loaded.
+
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { WorkName = "Load XmlBuilders", DoWork = () => DataLoad(getBuilders) });
+            return work;
+
+            void DataLoad(Func<IEnumerable<XmlBuilder>> getBuilders)
+            {
+                IEnumerable<XmlBuilder> builders = getBuilders();
+                data.Clear();
+
+                foreach (XmlBuilder item in builders)
+                {
+                    data.Add(item.BuilderPath, item);
+
+                    if (item is XmlBuilder.PropertyType propType)
+                    {
+                        foreach (var child in propType.Children.Values)
+                        { data.Add(child.BuilderPath, child); }
+                    }
+                    else if (item is XmlBuilder.ValueType valType)
+                    {
+                        foreach (var child in valType.Properties.Values)
+                        { data.Add(child.BuilderPath, child); }
+                    }
+                }
+            }
+        }
+
+        #region IReadOnlyDictionary
+        /// <inheritdoc/>
+        public XmlBuilder this[PathIndex key] => ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data)[key];
+
+        /// <inheritdoc/>
+        public IEnumerable<PathIndex> Keys => ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).Keys;
+
+        /// <inheritdoc/>
+        public IEnumerable<XmlBuilder> Values => ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).Values;
+
+        /// <inheritdoc/>
+        public Int32 Count => ((IReadOnlyCollection<KeyValuePair<PathIndex, XmlBuilder>>)data).Count;
+
+        /// <inheritdoc/>
+        public Boolean ContainsKey(PathIndex key)
+        { return ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).ContainsKey(key); }
+
+        /// <inheritdoc/>
+        public IEnumerator<KeyValuePair<PathIndex, XmlBuilder>> GetEnumerator()
+        { return ((IEnumerable<KeyValuePair<PathIndex, XmlBuilder>>)data).GetEnumerator(); }
+
+        /// <inheritdoc/>
+        public Boolean TryGetValue(PathIndex key, [MaybeNullWhen(false)] out XmlBuilder value)
+        { return ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).TryGetValue(key, out value); }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        { return ((IEnumerable)data).GetEnumerator(); }
+        #endregion
     }
 
     /// <summary>

@@ -54,13 +54,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public virtual String NodeName
         {
-            get;
+            get
+            {
+                if(String.IsNullOrWhiteSpace(field))
+                {
+                    String value = String.Concat(BuilderPath.Member.Where(c => !Char.IsWhiteSpace(c)));
+                    value = XmlConvert.EncodeName(value);
+                    return value;
+                }
+                else { return field; }
+            }
             set
             {
                 if (String.IsNullOrWhiteSpace(value))
                 { field = String.Empty; }
                 else
-                {   // Clean up the value before storing.
+                {   
+                    // Clean up the value before storing.
                     value = String.Concat(value.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
 
@@ -68,7 +78,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     String path = String.Concat(BuilderPath.Member.Where(c => !Char.IsWhiteSpace(c)));
                     path = XmlConvert.EncodeName(value);
 
-                    if (value == path) // Set to use the ObjectPath instead.
+                    if (value == path) // Flag get to use the Member name.
                     { field = String.Empty; }
                     else { field = value; }
                 }
