@@ -58,6 +58,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
                 {
                     XmlBuilder child = new XmlBuilder(ObjectScope, item);
+                    child.ObjectProperty = item.Name;
                     Properties.Add(item, child);
                 }
             }

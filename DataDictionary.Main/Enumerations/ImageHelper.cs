@@ -1,5 +1,4 @@
-﻿using DataDictionary.Main.Properties;
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 
 namespace DataDictionary.Main.Enumerations
 {

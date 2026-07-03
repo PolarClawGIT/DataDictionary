@@ -54,6 +54,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 foreach (PropertyValue item in properties)
                 {
                     XmlBuilder child = new XmlBuilder(ObjectScope, item);
+                    child.ObjectProperty = item.PropertyTitle;
                     Children.Add(new PropertyIndex(item), child);
                 }
             }
