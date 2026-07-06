@@ -82,17 +82,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                List<String> path = PathIndex.Parse(ObjectScope.GetName());
-                if (!String.IsNullOrWhiteSpace(ObjectProperty))
-                { path.Add(ObjectProperty); }
-                PathIndex key = new PathIndex(path);
-
-                if (TryGetBuilder is not null
-                    && TryGetBuilder(key, out XmlBuilder? builder))
-                {   // Does the builder need to be reset?
-                    if (field is null || !key.Equals(field.BuilderPath))
-                    { field = new SchemaXmlBuilder(builder, this); }
-                }
+                XmlBuilder newBuilder = GetBuilder();
+                if(!field.BuilderPath.Equals(newBuilder.BuilderPath))
+                { field = newBuilder; OnPropertyChanged(nameof(Builder)); }
 
                 return field;
             }
@@ -195,7 +187,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
-            Builder = new SchemaXmlBuilder(new XmlBuilder(ScopeType.Null), this);
+            Builder = GetBuilder();
 
             /* Not being supported
             // TODO: Remove?
@@ -228,7 +220,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
-            Builder = new SchemaXmlBuilder(new XmlBuilder(ObjectScope), this);
+            Builder = GetBuilder();
 
 
             /* Not being supported
@@ -247,6 +239,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             if (!String.IsNullOrWhiteSpace(FixedValue))
             { IsNameOverride = true; }*/
+        }
+
+        /// <summary>
+        /// Used to Set the current XmlBuilder
+        /// </summary>
+        /// <param name="objectScope">target ObjectScope, null = current ObjectScope</param>
+        /// <param name="objectProperty">target ObjectProperty, null = current ObjectProperty</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Used as part of Get on the property "Builder" and the constructors.<br/>
+        /// When the SchemaNodeValue is initialized from the UI, the ObjectScope and ObjectProperty is not set and must be updated.<br/>
+        /// When the SchemaNodeValue is initialized from the database, the ObjectScope and ObjectProperty has a value.<br/>
+        /// This is dependent on the static delegate SchemaNodeValue.TryGetBuilder.
+        /// </remarks>
+        protected virtual XmlBuilder GetBuilder(ScopeType? objectScope = null, String? objectProperty = null)
+        {
+            XmlBuilderIndex key = new XmlBuilderIndex(objectScope ?? ObjectScope, objectProperty ?? ObjectProperty ?? String.Empty);
+
+            if (TryGetBuilder is not null
+                && TryGetBuilder(key, out XmlBuilder? builder))
+            { return new SchemaXmlBuilder(builder, this); }
+            else { return new SchemaXmlBuilder(new XmlBuilder(ScopeType.Null), this); }
         }
 
         /// <inheritdoc/>

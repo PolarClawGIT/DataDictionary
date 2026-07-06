@@ -33,7 +33,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
             foreach (XmlBuilder item in builders.
                 Where(w => !builders.Any(a => a.BuilderPath.Equals(w.BuilderPath.ParentPath))).
-                OrderBy(o => o.NodeOrder).
+                OrderBy(o => o.RenderOrder).
                 ThenBy(o => o.BuilderPath))
             {
                 TreeNode node = CreateNode(item);
@@ -48,7 +48,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             {
                 foreach (XmlBuilder item in builders.
                     Where(w => key.Equals(w.BuilderPath.ParentPath)).
-                    OrderBy(o => o.NodeOrder).
+                    OrderBy(o => o.RenderOrder).
                     ThenBy(o => o.BuilderPath))
                 {
                     TreeNode childNode = CreateNode(item);

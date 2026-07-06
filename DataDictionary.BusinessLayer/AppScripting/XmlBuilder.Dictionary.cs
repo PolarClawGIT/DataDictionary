@@ -15,12 +15,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <param name="value"></param>
     /// <returns></returns>
     /// <seealso cref="Dictionary{TKey, TValue}.TryGetValue(TKey, out TValue)"/>
-    public delegate Boolean TryGetXmlBuilder(PathIndex key, [NotNullWhen(true)] out XmlBuilder? value);
+    public delegate Boolean TryGetXmlBuilder(XmlBuilderIndex key, [NotNullWhen(true)] out XmlBuilder? value);
 
     /// <summary>
     /// Provides a list of XML Builders.
     /// </summary>
-    public class XmlBuilderDictionary : IReadOnlyDictionary<PathIndex, XmlBuilder>
+    public class XmlBuilderDictionary : IReadOnlyDictionary<XmlBuilderIndex, XmlBuilder>
     {
         // TODO: Need to return a list including children so a tree structure can be built.
         // TODO: Need a way to load and save to the database. Rebuild into SchemaNode?
@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         //public required TryGetProperty GetProperty { get; init; } 
         //public required TryGetDefinition GetDefinition { get; init; }
 
-        Dictionary<PathIndex, XmlBuilder> data = new Dictionary<PathIndex, XmlBuilder>();
+        Dictionary<XmlBuilderIndex, XmlBuilder> data = new Dictionary<XmlBuilderIndex, XmlBuilder>();
 
         /// <summary>
         /// Constructor used for initialization only.
@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             where TRoot : class, IScopeType
             where TChild : class
         {
-            PathIndex rootKey = new PathIndex(scope);
+            XmlBuilderIndex rootKey = new XmlBuilderIndex(scope);
             Int32 rootCount = roots.Count(w => w.Scope == scope);
             XElement root = new XElement(scope.GetName());
 
@@ -75,7 +75,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                         foreach (var child in children)
                         {
-                            PathIndex childKey = new PathIndex(child.scope);
+                            XmlBuilderIndex childKey = new XmlBuilderIndex(child.scope);
 
                             if (TryGetValue(childKey, out XmlBuilder? childBuilder))
                             {
@@ -101,7 +101,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                             {
                                 foreach (var child in children)
                                 {
-                                    PathIndex childKey = new PathIndex(child.scope);
+                                    XmlBuilderIndex childKey = new XmlBuilderIndex(child.scope);
                                     if (TryGetValue(childKey, out XmlBuilder? childBuilder))
                                     {
                                         XElement childRoot = new XElement(childBuilder.NodeName);
@@ -162,28 +162,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         #region IReadOnlyDictionary
         /// <inheritdoc/>
-        public XmlBuilder this[PathIndex key] => ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data)[key];
+        public XmlBuilder this[XmlBuilderIndex key] => ((IReadOnlyDictionary<XmlBuilderIndex, XmlBuilder>)data)[key];
 
         /// <inheritdoc/>
-        public IEnumerable<PathIndex> Keys => ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).Keys;
+        public IEnumerable<XmlBuilderIndex> Keys => ((IReadOnlyDictionary<XmlBuilderIndex, XmlBuilder>)data).Keys;
 
         /// <inheritdoc/>
-        public IEnumerable<XmlBuilder> Values => ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).Values;
+        public IEnumerable<XmlBuilder> Values => ((IReadOnlyDictionary<XmlBuilderIndex, XmlBuilder>)data).Values;
 
         /// <inheritdoc/>
-        public Int32 Count => ((IReadOnlyCollection<KeyValuePair<PathIndex, XmlBuilder>>)data).Count;
+        public Int32 Count => ((IReadOnlyCollection<KeyValuePair<XmlBuilderIndex, XmlBuilder>>)data).Count;
 
         /// <inheritdoc/>
-        public Boolean ContainsKey(PathIndex key)
-        { return ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).ContainsKey(key); }
+        public Boolean ContainsKey(XmlBuilderIndex key)
+        { return ((IReadOnlyDictionary<XmlBuilderIndex, XmlBuilder>)data).ContainsKey(key); }
 
         /// <inheritdoc/>
-        public IEnumerator<KeyValuePair<PathIndex, XmlBuilder>> GetEnumerator()
-        { return ((IEnumerable<KeyValuePair<PathIndex, XmlBuilder>>)data).GetEnumerator(); }
+        public IEnumerator<KeyValuePair<XmlBuilderIndex, XmlBuilder>> GetEnumerator()
+        { return ((IEnumerable<KeyValuePair<XmlBuilderIndex, XmlBuilder>>)data).GetEnumerator(); }
 
         /// <inheritdoc/>
-        public Boolean TryGetValue(PathIndex key, [MaybeNullWhen(false)] out XmlBuilder value)
-        { return ((IReadOnlyDictionary<PathIndex, XmlBuilder>)data).TryGetValue(key, out value); }
+        public Boolean TryGetValue(XmlBuilderIndex key, [MaybeNullWhen(false)] out XmlBuilder value)
+        { return ((IReadOnlyDictionary<XmlBuilderIndex, XmlBuilder>)data).TryGetValue(key, out value); }
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
@@ -232,7 +232,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         );
 
             if (result is XElement) { return result; }
-            else { return new XElement(ScopeType.ModelAttribute.GetName()); }
+            else { return new XElement(ScopeType.ModelEntity.GetName()); }
         }
     }
 }

@@ -37,6 +37,7 @@
             Label fileBaseName;
             GroupBox nodeGroup;
             TableLayoutPanel nodeLayout;
+            TableLayoutPanel schemaNodeLayout;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTabs = new TabControl();
             schemaTab = new TabPage();
@@ -61,6 +62,13 @@
             bindingSchema = new BindingSource(components);
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
+            schemaNodeMenu = new ToolStrip();
+            objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            textBoxData1 = new DataDictionary.Main.Controls.TextBoxData();
+            nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
+            renderValueAsData = new DataDictionary.Main.Controls.ComboBoxData();
+            renderOrderData = new DataDictionary.Main.Controls.TextBoxData();
+            bindingNode = new BindingSource(components);
             schemaLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -68,6 +76,7 @@
             fileBaseName = new Label();
             nodeGroup = new GroupBox();
             nodeLayout = new TableLayoutPanel();
+            schemaNodeLayout = new TableLayoutPanel();
             schemaLayout.SuspendLayout();
             schemaTabs.SuspendLayout();
             schemaTab.SuspendLayout();
@@ -82,6 +91,8 @@
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
+            schemaNodeLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
             SuspendLayout();
             // 
             // schemaLayout
@@ -98,7 +109,7 @@
             schemaLayout.RowStyles.Add(new RowStyle());
             schemaLayout.RowStyles.Add(new RowStyle());
             schemaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            schemaLayout.Size = new Size(584, 644);
+            schemaLayout.Size = new Size(584, 704);
             schemaLayout.TabIndex = 4;
             // 
             // templateTitleData
@@ -122,7 +133,7 @@
             schemaTabs.Location = new Point(3, 103);
             schemaTabs.Name = "schemaTabs";
             schemaTabs.SelectedIndex = 0;
-            schemaTabs.Size = new Size(578, 538);
+            schemaTabs.Size = new Size(578, 598);
             schemaTabs.TabIndex = 6;
             // 
             // schemaTab
@@ -132,7 +143,7 @@
             schemaTab.Location = new Point(4, 24);
             schemaTab.Name = "schemaTab";
             schemaTab.Padding = new Padding(3);
-            schemaTab.Size = new Size(570, 510);
+            schemaTab.Size = new Size(570, 570);
             schemaTab.TabIndex = 0;
             schemaTab.Text = "Schema";
             // 
@@ -148,7 +159,7 @@
             detailLayout.RowCount = 2;
             detailLayout.RowStyles.Add(new RowStyle());
             detailLayout.RowStyles.Add(new RowStyle());
-            detailLayout.Size = new Size(564, 504);
+            detailLayout.Size = new Size(564, 564);
             detailLayout.TabIndex = 7;
             // 
             // filePatternGroup
@@ -288,7 +299,7 @@
             nodeGroup.Dock = DockStyle.Fill;
             nodeGroup.Location = new Point(3, 183);
             nodeGroup.Name = "nodeGroup";
-            nodeGroup.Size = new Size(558, 318);
+            nodeGroup.Size = new Size(558, 378);
             nodeGroup.TabIndex = 6;
             nodeGroup.TabStop = false;
             nodeGroup.Text = "Nodes";
@@ -301,13 +312,14 @@
             nodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             nodeLayout.Controls.Add(nodesTree, 0, 1);
             nodeLayout.Controls.Add(forEachScopeData, 0, 0);
+            nodeLayout.Controls.Add(schemaNodeLayout, 1, 0);
             nodeLayout.Dock = DockStyle.Fill;
             nodeLayout.Location = new Point(3, 19);
             nodeLayout.Name = "nodeLayout";
             nodeLayout.RowCount = 2;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeLayout.Size = new Size(552, 296);
+            nodeLayout.Size = new Size(552, 356);
             nodeLayout.TabIndex = 6;
             // 
             // nodesTree
@@ -315,7 +327,7 @@
             nodesTree.Dock = DockStyle.Fill;
             nodesTree.Location = new Point(3, 55);
             nodesTree.Name = "nodesTree";
-            nodesTree.Size = new Size(270, 238);
+            nodesTree.Size = new Size(270, 298);
             nodesTree.TabIndex = 2;
             // 
             // forEachScopeData
@@ -437,11 +449,109 @@
             schemaTitleData.TabIndex = 1;
             schemaTitleData.WordWrap = true;
             // 
+            // schemaNodeMenu
+            // 
+            schemaNodeMenu.Location = new Point(0, 0);
+            schemaNodeMenu.Name = "schemaNodeMenu";
+            schemaNodeMenu.Size = new Size(270, 25);
+            schemaNodeMenu.TabIndex = 3;
+            schemaNodeMenu.Text = "Schema Node";
+            // 
+            // schemaNodeLayout
+            // 
+            schemaNodeLayout.ColumnCount = 1;
+            schemaNodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            schemaNodeLayout.Controls.Add(schemaNodeMenu, 0, 0);
+            schemaNodeLayout.Controls.Add(this.objectScopeData, 0, 1);
+            schemaNodeLayout.Controls.Add(textBoxData1, 0, 2);
+            schemaNodeLayout.Controls.Add(this.nodeNameData, 0, 3);
+            schemaNodeLayout.Controls.Add(renderValueAsData, 0, 4);
+            schemaNodeLayout.Controls.Add(renderOrderData, 0, 5);
+            schemaNodeLayout.Dock = DockStyle.Fill;
+            schemaNodeLayout.Location = new Point(279, 3);
+            schemaNodeLayout.Name = "schemaNodeLayout";
+            schemaNodeLayout.RowCount = 7;
+            nodeLayout.SetRowSpan(schemaNodeLayout, 2);
+            schemaNodeLayout.RowStyles.Add(new RowStyle());
+            schemaNodeLayout.RowStyles.Add(new RowStyle());
+            schemaNodeLayout.RowStyles.Add(new RowStyle());
+            schemaNodeLayout.RowStyles.Add(new RowStyle());
+            schemaNodeLayout.RowStyles.Add(new RowStyle());
+            schemaNodeLayout.RowStyles.Add(new RowStyle());
+            schemaNodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            schemaNodeLayout.Size = new Size(270, 350);
+            schemaNodeLayout.TabIndex = 4;
+            // 
+            // objectScopeData
+            // 
+            objectScopeData.AutoSize = true;
+            objectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectScopeData.Dock = DockStyle.Fill;
+            objectScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            objectScopeData.HeaderText = "Object Scope";
+            objectScopeData.Location = new Point(3, 28);
+            objectScopeData.Name = "objectScopeData";
+            objectScopeData.ReadOnly = false;
+            objectScopeData.Size = new Size(264, 46);
+            objectScopeData.TabIndex = 4;
+            // 
+            // textBoxData1
+            // 
+            textBoxData1.AutoSize = true;
+            textBoxData1.Dock = DockStyle.Fill;
+            textBoxData1.HeaderText = "Object Property";
+            textBoxData1.Location = new Point(3, 80);
+            textBoxData1.Multiline = false;
+            textBoxData1.Name = "textBoxData1";
+            textBoxData1.ReadOnly = false;
+            textBoxData1.Size = new Size(264, 44);
+            textBoxData1.TabIndex = 5;
+            textBoxData1.WordWrap = true;
+            // 
+            // nodeNameData
+            // 
+            nodeNameData.AutoSize = true;
+            nodeNameData.Dock = DockStyle.Fill;
+            nodeNameData.HeaderText = "Node Name";
+            nodeNameData.Location = new Point(3, 130);
+            nodeNameData.Multiline = false;
+            nodeNameData.Name = "nodeNameData";
+            nodeNameData.ReadOnly = false;
+            nodeNameData.Size = new Size(264, 44);
+            nodeNameData.TabIndex = 6;
+            nodeNameData.WordWrap = true;
+            // 
+            // renderValueAsData
+            // 
+            renderValueAsData.AutoSize = true;
+            renderValueAsData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            renderValueAsData.Dock = DockStyle.Fill;
+            renderValueAsData.DropDownStyle = ComboBoxStyle.DropDown;
+            renderValueAsData.HeaderText = "Render Value as";
+            renderValueAsData.Location = new Point(3, 180);
+            renderValueAsData.Name = "renderValueAsData";
+            renderValueAsData.ReadOnly = false;
+            renderValueAsData.Size = new Size(264, 46);
+            renderValueAsData.TabIndex = 7;
+            // 
+            // renderOrderData
+            // 
+            renderOrderData.AutoSize = true;
+            renderOrderData.Dock = DockStyle.Fill;
+            renderOrderData.HeaderText = "Render Order";
+            renderOrderData.Location = new Point(3, 232);
+            renderOrderData.Multiline = false;
+            renderOrderData.Name = "renderOrderData";
+            renderOrderData.ReadOnly = false;
+            renderOrderData.Size = new Size(264, 44);
+            renderOrderData.TabIndex = 8;
+            renderOrderData.WordWrap = true;
+            // 
             // SchemaDefinition
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(584, 669);
+            ClientSize = new Size(584, 729);
             Controls.Add(schemaLayout);
             Name = "SchemaDefinition";
             Text = "SchemaDefinition";
@@ -469,6 +579,9 @@
             ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
+            schemaNodeLayout.ResumeLayout(false);
+            schemaNodeLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -504,5 +617,12 @@
         private DataGridViewTextBoxColumn FileNameColumn;
         private TableLayoutPanel nodeLayout;
         private ToolStripButton documentBuildCommand;
+        private ToolStrip schemaNodeMenu;
+        private Controls.ComboBoxData objectScopeData;
+        private Controls.TextBoxData textBoxData1;
+        private Controls.TextBoxData nodeNameData;
+        private Controls.ComboBoxData renderValueAsData;
+        private Controls.TextBoxData renderOrderData;
+        private BindingSource bindingNode;
     }
 }

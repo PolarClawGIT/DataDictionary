@@ -94,7 +94,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 RenderValueAsList.Load(nodeRenderAsData);
                 formBinding.NodeData.AddBinding(nodeRenderAsData, e => e.RenderValueAs);
-                formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.NodeOrder);
+                formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.RenderOrder);
 
                 //formBinding.NodeData.AddBinding(isObjectValueData, e => e.IsObjectValue);
                 //formBinding.NodeData.AddBinding(isPropertyValueData, e => e.IsPropertyValue);
@@ -182,7 +182,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (SchemaNodeValue item in
                 formBinding.NodeData.
-                OrderBy(o => o.NodeOrder).
+                OrderBy(o => o.RenderOrder).
                 ThenBy(o => o.NodeName ?? String.Empty))
             {
                 TreeNode newNode = new TreeNode(item.NodeName ?? "(no node name)")

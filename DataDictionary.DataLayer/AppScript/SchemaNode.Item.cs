@@ -9,17 +9,17 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Base SchemaNode (common to sub-types)
     /// </summary>
-    public interface ISchemaNodeBaseValue
+    public interface ISchemaNodeObject: ISchemaNodeObjectName
     {
         /// <summary>
-        /// Title of the Scripting Schema (aka Name of the Schema)
+        /// Name of the Node as Rendered
         /// </summary>
         String? NodeName { get; }
 
         /// <summary>
         /// Order that the Node appears in.
         /// </summary>
-        Int32? NodeOrder { get; }
+        Int32? RenderOrder { get; }
 
         /// <summary>
         /// How the Value of the Node is to be rendered.
@@ -31,7 +31,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting Fixed Value SchemaNode (sub-type)
     /// </summary>
     [Obsolete("Not being supported/needed")]
-    public interface ISchemaNodeFixedValue : ISchemaNodeBaseValue
+    public interface ISchemaNodeFixedValue : ISchemaNodeObject
     {
         /// <summary>
         /// Render the value as a fixed value instead of a Object drive value.
@@ -39,41 +39,12 @@ namespace DataDictionary.DataLayer.AppScript
         String? FixedValue { get; }
     }
 
-    /// <summary>
-    /// Interface for the Scripting Object Scope Value SchemaNode
-    /// </summary>
-    /// <remarks>Use ISchemaNodeObjectValue or ISchemaNodePropertyValue</remarks>
-    public interface ISchemaNodeObjectScopeValue : ISchemaNodeBaseValue
-    {
-        /// <summary>
-        /// Object Scope of the item to be rendered.
-        /// </summary>
-        ScopeType ObjectScope { get; }
-    }
-
-    /// <summary>
-    /// Interface for the Scripting Object Value SchemaNode
-    /// </summary>
-    public interface ISchemaNodeObjectValue : ISchemaNodeObjectScopeValue
-    {
-        /// <summary>
-        /// The Property within the Object to render. (not fixed value)
-        /// </summary>
-        String? ObjectProperty { get; }
-    }
-
-    /// <summary>
-    /// Interface for the Scripting Property Value SchemaNode (sub-type)
-    /// </summary>
-    [Obsolete("Not being supported/needed")]
-    public interface ISchemaNodePropertyValue : ISchemaNodeObjectScopeValue, IPropertyKey
-    { }
 
     /// <summary>
     /// Interface for the Scripting SchemaNode (super-type)
     /// </summary>
-    public interface ISchemaNodeItem : ISchemaNodeKey, ISchemaDefinitionKey, ITemplateKey,
-        ISchemaNodeBaseValue, ISchemaNodeObjectValue
+    public interface ISchemaNodeItem : ISchemaNodeKey, ISchemaNodeKeyName, ITemplateKey,
+        ISchemaNodeObject//, ISchemaNodeObjectValue
     { }
 
     /// <summary>
@@ -111,10 +82,10 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public virtual Int32? NodeOrder
+        public virtual Int32? RenderOrder
         {
-            get { return GetValue<Int32>(nameof(NodeOrder)); }
-            set { SetValue(nameof(NodeOrder), value); }
+            get { return GetValue<Int32>(nameof(RenderOrder)); }
+            set { SetValue(nameof(RenderOrder), value); }
         }
 
         /// <inheritdoc/>
@@ -183,7 +154,7 @@ namespace DataDictionary.DataLayer.AppScript
         {
             if (NodeId is null) { NodeId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(NodeName)) { NodeName = "(new Node)"; }
-            NodeOrder = 0;
+            RenderOrder = 0;
 
             Temporal = new TemporalItem()
             {
@@ -208,7 +179,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(NodeOrder), typeof(Int32)){ AllowDBNull = true},
+            new DataColumn(nameof(RenderOrder), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectScope), typeof(String)){ AllowDBNull = true},

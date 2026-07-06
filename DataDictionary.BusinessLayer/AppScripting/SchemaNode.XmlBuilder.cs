@@ -23,15 +23,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public override Int32? NodeOrder
+        public override Int32? RenderOrder
         {
-            get { return baseValue.NodeOrder; }
+            get { return baseValue.RenderOrder; }
             set
             {
-                base.NodeOrder = value;
+                base.RenderOrder = value;
 
                 if (baseValue is not null)
-                { baseValue.NodeOrder = base.NodeOrder; }
+                { baseValue.RenderOrder = base.RenderOrder; }
             }
         }
 

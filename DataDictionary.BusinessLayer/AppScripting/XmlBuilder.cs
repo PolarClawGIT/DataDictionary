@@ -14,12 +14,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Definition to Build an Xml Element
     /// </summary>
-    public partial class XmlBuilder : ISchemaNodeObjectValue
+    /// <remarks>Does not support Binding</remarks>
+    public partial class XmlBuilder : IXmlBuilderIndex, ISchemaNodeObject
     {
         /// <summary>
         /// Path to the Object to be Rendered. This is normally a Property of the Object.
         /// </summary>
-        public virtual PathIndex BuilderPath { get; set; }
+        public virtual XmlBuilderIndex BuilderPath { get; set; }
 
         /// <inheritdoc/>
         public virtual ScopeType ObjectScope
@@ -28,11 +29,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             protected set
             {
                 field = value;
-                List<String> path = PathIndex.Parse(field.GetName());
-                if (!String.IsNullOrWhiteSpace(ObjectProperty))
-                { path.Add(ObjectProperty); }
-
-                BuilderPath = new PathIndex(path);
+                BuilderPath = new XmlBuilderIndex(field, ObjectProperty);
             }
         }
 
@@ -43,11 +40,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             protected set
             {
                 field = value;
-                List<String> path = PathIndex.Parse(ObjectScope.GetName());
-                if (!String.IsNullOrWhiteSpace(value))
-                { path.Add(value); }
-
-                BuilderPath = new PathIndex(path);
+                BuilderPath = new XmlBuilderIndex(ObjectScope, field);
             }
         }
 
@@ -58,7 +51,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 if(String.IsNullOrWhiteSpace(field))
                 {
-                    String value = String.Concat(BuilderPath.Member.Where(c => !Char.IsWhiteSpace(c)));
+                    String value = String.Concat(((PathIndex)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
                     return value;
                 }
@@ -75,20 +68,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     value = XmlConvert.EncodeName(value);
 
                     // compare this to the ObjectPath
-                    String path = String.Concat(BuilderPath.Member.Where(c => !Char.IsWhiteSpace(c)));
+                    String path = String.Concat(((PathIndex)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
                     path = XmlConvert.EncodeName(value);
 
                     if (value == path) // Flag get to use the Member name.
                     { field = String.Empty; }
                     else { field = value; }
                 }
-
-                //this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
             }
         }
 
         /// <inheritdoc/>
-        public virtual Int32? NodeOrder { get; set; }
+        public virtual Int32? RenderOrder { get; set; }
 
         /// <inheritdoc/>
         public virtual NodeRenderAsType RenderValueAs { get; set; }
@@ -105,7 +96,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public XmlBuilder(ScopeType scope) : base()
         {
             ObjectScope = scope;
-            BuilderPath = new PathIndex(PathIndex.Parse(scope.GetName()));
+            BuilderPath = new XmlBuilderIndex(scope);
             RenderValueAs = NodeRenderAsType.Element;
             NodeName = String.Empty;
 
@@ -118,7 +109,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="source"></param>
         public XmlBuilder(XmlBuilder source) : this(source.ObjectScope)
         {
-            BuilderPath = new PathIndex(source.BuilderPath);
+            BuilderPath = new XmlBuilderIndex(source);
             RenderValueAs = source.RenderValueAs;
             NodeName = source.NodeName;
             GetValue = source.GetValue;
@@ -180,11 +171,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                         return new XElement(NodeName, XElement.Parse(nodeValue));
                     }
-                    catch (Exception fragementEx)
+                    catch (Exception fragmentEx)
                     {
-                        fragementEx.Data.Add(nameof(NodeName), NodeName);
-                        fragementEx.Data.Add(nameof(nodeValue), nodeValue);
-                        fragementEx.Data.Add(nameof(RenderValueAs), RenderValueAs.ToString());
+                        fragmentEx.Data.Add(nameof(NodeName), NodeName);
+                        fragmentEx.Data.Add(nameof(nodeValue), nodeValue);
+                        fragmentEx.Data.Add(nameof(RenderValueAs), RenderValueAs.ToString());
                         throw;
                     }
                 case NodeRenderAsType.AttributeText:

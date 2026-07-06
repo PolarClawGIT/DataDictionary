@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="property"></param>
         private XmlBuilder(ScopeType scope, IPropertyValue property) : this(scope)
         {
-            BuilderPath = new PathIndex(property.PropertyTitle).Merge(BuilderPath);
+            BuilderPath = new XmlBuilderIndex(scope, property.PropertyTitle);
             RenderValueAs = NodeRenderAsType.ElementText;
             GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
         }
