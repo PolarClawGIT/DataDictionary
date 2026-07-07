@@ -158,17 +158,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             return HashCode.Combine(
                 ObjectScope.GetName().GetHashCode(KeyExtension.CompareString),
-                (ObjectProperty??String.Empty).GetHashCode(KeyExtension.CompareString));
+                (ObjectProperty ?? String.Empty).GetHashCode(KeyExtension.CompareString));
         }
         #endregion
+
         /// <inheritdoc/>
         public override String ToString()
-        {
-            String result = ObjectScope.GetName();
-            if (!String.IsNullOrWhiteSpace(ObjectProperty))
-            { result = String.Concat(result, ".", ObjectProperty); }
-
-            return result;
-        }
+        { return MemberFullPath; }
     }
 }

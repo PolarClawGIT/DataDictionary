@@ -183,6 +183,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Boolean {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Boolean", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Class {
             get {
                 object obj = ResourceManager.GetObject("Icon_Class", resourceCulture);
@@ -453,6 +463,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Numeric {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Numeric", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Parameter {
             get {
                 object obj = ResourceManager.GetObject("Icon_Parameter", resourceCulture);
@@ -656,6 +676,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_StatusOk {
             get {
                 object obj = ResourceManager.GetObject("Icon_StatusOk", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_String {
+            get {
+                object obj = ResourceManager.GetObject("Icon_String", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

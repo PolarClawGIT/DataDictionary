@@ -7,7 +7,7 @@ namespace DataDictionary.Main.Enumerations
     {
         static Dictionary<ScopeType, Icon> scopeIconMap = new Dictionary<ScopeType, Icon>()
         {   // Most images are set using the Resource file.
-            // There is an alteritive using: SystemIcons.GetStockIcon(StockIconId)
+            // There is an alterative using: SystemIcons.GetStockIcon(StockIconId)
             // This allows the application to use icon for the current version of Windows.
             // The number of icons is limited and does not include things like copy/paste.
             // Other images are simply blank.

@@ -4,6 +4,7 @@ using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -44,6 +45,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
+        /// <summary>
+        /// Source Object Type, if any. Only applies to Properties.
+        /// </summary>
+        public virtual Type? ObjectType { get; init; } = null;
+
         /// <inheritdoc/>
         public virtual String NodeName
         {
@@ -83,6 +89,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public virtual NodeRenderAsType RenderValueAs { get; set; }
+
+        /// <summary>
+        /// The XmlValueType that this node is handled as.
+        /// </summary>
+        public virtual XmlValueType NodeType { get; init; } = XmlValueType.None;
 
         /// <summary>
         /// Function that returns the NodeValue.

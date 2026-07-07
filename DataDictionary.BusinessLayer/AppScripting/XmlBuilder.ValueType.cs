@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -14,9 +13,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="property"></param>
         private XmlBuilder(ScopeType scope, PropertyInfo property) : this(scope)
         {
+            ObjectType = property.PropertyType;
             BuilderPath = new XmlBuilderIndex(scope, property.Name);
             RenderValueAs = NodeRenderAsType.ElementText;
             GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
+
+            if (ObjectType.TryConvert(out XmlValueType? value))
+            { NodeType = value ?? XmlValueType.None; }
         }
 
         /// <summary>

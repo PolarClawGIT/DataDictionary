@@ -55,6 +55,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 {
                     XmlBuilder child = new XmlBuilder(ObjectScope, item);
                     child.ObjectProperty = item.PropertyTitle;
+                    
                     Children.Add(new PropertyIndex(item), child);
                 }
             }

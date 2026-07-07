@@ -4,18 +4,24 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using DataDictionary.Main.Properties;
+using System.Xml.Schema;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record class XmlBuilderList
     {
-        public XmlBuilder ValueMember { get; init; }
-        public String DisplayMember { get { return ValueMember.BuilderPath.MemberFullPath; } }
-        static readonly String fieldImageName = "Field";
-        static readonly Image fieldImage = Resources.Icon_Field.GetSmallImage();
+        public XmlBuilderIndex ValueMember { get; init; }
+        public String DisplayMember { get; init; }
+
+        //TODO: Replace with Type specific icons.
+        //static readonly String fieldImageName = "Field";
+        //static readonly Image fieldImage = Resources.Icon_Field.GetSmallImage();
 
         XmlBuilderList(XmlBuilder builder) : base()
-        { ValueMember = builder; }
+        {
+            ValueMember = builder.BuilderPath;
+            DisplayMember = builder.BuilderPath.MemberFullPath;
+        }
 
         public static void Load(ComboBoxData control, IEnumerable<XmlBuilder> builders)
         {
@@ -24,12 +30,24 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.DataSource = BuildList(builders);
         }
 
+        static BindingList<XmlBuilderList> BuildList(IEnumerable<XmlBuilder> builders)
+        {
+            BindingList<XmlBuilderList> result = new BindingList<XmlBuilderList>();
+
+            foreach (XmlBuilder item in builders.OrderBy(o => o.BuilderPath))
+            { result.Add(new XmlBuilderList(item)); }
+
+            return result;
+        }
+
         public static void Load(TreeView control, IEnumerable<XmlBuilder> builders)
         {
+            //TODO: The tree is producing two nodes and not correctly layed out.
+
             control.BeginUpdate();
             control.ImageList =  new ImageList();
             control.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
-            control.ImageList.Images.Add(fieldImageName, fieldImage);
+            control.ImageList.AddImages(Enum.GetValues<XmlValueType>().ToList());
 
             foreach (XmlBuilder item in builders.
                 Where(w => !builders.Any(a => a.BuilderPath.Equals(w.BuilderPath.ParentPath))).
@@ -62,32 +80,30 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         private static TreeNode CreateNode(XmlBuilder item)
         {
             TreeNode node = new TreeNode(item.BuilderPath.Member);
-            node.Tag = item;
+            node.Tag = item.BuilderPath;
 
-            //TODO: Consider using type to drive the icon?
-            // Would need a new set of Icons for each major type. String, Number, Enum, Guid
             if (String.IsNullOrEmpty(item.ObjectProperty))
             {
-                node.ImageKey = item.ObjectScope.GetEnumeration().Name;
-                node.SelectedImageKey = item.ObjectScope.GetEnumeration().Name;
+                node.ImageKey = item.ObjectScope.GetName();
+                node.SelectedImageKey = item.ObjectScope.GetName();
             }
             else
             {
-                node.ImageKey = fieldImageName;
-                node.SelectedImageKey = fieldImageName;
+                if(item.NodeType.TryGetImage(out Image? _))
+                {
+                    node.ImageKey = item.NodeType.GetName();
+                    node.SelectedImageKey = item.NodeType.GetName();
+                }
+                else
+                {
+                    node.ImageKey = XmlValueType.None.GetName();
+                    node.SelectedImageKey = XmlValueType.None.GetName();
+                }
             }
            
             return node;
         }
 
-        static BindingList<XmlBuilderList> BuildList(IEnumerable<XmlBuilder> builders)
-        {
-            BindingList<XmlBuilderList> result = new BindingList<XmlBuilderList>();
 
-            foreach (XmlBuilder item in builders.OrderBy(o => o.BuilderPath))
-            { result.Add(new XmlBuilderList(item)); }
-
-            return result;
-        }
     }
 }
