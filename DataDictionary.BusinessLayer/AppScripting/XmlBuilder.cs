@@ -1,11 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Schema;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -44,11 +41,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 BuilderPath = new XmlBuilderIndex(ObjectScope, field);
             }
         }
-
-        /// <summary>
-        /// Source Object Type, if any. Only applies to Properties.
-        /// </summary>
-        public virtual Type? ObjectType { get; init; } = null;
 
         /// <inheritdoc/>
         public virtual String NodeName

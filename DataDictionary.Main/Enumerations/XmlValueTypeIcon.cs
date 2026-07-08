@@ -20,8 +20,9 @@ namespace DataDictionary.Main.Enumerations
             {XmlValueType.Float, Resources.Icon_Numeric },
             {XmlValueType.Double, Resources.Icon_Numeric },
             {XmlValueType.DateTime, Resources.Icon_Field },
+            {XmlValueType.Guid, Resources.Icon_Field },
             {XmlValueType.Class, Resources.Icon_Class },
-            {XmlValueType.StringEnum, Resources.Icon_Field },
+            {XmlValueType.Enum, Resources.Icon_Field },
         };
 
         /// <summary>

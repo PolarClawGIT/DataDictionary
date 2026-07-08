@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Xml.Schema;
 
 namespace DataDictionary.Resource.Enumerations
@@ -16,16 +17,22 @@ namespace DataDictionary.Resource.Enumerations
     class XmlTypeEnumeration : Enumeration<XmlValueType, XmlTypeEnumeration>, IXmlTypeEnumeration
     {
         /// <summary>
-        /// The Data Type native to .Net
+        /// The equivalent XmlTypeCode that represents the W3C XML Schema type.
         /// </summary>
-        public Type? NetType { get; init; }
-
+        /// <remarks>None represents not determined.</remarks>
         public XmlTypeCode XmlType { get; init; } = XmlTypeCode.None;
 
-        XmlTypeEnumeration(XmlValueType value, Type? netType = null, XmlTypeCode xmlType = XmlTypeCode.None) : base(value)
+        /// <summary>
+        /// A function used by the TryConvert to determine if the Property Info matches the given type
+        /// </summary>
+        public Func<PropertyInfo, Boolean> IsOfType { get; init; } = (info) => false;
+
+        XmlTypeEnumeration(XmlValueType value, XmlTypeCode xmlType = XmlTypeCode.None, Func<PropertyInfo, Boolean>? isOfType = null) : base(value)
         {
-            NetType = netType;
             XmlType = xmlType;
+
+            if (isOfType is not null)
+            { IsOfType = isOfType; }
         }
 
         static XmlTypeEnumeration()
@@ -33,18 +40,67 @@ namespace DataDictionary.Resource.Enumerations
             List<XmlTypeEnumeration> data = new List<XmlTypeEnumeration>()
             {
                 new XmlTypeEnumeration(XmlValueType.None),
-                new XmlTypeEnumeration(XmlValueType.String, typeof(string), XmlTypeCode.String),
-                new XmlTypeEnumeration(XmlValueType.Integer, typeof(int), XmlTypeCode.Integer),
-                new XmlTypeEnumeration(XmlValueType.Long, typeof(long), XmlTypeCode.Long),
-                new XmlTypeEnumeration(XmlValueType.Boolean, typeof(bool), XmlTypeCode.Boolean),
-                new XmlTypeEnumeration(XmlValueType.Decimal, typeof(decimal), XmlTypeCode.Decimal),
-                new XmlTypeEnumeration(XmlValueType.Float, typeof(float), XmlTypeCode.Float),
-                new XmlTypeEnumeration(XmlValueType.Double, typeof(double), XmlTypeCode.Double),
-                new XmlTypeEnumeration(XmlValueType.DateTime, typeof(DateTime), XmlTypeCode.DateTime),
+                new XmlTypeEnumeration(XmlValueType.String, XmlTypeCode.String, (p) => p.PropertyType == typeof(string)),
+                new XmlTypeEnumeration(XmlValueType.Integer, XmlTypeCode.Integer,
+                    (p) => p.PropertyType == typeof(Int16)
+                        || p.PropertyType == typeof(Nullable<Int16>)
+                        || p.PropertyType == typeof(Int32)
+                        || p.PropertyType == typeof(Nullable<Int32>)
+                        || p.PropertyType == typeof(Int64)
+                        || p.PropertyType == typeof(Nullable<Int64>)
+                        || p.PropertyType == typeof(Int128)
+                        || p.PropertyType == typeof(Nullable<Int128>)
+                        || p.PropertyType == typeof(Byte)
+                        || p.PropertyType == typeof(Nullable<Byte>)
+                        || p.PropertyType == typeof(UInt16)
+                        || p.PropertyType == typeof(Nullable<UInt16>)
+                        || p.PropertyType == typeof(UInt32)
+                        || p.PropertyType == typeof(Nullable<UInt32>)
+                        || p.PropertyType == typeof(UInt64)
+                        || p.PropertyType == typeof(Nullable<UInt64>)
+                        || p.PropertyType == typeof(UInt128)
+                        || p.PropertyType == typeof(Nullable<UInt128>)
+                        || p.PropertyType == typeof(SByte)
+                        || p.PropertyType == typeof(Nullable<SByte>)),
+                new XmlTypeEnumeration(XmlValueType.Long, XmlTypeCode.Long,
+                    (p) => p.PropertyType == typeof(long)
+                        || p.PropertyType == typeof(Nullable<long>)),
+                new XmlTypeEnumeration(XmlValueType.Boolean, XmlTypeCode.Boolean,
+                    (p) => p.PropertyType == typeof(bool)
+                        || p.PropertyType == typeof(Nullable<bool>)),
+                new XmlTypeEnumeration(XmlValueType.Decimal, XmlTypeCode.Decimal,
+                    (p) => p.PropertyType == typeof(decimal)
+                        || p.PropertyType == typeof(Nullable<decimal>)),
+                new XmlTypeEnumeration(XmlValueType.Float, XmlTypeCode.Float,
+                    (p) => p.PropertyType == typeof(float)
+                        || p.PropertyType == typeof(Nullable<float>)),
+                new XmlTypeEnumeration(XmlValueType.Double, XmlTypeCode.Double,
+                    (p) => p.PropertyType == typeof(float)
+                        || p.PropertyType == typeof(Nullable<float>)),
+                new XmlTypeEnumeration(XmlValueType.DateTime, XmlTypeCode.DateTime,
+                    (p) => p.PropertyType == typeof(DateTime)
+                        || p.PropertyType == typeof(Nullable<DateTime>)),
+
+                // Does not translate directly to a XmlTypeCode
+                new XmlTypeEnumeration(XmlValueType.Guid, default,
+                    (p) => p.PropertyType == typeof(Guid)
+                        || p.PropertyType == typeof(Nullable<Guid>)),
+                new XmlTypeEnumeration(XmlValueType.Class, default,
+                    (p) => (p.PropertyType.IsClass || p.PropertyType.IsInterface)
+                        && p.PropertyType != typeof(string)),
+                new XmlTypeEnumeration(XmlValueType.Enum, default,
+                    (p) => p.PropertyType.IsEnum),
             };
 
             BuildDictionary(data);
+
+            Boolean tester(PropertyInfo info)
+            {   // Used to test the IsOfType logic
+                return info.PropertyType.IsClass;
+            }
         }
+
+
 
         /// <summary>
         /// Try to convert the .Net Type to an XmlValueType
@@ -52,13 +108,22 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="type"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static Boolean TryConvert(Type type, [NotNullWhen(true)] out XmlValueType? result)
+        public static Boolean TryConvert(PropertyInfo type, [NotNullWhen(true)] out XmlValueType? result)
         {
-            var matched = EnumerationValues.Where(w => w.Value.NetType == type).ToList();
+            var matched = EnumerationValues.Where(w => w.Value.IsOfType(type)).ToList();
 
-            if(matched.Count > 0 && matched.First().Key is XmlValueType value)
+            if (matched.Count > 0 && matched.First().Key is XmlValueType value)
             { result = value; return true; }
-            else { result = null; return false; }
+            else
+            {
+#if DEBUG
+                Exception ex = new InvalidOperationException("Could not determine Type");
+                ex.Data.Add(nameof(type.PropertyType), type.PropertyType.Name);
+                throw ex;
+#else
+                result = null; return false; 
+#endif
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
     public enum XmlValueType
     {
         /// <inheritdoc cref="System.Xml.Schema.XmlTypeCode.None" />
+        /// <remarks>Also represents Null or does not apply</remarks>
         None,
 
         /// <inheritdoc cref="System.Xml.Schema.XmlTypeCode.String" />
@@ -36,7 +37,12 @@
         // ** items not in System.Xml.Schema.XmlTypeCode **
 
         /// <summary>
-        /// Class Type. translates approximately to a System.Xml.Schema.XmlTypeCode.Element
+        /// Guid Type. No System.Xml.Schema.XmlTypeCode equivalent.
+        /// </summary>
+        Guid,
+
+        /// <summary>
+        /// Class Type. Translates approximately to a System.Xml.Schema.XmlTypeCode.Element
         /// </summary>
         Class,
 
@@ -44,10 +50,5 @@
         /// Enum type without a specific representation.
         /// </summary>
         Enum,
-
-        /// <summary>
-        /// Enum type that represents strings.
-        /// </summary>
-        StringEnum
     }
 }

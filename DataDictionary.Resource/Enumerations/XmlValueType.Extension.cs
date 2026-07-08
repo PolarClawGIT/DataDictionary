@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Xml.Schema;
 
 namespace DataDictionary.Resource.Enumerations
@@ -35,7 +36,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="type"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static Boolean TryConvert(this Type type, [NotNullWhen(true)] out XmlValueType? result)
+        public static Boolean TryConvert(this PropertyInfo type, [NotNullWhen(true)] out XmlValueType? result)
         {
             if (XmlTypeEnumeration.TryConvert(type, out XmlValueType? value))
             { result = value; return true; }
