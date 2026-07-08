@@ -253,6 +253,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_DateTime {
+            get {
+                object obj = ResourceManager.GetObject("Icon_DateTime", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Dependancy {
             get {
                 object obj = ResourceManager.GetObject("Icon_Dependancy", resourceCulture);
@@ -296,6 +306,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_Entities {
             get {
                 object obj = ResourceManager.GetObject("Icon_Entities", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_Enumeration {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Enumeration", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -796,6 +816,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_TreeView {
             get {
                 object obj = ResourceManager.GetObject("Icon_TreeView", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_UniqueIdentifier {
+            get {
+                object obj = ResourceManager.GetObject("Icon_UniqueIdentifier", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

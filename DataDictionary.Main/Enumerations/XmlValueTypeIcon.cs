@@ -19,10 +19,10 @@ namespace DataDictionary.Main.Enumerations
             {XmlValueType.Decimal, Resources.Icon_Numeric },
             {XmlValueType.Float, Resources.Icon_Numeric },
             {XmlValueType.Double, Resources.Icon_Numeric },
-            {XmlValueType.DateTime, Resources.Icon_Field },
-            {XmlValueType.Guid, Resources.Icon_Field },
+            {XmlValueType.DateTime, Resources.Icon_DateTime },
+            {XmlValueType.Guid, Resources.Icon_UniqueIdentifier },
             {XmlValueType.Class, Resources.Icon_Class },
-            {XmlValueType.Enum, Resources.Icon_Field },
+            {XmlValueType.Enum, Resources.Icon_Enumeration },
         };
 
         /// <summary>
