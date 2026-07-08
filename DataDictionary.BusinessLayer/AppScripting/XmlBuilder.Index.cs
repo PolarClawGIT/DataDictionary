@@ -19,7 +19,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Implementation for the XmlBuilder Key
     /// </summary>
     public class XmlBuilderIndex : IXmlBuilderIndex, IPathItem,
-        IKeyComparable<XmlBuilderIndex>, IKeyComparable<IXmlBuilderIndex>
+        IKeyComparable<XmlBuilderIndex>, IKeyComparable<IXmlBuilderIndex>,
+        IKeyEquality<PathIndex>
     {
         /// <inheritdoc/>
         public ScopeType ObjectScope { get; init; } = ScopeType.Null;
@@ -106,6 +107,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public Boolean Equals(IXmlBuilderIndex? other)
         { return other is IXmlBuilderIndex value && Equals(new XmlBuilderIndex(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(PathIndex? other)
+        { return ((PathIndex)this).Equals(other); }
 
         /// <inheritdoc/>
         public Int32 CompareTo(XmlBuilderIndex? other)
