@@ -543,6 +543,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_RadioButtonList {
+            get {
+                object obj = ResourceManager.GetObject("Icon_RadioButtonList", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Relationship {
             get {
                 object obj = ResourceManager.GetObject("Icon_Relationship", resourceCulture);

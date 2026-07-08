@@ -40,7 +40,8 @@ namespace DataDictionary.Resource.Enumerations
             List<XmlTypeEnumeration> data = new List<XmlTypeEnumeration>()
             {
                 new XmlTypeEnumeration(XmlValueType.None),
-                new XmlTypeEnumeration(XmlValueType.String, XmlTypeCode.String, (p) => p.PropertyType == typeof(string)),
+                new XmlTypeEnumeration(XmlValueType.String, XmlTypeCode.String,
+                    (p) => p.PropertyType == typeof(string)),
                 new XmlTypeEnumeration(XmlValueType.Integer, XmlTypeCode.Integer,
                     (p) => p.PropertyType == typeof(Int16)
                         || p.PropertyType == typeof(Nullable<Int16>)
@@ -90,6 +91,11 @@ namespace DataDictionary.Resource.Enumerations
                         && p.PropertyType != typeof(string)),
                 new XmlTypeEnumeration(XmlValueType.Enum, default,
                     (p) => p.PropertyType.IsEnum),
+
+                // Cannot determine by Property Type, does not translate directly to XmlTypeCode.
+                new XmlTypeEnumeration(XmlValueType.Xml),
+                new XmlTypeEnumeration(XmlValueType.RichText),
+                new XmlTypeEnumeration(XmlValueType.List),
             };
 
             BuildDictionary(data);
@@ -124,6 +130,30 @@ namespace DataDictionary.Resource.Enumerations
                 result = null; return false; 
 #endif
             }
+        }
+
+        /// <summary>
+        /// Try to convert the DomainPropertyType to an XmlValueType
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryConvert(DomainPropertyType type, [NotNullWhen(true)] out XmlValueType? result)
+        {
+            switch (type)
+            {
+                case DomainPropertyType.Null: result = XmlValueType.None; break;
+                case DomainPropertyType.String: result = XmlValueType.String; break;
+                case DomainPropertyType.Integer: result = XmlValueType.Integer; break;
+                case DomainPropertyType.List: result = XmlValueType.List; break;
+                case DomainPropertyType.Xml: result = XmlValueType.Xml; break;
+                case DomainPropertyType.MS_ExtendedProperty: result = XmlValueType.String; break;
+                default: result = null; break;
+            }
+
+            if(result is null) { return false; }
+            else { return true; }
+
         }
     }
 }

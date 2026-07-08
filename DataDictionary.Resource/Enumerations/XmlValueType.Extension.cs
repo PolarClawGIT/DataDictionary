@@ -44,6 +44,19 @@ namespace DataDictionary.Resource.Enumerations
         }
 
         /// <summary>
+        /// Try to get the XML Type Code from the DomainPropertyType.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryConvert(this DomainPropertyType type, [NotNullWhen(true)] out XmlValueType? result)
+        {
+            if (XmlTypeEnumeration.TryConvert(type, out XmlValueType? value))
+            { result = value; return true; }
+            else { result = null; return false; }
+        }
+
+        /// <summary>
         /// Gets the Name of the XmlType Enum.
         /// </summary>
         /// <param name="value"></param>

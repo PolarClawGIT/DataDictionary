@@ -23,6 +23,9 @@ namespace DataDictionary.Main.Enumerations
             {XmlValueType.Guid, Resources.Icon_UniqueIdentifier },
             {XmlValueType.Class, Resources.Icon_Class },
             {XmlValueType.Enum, Resources.Icon_Enumeration },
+            {XmlValueType.Xml, Resources.Icon_XMLElement },
+            {XmlValueType.RichText, Resources.Icon_RichTextBox },
+            {XmlValueType.List, Resources.Icon_RadioButtonList },
         };
 
         /// <summary>

@@ -50,5 +50,20 @@
         /// Enum type without a specific representation.
         /// </summary>
         Enum,
+
+        /// <summary>
+        /// An XML Fragment.
+        /// </summary>
+        Xml,
+
+        /// <summary>
+        /// String encoded as Rich Text
+        /// </summary>
+        RichText,
+
+        /// <summary>
+        /// Some type of list. Such as a String as a delimited list of values or List{T}.
+        /// </summary>
+        List
     }
 }

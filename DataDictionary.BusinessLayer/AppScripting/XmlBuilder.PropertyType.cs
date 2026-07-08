@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 
@@ -17,6 +16,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
             BuilderPath = new XmlBuilderIndex(scope, property.PropertyTitle);
             RenderValueAs = NodeRenderAsType.ElementText;
             GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
+
+            if (property.PropertyType.TryConvert(out XmlValueType? value))
+            { NodeType = value ?? XmlValueType.None; }
+
         }
 
         /// <summary>
