@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Schema;
 
 namespace DataDictionary.Resource.Enumerations
@@ -8,12 +9,14 @@ namespace DataDictionary.Resource.Enumerations
     /// Interface for a XmlType Enumeration.
     /// </summary>
     /// <remarks>Support only the W3C XML Schema types.</remarks>
+    [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
     public interface IXmlTypeEnumeration : IEnumeration<XmlValueType>
     { }
 
     /// <summary>
     /// Enumeration support class for System.Xml.Schema.XmlType
     /// </summary>
+    [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
     class XmlTypeEnumeration : Enumeration<XmlValueType, XmlTypeEnumeration>, IXmlTypeEnumeration
     {
         /// <summary>
@@ -118,6 +121,9 @@ namespace DataDictionary.Resource.Enumerations
         {
             var matched = EnumerationValues.Where(w => w.Value.IsOfType(type)).ToList();
 
+
+            //var x = GetXmlTypeCode(type);
+
             if (matched.Count > 0 && matched.First().Key is XmlValueType value)
             { result = value; return true; }
             else
@@ -130,6 +136,24 @@ namespace DataDictionary.Resource.Enumerations
                 result = null; return false; 
 #endif
             }
+        }
+
+        public static XmlTypeCode GetXmlTypeCode(PropertyInfo property)
+        {
+            // This code was gotten from Google AI search result.
+            // It does not actually work as even a String return XmlTypeCode.None.
+
+            // 1. Get the underlying CLR type of the property
+            Type propertyType = property.PropertyType;
+
+
+
+            // 2. Query the built-in simple type mapping for this type
+            XmlSchemaDatatype? datatype = XmlSchemaType.GetBuiltInSimpleType(new XmlQualifiedName(propertyType.Name, "http://w3.org"))?.Datatype;
+
+
+            // 3. Return the TypeCode, or None if it's a complex/unmapped type
+            return datatype?.TypeCode ?? XmlTypeCode.None;
         }
 
         /// <summary>
@@ -151,7 +175,7 @@ namespace DataDictionary.Resource.Enumerations
                 default: result = null; break;
             }
 
-            if(result is null) { return false; }
+            if (result is null) { return false; }
             else { return true; }
 
         }

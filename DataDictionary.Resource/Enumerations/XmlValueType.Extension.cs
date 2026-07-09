@@ -7,6 +7,7 @@ namespace DataDictionary.Resource.Enumerations
     /// <summary>
     /// Extensions on XmlType Enum. 
     /// </summary>
+    [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
     public static class XmlTypeExtension
     {
         /// <summary>
@@ -14,6 +15,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
         public static IXmlTypeEnumeration GetEnumeration(this XmlValueType value)
         { return XmlTypeEnumeration.GetValue(value); }
 
@@ -23,6 +25,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <param name="result"></param>
         /// <returns></returns>
+        [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
         public static Boolean TryParse(this String? value, [NotNullWhen(true)] out XmlValueType? result)
         {
             if (XmlTypeEnumeration.TryParse(value, null, out XmlTypeEnumeration? enumeration))
@@ -36,6 +39,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="type"></param>
         /// <param name="result"></param>
         /// <returns></returns>
+        [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
         public static Boolean TryConvert(this PropertyInfo type, [NotNullWhen(true)] out XmlValueType? result)
         {
             if (XmlTypeEnumeration.TryConvert(type, out XmlValueType? value))
@@ -49,6 +53,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="type"></param>
         /// <param name="result"></param>
         /// <returns></returns>
+        [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
         public static Boolean TryConvert(this DomainPropertyType type, [NotNullWhen(true)] out XmlValueType? result)
         {
             if (XmlTypeEnumeration.TryConvert(type, out XmlValueType? value))
@@ -61,6 +66,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        [Obsolete("Switch to XmlTypeCode and ObjectPropertyType")]
         public static String GetName(this XmlValueType value)
         {
             if (XmlTypeEnumeration.TryGetValue(value, out XmlTypeEnumeration? type))
