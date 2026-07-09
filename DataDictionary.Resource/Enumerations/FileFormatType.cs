@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DataDictionary.Resource.Enumerations
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
     /// File Format (extensions) Support

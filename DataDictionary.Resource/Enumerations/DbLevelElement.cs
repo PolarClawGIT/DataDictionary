@@ -1,21 +1,61 @@
-﻿namespace DataDictionary.Resource.Enumerations;
-
-/// <summary>
-/// Interface for Level2 MS Extended Property Type.
-/// </summary>
-public interface IDbLevelElementType : IDbLevelObjectType
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// Level2 MS Extended Property Type.
+    /// Interface for Level2 MS Extended Property Type.
     /// </summary>
-    public DbLevelElementType ElementScope { get; }
-}
+    public interface IDbLevelElementType : IDbLevelObjectType
+    {
+        /// <summary>
+        /// Level2 MS Extended Property Type.
+        /// </summary>
+        public DbLevelElementType ElementScope { get; }
+    }
 
-public static class DbLevelElement
-{
-    public static DbLevelElementType GetDbLevel(String? value)
-    { return DbLevelElementEnumeration.Parse(value ?? String.Empty, null).Value; }
+    /// <summary>
+    /// Level2 MS Extended Property Types. These are Element Level.
+    /// Not all types are supported by the Application.
+    /// </summary>
+    /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
+    public enum DbLevelElementType
+    {
+        /// <summary>
+        /// Not defined, default value.
+        /// </summary>
+        Null,
 
-    public static String GetName(this DbLevelElementType value)
-    { return DbLevelElementEnumeration.GetValue(value).Name; }
+        /// <summary>
+        /// MS SQL Default.
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// MS SQL Column. Application Supported.
+        /// </summary>
+        Column,
+
+        /// <summary>
+        /// MS SQL Constraint.
+        /// </summary>
+        Constraint,
+
+        /// <summary>
+        /// MS SQL EventNotification.
+        /// </summary>
+        EventNotification,
+
+        /// <summary>
+        /// MS SQL Index.
+        /// </summary>
+        Index,
+
+        /// <summary>
+        /// MS SQL Parameter. Application Supported.
+        /// </summary>
+        Parameter,
+
+        /// <summary>
+        /// MS SQL Trigger.
+        /// </summary>
+        Trigger,
+    }
 }

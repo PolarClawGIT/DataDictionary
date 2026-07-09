@@ -1,7 +1,19 @@
-﻿namespace DataDictionary.Resource.Enumerations
+﻿// Place holder for file nesting purposes.
+namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// List of supported Table Types.
+    /// Interface for DomainPropertyType
+    /// </summary>
+    public interface IDomainPropertyType
+    {
+        /// <summary>
+        /// Domain Property Type for the Item.
+        /// </summary>
+        DomainPropertyType PropertyType { get; }
+    }
+
+    /// <summary>
+    /// List of supported Domain Properties.
     /// </summary>
     public enum DomainPropertyType
     {

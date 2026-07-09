@@ -1,6 +1,17 @@
 ﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
+    /// Interface for the Scope
+    /// </summary>
+    public interface IScopeType
+    {
+        /// <summary>
+        /// ScopeType for the Item.
+        /// </summary>
+        ScopeType Scope { get; }
+    }
+
+    /// <summary>
     /// List of Scope Types that are supported by the application.
     /// A Scope is used to define a NameSpace and what type of object that NameSpace represents.
     /// Database NameSpaces are represented by the fully qualified object name.
@@ -390,5 +401,4 @@
         ScriptingSchema,
 
     }
-
 }

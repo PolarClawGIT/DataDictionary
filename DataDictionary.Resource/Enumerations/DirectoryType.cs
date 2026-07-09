@@ -1,6 +1,17 @@
 ﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
+    /// Interface for TemplateDirectoryType
+    /// </summary>
+    public interface ITemplateDirectory
+    {
+        /// <summary>
+        /// Root Directory to place documents in (must be a supported Special Folder).
+        /// </summary>
+        DirectoryType RootDirectory { get; }
+    }
+
+    /// <summary>
     /// Supported Folders
     /// </summary>
     public enum DirectoryType

@@ -1,6 +1,17 @@
 ﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
+    /// Interface for Database MemberType Key.
+    /// </summary>
+    public interface ILibraryMemberType
+    {
+        /// <summary>
+        /// Type of Member (NameSpace, Type, Property, Field, ...)
+        /// </summary>
+        LibraryMemberType MemberType { get; }
+    }
+
+    /// <summary>
     /// List of supported .Net Library Types.
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/"/>
@@ -47,7 +58,4 @@
         Parameter,
 
     }
-
-
-
 }

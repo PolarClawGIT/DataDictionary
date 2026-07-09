@@ -25,5 +25,11 @@
             { result = enumeration.Value; return true; }
             else { result = DbLevelCatalogType.Null; return false; }
         }
+
+        public static DbLevelCatalogType GetDbLevel(String? value)
+        { return DbLevelCatalogEnumeration.Parse(value ?? String.Empty, null).Value; }
+
+        public static String GetName(this DbLevelCatalogType value)
+        { return DbLevelCatalogEnumeration.GetValue(value).Name; }
     }
 }
