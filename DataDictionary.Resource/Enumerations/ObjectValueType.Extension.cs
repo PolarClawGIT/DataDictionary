@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DataDictionary.Resource.Enumerations
 {
-    public static class ObjectPropertyTypeExtension
+    public static class ValueTypeExtension
     {
         /// <summary>
         /// Try to parse the String into a ObjectPropertyType enum.
@@ -12,11 +12,11 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static Boolean TryParse(this String? value, out ObjectPropertyType result)
+        public static Boolean TryParse(this String? value, out ObjectValueType result)
         {
-            if (ObjectPropertyTypeEnumeration.TryParse(value, null, out ObjectPropertyTypeEnumeration? enumeration))
+            if (ObjectValueTypeEnumeration.TryParse(value, null, out ObjectValueTypeEnumeration? enumeration))
             { result = enumeration.Value; return true; }
-            else { result = ObjectPropertyType.Null; return false; }
+            else { result = ObjectValueType.Null; return false; }
         }
 
         /// <summary>
@@ -24,9 +24,9 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static String GetName(this ObjectPropertyType value)
+        public static String GetName(this ObjectValueType value)
         {
-            if (ObjectPropertyTypeEnumeration.TryGetValue(value, out ObjectPropertyTypeEnumeration? result))
+            if (ObjectValueTypeEnumeration.TryGetValue(value, out ObjectValueTypeEnumeration? result))
             { return result.Name; }
             else { return String.Empty; }
         }

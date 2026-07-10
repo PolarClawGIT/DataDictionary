@@ -10,6 +10,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// List of XML Data Types.
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/dotnet/standard/data/xml/mapping-xml-data-types-to-clr-types"/>
+    [Obsolete ("Replace with xmltypecode", true)]
     public enum XmlDataType
     { // There may be an existing list but I could not find one.
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -64,6 +65,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Extension for dealing with XML Data Types
     /// </summary>
+    [Obsolete("Replace with xmltypecode", true)]
     public static class XmlDataTypeExtension
     {
         static Dictionary<XmlDataType, (String Name, Type NetType, Boolean IsSupported)> parseValues = new Dictionary<XmlDataType, (string Name, Type NetType, Boolean IsSupported)>()
@@ -119,6 +121,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        [Obsolete("Replace with xmltypecode", true)]
         public static (String Name, Type NetType, Boolean IsSupported)? ToCrossReference(this XmlDataType value)
         {
             if (parseValues.ContainsKey(value))

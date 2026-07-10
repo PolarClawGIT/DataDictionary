@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -16,10 +18,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             BuilderPath = new XmlBuilderIndex(scope, property.PropertyTitle);
             RenderValueAs = NodeRenderAsType.ElementText;
             GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
-
-            if (property.PropertyType.TryConvert(out XmlValueType? value))
-            { NodeType = value ?? XmlValueType.None; }
-
         }
 
         /// <summary>
@@ -42,6 +40,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         public class PropertyType: XmlBuilder
         {
+            //TODO: This is messy. How do I get rid of this? What value does it add?
+
             /// <summary>
             /// Child XML Builders of the Property
             /// </summary>
@@ -56,9 +56,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 foreach (PropertyValue item in properties)
                 {
-                    XmlBuilder child = new XmlBuilder(ObjectScope, item);
-                    child.ObjectProperty = item.PropertyTitle;
-                    
+                    XmlBuilder child = new XmlBuilder(ObjectScope, item)
+                    {
+                        ObjectProperty = item.PropertyTitle,
+                        RenderValueAs = (item.PropertyType is DomainPropertyType.Xml) ? NodeRenderAsType.ElementXML : NodeRenderAsType.ElementText,
+                        RenderType = XmlTypeCode.String,
+                        ObjectType = TryConvert(item, out ObjectValueType? objectValue) ? objectValue.Value : ObjectValueType.Null
+                    };
+
                     Children.Add(new PropertyIndex(item), child);
                 }
             }
@@ -91,6 +96,37 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 }
 
                 return result;
+            }
+
+            /// <summary>
+            /// Try to Convert the PropertyInfo into an ObjectValueType.
+            /// </summary>
+            /// <param name="type"></param>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public virtual Boolean TryConvert(PropertyValue type, [NotNullWhen(true)] out ObjectValueType? result)
+            {
+                result = null;
+
+                // I included but the .Net name and the C# name of the Type.
+                // This is mostly for clarity and to remind myself that these things are the same.
+
+                switch (type.PropertyType)
+                {
+                    case DomainPropertyType.Null: result = ObjectValueType.Null; break;
+                    case DomainPropertyType.String: result = ObjectValueType.String; break;
+                    case DomainPropertyType.Integer: result = ObjectValueType.Numeric; break;
+                    case DomainPropertyType.List: result = ObjectValueType.StringList; break;
+                    case DomainPropertyType.Xml: result = ObjectValueType.StringXML; break;
+                    case DomainPropertyType.MS_ExtendedProperty: result = ObjectValueType.String; break;
+                    default:
+                        break;
+                }
+
+                if (result is null)
+                { return false; }
+                else { return true; }
+
             }
         }
     }

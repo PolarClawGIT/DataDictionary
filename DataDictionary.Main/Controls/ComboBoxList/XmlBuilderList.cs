@@ -42,12 +42,10 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
         public static void Load(TreeView control, IEnumerable<XmlBuilder> builders)
         {
-            //TODO: The tree is producing two nodes and not correctly layed out.
-
             control.BeginUpdate();
             control.ImageList =  new ImageList();
             control.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
-            control.ImageList.AddImages(Enum.GetValues<XmlValueType>().ToList());
+            control.ImageList.AddImages(Enum.GetValues<ObjectValueType>().ToList());
 
             foreach (XmlBuilder item in builders.
                 Where(w => !builders.Any(a => a.BuilderPath.Equals(w.BuilderPath.ParentPath))).
@@ -89,15 +87,15 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             }
             else
             {
-                if(item.NodeType.TryGetImage(out Image? _))
+                if(item.ObjectType.TryGetImage(out Image? _))
                 {
-                    node.ImageKey = item.NodeType.GetName();
-                    node.SelectedImageKey = item.NodeType.GetName();
+                    node.ImageKey = item.ObjectType.GetName();
+                    node.SelectedImageKey = item.ObjectType.GetName();
                 }
                 else
                 {
-                    node.ImageKey = XmlValueType.None.GetName();
-                    node.SelectedImageKey = XmlValueType.None.GetName();
+                    node.ImageKey = ObjectValueType.Null.GetName();
+                    node.SelectedImageKey = ObjectValueType.Null.GetName();
                 }
             }
            

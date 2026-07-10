@@ -1,8 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -42,6 +44,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
+        /// <summary>
+        /// Type of Value the Object Property represents.
+        /// </summary>
+        public virtual ObjectValueType ObjectType { get; init; } = ObjectValueType.Null;
+
         /// <inheritdoc/>
         public virtual String NodeName
         {
@@ -76,16 +83,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
+        /// <summary>
+        /// The XmlTypeCode that this node is handled as.
+        /// </summary>
+        public virtual XmlTypeCode RenderType { get; set; } = XmlTypeCode.None;
+
         /// <inheritdoc/>
         public virtual Int32? RenderOrder { get; set; }
 
         /// <inheritdoc/>
         public virtual NodeRenderAsType RenderValueAs { get; set; }
-
-        /// <summary>
-        /// The XmlValueType that this node is handled as.
-        /// </summary>
-        public virtual XmlValueType NodeType { get; init; } = XmlValueType.None;
 
         /// <summary>
         /// Function that returns the NodeValue.
@@ -110,11 +117,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Creates a Clone of the XML Builder
         /// </summary>
         /// <param name="source"></param>
-        public XmlBuilder(XmlBuilder source) : this(source.ObjectScope)
+        protected XmlBuilder(XmlBuilder source) : this(source.ObjectScope)
         {
             BuilderPath = new XmlBuilderIndex(source);
-            RenderValueAs = source.RenderValueAs;
             NodeName = source.NodeName;
+
+            ObjectProperty = source.ObjectProperty;
+            ObjectType = source.ObjectType;
+
+            RenderValueAs = source.RenderValueAs;
+            RenderOrder = source.RenderOrder;
+            RenderType = source.RenderType;
+            
             GetValue = source.GetValue;
         }
 

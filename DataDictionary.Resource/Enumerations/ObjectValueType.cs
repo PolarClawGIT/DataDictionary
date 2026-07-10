@@ -5,10 +5,13 @@ using System.Text;
 namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// List of Object Property Types.
+    /// List of Value Types for an Object Property.<br/>
     /// </summary>
-    /// <remarks>This is to give an Icon/Image to a property.</remarks>
-    public enum ObjectPropertyType
+    /// <remarks>
+    /// This is used instead of PropertyInfo.PropertyType to assign a set of behavior based on type.<br/>
+    /// Assigns a Icon/Image to a property.
+    /// </remarks>
+    public enum ObjectValueType
     {
         // Future: Help define behaviors, especially when working with XML generation.
 
@@ -23,11 +26,6 @@ namespace DataDictionary.Resource.Enumerations
         String,
 
         /// <summary>
-        /// An Enumeration value represented as a String.
-        /// </summary>
-        StringEnumeration,
-
-        /// <summary>
         /// XML value represented as a String.
         /// </summary>
         StringXML,
@@ -36,7 +34,7 @@ namespace DataDictionary.Resource.Enumerations
         /// Rich Text value represented as a String.
         /// </summary>
         StringRichText,
-
+        
         /// <summary>
         /// List of delimited values represented as a String.
         /// </summary>
@@ -63,14 +61,37 @@ namespace DataDictionary.Resource.Enumerations
         GUID,
 
         /// <summary>
-        /// Generic Class value, an un-defined class type
+        /// Something used to define a namespace like value such as an alias name, object path, or a qualified name.
+        /// </summary>
+        NameSpace,
+
+        /// <summary>
+        /// Generic Enumeration value
+        /// </summary>
+        Enumeration,
+
+        // Note needed? //
+
+        /// <summary>
+        /// Generic Class value
         /// </summary>
         Class,
 
         /// <summary>
-        /// Something used to define a namespace like value such as an alias name, object path, or a qualified name.
+        /// Generic Structure value
         /// </summary>
-        NameSpace,
+        Structure,
+
+        /// <summary>
+        /// Generic Record value
+        /// </summary>
+        Record,
+
+        /// <summary>
+        /// Generic Interface value
+        /// </summary>
+        Interface,
+
     }
 
 }
