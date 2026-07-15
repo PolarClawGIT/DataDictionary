@@ -5,6 +5,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Specialized Xml Builder that is bound to a SchemaNodeValue.
     /// </summary>
+    [Obsolete("Not to be used, handled in UI layer", true)]
     class SchemaXmlBuilder : XmlBuilder
     {
         SchemaNodeValue baseValue;

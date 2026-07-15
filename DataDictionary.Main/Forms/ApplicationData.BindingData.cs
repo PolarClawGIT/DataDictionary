@@ -79,6 +79,25 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <summary>
+            /// Try to set the Position of the current row matching the Condition past.
+            /// </summary>
+            /// <param name="condition"></param>
+            /// <returns></returns>
+            public virtual Boolean TrySetValue(Func<TRow, Boolean> condition)
+            {
+                //bindingValues.IndexOf()
+                IEnumerable<TRow> target = bindingValues.Where(condition);
+                if (target.Count() == 1)
+                {
+                    Int32 position = bindingValues.IndexOf(target.First());
+                    if (position >= 0)
+                    { BindingData.Position = position; return true; }
+                    else { return false; }
+                }
+                else { return false; }
+            }
+
+            /// <summary>
             /// Removes the Value that is the Current Value for the BindingSource.
             /// </summary>
             /// <returns></returns>
@@ -401,7 +420,7 @@ namespace DataDictionary.Main.Forms
                 { formControl.DataPropertyName = String.Join(".", bindingMember); }
                 else { throw bindingException; }
             }
-            
+
 
             /// <summary>
             /// Helper method that loads a ComboBox with the values of Binding DataSource.

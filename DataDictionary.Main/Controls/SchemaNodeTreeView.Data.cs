@@ -144,7 +144,7 @@ namespace DataDictionary.Main.Controls
             TreeNode CreateNode(XmlBuilder item)
             {
                 TreeNode node = new TreeNode(item.BuilderPath.Member);
-                node.Tag = item.BuilderPath;
+                XmlBuilderIndex key = new XmlBuilderIndex(item);
 
                 if (String.IsNullOrEmpty(item.ObjectProperty))
                 {
@@ -164,6 +164,9 @@ namespace DataDictionary.Main.Controls
                         node.SelectedImageKey = ObjectValueType.Null.GetName();
                     }
                 }
+
+                if (!treeValues.ContainsValue(key))
+                { treeValues.Add(node, key); }
 
                 completedWork = completedWork + 1;
                 return node;

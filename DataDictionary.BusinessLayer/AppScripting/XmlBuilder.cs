@@ -12,10 +12,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
     //public delegate Boolean TryGetDefinition(IDefinitionIndex key, [NotNullWhen(true)] out IDefinitionValue? value);
 
     /// <summary>
+    /// Interface for the XmlBuilder
+    /// </summary>
+    public interface IXmlBuilder : IXmlBuilderIndex, ISchemaNodeObject
+    { }
+
+    /// <summary>
     /// Definition to Build an Xml Element
     /// </summary>
     /// <remarks>Does not support Binding</remarks>
-    public partial class XmlBuilder : IXmlBuilderIndex, ISchemaNodeObject
+    public partial class XmlBuilder : IXmlBuilder
     {
         /// <summary>
         /// Path to the Object to be Rendered. This is normally a Property of the Object.

@@ -94,14 +94,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(fileSuffixData, e => e.FileSuffix);
                 formBinding.SchemaData.AddBinding(fileExtensionData, e => e.FileExtension);
 
-                ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
+                ScopeNameList.Load(forEachScopeData, ScopeType.Null, ScopeType.ModelAttribute, ScopeType.ModelEntity);
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
-
 
                 nodesTree.HeaderText = String.Empty;
                 nodesTree.LoadTree(formBinding.GetBuilders());
 
-                ScopeNameList.Load(objectScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
+                ScopeNameList.Load(objectScopeData, ScopeType.Null,
+                    ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
+                    ScopeType.ModelEntity, ScopeType.ModelEntityProperty);
                 formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
                 formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
                 formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
@@ -216,8 +217,6 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
-        {
-
-        }
+        { formBinding.TrySetNode(e); }
     }
 }

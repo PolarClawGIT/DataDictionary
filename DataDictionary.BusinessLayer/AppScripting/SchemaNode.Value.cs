@@ -78,17 +78,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// This may not return the same object on each call.<br/>
         /// If the Object Scope or Property changes, a new XmlBuilder is needed.<br/>
         /// This is dependent on the static delegate TryGetBuilder.</remarks>
-        public XmlBuilder Builder
-        {
-            get
-            {
-                XmlBuilder newBuilder = GetBuilder();
-                if(!field.BuilderPath.Equals(newBuilder.BuilderPath))
-                { field = newBuilder; OnPropertyChanged(nameof(Builder)); }
-
-                return field;
-            }
-        }
+        //private XmlBuilder Builder { get; }
 
         /* Not being supported
         // TODO: Remove?
@@ -187,7 +177,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
-            Builder = GetBuilder();
+            //Builder = GetBuilder();
 
             /* Not being supported
             // TODO: Remove?
@@ -220,7 +210,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
-            Builder = GetBuilder();
+            //Builder = GetBuilder();
 
 
             /* Not being supported
@@ -247,20 +237,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="objectScope">target ObjectScope, null = current ObjectScope</param>
         /// <param name="objectProperty">target ObjectProperty, null = current ObjectProperty</param>
         /// <returns></returns>
-        /// <remarks>
-        /// Used as part of Get on the property "Builder" and the constructors.<br/>
-        /// When the SchemaNodeValue is initialized from the UI, the ObjectScope and ObjectProperty is not set and must be updated.<br/>
-        /// When the SchemaNodeValue is initialized from the database, the ObjectScope and ObjectProperty has a value.<br/>
-        /// This is dependent on the static delegate SchemaNodeValue.TryGetBuilder.
-        /// </remarks>
-        protected virtual XmlBuilder GetBuilder(ScopeType? objectScope = null, String? objectProperty = null)
+        public virtual XmlBuilder GetBuilder(ScopeType? objectScope = null, String? objectProperty = null)
         {
+            // <remarks>
+            // Used as part of Get on the property "Builder" and the constructors.<br/>
+            // When the SchemaNodeValue is initialized from the UI, the ObjectScope and ObjectProperty is not set and must be updated.<br/>
+            // When the SchemaNodeValue is initialized from the database, the ObjectScope and ObjectProperty has a value.<br/>
+            // This is dependent on the static delegate SchemaNodeValue.TryGetBuilder.
+            // </remarks>
+
             XmlBuilderIndex key = new XmlBuilderIndex(objectScope ?? ObjectScope, objectProperty ?? ObjectProperty ?? String.Empty);
 
             if (TryGetBuilder is not null
                 && TryGetBuilder(key, out XmlBuilder? builder))
-            { return new SchemaXmlBuilder(builder, this); }
-            else { return new SchemaXmlBuilder(new XmlBuilder(ScopeType.Null), this); }
+            { return builder; }
+            else { return new XmlBuilder(this.ObjectScope); }
         }
 
         /// <inheritdoc/>

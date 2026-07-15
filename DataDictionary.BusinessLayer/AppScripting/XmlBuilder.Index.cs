@@ -98,10 +98,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public Boolean Equals(XmlBuilderIndex? other)
         {
             return
-                other is XmlBuilderIndex &&
-                !ObjectScope.Equals(ScopeType.Null) &&
-                !other.ObjectScope.Equals(ScopeType.Null) &&
-                ObjectScope.Equals(other.ObjectScope);
+                other is XmlBuilderIndex
+                && !ObjectScope.Equals(ScopeType.Null)
+                && !other.ObjectScope.Equals(ScopeType.Null)
+                && ObjectScope.Equals(other.ObjectScope)
+                && (
+                    (String.IsNullOrWhiteSpace(ObjectProperty) && String.IsNullOrWhiteSpace(other.ObjectProperty))
+                    || (String.Equals(ObjectProperty,other.ObjectProperty, StringComparison.CurrentCulture)));
         }
 
         /// <inheritdoc/>
