@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema);
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode);
 
             SetRowState(bindingSchema);
             SetTitle(bindingSchema);
@@ -31,6 +31,8 @@ namespace DataDictionary.Main.Forms.Scripting
             documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+
+            nodesTree.DoWork = DoWork;
         }
 
         public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
@@ -95,7 +97,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
 
-                XmlBuilderList.Load(nodesTree, formBinding.GetBuilders());
+
+                nodesTree.HeaderText = String.Empty;
+                nodesTree.LoadTree(formBinding.GetBuilders());
+
+                ScopeNameList.Load(objectScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
+                formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+                formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
+                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+
+                RenderValueAsList.Load(renderValueAsData);
+                formBinding.NodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -201,6 +213,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.LoadValue(schemaIndex);
                 SendMessage(new RefreshRow<SchemaDefinitionIndex>(schemaIndex));
             }
+        }
+
+        private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
+        {
+
         }
     }
 }

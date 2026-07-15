@@ -15,7 +15,6 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    [Obsolete("Being replaced")]
     partial class SchemaNode : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();
@@ -33,21 +32,16 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding(
                 templateBinding: bindingTemplate,
                 schemaBinding: bindingSchema,
-                nodeBinding: bindingNode,
-                ownerBinding: bindingNodeOwner);
+                nodeBinding: bindingNode);
 
             SetRowState(
-                bindingNode,
-                bindingNodeOwner);
+                bindingNode);
             SetTitle(bindingNode);
             SetIcon(bindingNode);
 
             SetCommand(
                 ButtonType.Add,
                 ButtonType.Delete);
-
-            nodeTreeView.ImageList = new ImageList();
-            nodeTreeView.ImageList.AddImages(Enum.GetValues<NodeRenderAsType>().ToList());
 
             CommandButtons[ButtonType.Delete].Enabled = false;
             IsEnabled(false);
@@ -92,9 +86,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 //formBinding.NodeData.AddBinding(isNameOverrideData, e => e.IsNameOverride);
 
-                RenderValueAsList.Load(nodeRenderAsData);
-                formBinding.NodeData.AddBinding(nodeRenderAsData, e => e.RenderValueAs);
-                formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.RenderOrder);
+                //RenderValueAsList.Load(nodeRenderAsData);
+                //formBinding.NodeData.AddBinding(nodeRenderAsData, e => e.RenderValueAs);
+                //formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.RenderOrder);
 
                 //formBinding.NodeData.AddBinding(isObjectValueData, e => e.IsObjectValue);
                 //formBinding.NodeData.AddBinding(isPropertyValueData, e => e.IsPropertyValue);
@@ -112,12 +106,15 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 //formBinding.NodeData.AddBinding(nodeFixedValueData, e => e.FixedNodeValue.FixedValue);
 
-                formBinding.NodeData.LoadCombBox(nodeOwnerColumn, e => e.NodeId, e => e.NodeName);
-                formBinding.OwnerData.AddBinding(nodeOwnerColumn, e => e.NodeOwnerId);
-                nodeOwnershipData.AutoGenerateColumns = false;
-                nodeOwnershipData.DataSource = formBinding.OwnerData;
+                //formBinding.NodeData.LoadCombBox(nodeOwnerColumn, e => e.NodeId, e => e.NodeName);
+                //formBinding.OwnerData.AddBinding(nodeOwnerColumn, e => e.NodeOwnerId);
+                //nodeOwnershipData.AutoGenerateColumns = false;
+                //nodeOwnershipData.DataSource = formBinding.OwnerData;
 
-                BuildTree();
+                nodesTree.HeaderText = String.Empty;
+                nodesTree.LoadTree(formBinding.GetBuilders());
+                //nodeTreeView.LoadTree(formBinding.)
+
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -164,43 +161,19 @@ namespace DataDictionary.Main.Forms.Scripting
 
         void IsEnabled(Boolean newState)
         {
-            foreach (Control item in nodeOverviewLayout.Controls)
-            { item.Enabled = newState; }
+            //foreach (Control item in nodeOverviewLayout.Controls)
+            //{ item.Enabled = newState; }
 
-            foreach (Control item in valueSourceLayout.Controls)
-            { item.Enabled = newState; }
+            //foreach (Control item in valueSourceLayout.Controls)
+            //{ item.Enabled = newState; }
 
-            nodeTabs.Enabled = newState;
+            //nodeTabs.Enabled = newState;
         }
 
-        void BuildTree()
-        {
-            // TODO: Currently simple, just list the nodes
-
-            nodeTreeView.BeginUpdate();
-            nodeTreeView.Nodes.Clear();
-
-            foreach (SchemaNodeValue item in
-                formBinding.NodeData.
-                OrderBy(o => o.RenderOrder).
-                ThenBy(o => o.NodeName ?? String.Empty))
-            {
-                TreeNode newNode = new TreeNode(item.NodeName ?? "(no node name)")
-                {
-                    ImageKey = Enum.GetName<NodeRenderAsType>(item.RenderValueAs),
-                    SelectedImageKey = Enum.GetName<NodeRenderAsType>(item.RenderValueAs)
-                };
-
-                nodeTreeView.Nodes.Add(newNode);
-            }
-
-            nodeTreeView.EndUpdate();
-        }
-
+        //namedScopeData.HeaderText
         private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
         {
-            if(formBinding.TryGetValue(out _))
-            { BuildTree(); }
+
         }
     }
 }

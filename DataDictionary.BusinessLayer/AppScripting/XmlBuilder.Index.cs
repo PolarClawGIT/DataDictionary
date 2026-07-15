@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         protected XmlBuilderIndex() : base() { }
 
         /// <summary>
-        /// Constructor for the Schema Node Key Name.
+        /// Constructor for the Schema Node Key Name. Cloner.
         /// </summary>
         /// <param name="source"></param>
         public XmlBuilderIndex(IXmlBuilderIndex source) : this()

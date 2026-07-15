@@ -13,13 +13,16 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
+            public DataBinding<SchemaNodeValue> NodeData { get; }
 
             public FormBinding(
                 BindingSource templateBinding,
-                BindingSource schemaBinding) : base()
+                BindingSource schemaBinding,
+                BindingSource nodeBinding) : base()
             {
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
+                NodeData = new DataBinding<SchemaNodeValue>(nodeBinding, () => GetData().SchemataNodes);
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
@@ -32,6 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
                 { templateKey = new TemplateIndex(schemaValue); }
 
+                NodeData.LoadBinding(w => key.Equals(w));
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
             }
 

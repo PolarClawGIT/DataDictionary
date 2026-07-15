@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
@@ -8,18 +8,17 @@ using Toolbox.Threading;
 namespace DataDictionary.Main.Controls
 {
     /// <summary>
-    /// TreeView Control wired up to the NamedScope.
+    /// TreeView Control wired up to the SchemaNode.
     /// </summary>
-    partial class NamedScopeTreeView : UserControl
+    partial class SchemaNodeTreeView : UserControl
     {
-        NamedScopeTreeViewData data;
-        INamedScopeData sourceData = BusinessData.NamedScope;
-
         /// <summary>
         /// The Worker Method of ApplicationData.DoWork
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; set; }
+
+        SchemaNodeTreeViewData data;
 
         /// <summary>
         /// Text that appears at the top of the control
@@ -31,16 +30,17 @@ namespace DataDictionary.Main.Controls
             set { headerTitle.Text = value; }
         }
 
-        public NamedScopeTreeView()
+        public SchemaNodeTreeView()
         {
             InitializeComponent();
 
-            refreshCommand.Image = Resources.Icon_TreeView.MergeImage(Resources.ItemRefresh);
-            reloadCommand.Image = Resources.Icon_TreeView.MergeImage(Resources.ItemSync);
-
-            data = new NamedScopeTreeViewData(treeViewData);
             treeViewData.ImageList = new ImageList();
             treeViewData.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
+            treeViewData.ImageList.AddImages(Enum.GetValues<ObjectValueType>().ToList());
+            refreshCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemRefresh);
+            reloadCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemSync);
+            
+            data = new SchemaNodeTreeViewData(treeViewData);
 
             DoWork = (work, complete) =>
             {   // No worker assigned, do the work in the foreground.
@@ -53,64 +53,22 @@ namespace DataDictionary.Main.Controls
         }
 
         /// <summary>
-        /// Causes the Tree to re-read the Data and rebuild.
-        /// </summary>
-        public void RefreshCommand()
-        {
-            DoWork(RefreshWork(), onComplete);
-
-            void onComplete(RunWorkerCompletedEventArgs args)
-            { }
-        }
-
-        /// <summary>
-        /// Create Work Items version of the RefreshCommand
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<WorkItem> RefreshWork()
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(data.BeginUpdate());
-            work.AddRange(data.BuildNodes(sourceData));
-            work.AddRange(data.EndUpdate());
-            return work;
-        }
-
-        private void RefreshCommand_Click(object sender, EventArgs e)
-        { RefreshCommand(); }
-
-        /// <summary>
-        /// Causes the Tree to re-load the Data and rebuild.
-        /// </summary>
-        public void ReloadCommand()
-        {
-            DoWork(ReloadWork(), onComplete);
-
-            void onComplete(RunWorkerCompletedEventArgs args)
-            { }
-        }
-
-        /// <summary>
-        /// Create Work Items version of the ReloadCommand
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<WorkItem> ReloadWork()
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(data.BeginUpdate());
-            work.AddRange(sourceData.Load());
-            work.AddRange(data.BuildNodes(sourceData));
-            work.AddRange(data.EndUpdate());
-            return work;
-        }
-
-        private void ReloadCommand_Click(object sender, EventArgs e)
-        { ReloadCommand(); }
-
-        /// <summary>
         /// A NamedScope item was selected.
         /// </summary>
-        public event EventHandler<NamedScopeValueEventArgs>? OnNamedScopeSelected;
+        public event EventHandler<XmlBuilderIndex>? OnNodeSelected;
+
+        public void LoadTree(IEnumerable<XmlBuilder> builders)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(data.BeginUpdate());
+            work.AddRange(data.BuildNodes(builders));
+            work.AddRange(data.EndUpdate());
+
+            DoWork(work, onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { }
+        }
 
         /// <summary>
         /// Used in determine if the node should expand the node or not.
@@ -160,17 +118,9 @@ namespace DataDictionary.Main.Controls
             if (e.Node is not null
                 && e.Node.TreeView is not null
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
-                && OnNamedScopeSelected is EventHandler<NamedScopeValueEventArgs> hander
-                && data.GetValue(e.Node) is INamedScopeSourceValue value)
-            { hander(this, new NamedScopeValueEventArgs(value)); }
+                && OnNodeSelected is EventHandler<XmlBuilderIndex> hander
+                && data.GetValue(e.Node) is XmlBuilderIndex value)
+            { hander(this, new XmlBuilderIndex(value)); }
         }
     }
-
-    class NamedScopeValueEventArgs : EventArgs
-    {
-        public INamedScopeSourceValue Value { get; }
-        public NamedScopeValueEventArgs(INamedScopeSourceValue value) : base()
-        { Value = value; }
-    }
-
 }
