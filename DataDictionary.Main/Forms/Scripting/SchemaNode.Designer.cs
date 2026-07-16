@@ -38,7 +38,7 @@
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             splitContainer1 = new SplitContainer();
-            nodesTree = new DataDictionary.Main.Controls.SchemaNodeTreeView();
+            nodesTree = new DataDictionary.Main.Controls.XmlBuilderTreeView();
             objectTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             textBoxData1 = new DataDictionary.Main.Controls.TextBoxData();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
@@ -369,6 +369,6 @@
         private Controls.ComboBoxData renderTypeData;
         private Controls.TextBoxData renderOrderData;
         private SplitContainer splitContainer1;
-        private Controls.SchemaNodeTreeView nodesTree;
+        private Controls.XmlBuilderTreeView nodesTree;
     }
 }

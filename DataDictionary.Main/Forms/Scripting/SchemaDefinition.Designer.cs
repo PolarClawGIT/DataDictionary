@@ -51,7 +51,7 @@
             objectPropertyData = new DataDictionary.Main.Controls.TextBoxData();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             forEachScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            nodesTree = new DataDictionary.Main.Controls.SchemaNodeTreeView();
+            nodesTree = new DataDictionary.Main.Controls.XmlBuilderTreeView();
             documentTab = new TabPage();
             fileLayout = new TableLayoutPanel();
             documentToolStrip = new ToolStrip();
@@ -580,6 +580,6 @@
         private Controls.TextBoxData nodeNameData;
         private Controls.ComboBoxData renderValueAsData;
         private BindingSource bindingNode;
-        private Controls.SchemaNodeTreeView nodesTree;
+        private Controls.XmlBuilderTreeView nodesTree;
     }
 }

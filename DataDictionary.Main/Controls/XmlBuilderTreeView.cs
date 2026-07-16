@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Forms.Scripting;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -8,9 +9,9 @@ using Toolbox.Threading;
 namespace DataDictionary.Main.Controls
 {
     /// <summary>
-    /// TreeView Control wired up to the SchemaNode.
+    /// TreeView Control wired up to the XmlBuilder.
     /// </summary>
-    partial class SchemaNodeTreeView : UserControl
+    partial class XmlBuilderTreeView : UserControl
     {
         /// <summary>
         /// The Worker Method of ApplicationData.DoWork
@@ -18,7 +19,7 @@ namespace DataDictionary.Main.Controls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; set; }
 
-        SchemaNodeTreeViewData data;
+        XmlBuilderTreeViewData data;
 
         /// <summary>
         /// Text that appears at the top of the control
@@ -30,17 +31,39 @@ namespace DataDictionary.Main.Controls
             set { headerTitle.Text = value; }
         }
 
-        public SchemaNodeTreeView()
+        /// <summary>
+        /// Sets the Enabled of the useDefaultCommand
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Boolean IsUseDefault
+        {
+            get { return useDefaultCommand.Enabled; }
+            set { useDefaultCommand.Enabled = value; }
+        }
+
+        /// <summary>
+        /// Sets the Enabled of the overrideCommand
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Boolean IsOverride
+        {
+            get { return overrideCommand.Enabled; }
+            set { overrideCommand.Enabled = value; }
+        }
+
+        public XmlBuilderTreeView()
         {
             InitializeComponent();
 
             treeViewData.ImageList = new ImageList();
             treeViewData.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
             treeViewData.ImageList.AddImages(Enum.GetValues<ObjectValueType>().ToList());
-            refreshCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemRefresh);
-            reloadCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemSync);
-            
-            data = new SchemaNodeTreeViewData(treeViewData);
+            useDefaultCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemDetached);
+            overrideCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemImport);
+
+            IsUseDefault = false;
+
+            data = new XmlBuilderTreeViewData(treeViewData);
 
             DoWork = (work, complete) =>
             {   // No worker assigned, do the work in the foreground.
@@ -91,6 +114,12 @@ namespace DataDictionary.Main.Controls
             if (e.Node is not null && e.Node.TreeView is not null)
             { isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus; }
 
+            if (e.Node is not null
+                && e.Node.TreeView is not null
+                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
+                && data.GetValue(e.Node) is XmlBuilderIndex value)
+            { headerTitle.Text = value.Member; }
+
             if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
         }
 
@@ -122,5 +151,6 @@ namespace DataDictionary.Main.Controls
                 && data.GetValue(e.Node) is XmlBuilderIndex value)
             { hander(this, new XmlBuilderIndex(value)); }
         }
+
     }
 }

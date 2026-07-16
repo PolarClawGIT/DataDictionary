@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Controls
+namespace DataDictionary.Main.Forms.Scripting
 {
     /// <summary>
-    /// Wrapper item class used with the SchemaNodeTreeView to connect the XMLBuilder to the SchemaNodeValue
+    /// Wrapper item class used to connect the XMLBuilder to the SchemaNodeValue
     /// </summary>
-    class SchemaNodeTreeViewBindingItem : IXmlBuilder, IBindingPropertyChanged, IBindingRowState
+    class XmlBuilderValue : IXmlBuilder, IBindingPropertyChanged, IBindingRowState
     {
         public required XmlBuilder Builder { get; init; }
         public SchemaNodeValue? SchemaNode
@@ -113,7 +113,7 @@ namespace DataDictionary.Main.Controls
     /// <summary>
     /// Wrapper list class used with the SchemaNodeTreeView to provided a list to bind to.
     /// </summary>
-    class SchemaNodeTreeViewBindingList : BindingList<SchemaNodeTreeViewBindingItem>, IBindingList<SchemaNodeTreeViewBindingItem>
+    class XmlBuilderData : BindingList<XmlBuilderValue>, IBindingList<XmlBuilderValue>
     { 
         public void Load(SchemaDefinitionIndex key, ISchemaNodeData data)
         {
@@ -121,7 +121,7 @@ namespace DataDictionary.Main.Controls
 
             foreach (var item in BusinessData.Templates.XmlBuilders.Values)
             {
-                SchemaNodeTreeViewBindingItem newValue = new SchemaNodeTreeViewBindingItem() { Builder = item };
+                XmlBuilderValue newValue = new XmlBuilderValue() { Builder = item };
                 XmlBuilderIndex builderKey = new XmlBuilderIndex(item);
 
                 if (data.Where(w => key.Equals(w) && builderKey.Equals(w)) is SchemaNodeValue value)

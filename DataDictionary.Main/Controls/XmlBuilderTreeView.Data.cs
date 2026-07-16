@@ -5,14 +5,14 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Controls
 {
-    class SchemaNodeTreeViewData
+    class XmlBuilderTreeViewData
     {
         TreeView treeControl;
 
         Dictionary<TreeNode, XmlBuilderIndex> treeValues = new Dictionary<TreeNode, XmlBuilderIndex>();
         List<XmlBuilderIndex> expandedIndexes = new List<XmlBuilderIndex>();
 
-        public SchemaNodeTreeViewData(TreeView tree)
+        public XmlBuilderTreeViewData(TreeView tree)
         { treeControl = tree; }
 
         public XmlBuilderIndex? GetValue(TreeNode node)
@@ -144,6 +144,8 @@ namespace DataDictionary.Main.Controls
             TreeNode CreateNode(XmlBuilder item)
             {
                 TreeNode node = new TreeNode(item.BuilderPath.Member);
+                node.ToolTipText = item.BuilderPath.MemberFullPath;
+
                 XmlBuilderIndex key = new XmlBuilderIndex(item);
 
                 if (String.IsNullOrEmpty(item.ObjectProperty))

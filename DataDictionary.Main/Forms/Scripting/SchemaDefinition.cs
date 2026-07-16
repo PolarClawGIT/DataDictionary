@@ -103,12 +103,12 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(objectScopeData, ScopeType.Null,
                     ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
                     ScopeType.ModelEntity, ScopeType.ModelEntityProperty);
-                formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
-                formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
-                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+                formBinding.TreeNodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+                formBinding.TreeNodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
+                formBinding.TreeNodeData.AddBinding(nodeNameData, e => e.NodeName);
 
                 RenderValueAsList.Load(renderValueAsData);
-                formBinding.NodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);
+                formBinding.TreeNodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -217,6 +217,10 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
-        { formBinding.TrySetNode(e); }
+        {
+            formBinding.TrySetNode(e);
+
+            
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Controls
 {
-    partial class SchemaNodeTreeView
+    partial class XmlBuilderTreeView
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,41 +29,63 @@
         private void InitializeComponent()
         {
             TableLayoutPanel controlLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XmlBuilderTreeView));
             treeViewMenu = new ToolStrip();
-            refreshCommand = new ToolStripButton();
-            reloadCommand = new ToolStripButton();
+            useDefaultCommand = new ToolStripButton();
+            overrideCommand = new ToolStripButton();
             headerTitle = new ToolStripLabel();
             treeViewData = new TreeView();
             controlLayout = new TableLayoutPanel();
-            treeViewMenu.SuspendLayout();
             controlLayout.SuspendLayout();
+            treeViewMenu.SuspendLayout();
             SuspendLayout();
+            // 
+            // controlLayout
+            // 
+            controlLayout.AutoSize = true;
+            controlLayout.ColumnCount = 1;
+            controlLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            controlLayout.Controls.Add(treeViewMenu, 0, 0);
+            controlLayout.Controls.Add(treeViewData, 0, 1);
+            controlLayout.Dock = DockStyle.Fill;
+            controlLayout.Location = new Point(0, 0);
+            controlLayout.Name = "controlLayout";
+            controlLayout.RowCount = 2;
+            controlLayout.RowStyles.Add(new RowStyle());
+            controlLayout.RowStyles.Add(new RowStyle());
+            controlLayout.Size = new Size(188, 268);
+            controlLayout.TabIndex = 5;
             // 
             // treeViewMenu
             // 
+            treeViewMenu.CanOverflow = false;
             treeViewMenu.GripStyle = ToolStripGripStyle.Hidden;
-            treeViewMenu.Items.AddRange(new ToolStripItem[] { refreshCommand, reloadCommand, headerTitle });
+            treeViewMenu.Items.AddRange(new ToolStripItem[] { useDefaultCommand, overrideCommand, headerTitle });
             treeViewMenu.Location = new Point(0, 0);
             treeViewMenu.Name = "treeViewMenu";
             treeViewMenu.Size = new Size(188, 25);
             treeViewMenu.TabIndex = 4;
             treeViewMenu.Text = "treeViewMenu";
             // 
-            // refreshCommand
+            // useDefaultCommand
             // 
-            refreshCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            refreshCommand.ImageTransparentColor = Color.Magenta;
-            refreshCommand.Name = "refreshCommand";
-            refreshCommand.Size = new Size(23, 22);
-            refreshCommand.Text = "refresh Navigation";
+            useDefaultCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            useDefaultCommand.Image = (Image)resources.GetObject("useDefaultCommand.Image");
+            useDefaultCommand.ImageTransparentColor = Color.Magenta;
+            useDefaultCommand.Name = "useDefaultCommand";
+            useDefaultCommand.Size = new Size(23, 22);
+            useDefaultCommand.Text = "toolStripButton1";
+            useDefaultCommand.ToolTipText = "Use Defaults";
             // 
-            // reloadCommand
+            // overrideCommand
             // 
-            reloadCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            reloadCommand.ImageTransparentColor = Color.Magenta;
-            reloadCommand.Name = "reloadCommand";
-            reloadCommand.Size = new Size(23, 22);
-            reloadCommand.Text = "refresh Navigation Data";
+            overrideCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            overrideCommand.Image = (Image)resources.GetObject("overrideCommand.Image");
+            overrideCommand.ImageTransparentColor = Color.Magenta;
+            overrideCommand.Name = "overrideCommand";
+            overrideCommand.Size = new Size(23, 22);
+            overrideCommand.Text = "toolStripButton1";
+            overrideCommand.ToolTipText = "Override Defaults";
             // 
             // headerTitle
             // 
@@ -84,33 +106,17 @@
             treeViewData.NodeMouseClick += TreeViewData_NodeMouseClick;
             treeViewData.NodeMouseDoubleClick += TreeViewData_NodeMouseDoubleClick;
             // 
-            // controlLayout
-            // 
-            controlLayout.AutoSize = true;
-            controlLayout.ColumnCount = 1;
-            controlLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            controlLayout.Controls.Add(treeViewMenu, 0, 0);
-            controlLayout.Controls.Add(treeViewData, 0, 1);
-            controlLayout.Dock = DockStyle.Fill;
-            controlLayout.Location = new Point(0, 0);
-            controlLayout.Name = "controlLayout";
-            controlLayout.RowCount = 2;
-            controlLayout.RowStyles.Add(new RowStyle());
-            controlLayout.RowStyles.Add(new RowStyle());
-            controlLayout.Size = new Size(188, 268);
-            controlLayout.TabIndex = 5;
-            // 
-            // SchemaNodeTreeView
+            // XmlBuilderTreeView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(controlLayout);
-            Name = "SchemaNodeTreeView";
+            Name = "XmlBuilderTreeView";
             Size = new Size(188, 268);
-            treeViewMenu.ResumeLayout(false);
-            treeViewMenu.PerformLayout();
             controlLayout.ResumeLayout(false);
             controlLayout.PerformLayout();
+            treeViewMenu.ResumeLayout(false);
+            treeViewMenu.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -118,10 +124,10 @@
         #endregion
 
         private ToolStrip treeViewMenu;
-        private ToolStripButton refreshCommand;
-        private ToolStripButton reloadCommand;
         private ToolStripLabel headerTitle;
         private TreeView treeViewData;
         private TableLayoutPanel controlLayout;
+        private ToolStripButton useDefaultCommand;
+        private ToolStripButton overrideCommand;
     }
 }
