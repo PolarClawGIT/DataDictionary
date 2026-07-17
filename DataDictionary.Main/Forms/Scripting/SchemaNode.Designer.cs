@@ -40,7 +40,7 @@
             splitContainer1 = new SplitContainer();
             nodesTree = new DataDictionary.Main.Controls.XmlBuilderTreeView();
             objectTypeData = new DataDictionary.Main.Controls.ComboBoxData();
-            textBoxData1 = new DataDictionary.Main.Controls.TextBoxData();
+            objectPropertyData = new DataDictionary.Main.Controls.TextBoxData();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             renderOrderData = new DataDictionary.Main.Controls.TextBoxData();
@@ -138,6 +138,7 @@
             nodesTree.Name = "nodesTree";
             nodesTree.Size = new Size(183, 402);
             nodesTree.TabIndex = 0;
+            nodesTree.OnNodeSelected += NodesTree_OnNodeSelected;
             // 
             // nodeLayout
             // 
@@ -173,7 +174,7 @@
             objectLayout.ColumnCount = 1;
             objectLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             objectLayout.Controls.Add(objectTypeData, 0, 2);
-            objectLayout.Controls.Add(textBoxData1, 0, 1);
+            objectLayout.Controls.Add(objectPropertyData, 0, 1);
             objectLayout.Controls.Add(objectScopeData, 0, 0);
             objectLayout.Dock = DockStyle.Fill;
             objectLayout.Location = new Point(3, 19);
@@ -198,18 +199,18 @@
             objectTypeData.Size = new Size(344, 46);
             objectTypeData.TabIndex = 10;
             // 
-            // textBoxData1
+            // objectPropertyData
             // 
-            textBoxData1.AutoSize = true;
-            textBoxData1.Dock = DockStyle.Fill;
-            textBoxData1.HeaderText = "Object Property";
-            textBoxData1.Location = new Point(3, 55);
-            textBoxData1.Multiline = false;
-            textBoxData1.Name = "textBoxData1";
-            textBoxData1.ReadOnly = true;
-            textBoxData1.Size = new Size(344, 44);
-            textBoxData1.TabIndex = 6;
-            textBoxData1.WordWrap = true;
+            objectPropertyData.AutoSize = true;
+            objectPropertyData.Dock = DockStyle.Fill;
+            objectPropertyData.HeaderText = "Object Property";
+            objectPropertyData.Location = new Point(3, 55);
+            objectPropertyData.Multiline = false;
+            objectPropertyData.Name = "objectPropertyData";
+            objectPropertyData.ReadOnly = true;
+            objectPropertyData.Size = new Size(344, 44);
+            objectPropertyData.TabIndex = 6;
+            objectPropertyData.WordWrap = true;
             // 
             // objectScopeData
             // 
@@ -363,7 +364,7 @@
         private TableLayoutPanel objectLayout;
         private TableLayoutPanel renderAsLayout;
         private Controls.ComboBoxData objectScopeData;
-        private Controls.TextBoxData textBoxData1;
+        private Controls.TextBoxData objectPropertyData;
         private Controls.ComboBoxData objectTypeData;
         private Controls.ComboBoxData renderValueAsData;
         private Controls.ComboBoxData renderTypeData;

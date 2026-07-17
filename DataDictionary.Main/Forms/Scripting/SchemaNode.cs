@@ -44,6 +44,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 ButtonType.Delete);
 
             CommandButtons[ButtonType.Delete].Enabled = false;
+            nodesTree.DoWork = DoWork;
             IsEnabled(false);
         }
 
@@ -83,6 +84,21 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
                 formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+
+                ScopeNameList.Load(objectScopeData, ScopeType.Null,
+                    ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
+                    ScopeType.ModelEntity, ScopeType.ModelEntityProperty);
+                formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+
+                formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
+                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+
+                RenderValueAsList.Load(renderValueAsData);
+                formBinding.NodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);
+
+                //renderTypeData
+                formBinding.NodeData.AddBinding(renderOrderData, e => e.RenderOrder);
+                
 
                 //formBinding.NodeData.AddBinding(isNameOverrideData, e => e.IsNameOverride);
 
@@ -147,16 +163,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingNode_CurrentChanged(object sender, EventArgs e)
         {
-            if (formBinding.NodeData.TryGetValue(out SchemaNodeValue? value))
-            {
-                CommandButtons[ButtonType.Delete].Enabled = true;
-                IsEnabled(true);
-            }
-            else
-            {
-                CommandButtons[ButtonType.Delete].Enabled = false;
-                IsEnabled(false);
-            }
+
         }
 
         void IsEnabled(Boolean newState)
@@ -174,6 +181,11 @@ namespace DataDictionary.Main.Forms.Scripting
         private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
         {
 
+        }
+
+        private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
+        {
+            formBinding.TrySetNode(e);
         }
     }
 }

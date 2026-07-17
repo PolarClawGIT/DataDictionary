@@ -11,7 +11,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
-            public DataBinding<SchemaNodeValue> NodeData { get; }
+            public DataBinding<XmlBuilderValue> NodeData { get; }
+            XmlBuilderData nodeValues = new XmlBuilderData();
 
             public FormBinding(
                 BindingSource templateBinding,
@@ -20,17 +21,13 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
-                NodeData = new DataBinding<SchemaNodeValue>(nodeBinding, () => GetData().SchemataNodes);
+                NodeData = new DataBinding<XmlBuilderValue>(nodeBinding, () => nodeValues);
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
-            public Boolean TryGetValue([NotNullWhen(true)] out SchemaNodeValue? result)
-            {
-                if (NodeData.TryGetValue(out SchemaNodeValue? value))
-                { result = value; return true; }
-                else { result = null; return false; }
-            }
+            public Boolean TrySetNode(XmlBuilderIndex key)
+            { return NodeData.TrySetValue(w => key.Equals(w)); }
 
             public override void LoadValue(SchemaDefinitionIndex key)
             {
@@ -41,20 +38,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 { templateKey = new TemplateIndex(schemaValue); }
 
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
-                NodeData.LoadBinding(w => key.Equals(w));
+
+                nodeValues.Load(key, GetData().SchemataNodes);
+                NodeData.LoadBinding();
             }
 
             public void AddNew(ITemplateIndex template, ISchemaDefinitionIndex schema)
-            { NodeData.Add(new SchemaNodeValue(template, schema)); }
+            {  }
 
             public void RemoveCurrent()
             {
-                if (NodeData.TryGetValue(out SchemaNodeValue? node))
-                {
-                    SchemaNodeIndex key = new SchemaNodeIndex(node);
 
-                    NodeData.Remove(node);
-                }
             }
 
             public IEnumerable<XmlBuilder> GetBuilders()

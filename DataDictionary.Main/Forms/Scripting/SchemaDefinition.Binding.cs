@@ -1,11 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.AppSecurity;
-using DataDictionary.DataLayer.AppScript;
-using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -17,7 +11,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
-            public DataBinding<XmlBuilderValue> TreeNodeData { get; }
+            public DataBinding<XmlBuilderValue> NodeData { get; }
             XmlBuilderData nodeValues = new XmlBuilderData();
 
             public FormBinding(
@@ -28,14 +22,14 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
-                TreeNodeData = new DataBinding<XmlBuilderValue>(nodeBinding, () => nodeValues);
+                NodeData = new DataBinding<XmlBuilderValue>(nodeBinding, () => nodeValues);
 
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
             public Boolean TrySetNode(XmlBuilderIndex key)
-            { return TreeNodeData.TrySetValue(w => key.Equals(w)); }
+            { return NodeData.TrySetValue(w => key.Equals(w)); }
 
             public override void LoadValue(SchemaDefinitionIndex key)
             {
@@ -48,7 +42,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
 
                 nodeValues.Load(key, GetData().SchemataNodes);
-                TreeNodeData.LoadBinding();
+                NodeData.LoadBinding();
             }
 
             protected void RemoveValue(SchemaDefinitionIndex key)

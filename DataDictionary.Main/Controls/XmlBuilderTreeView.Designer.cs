@@ -60,7 +60,7 @@
             // 
             treeViewMenu.CanOverflow = false;
             treeViewMenu.GripStyle = ToolStripGripStyle.Hidden;
-            treeViewMenu.Items.AddRange(new ToolStripItem[] { useDefaultCommand, overrideCommand, headerTitle });
+            treeViewMenu.Items.AddRange(new ToolStripItem[] { overrideCommand, useDefaultCommand, headerTitle });
             treeViewMenu.Location = new Point(0, 0);
             treeViewMenu.Name = "treeViewMenu";
             treeViewMenu.Size = new Size(188, 25);
