@@ -31,8 +31,9 @@
             TableLayoutPanel controlLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XmlBuilderTreeView));
             treeViewMenu = new ToolStrip();
-            useDefaultCommand = new ToolStripButton();
+            viewDetailsCommand = new ToolStripButton();
             overrideCommand = new ToolStripButton();
+            useDefaultCommand = new ToolStripButton();
             headerTitle = new ToolStripLabel();
             treeViewData = new TreeView();
             controlLayout = new TableLayoutPanel();
@@ -60,22 +61,22 @@
             // 
             treeViewMenu.CanOverflow = false;
             treeViewMenu.GripStyle = ToolStripGripStyle.Hidden;
-            treeViewMenu.Items.AddRange(new ToolStripItem[] { overrideCommand, useDefaultCommand, headerTitle });
+            treeViewMenu.Items.AddRange(new ToolStripItem[] { viewDetailsCommand, overrideCommand, useDefaultCommand, headerTitle });
             treeViewMenu.Location = new Point(0, 0);
             treeViewMenu.Name = "treeViewMenu";
             treeViewMenu.Size = new Size(188, 25);
             treeViewMenu.TabIndex = 4;
             treeViewMenu.Text = "treeViewMenu";
             // 
-            // useDefaultCommand
+            // viewDetailsCommand
             // 
-            useDefaultCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            useDefaultCommand.Image = (Image)resources.GetObject("useDefaultCommand.Image");
-            useDefaultCommand.ImageTransparentColor = Color.Magenta;
-            useDefaultCommand.Name = "useDefaultCommand";
-            useDefaultCommand.Size = new Size(23, 22);
-            useDefaultCommand.Text = "toolStripButton1";
-            useDefaultCommand.ToolTipText = "Use Defaults";
+            viewDetailsCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            viewDetailsCommand.Image = (Image)resources.GetObject("viewDetailsCommand.Image");
+            viewDetailsCommand.ImageTransparentColor = Color.Magenta;
+            viewDetailsCommand.Name = "viewDetailsCommand";
+            viewDetailsCommand.Size = new Size(23, 22);
+            viewDetailsCommand.Text = "toolStripButton1";
+            viewDetailsCommand.Click += ViewDetailsCommand_Click;
             // 
             // overrideCommand
             // 
@@ -86,6 +87,18 @@
             overrideCommand.Size = new Size(23, 22);
             overrideCommand.Text = "toolStripButton1";
             overrideCommand.ToolTipText = "Override Defaults";
+            overrideCommand.Click += OverrideCommand_Click;
+            // 
+            // useDefaultCommand
+            // 
+            useDefaultCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            useDefaultCommand.Image = (Image)resources.GetObject("useDefaultCommand.Image");
+            useDefaultCommand.ImageTransparentColor = Color.Magenta;
+            useDefaultCommand.Name = "useDefaultCommand";
+            useDefaultCommand.Size = new Size(23, 22);
+            useDefaultCommand.Text = "toolStripButton1";
+            useDefaultCommand.ToolTipText = "Use Defaults";
+            useDefaultCommand.Click += UseDefaultCommand_Click;
             // 
             // headerTitle
             // 
@@ -129,5 +142,6 @@
         private TableLayoutPanel controlLayout;
         private ToolStripButton useDefaultCommand;
         private ToolStripButton overrideCommand;
+        private ToolStripButton viewDetailsCommand;
     }
 }

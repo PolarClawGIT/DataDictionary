@@ -58,6 +58,7 @@ namespace DataDictionary.Main.Controls
             treeViewData.ImageList = new ImageList();
             treeViewData.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
             treeViewData.ImageList.AddImages(Enum.GetValues<ObjectValueType>().ToList());
+            viewDetailsCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemBrowse);
             useDefaultCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemDetached);
             overrideCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemImport);
 
@@ -152,5 +153,30 @@ namespace DataDictionary.Main.Controls
             { hander(this, new XmlBuilderIndex(value)); }
         }
 
+        // TODO: Remodel using the "CommandButton" from the ApplicationData form.
+        // Can the CommandButton be moved out of the ApplicationData? Its own control?
+
+        /// <summary>
+        /// Event raised when a Button is pressed. The type of button is returned.
+        /// </summary>
+        public event EventHandler<ButtonType>? OnButtonClick;
+
+        private void ViewDetailsCommand_Click(object sender, EventArgs e)
+        {
+            if (OnButtonClick is EventHandler<ButtonType> handler)
+            { handler(this, ButtonType.Browse); }
+        }
+
+        private void OverrideCommand_Click(object sender, EventArgs e)
+        {
+            if (OnButtonClick is EventHandler<ButtonType> handler)
+            { handler(this, ButtonType.Add); }
+        }
+
+        private void UseDefaultCommand_Click(object sender, EventArgs e)
+        {
+            if (OnButtonClick is EventHandler<ButtonType> handler)
+            { handler(this, ButtonType.Delete); }
+        }
     }
 }
