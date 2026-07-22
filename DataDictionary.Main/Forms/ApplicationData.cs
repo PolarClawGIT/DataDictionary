@@ -27,12 +27,6 @@ namespace DataDictionary.Main.Forms
         public virtual Boolean IsOpenItem(Object? item) { return true; }
 
         /// <summary>
-        /// The set of Command Buttons
-        /// </summary>
-        protected IReadOnlyDictionary<ButtonType, CommandState> CommandButtons { get { return commandButtons; } }
-        Dictionary<ButtonType, CommandState> commandButtons = new Dictionary<ButtonType, CommandState>();
-
-        /// <summary>
         /// Function called to determine if a given Button has authorization.
         /// </summary>
         protected Func<Enumerations.ButtonType, Boolean> GetAuthorization { get; private set; } = (button) => true;
@@ -50,8 +44,7 @@ namespace DataDictionary.Main.Forms
         public ApplicationData() : base()
         {
             InitializeComponent();
-            CreateCommands(); 
-            CreateCommands_New(); // TODO: Temp, experimenting with new Command Button structure.
+            InitCommands(); 
 
             helpCommand.Image = ScopeType.ApplicationHelp.GetImage(ButtonType.Default);
        }
@@ -339,7 +332,7 @@ namespace DataDictionary.Main.Forms
             {
                 foreach (ButtonType item in commands)
                 {
-                    if (CommandButtons.TryGetValue(item, out CommandState? value))
+                    if (CommandButtons.TryGetValue(item, out ToolStripCommand? value))
                     {
                         value.Visible = true;
                         value.Enabled = true;
@@ -515,9 +508,9 @@ namespace DataDictionary.Main.Forms
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            commandButtons[Enumerations.ButtonType.OpenDatabase].Refresh();
-            commandButtons[Enumerations.ButtonType.SaveDatabase].Refresh();
-            commandButtons[Enumerations.ButtonType.DeleteDatabase].Refresh();
+            CommandButtons[Enumerations.ButtonType.OpenDatabase].Refresh();
+            CommandButtons[Enumerations.ButtonType.SaveDatabase].Refresh();
+            CommandButtons[Enumerations.ButtonType.DeleteDatabase].Refresh();
         }
 
 

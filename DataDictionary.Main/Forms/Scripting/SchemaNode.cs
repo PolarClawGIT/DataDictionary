@@ -49,18 +49,16 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
 
-        public SchemaNode(ITemplateIndex template, ISchemaDefinitionIndex schema) : this()
+        public SchemaNode(ISchemaDefinitionIndex schema) : this()
         {
-            templateIndex = new TemplateIndex(template);
             schemaIndex = new SchemaDefinitionIndex(schema);
         }
 
-        public SchemaNode(ISchemaComposite schema) : this(schema, schema) { }
 
         public SchemaNode(
             ITemplateIndex template,
             ISchemaDefinitionIndex schema,
-            Func<ITemplateData> getData) : this(template, schema)
+            Func<ITemplateData> getData) : this(schema)
         { formBinding.GetData = getData; }
 
         private void SchemaNode_Load(object sender, EventArgs e)
@@ -91,7 +89,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
 
                 formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
-                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
 
                 RenderValueAsList.Load(renderValueAsData);
                 formBinding.NodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);

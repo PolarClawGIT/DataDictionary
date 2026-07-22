@@ -75,7 +75,7 @@
             viewDetailsCommand.ImageTransparentColor = Color.Magenta;
             viewDetailsCommand.Name = "viewDetailsCommand";
             viewDetailsCommand.Size = new Size(23, 22);
-            viewDetailsCommand.Text = "toolStripButton1";
+            viewDetailsCommand.Text = "View Details";
             viewDetailsCommand.Click += ViewDetailsCommand_Click;
             // 
             // overrideCommand

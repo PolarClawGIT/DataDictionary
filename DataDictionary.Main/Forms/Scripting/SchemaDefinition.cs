@@ -99,6 +99,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 nodesTree.HeaderText = String.Empty;
                 nodesTree.LoadTree(formBinding.GetBuilders());
+                nodesTree.CommandButtons[ButtonType.Browse].Click += BrowseNodeCommand_Click;
 
                 ScopeNameList.Load(objectScopeData, ScopeType.Null,
                     ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
@@ -115,6 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 SetAuthorization(formBinding.Authorize);
             }
         }
+
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
@@ -219,8 +221,15 @@ namespace DataDictionary.Main.Forms.Scripting
         private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
         {
             formBinding.TrySetNode(e);
+        }
 
-            
+
+        private void BrowseNodeCommand_Click(Object? sender, EventArgs e)
+        {
+            Activate(
+                () => new SchemaNode(schemaIndex),
+                (form) => form.IsOpenItem(schemaIndex));
+
         }
     }
 }

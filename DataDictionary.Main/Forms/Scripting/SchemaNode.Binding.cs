@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.Main.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -49,6 +50,13 @@ namespace DataDictionary.Main.Forms.Scripting
             public void RemoveCurrent()
             {
 
+            }
+
+            
+
+            public override Boolean Authorize(ButtonType command)
+            {
+                return base.Authorize(command);
             }
 
             public IEnumerable<XmlBuilder> GetBuilders()

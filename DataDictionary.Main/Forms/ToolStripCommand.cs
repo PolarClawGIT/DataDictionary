@@ -67,7 +67,7 @@ namespace DataDictionary.Main.Forms
         public ScopeType Scope
         {
             get;
-            init
+            set
             {
                 field = value;
                 if (value is not ScopeType.Null)

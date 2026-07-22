@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Forms;
 using DataDictionary.Main.Forms.Scripting;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
@@ -13,6 +14,12 @@ namespace DataDictionary.Main.Controls
     /// </summary>
     partial class XmlBuilderTreeView : UserControl
     {
+        /// <summary>
+        /// The set of Command Buttons
+        /// </summary>
+        public IReadOnlyDictionary<ButtonType, ToolStripCommand> CommandButtons { get { return commandItems; } }
+        ToolStripCommandCollection commandItems = new ToolStripCommandCollection();
+
         /// <summary>
         /// The Worker Method of ApplicationData.DoWork
         /// </summary>
@@ -58,9 +65,13 @@ namespace DataDictionary.Main.Controls
             treeViewData.ImageList = new ImageList();
             treeViewData.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
             treeViewData.ImageList.AddImages(Enum.GetValues<ObjectValueType>().ToList());
-            viewDetailsCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemBrowse);
-            useDefaultCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemDetached);
-            overrideCommand.Image = Resources.Icon_XMLSchema.MergeImage(Resources.ItemImport);
+
+            commandItems.AddRange(
+                 new ToolStripCommand(ScopeType.ScriptingSchema, ButtonType.Browse, viewDetailsCommand),
+                 new ToolStripCommand(ScopeType.ScriptingSchema, ButtonType.Delete, useDefaultCommand),
+                 new ToolStripCommand(ScopeType.ScriptingSchema, ButtonType.Import, overrideCommand)
+                );
+
 
             IsUseDefault = false;
 
