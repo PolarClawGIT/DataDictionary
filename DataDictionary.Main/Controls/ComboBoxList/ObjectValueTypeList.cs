@@ -1,22 +1,20 @@
 ﻿using DataDictionary.Resource.Enumerations;
-using System.Xml.Schema;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
-    record XmlTypeCodeList
+    record ObjectValueTypeList
     {
-        public XmlTypeCode ValueMember { get; init; } = XmlTypeCode.None;
+        public ObjectValueType ValueMember { get; init; } = ObjectValueType.Null;
         public String DisplayMember { get { return ValueMember.GetName(); } }
 
         public static RenderValueAsList Empty { get; } = new RenderValueAsList();
-        public static XmlTypeCode NullValue { get; } = XmlTypeCode.None;
+        public static ObjectValueType NullValue { get; } = ObjectValueType.Null;
 
-        static IReadOnlyList<XmlTypeCodeList> data = Enum.GetValues<XmlTypeCode>().
-            Where(w => w.TryGetValue(out XmlTypeCodeEnumeration? value) && value.IsSupported).
-            Select(s => new XmlTypeCodeList(s)).
+        static IReadOnlyList<ObjectValueTypeList> data = Enum.GetValues<ObjectValueType>().
+            Select(s => new ObjectValueTypeList(s)).
             ToList();
 
-        XmlTypeCodeList(XmlTypeCode value) : base()
+        ObjectValueTypeList(ObjectValueType value) : base()
         { ValueMember = value; }
 
         public static void Load(ComboBoxData control)

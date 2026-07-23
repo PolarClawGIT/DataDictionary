@@ -2,6 +2,7 @@
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
+using System.Xml.Schema;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -55,6 +56,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
         public String? ObjectProperty { get { return Builder.ObjectProperty; } }
 
+        public ObjectValueType ObjectType { get { return Builder.ObjectType; } }
+
         public String? NodeName
         {
             get
@@ -100,7 +103,23 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        public XmlTypeCode RenderTypeAs
+        {
+            get
+            {
+                if (SchemaNode is not null) { return SchemaNode.RenderTypeAs; }
+                else { return Builder.RenderTypeAs; }
+            }
+
+            set
+            {
+                if (SchemaNode is not null) { SchemaNode.RenderTypeAs = value; }
+                else { Builder.RenderTypeAs = value; }
+            }
+        }
+
         public Boolean IsReadOnly { get { return SchemaNode is not null; } }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public event EventHandler<RowStateEventArgs>? RowStateChanged;

@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     XmlBuilder child = new XmlBuilder(ObjectScope, item)
                     {
                         ObjectProperty = item.Name,
-                        RenderType = item.TryConvert(out XmlTypeCode? xmlValue) ? xmlValue.Value : XmlTypeCode.None,
+                        RenderTypeAs = item.TryConvert(out XmlTypeCode? xmlValue) ? xmlValue.Value : XmlTypeCode.None,
                         ObjectType = GetObjectType(item)
                     };
 

@@ -7,7 +7,7 @@ namespace DataDictionary.Main.Enumerations
     {
         static Dictionary<NodeRenderAsType, Icon> nodeRenderIconMap = new Dictionary<NodeRenderAsType, Icon>() 
         {
-            { NodeRenderAsType.none,            Resources.Icon_XMLElementNone },
+            { NodeRenderAsType.None,            Resources.Icon_XMLElementNone },
             { NodeRenderAsType.Element,         Resources.Icon_XMLElement },
             { NodeRenderAsType.ElementText,     Resources.Icon_XMLElementText },
             { NodeRenderAsType.ElementCData,    Resources.Icon_XMLCDataTag },

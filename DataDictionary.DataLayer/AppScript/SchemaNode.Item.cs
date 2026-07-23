@@ -2,6 +2,7 @@
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
+using System.Xml.Schema;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.AppScript
@@ -25,6 +26,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// How the Value of the Node is to be rendered.
         /// </summary>
         NodeRenderAsType RenderValueAs { get; }
+
+        /// <summary>
+        /// The XmlTypeCode that this node is handled as.
+        /// </summary>
+        XmlTypeCode RenderTypeAs { get; }
     }
 
     /// <summary>
@@ -96,22 +102,32 @@ namespace DataDictionary.DataLayer.AppScript
                 String? value = GetValue(nameof(RenderValueAs));
                 if (value.TryParse(out NodeRenderAsType result))
                 { return result; }
-                else { return NodeRenderAsType.none; }
+                else { return NodeRenderAsType.None; }
             }
             set
             {
-                if (value is NodeRenderAsType.none)
+                if (value is NodeRenderAsType.None)
                 { SetValue(nameof(RenderValueAs), null); }
-                else { SetValue(nameof(RenderValueAs), value.GetEnumeration().Name); }
+                else { SetValue(nameof(RenderValueAs), value.GetName()); }
             }
         }
 
         /// <inheritdoc/>
-        [Obsolete("Not being supported/needed")]
-        protected String? FixedValue
+        public virtual XmlTypeCode RenderTypeAs
         {
-            get { return GetValue(nameof(FixedValue)); }
-            set { SetValue(nameof(FixedValue), value); }
+            get
+            {
+                String? value = GetValue(nameof(RenderTypeAs));
+                if (value.TryParse(out XmlTypeCode result))
+                { return result; }
+                else { return XmlTypeCode.None; }
+            }
+            set
+            {
+                if (value is XmlTypeCode.None)
+                { SetValue(nameof(RenderTypeAs), null); }
+                else { SetValue(nameof(RenderTypeAs), value.GetName()); }
+            }
         }
 
         /// <inheritdoc/>
@@ -133,14 +149,6 @@ namespace DataDictionary.DataLayer.AppScript
         {
             get { return GetValue(nameof(ObjectProperty)); }
             set { SetValue(nameof(ObjectProperty), value); }
-        }
-
-        /// <inheritdoc/>
-        [Obsolete("Not being supported/needed")]
-        protected Guid? PropertyId
-        {
-            get { return GetValue<Guid>(nameof(PropertyId)); }
-            set { SetValue(nameof(PropertyId), value); }
         }
 
         /// <inheritdoc/>
@@ -181,10 +189,11 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RenderOrder), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RenderTypeAs), typeof(String)){ AllowDBNull = true},
+            //new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectProperty), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull =true},
+            //new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull =true},
             ..TemporalItem.columnDefinitions,
         ];
 

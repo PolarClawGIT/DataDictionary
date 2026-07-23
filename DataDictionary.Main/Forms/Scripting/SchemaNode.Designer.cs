@@ -311,11 +311,6 @@
             renderValueAsData.Size = new Size(344, 46);
             renderValueAsData.TabIndex = 8;
             // 
-            // bindingNode
-            // 
-            bindingNode.CurrentChanged += BindingNode_CurrentChanged;
-            bindingNode.ListChanged += BindingNode_ListChanged;
-            // 
             // SchemaNode
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);

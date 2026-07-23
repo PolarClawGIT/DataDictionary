@@ -23,7 +23,19 @@
         {
             if (NodeRenderAsEnumeration.TryParse(value, null, out NodeRenderAsEnumeration? enumeration))
             { result = enumeration.Value; return true; }
-            else { result = NodeRenderAsType.none; return false; }
+            else { result = NodeRenderAsType.None; return false; }
+        }
+
+        /// <summary>
+        /// Gets the Name of the NodeRenderAsType Enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static String GetName(this NodeRenderAsType value)
+        {
+            if (NodeRenderAsEnumeration.TryGetValue(value, out NodeRenderAsEnumeration? result))
+            { return result.Name; }
+            else { return String.Empty; }
         }
     }
 }

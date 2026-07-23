@@ -19,7 +19,7 @@
         /// <summary>
         /// Not Defined or do not render
         /// </summary>
-        none,
+        None,
 
         /// <summary>
         /// Render as Element without a Value

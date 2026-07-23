@@ -60,7 +60,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     {
                         ObjectProperty = item.PropertyTitle,
                         RenderValueAs = (item.PropertyType is DomainPropertyType.Xml) ? NodeRenderAsType.ElementXML : NodeRenderAsType.ElementText,
-                        RenderType = XmlTypeCode.String,
+                        RenderTypeAs = XmlTypeCode.String,
                         ObjectType = TryConvert(item, out ObjectValueType? objectValue) ? objectValue.Value : ObjectValueType.Null
                     };
 

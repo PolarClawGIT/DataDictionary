@@ -89,16 +89,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
-        /// <summary>
-        /// The XmlTypeCode that this node is handled as.
-        /// </summary>
-        public virtual XmlTypeCode RenderType { get; set; } = XmlTypeCode.None;
-
         /// <inheritdoc/>
-        public virtual Int32? RenderOrder { get; set; }
+        public virtual XmlTypeCode RenderTypeAs { get; set; } = XmlTypeCode.None;
 
         /// <inheritdoc/>
         public virtual NodeRenderAsType RenderValueAs { get; set; }
+
+        /// <inheritdoc/>
+        public virtual Int32? RenderOrder { get; set; }
 
         /// <summary>
         /// Function that returns the NodeValue.
@@ -133,7 +131,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             RenderValueAs = source.RenderValueAs;
             RenderOrder = source.RenderOrder;
-            RenderType = source.RenderType;
+            RenderTypeAs = source.RenderTypeAs;
             
             GetValue = source.GetValue;
         }
@@ -173,12 +171,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             String? nodeValue = GetValue(value);
 
-            if (String.IsNullOrEmpty(NodeName) || RenderValueAs is NodeRenderAsType.none)
+            if (String.IsNullOrEmpty(NodeName) || RenderValueAs is NodeRenderAsType.None)
             { return null; }
 
             switch (RenderValueAs)
             {
-                case NodeRenderAsType.none:
+                case NodeRenderAsType.None:
                     return null;
                 case NodeRenderAsType.Element:
                     return new XElement(NodeName);

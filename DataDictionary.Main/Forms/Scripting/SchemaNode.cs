@@ -35,6 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeBinding: bindingNode);
 
             SetRowState(
+                bindingSchema,
                 bindingNode);
             SetTitle(bindingNode);
             SetIcon(bindingNode);
@@ -44,8 +45,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 ButtonType.Delete);
 
             CommandButtons[ButtonType.Delete].Enabled = false;
+            nodesTree.CommandButtons[ButtonType.Browse].Visible = false;
             nodesTree.DoWork = DoWork;
-            IsEnabled(false);
         }
 
 
@@ -90,44 +91,19 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
 
+                ObjectValueTypeList.Load(objectTypeData);
+                formBinding.NodeData.AddBinding(objectTypeData, e => e.ObjectType, ObjectValueTypeList.NullValue);
+
                 RenderValueAsList.Load(renderValueAsData);
                 formBinding.NodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);
 
-                //renderTypeData
+                XmlTypeCodeList.Load(renderTypeData);
+                formBinding.NodeData.AddBinding(renderTypeData, e => e.RenderTypeAs, XmlTypeCodeList.NullValue);
+
                 formBinding.NodeData.AddBinding(renderOrderData, e => e.RenderOrder);
-                
-
-                //formBinding.NodeData.AddBinding(isNameOverrideData, e => e.IsNameOverride);
-
-                //RenderValueAsList.Load(nodeRenderAsData);
-                //formBinding.NodeData.AddBinding(nodeRenderAsData, e => e.RenderValueAs);
-                //formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.RenderOrder);
-
-                //formBinding.NodeData.AddBinding(isObjectValueData, e => e.IsObjectValue);
-                //formBinding.NodeData.AddBinding(isPropertyValueData, e => e.IsPropertyValue);
-                //formBinding.NodeData.AddBinding(isFixedValueData, e => e.IsFixedValue);
-
-                //XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
-                //formBinding.NodeData.AddBinding(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
-                //formBinding.NodeData.AddBinding(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
-
-                //XScopeList.Load(nodePropertyScopeData, formBinding.Builders, "(n/a)");
-                //formBinding.NodeData.AddBinding(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
-
-                //PropertyNameList.Load(nodePropertyData, "(n/a)");
-                //formBinding.NodeData.AddBinding(nodePropertyData, e => e.PropertyNodeValue.PropertyId, PropertyNameList.NullValue);
-
-                //formBinding.NodeData.AddBinding(nodeFixedValueData, e => e.FixedNodeValue.FixedValue);
-
-                //formBinding.NodeData.LoadCombBox(nodeOwnerColumn, e => e.NodeId, e => e.NodeName);
-                //formBinding.OwnerData.AddBinding(nodeOwnerColumn, e => e.NodeOwnerId);
-                //nodeOwnershipData.AutoGenerateColumns = false;
-                //nodeOwnershipData.DataSource = formBinding.OwnerData;
 
                 nodesTree.HeaderText = String.Empty;
                 nodesTree.LoadTree(formBinding.GetBuilders());
-                //nodeTreeView.LoadTree(formBinding.)
-
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -156,28 +132,6 @@ namespace DataDictionary.Main.Forms.Scripting
             if (message is RefreshRow<SchemaDefinitionIndex> rowMessage
                 && rowMessage.Key.Equals(schemaIndex))
             { formBinding.LoadValue(schemaIndex); }
-        }
-
-        private void BindingNode_CurrentChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        void IsEnabled(Boolean newState)
-        {
-            //foreach (Control item in nodeOverviewLayout.Controls)
-            //{ item.Enabled = newState; }
-
-            //foreach (Control item in valueSourceLayout.Controls)
-            //{ item.Enabled = newState; }
-
-            //nodeTabs.Enabled = newState;
-        }
-
-        //namedScopeData.HeaderText
-        private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
-        {
-
         }
 
         private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)

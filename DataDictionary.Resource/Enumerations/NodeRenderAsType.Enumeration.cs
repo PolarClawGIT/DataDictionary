@@ -16,7 +16,7 @@ namespace DataDictionary.Resource.Enumerations
         {
             List<NodeRenderAsEnumeration> data = new List<NodeRenderAsEnumeration>()
             {
-                new NodeRenderAsEnumeration(NodeRenderAsType.none,           String.Empty){ DisplayName = "not defined" },
+                new NodeRenderAsEnumeration(NodeRenderAsType.None,           String.Empty){ DisplayName = "not defined" },
                 new NodeRenderAsEnumeration(NodeRenderAsType.Element,        "Element"),
                 new NodeRenderAsEnumeration(NodeRenderAsType.ElementText,    "Element.Text"),
                 new NodeRenderAsEnumeration(NodeRenderAsType.ElementCData,   "Element.CData"),

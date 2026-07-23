@@ -75,11 +75,11 @@ namespace DataDictionary.DataLayer.Obsolete
                 String? value = GetValue(nameof(NodeRenderAs));
                 if (value.TryParse(out NodeRenderAsType result))
                 { return result; }
-                else { return NodeRenderAsType.none; }
+                else { return NodeRenderAsType.None; }
             }
             set
             {
-                if (value is NodeRenderAsType.none)
+                if (value is NodeRenderAsType.None)
                 { SetValue(nameof(NodeRenderAs), null); }
                 else { SetValue(nameof(NodeRenderAs), value.GetEnumeration().Name); }
             }

@@ -4,11 +4,11 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record RenderValueAsList
     {
-        public NodeRenderAsType ValueMember { get; init; } = NodeRenderAsType.none;
+        public NodeRenderAsType ValueMember { get; init; } = NodeRenderAsType.None;
         public String DisplayMember { get { return ValueMember.GetEnumeration().DisplayName; } }
 
         public static RenderValueAsList Empty { get; } = new RenderValueAsList();
-        public static NodeRenderAsType NullValue { get; } = NodeRenderAsType.none;
+        public static NodeRenderAsType NullValue { get; } = NodeRenderAsType.None;
 
         static IReadOnlyList<RenderValueAsList> data = 
             [..Enum.GetValues<NodeRenderAsType>().
