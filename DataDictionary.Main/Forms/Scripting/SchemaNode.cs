@@ -38,7 +38,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingSchema,
                 bindingNode);
             SetTitle(bindingNode);
-            SetIcon(bindingNode);
+            SetIcon(ScopeType.ScriptingNode);
 
             SetCommand(
                 ButtonType.Add,
@@ -102,7 +102,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 formBinding.NodeData.AddBinding(renderOrderData, e => e.RenderOrder);
 
-                nodesTree.HeaderText = String.Empty;
                 nodesTree.LoadTree(formBinding.GetBuilders());
 
                 // Security

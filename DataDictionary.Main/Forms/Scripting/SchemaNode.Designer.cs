@@ -133,7 +133,6 @@
             // nodesTree
             // 
             nodesTree.Dock = DockStyle.Fill;
-            nodesTree.HeaderText = "(header)";
             nodesTree.Location = new Point(0, 0);
             nodesTree.Name = "nodesTree";
             nodesTree.Size = new Size(183, 402);

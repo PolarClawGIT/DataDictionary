@@ -34,7 +34,6 @@
             viewDetailsCommand = new ToolStripButton();
             overrideCommand = new ToolStripButton();
             useDefaultCommand = new ToolStripButton();
-            headerTitle = new ToolStripLabel();
             treeViewData = new TreeView();
             controlLayout = new TableLayoutPanel();
             controlLayout.SuspendLayout();
@@ -61,7 +60,7 @@
             // 
             treeViewMenu.CanOverflow = false;
             treeViewMenu.GripStyle = ToolStripGripStyle.Hidden;
-            treeViewMenu.Items.AddRange(new ToolStripItem[] { viewDetailsCommand, overrideCommand, useDefaultCommand, headerTitle });
+            treeViewMenu.Items.AddRange(new ToolStripItem[] { viewDetailsCommand, overrideCommand, useDefaultCommand });
             treeViewMenu.Location = new Point(0, 0);
             treeViewMenu.Name = "treeViewMenu";
             treeViewMenu.Size = new Size(188, 25);
@@ -100,12 +99,6 @@
             useDefaultCommand.ToolTipText = "Use Defaults";
             useDefaultCommand.Click += UseDefaultCommand_Click;
             // 
-            // headerTitle
-            // 
-            headerTitle.Name = "headerTitle";
-            headerTitle.Size = new Size(51, 22);
-            headerTitle.Text = "(header)";
-            // 
             // treeViewData
             // 
             treeViewData.Dock = DockStyle.Fill;
@@ -137,7 +130,6 @@
         #endregion
 
         private ToolStrip treeViewMenu;
-        private ToolStripLabel headerTitle;
         private TreeView treeViewData;
         private TableLayoutPanel controlLayout;
         private ToolStripButton useDefaultCommand;

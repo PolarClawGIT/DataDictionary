@@ -355,6 +355,7 @@
             // 
             objectPropertyData.AutoSize = true;
             objectPropertyData.Dock = DockStyle.Fill;
+            objectPropertyData.Enabled = false;
             objectPropertyData.HeaderText = "Object Property";
             objectPropertyData.Location = new Point(264, 107);
             objectPropertyData.Multiline = false;
@@ -370,6 +371,7 @@
             objectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             objectScopeData.Dock = DockStyle.Fill;
             objectScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            objectScopeData.Enabled = false;
             objectScopeData.HeaderText = "Object Scope";
             objectScopeData.Location = new Point(264, 55);
             objectScopeData.Name = "objectScopeData";
@@ -394,7 +396,6 @@
             // 
             nodesTree.AutoSize = true;
             nodesTree.Dock = DockStyle.Fill;
-            nodesTree.HeaderText = "(header)";
             nodesTree.Location = new Point(3, 3);
             nodesTree.Name = "nodesTree";
             nodeLayout.SetRowSpan(nodesTree, 5);

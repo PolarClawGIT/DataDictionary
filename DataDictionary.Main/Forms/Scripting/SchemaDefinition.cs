@@ -97,7 +97,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(forEachScopeData, ScopeType.Null, ScopeType.ModelAttribute, ScopeType.ModelEntity);
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
 
-                nodesTree.HeaderText = String.Empty;
                 nodesTree.LoadTree(formBinding.GetBuilders());
                 nodesTree.CommandButtons[ButtonType.Browse].Click += BrowseNodeCommand_Click;
 

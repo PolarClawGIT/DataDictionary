@@ -29,16 +29,6 @@ namespace DataDictionary.Main.Controls
         XmlBuilderTreeViewData data;
 
         /// <summary>
-        /// Text that appears at the top of the control
-        /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public String HeaderText
-        {
-            get { return headerTitle.Text ?? String.Empty; }
-            set { headerTitle.Text = value; }
-        }
-
-        /// <summary>
         /// Sets the Enabled of the useDefaultCommand
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -67,9 +57,9 @@ namespace DataDictionary.Main.Controls
             treeViewData.ImageList.AddImages(Enum.GetValues<ObjectValueType>().ToList());
 
             commandItems.AddRange(
-                 new ToolStripCommand(ScopeType.ScriptingSchema, ButtonType.Browse, viewDetailsCommand),
-                 new ToolStripCommand(ScopeType.ScriptingSchema, ButtonType.Delete, useDefaultCommand),
-                 new ToolStripCommand(ScopeType.ScriptingSchema, ButtonType.Import, overrideCommand)
+                 new ToolStripCommand(ScopeType.ScriptingNode, ButtonType.Browse, viewDetailsCommand),
+                 new ToolStripCommand(ScopeType.ScriptingNode, ButtonType.Delete, useDefaultCommand),
+                 new ToolStripCommand(ScopeType.ScriptingNode, ButtonType.Import, overrideCommand)
                 );
 
 
@@ -125,12 +115,6 @@ namespace DataDictionary.Main.Controls
         {
             if (e.Node is not null && e.Node.TreeView is not null)
             { isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus; }
-
-            if (e.Node is not null
-                && e.Node.TreeView is not null
-                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
-                && data.GetValue(e.Node) is XmlBuilderIndex value)
-            { headerTitle.Text = value.Member; }
 
             if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
         }
