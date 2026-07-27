@@ -37,6 +37,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
         }
+
         private void Value_RowStateChanged(Object? sender, RowStateEventArgs e)
         {
             if (RowStateChanged is EventHandler<RowStateEventArgs> handler)
@@ -46,18 +47,16 @@ namespace DataDictionary.Main.Forms.Scripting
         private void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
         { this.OnPropertyChanged(PropertyChanged, nameof(e.PropertyName)); }
 
-        public DataRowState RowState()
-        {
-            if (SchemaNode is not null) { return SchemaNode.RowState(); }
-            else { return DataRowState.Detached; }
-        }
-
+        /// <inheritdoc/>
         public ScopeType ObjectScope { get { return Builder.ObjectScope; } }
 
+        /// <inheritdoc/>
         public String? ObjectProperty { get { return Builder.ObjectProperty; } }
 
+        /// <inheritdoc/>
         public ObjectValueType ObjectType { get { return Builder.ObjectType; } }
 
+        /// <inheritdoc/>
         public String? NodeName
         {
             get
@@ -73,6 +72,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        /// <inheritdoc/>
         public Int32? RenderOrder
         {
             get
@@ -88,6 +88,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        /// <inheritdoc/>
         public NodeRenderAsType RenderValueAs
         {
             get
@@ -103,6 +104,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        /// <inheritdoc/>
         public XmlTypeCode RenderTypeAs
         {
             get
@@ -117,13 +119,23 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { Builder.RenderTypeAs = value; }
             }
         }
-
+        
         public Boolean IsReadOnly { get { return SchemaNode is not null; } }
 
-
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <inheritdoc/>
+        public DataRowState RowState()
+        {
+            if (SchemaNode is not null) { return SchemaNode.RowState(); }
+            else { return DataRowState.Detached; }
+        }
+
+        /// <inheritdoc/>
         public event EventHandler<RowStateEventArgs>? RowStateChanged;
 
+        /// <inheritdoc/>
         public override String ToString()
         { return Builder.ToString(); }
 

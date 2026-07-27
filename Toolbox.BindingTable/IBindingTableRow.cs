@@ -16,7 +16,15 @@ namespace Toolbox.BindingTable
     /// </summary>
     public interface IBindingRowState
     {
+        /// <summary>
+        /// Returns the DataRowState of the bound DataTable
+        /// </summary>
+        /// <returns></returns>
         DataRowState RowState();
+
+        /// <summary>
+        /// Raised when the RowState changes.
+        /// </summary>
         event EventHandler<RowStateEventArgs>? RowStateChanged;
 
         /// <summary>
