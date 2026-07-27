@@ -1,8 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms;
-using DataDictionary.Main.Forms.Scripting;
-using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;

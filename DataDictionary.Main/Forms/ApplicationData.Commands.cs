@@ -1,4 +1,5 @@
-﻿using DataDictionary.Main.Enumerations;
+﻿using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.Data;

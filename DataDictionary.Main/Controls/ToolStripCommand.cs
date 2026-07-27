@@ -2,7 +2,7 @@
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main.Controls
 {
     /// <summary>
     /// Wrapper class to hold a Dictionary of CommandTools
