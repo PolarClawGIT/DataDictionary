@@ -16,7 +16,6 @@ namespace DataDictionary.Main.Controls
         /// <inheritdoc cref="Dictionary{TKey, TValue}.Dictionary()"/>
         public ToolStripCommandCollection() : base() { }
 
-
         public void Add(ToolStripCommand item)
         { base.Add(item.Command, item); }
 

@@ -10,7 +10,8 @@
         /// <param name="index">
         /// 0 = place at start, otherwise the location specified or at the end
         /// </param>
-        public static void TransferItems(this ToolStrip target, ContextMenuStrip source, Int32 index)
+        [Obsolete("Not Used. Use ApplicationData.AddCommands", true)]
+        public static void Transfer(this ToolStrip target, ToolStripItemCollection source, Int32 index)
         {
             // There is an undocumented behavior with ToolStripItemCollection.Insert (and Add).
             // If the ToolStripItem is part of another ToolStripItemCollection,
@@ -23,10 +24,10 @@
             if (index > target.Items.Count)
             { index = target.Items.Count; }
 
-            while (source.Items.Count > 0)
+            while (source.Count > 0)
             {
-                ToolStripItem item = source.Items[0];
-                source.Items.Remove(item); // Because I cannot guarantee the behavior of ToolStripItemCollection.Insert
+                ToolStripItem item = source[0];
+                source.Remove(item); // Because I cannot guarantee the behavior of ToolStripItemCollection.Insert
 
                 item.DisplayStyle = ToolStripItemDisplayStyle.Image;
                 if (String.IsNullOrWhiteSpace(item.ToolTipText) && !String.IsNullOrWhiteSpace(item.Text))
