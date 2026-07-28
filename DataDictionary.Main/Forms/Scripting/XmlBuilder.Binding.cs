@@ -68,7 +68,7 @@ namespace DataDictionary.Main.Forms.Scripting
             set
             {
                 if (SchemaNode is not null) { SchemaNode.NodeName = value; }
-                else { Builder.NodeName = value ?? String.Empty; }
+                this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
             }
         }
 
@@ -84,7 +84,7 @@ namespace DataDictionary.Main.Forms.Scripting
             set
             {
                 if (SchemaNode is not null) { SchemaNode.RenderOrder = value; }
-                else { Builder.RenderOrder = value; }
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
             }
         }
 
@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
             set
             {
                 if (SchemaNode is not null) { SchemaNode.RenderValueAs = value; }
-                else { Builder.RenderValueAs = value; }
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
             }
         }
 
@@ -116,7 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
             set
             {
                 if (SchemaNode is not null) { SchemaNode.RenderTypeAs = value; }
-                else { Builder.RenderTypeAs = value; }
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
             }
         }
         

@@ -25,6 +25,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 NodeData = new DataBinding<XmlBuilderValue>(nodeBinding, () => nodeValues);
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
+                
             }
 
             public Boolean TrySetNode(XmlBuilderIndex key)
@@ -45,14 +46,24 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             public void AddNew(ITemplateIndex template, ISchemaDefinitionIndex schema)
-            {  }
+            {
+                if (NodeData.TryGetValue(out XmlBuilderValue? builder))
+                {
+                    SchemaNodeValue value = new SchemaNodeValue(template, schema);
+                    GetData().SchemataNodes.Add(value);
+                    builder.SchemaNode = value;
+                    NodeData.ResetCurrent();
+                }
+            }
 
             public void RemoveCurrent()
             {
-
+                if (NodeData.TryGetValue(out XmlBuilderValue? builder) && builder.SchemaNode != null)
+                {
+                    SchemaNodeIndex key = new SchemaNodeIndex(builder.SchemaNode);
+                    GetData().SchemataNodes.Remove(key);
+                }
             }
-
-            
 
             public override Boolean Authorize(ButtonType command)
             {

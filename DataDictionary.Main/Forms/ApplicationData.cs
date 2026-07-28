@@ -44,10 +44,10 @@ namespace DataDictionary.Main.Forms
         public ApplicationData() : base()
         {
             InitializeComponent();
-            InitCommands(); 
+            InitCommands();
 
             helpCommand.Image = ScopeType.ApplicationHelp.GetImage(ButtonType.Default);
-       }
+        }
 
         private void ApplicationData_Load(object sender, EventArgs e)
         {
@@ -228,8 +228,6 @@ namespace DataDictionary.Main.Forms
 
         }
 
-
-
         /// <summary>
         /// Sets the Title based on the BindingSource provided.
         /// Allows for the Title to be changed if the Title of the object changes.
@@ -237,7 +235,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="data"></param>
         /// <param name="defaultTitle"></param>
         /// <remarks>
-        /// The data in the BindingSource must be an IDataValue.
+        /// If the BindingSource is a IDataValue, the Title attribute is used. Otherwise the ToString is used.
         /// </remarks>
         protected void SetTitle(BindingSource data, String? defaultTitle = null)
         {
@@ -253,9 +251,16 @@ namespace DataDictionary.Main.Forms
 
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
-                if (data.Position >= 0 && data.Current is IDataValue dataValue)
-                { SetTitle(dataValue.Title); }
-                else { SetTitle(defaultTitle ?? String.Empty); }
+                if (data.Position >= 0)
+                {
+                    if (data.Current is IDataValue dataValue)
+                    { SetTitle(dataValue.Title); }
+                    else if (data.Current is not null
+                        && data.Current.ToString() is String objectValue
+                        && !String.IsNullOrWhiteSpace(objectValue))
+                    { SetTitle(objectValue); }
+                    else { SetTitle(defaultTitle ?? String.Empty); }
+                }
             }
 
             void Data_Disposed(Object? sender, EventArgs e)

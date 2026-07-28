@@ -138,6 +138,7 @@
             nodesTree.Size = new Size(183, 402);
             nodesTree.TabIndex = 0;
             nodesTree.OnNodeSelected += NodesTree_OnNodeSelected;
+            nodesTree.OnButtonClick += NodesTree_OnButtonClick;
             // 
             // nodeLayout
             // 

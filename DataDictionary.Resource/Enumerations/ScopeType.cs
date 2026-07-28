@@ -400,5 +400,10 @@
         /// </summary>
         ScriptingSchema,
 
+        /// <summary>
+        /// Scripting Xml Builder
+        /// </summary>
+        ScriptingBuilder,
+
     }
 }

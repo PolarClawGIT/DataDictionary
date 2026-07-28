@@ -49,13 +49,33 @@ namespace DataDictionary.Main.Forms
 
                 LoadBindingStart += OnLoadBindingStart;
                 LoadBindingComplete += OnLoadBindingComplete;
+                binding.DataError += Binding_DataError;
                 binding.Disposed += Binding_Disposed;
 
                 void Binding_Disposed(Object? sender, EventArgs e)
                 {
                     LoadBindingStart -= OnLoadBindingStart;
                     LoadBindingComplete -= OnLoadBindingComplete;
+                    binding.DataError -= Binding_DataError;
                     binding.Disposed -= Binding_Disposed;
+                }
+
+                void Binding_DataError(Object? sender, BindingManagerDataErrorEventArgs e)
+                {
+                    Exception ex = e.Exception;
+
+                    if(sender is not null)
+                    {
+                        var senderData = sender.GetType();
+                        ex.Data.Add(nameof(senderData.Name), senderData.Name);
+                    }
+
+                    if(sender is BindingSource source)
+                    {
+                        
+                    }
+                    
+                    throw ex;
                 }
             }
 
@@ -96,6 +116,10 @@ namespace DataDictionary.Main.Forms
                 }
                 else { return false; }
             }
+
+            /// <inheritdoc cref="BindingSource.ResetCurrentItem"/>
+            public void ResetCurrent()
+            { BindingData.ResetCurrentItem(); }
 
             /// <summary>
             /// Removes the Value that is the Current Value for the BindingSource.
@@ -217,7 +241,7 @@ namespace DataDictionary.Main.Forms
                 if (BindingData.DataSource is null)
                 { throw new ArgumentNullException(nameof(BindingData.DataSource), "DataSource is Null. Binding has not been loaded"); }
 
-                IReadOnlyList<String> members = ParseExpresion(expression);
+                IReadOnlyList<String> members = ParseExpression(expression);
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
                 Exception? memberException = ValidateProperty<TProperty>(members);
 
@@ -230,7 +254,7 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <summary>
-            /// Parses a Expresion Tree to return the list of Strings that represents the Path to the Property.
+            /// Parses a Expression Tree to return the list of Strings that represents the Path to the Property.
             /// </summary>
             /// <typeparam name="TProperty"></typeparam>
             /// <param name="bindingField"></param>
@@ -239,9 +263,9 @@ namespace DataDictionary.Main.Forms
             /// The method parses an Expression tree to get the name of the property to be bound.
             /// This can cause performance issues but the results can be validated against the data.<br/>
             /// </remarks>
-            protected virtual IReadOnlyList<String> ParseExpresion<TProperty>(Expression<Func<TRow, TProperty>> bindingField)
+            protected virtual IReadOnlyList<String> ParseExpression<TProperty>(Expression<Func<TRow, TProperty>> bindingField)
             {
-                // Base code was dirived from Google AI search. The orginal source is unkown.
+                // Base code was derived from Google AI search. The original source is unknown.
                 //
                 // public static class PathHelper
                 // {
@@ -261,14 +285,14 @@ namespace DataDictionary.Main.Forms
                 // }
                 //
                 // T: Becomes TRow as the base type is already known to this class.
-                //    This makes the call simplier and reduces the chance that the wrong property is bound.
+                //    This makes the call simpler and reduces the chance that the wrong property is bound.
 
 
                 List<String> members = new List<string>();
                 MemberExpression? memberExpr = bindingField.Body as MemberExpression;
                 var properties = BindingData.GetItemProperties(null);
 
-                // Prase the Expression to build the field name to be bound.
+                // Parse the Expression to build the field name to be bound.
                 while (memberExpr != null)
                 {
                     members.Insert(0, memberExpr.Member.Name);
@@ -287,7 +311,7 @@ namespace DataDictionary.Main.Forms
             /// <remarks>
             /// This is intended to trap issues with the FindGoodRow method, before that method raises an error.<br/>
             /// The FindGoodRow method (Microsoft code: System.Windows.Forms.CurrencyManager) traps errors but returns very little useful information.
-            /// This method catches common issues and throws execptions during binding rather then when data is retrived.<br/><br/>
+            /// This method catches common issues and throws exceptions during binding rather then when data is retrieved.<br/>
             /// </remarks>
             public virtual Exception? ValidateProperty<TProperty>(IReadOnlyList<String> bindingProperty)
             {
@@ -413,7 +437,7 @@ namespace DataDictionary.Main.Forms
                 DataGridViewComboBoxColumn formControl,
                 Expression<Func<TRow, TProperty>> expression)
             {
-                IReadOnlyList<String> bindingMember = ParseExpresion(expression);
+                IReadOnlyList<String> bindingMember = ParseExpression(expression);
                 Exception? bindingException = ValidateProperty<TProperty>(bindingMember);
 
                 if (bindingException is null)
@@ -441,8 +465,8 @@ namespace DataDictionary.Main.Forms
                 Expression<Func<TRow, TValueMember>> valueExpression,
                 Expression<Func<TRow, TDisplayMember>> displayExpression)
             {
-                IReadOnlyList<String> valueMember = ParseExpresion(valueExpression);
-                IReadOnlyList<String> displayMember = ParseExpresion(displayExpression);
+                IReadOnlyList<String> valueMember = ParseExpression(valueExpression);
+                IReadOnlyList<String> displayMember = ParseExpression(displayExpression);
                 Exception? valueException = ValidateProperty<TValueMember>(valueMember);
                 Exception? displayException = ValidateProperty<TValueMember>(displayMember);
 

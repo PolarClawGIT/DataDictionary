@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        IDeleteData
+        IDeleteData<ISchemaNodeIndex>, IDeleteData
     { }
 
     class SchemaNodeData : SchemaNodeCollection<SchemaNodeValue>, ISchemaNodeData
@@ -94,6 +94,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Delete(ISchemaNodeIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { WorkName = "Remove Scripting SchemaNode", DoWork = () => { Remove(dataKey); } });
+            return work;
+        }
+
+        /// <inheritdoc/>
         /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete()
         {
@@ -103,13 +111,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public void Remove(ITemplateIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        public void Remove(ISchemaNodeIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>
@@ -132,6 +142,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return new TemporalData<TemplateData, TemplateValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
         }
+
+
+
 
         //public XmlBuilderDictionary XmlBuilders { get; private set; } = new XmlBuilderDictionary();
     }

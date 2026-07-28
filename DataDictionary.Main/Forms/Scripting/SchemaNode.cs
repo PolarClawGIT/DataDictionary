@@ -137,5 +137,46 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             formBinding.TrySetNode(e);
         }
+
+        private void NodesTree_OnButtonClick(object sender, ButtonType e)
+        {
+            switch (e)
+            {
+                case ButtonType.Default:
+                    break;
+                case ButtonType.Browse:
+                    break;
+                case ButtonType.Select:
+                    break;
+                case ButtonType.Add:
+                    break;
+                case ButtonType.Delete:
+                    break;
+                case ButtonType.Save:
+                    break;
+                case ButtonType.Open:
+                    break;
+                case ButtonType.Refresh:
+                    break;
+                case ButtonType.Sync:
+                    break;
+                case ButtonType.Import:
+                    break;
+                case ButtonType.Export:
+                    break;
+                case ButtonType.OpenDatabase:
+                    break;
+                case ButtonType.SaveDatabase:
+                    break;
+                case ButtonType.DeleteDatabase:
+                    break;
+                case ButtonType.HistoryDatabase:
+                    break;
+                case ButtonType.SecurityDatabase:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

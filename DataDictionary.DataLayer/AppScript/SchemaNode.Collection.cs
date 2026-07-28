@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.AppScript
     public class SchemaNodeCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
-        IRemoveItem<ITemplateKey>,
+        IRemoveItem<ITemplateKey>,IRemoveItem<ISchemaNodeKey>,
         IReadTemporal<IModelKey>, IReadTemporal<ITemplateKey>
         where TItem : BindingTableRow, ISchemaNodeItem, new()
     {
@@ -84,6 +84,15 @@ namespace DataDictionary.DataLayer.AppScript
         public virtual void Remove(ITemplateKey TemplateKey)
         {
             TemplateKey key = new TemplateKey(TemplateKey);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(ISchemaNodeKey schemaNodeKey)
+        {
+            SchemaNodeKey key = new SchemaNodeKey(schemaNodeKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
