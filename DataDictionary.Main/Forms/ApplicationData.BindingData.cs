@@ -49,6 +49,7 @@ namespace DataDictionary.Main.Forms
 
                 LoadBindingStart += OnLoadBindingStart;
                 LoadBindingComplete += OnLoadBindingComplete;
+                binding.BindingComplete += Binding_BindingComplete;
                 binding.DataError += Binding_DataError;
                 binding.Disposed += Binding_Disposed;
 
@@ -56,28 +57,51 @@ namespace DataDictionary.Main.Forms
                 {
                     LoadBindingStart -= OnLoadBindingStart;
                     LoadBindingComplete -= OnLoadBindingComplete;
+                    binding.BindingComplete -= Binding_BindingComplete;
                     binding.DataError -= Binding_DataError;
                     binding.Disposed -= Binding_Disposed;
                 }
 
                 void Binding_DataError(Object? sender, BindingManagerDataErrorEventArgs e)
-                {
+                {   // This does not always get called.
+                    // Many exceptions are just buried and the action just does not occur.
+                    // This makes debugging exceedingly difficult as the developer gets no useful information.
+
                     Exception ex = e.Exception;
 
-                    if(sender is not null)
+                    if (sender is not null)
                     {
                         var senderData = sender.GetType();
                         ex.Data.Add(nameof(senderData.Name), senderData.Name);
                     }
 
-                    if(sender is BindingSource source)
+                    if (sender is BindingSource source)
                     {
-                        
+                        //TODO: Collect more data
                     }
-                    
+
                     throw ex;
                 }
+
+                void Binding_BindingComplete(Object? sender, BindingCompleteEventArgs e)
+                {   // This does not always get called.
+                    // Must be FormattingEnabled = true
+                    // Must implement INotifyPropertyChanged 
+
+                    if (e.BindingCompleteState is BindingCompleteState.DataError)
+                    {
+                        //TODO: Collect more data
+                        throw new Exception("Binding Data Error occurred. Need to add details here.");
+                    }
+
+                    if (e.Exception is Exception ex)
+                    {
+                        //TODO: Collect more data
+                        throw ex;
+                    }
+                }
             }
+
 
             #region BindingSource Support
             /// <summary>
@@ -247,8 +271,26 @@ namespace DataDictionary.Main.Forms
 
                 if (memberException is null)
                 {
+                    Boolean needsFormatting = false;
+
+                    // This logic is intended to handle issues that just do not throw exceptions.
+                    if (properties.Find(members.Last(), false) is PropertyDescriptor detail)
+                    {   // Special Handling for data types
+
+                        //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
+                        if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        { needsFormatting = true; }
+
+                        // Strings are already assumed to be formatted.
+                        if (detail.PropertyType == typeof(String))
+                        { needsFormatting = false; } 
+                    }
+
                     return new Binding(controlField, BindingData, String.Join(".", members))
-                    { DataSourceNullValue = nullValue };
+                    {
+                        DataSourceNullValue = nullValue,
+                        FormattingEnabled = needsFormatting 
+                    };
                 }
                 else { throw memberException; }
             }
@@ -301,6 +343,7 @@ namespace DataDictionary.Main.Forms
 
                 return members.AsReadOnly();
             }
+
 
             /// <summary>
             /// Validate the binding property against the object and return any exceptions if found.

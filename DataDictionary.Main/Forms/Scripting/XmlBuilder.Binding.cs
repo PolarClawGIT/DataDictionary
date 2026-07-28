@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             set
-            {
+            {   //TODO: This is not being called. Why?
                 if (SchemaNode is not null) { SchemaNode.RenderOrder = value; }
                 this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
             }
