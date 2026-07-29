@@ -275,21 +275,28 @@ namespace DataDictionary.Main.Forms
 
                     // This logic is intended to handle issues that just do not throw exceptions.
                     if (properties.Find(members.Last(), false) is PropertyDescriptor detail)
-                    {   // Special Handling for data types
-
-                        //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
+                    {   //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
                         if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                         { needsFormatting = true; }
 
                         // Strings are already assumed to be formatted.
                         if (detail.PropertyType == typeof(String))
-                        { needsFormatting = false; } 
+                        { needsFormatting = false; }
+                    }
+                    else
+                    {
+                        Exception ex = new ArgumentException("The Property Name could not be resolved.");
+                        ex.Data.Add(nameof(members), String.Join(".", members));
+                        foreach (PropertyDescriptor item in properties)
+                        { ex.Data.Add(item.Name, item.PropertyType.Name); }
+
+                        throw ex;
                     }
 
                     return new Binding(controlField, BindingData, String.Join(".", members))
                     {
                         DataSourceNullValue = nullValue,
-                        FormattingEnabled = needsFormatting 
+                        FormattingEnabled = needsFormatting
                     };
                 }
                 else { throw memberException; }
