@@ -13,6 +13,10 @@ namespace DataDictionary.Main.Forms.Scripting
     class XmlBuilderValue : IXmlBuilder, IBindingPropertyChanged, IBindingRowState
     {
         public required XmlBuilder Builder { get; init; }
+
+        /// <summary>
+        /// Sets the Schema Node linked to the XmlBuilder.
+        /// </summary>
         public SchemaNodeValue? SchemaNode
         {
             get { return field; }
@@ -21,9 +25,15 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 if (value is not null && field is null)
                 {
-                    value.ObjectScope = Builder.ObjectScope;
-                    value.ObjectProperty = Builder.ObjectProperty;
-                    value.RenderValueAs = Builder.RenderValueAs;
+                    if(value.ObjectScope is ScopeType.Null)
+                    {   // The incoming SchemaNode is "blank", fill it with defaults.
+                        value.ObjectScope = Builder.ObjectScope;
+                        value.ObjectProperty = Builder.ObjectProperty;
+                        value.NodeName = Builder.NodeName;
+                        value.RenderValueAs = Builder.RenderValueAs;
+                        value.RenderTypeAs = Builder.RenderTypeAs;
+                        value.RenderOrder = Builder.RenderOrder;
+                    }
 
                     value.RowStateChanged += Value_RowStateChanged;
                     value.PropertyChanged += Value_PropertyChanged;
@@ -82,7 +92,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             set
-            {   //TODO: This is not being called. Why?
+            {   
                 if (SchemaNode is not null) { SchemaNode.RenderOrder = value; }
                 this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
             }
@@ -119,7 +129,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
             }
         }
-        
+
+        /// <summary>
+        /// This is Read Only. No SchemaNode is associated with this instance.
+        /// </summary>
         public Boolean IsReadOnly { get { return SchemaNode is not null; } }
 
         /// <inheritdoc/>
