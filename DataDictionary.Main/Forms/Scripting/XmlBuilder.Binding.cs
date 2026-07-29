@@ -2,6 +2,7 @@
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
+using System.Xml;
 using System.Xml.Schema;
 using Toolbox.BindingTable;
 
@@ -30,8 +31,8 @@ namespace DataDictionary.Main.Forms.Scripting
                         value.ObjectScope = Builder.ObjectScope;
                         value.ObjectProperty = Builder.ObjectProperty;
                         value.NodeName = Builder.NodeName;
-                        value.RenderValueAs = Builder.RenderValueAs;
-                        value.RenderTypeAs = Builder.RenderTypeAs;
+                        value.RenderNodeType = Builder.RenderNodeType;
+                        value.RenderTypeCode = Builder.RenderTypeCode;
                         value.RenderOrder = Builder.RenderOrder;
                     }
 
@@ -98,42 +99,42 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        /// <inheritdoc/>
-        public NodeRenderAsType RenderValueAs
-        {
-            get
-            {
-                if (SchemaNode is not null) { return SchemaNode.RenderValueAs; }
-                else { return Builder.RenderValueAs; }
-            }
-
-            set
-            {
-                if (SchemaNode is not null) { SchemaNode.RenderValueAs = value; }
-                this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
-            }
-        }
-
-        /// <inheritdoc/>
-        public XmlTypeCode RenderTypeAs
-        {
-            get
-            {
-                if (SchemaNode is not null) { return SchemaNode.RenderTypeAs; }
-                else { return Builder.RenderTypeAs; }
-            }
-
-            set
-            {
-                if (SchemaNode is not null) { SchemaNode.RenderTypeAs = value; }
-                this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
-            }
-        }
-
         /// <summary>
         /// This is Read Only. No SchemaNode is associated with this instance.
         /// </summary>
         public Boolean IsReadOnly { get { return SchemaNode is not null; } }
+
+        /// <inheritdoc/>
+        public XmlNodeType RenderNodeType
+        {
+            get
+            {
+                if (SchemaNode is not null) { return SchemaNode.RenderNodeType; }
+                else { return Builder.RenderNodeType; }
+            }
+
+            set
+            {
+                if (SchemaNode is not null) { SchemaNode.RenderNodeType = value; }
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderNodeType));
+            }
+        }
+
+        /// <inheritdoc/>
+        public XmlTypeCode RenderTypeCode
+        {
+            get
+            {
+                if (SchemaNode is not null) { return SchemaNode.RenderTypeCode; }
+                else { return Builder.RenderTypeCode; }
+            }
+
+            set
+            {
+                if (SchemaNode is not null) { SchemaNode.RenderTypeCode = value; }
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderTypeCode));
+            }
+        }
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;

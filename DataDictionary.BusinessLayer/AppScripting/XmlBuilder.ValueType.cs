@@ -2,6 +2,7 @@
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 
@@ -17,7 +18,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         private XmlBuilder(ScopeType scope, PropertyInfo property) : this(scope)
         {
             BuilderPath = new XmlBuilderIndex(scope, property.Name);
-            RenderValueAs = NodeRenderAsType.ElementText;
+            RenderNodeType = XmlNodeType.Text;
             GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
         }
 
@@ -63,7 +64,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     XmlBuilder child = new XmlBuilder(ObjectScope, item)
                     {
                         ObjectProperty = item.Name,
-                        RenderTypeAs = item.TryConvert(out XmlTypeCode? xmlValue) ? xmlValue.Value : XmlTypeCode.None,
+                        RenderTypeCode= item.TryConvert(out XmlTypeCode? xmlValue) ? xmlValue.Value : XmlTypeCode.None,
                         ObjectType = GetObjectType(item)
                     };
 

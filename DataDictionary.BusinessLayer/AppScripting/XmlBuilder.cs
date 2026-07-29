@@ -90,18 +90,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public virtual XmlTypeCode RenderTypeAs { get; set; } = XmlTypeCode.None;
-
-        /// <inheritdoc/>
-        public virtual NodeRenderAsType RenderValueAs { get; set; }
-
-        /// <inheritdoc/>
         public virtual Int32? RenderOrder { get; set; }
 
         /// <summary>
         /// Function that returns the NodeValue.
         /// </summary>
         protected Func<Object, String> GetValue { get; set; }
+
+        /// <inheritdoc/>
+        public XmlNodeType RenderNodeType { get; set; }
+
+        /// <inheritdoc/>
+        public XmlTypeCode RenderTypeCode { get; set; }
 
         /// <summary>
         /// Basic XmlBuilder constructor. The value is set to the ToString of the Build object.
@@ -111,7 +111,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             ObjectScope = scope;
             BuilderPath = new XmlBuilderIndex(scope);
-            RenderValueAs = NodeRenderAsType.Element;
+            RenderNodeType = XmlNodeType.Element;
+            RenderTypeCode = XmlTypeCode.Node;
             NodeName = String.Empty;
 
             GetValue = (value) => GetValueDelegate((dynamic)value);
@@ -128,10 +129,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             ObjectProperty = source.ObjectProperty;
             ObjectType = source.ObjectType;
-
-            RenderValueAs = source.RenderValueAs;
+            RenderTypeCode = source.RenderTypeCode;
+            RenderNodeType = source.RenderNodeType;
             RenderOrder = source.RenderOrder;
-            RenderTypeAs = source.RenderTypeAs;
             
             GetValue = source.GetValue;
         }
@@ -171,41 +171,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             String? nodeValue = GetValue(value);
 
-            if (String.IsNullOrEmpty(NodeName) || RenderValueAs is NodeRenderAsType.None)
+            if (String.IsNullOrEmpty(NodeName) || RenderNodeType is XmlNodeType.None)
             { return null; }
 
-            switch (RenderValueAs)
+            switch (RenderNodeType)
             {
-                case NodeRenderAsType.None:
+                case XmlNodeType.None:
                     return null;
-                case NodeRenderAsType.Element:
+                case XmlNodeType.Element:
                     return new XElement(NodeName);
-                case NodeRenderAsType.ElementText:
+                case XmlNodeType.Text:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XElement(NodeName, nodeValue);
-                case NodeRenderAsType.ElementCData:
+                case XmlNodeType.CDATA:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XElement(NodeName, new XCData(nodeValue));
-                case NodeRenderAsType.ElementXML:
-                    try
-                    {
-                        if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
-                        return new XElement(NodeName, XElement.Parse(nodeValue));
-                    }
-                    catch (Exception fragmentEx)
-                    {
-                        fragmentEx.Data.Add(nameof(NodeName), NodeName);
-                        fragmentEx.Data.Add(nameof(nodeValue), nodeValue);
-                        fragmentEx.Data.Add(nameof(RenderValueAs), RenderValueAs.ToString());
-                        throw;
-                    }
-                case NodeRenderAsType.AttributeText:
+                case XmlNodeType.Attribute:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XAttribute(NodeName, nodeValue);
                 default:
-                    Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(NodeRenderAsType)));
+                    Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(RenderNodeType)));
                     ex.Data.Add(nameof(NodeName), NodeName);
-                    ex.Data.Add(nameof(RenderValueAs), RenderValueAs.ToString());
+                    ex.Data.Add(nameof(RenderNodeType), RenderNodeType.ToString());
                     throw ex;
             }
         }

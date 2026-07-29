@@ -3,6 +3,7 @@
     /// <summary>
     /// Extensions on NodeRenderAs Enum. 
     /// </summary>
+    [Obsolete("Replace with XmlNodeType", true)]
     public static class NodeRenderAsExtension
     {
         /// <summary>

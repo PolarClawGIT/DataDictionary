@@ -44,8 +44,8 @@
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             renderOrderData = new DataDictionary.Main.Controls.TextBoxData();
-            renderTypeData = new DataDictionary.Main.Controls.ComboBoxData();
-            renderValueAsData = new DataDictionary.Main.Controls.ComboBoxData();
+            renderTypeCodeData = new DataDictionary.Main.Controls.ComboBoxData();
+            renderNodeTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingNode = new BindingSource(components);
@@ -245,8 +245,8 @@
             renderAsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             renderAsLayout.Controls.Add(nodeNameData, 0, 0);
             renderAsLayout.Controls.Add(renderOrderData, 0, 3);
-            renderAsLayout.Controls.Add(renderTypeData, 0, 2);
-            renderAsLayout.Controls.Add(renderValueAsData, 0, 1);
+            renderAsLayout.Controls.Add(renderTypeCodeData, 0, 2);
+            renderAsLayout.Controls.Add(renderNodeTypeData, 0, 1);
             renderAsLayout.Dock = DockStyle.Fill;
             renderAsLayout.Location = new Point(3, 19);
             renderAsLayout.Name = "renderAsLayout";
@@ -285,31 +285,31 @@
             renderOrderData.TabIndex = 12;
             renderOrderData.WordWrap = true;
             // 
-            // renderTypeData
+            // renderTypeCodeData
             // 
-            renderTypeData.AutoSize = true;
-            renderTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            renderTypeData.Dock = DockStyle.Fill;
-            renderTypeData.DropDownStyle = ComboBoxStyle.DropDown;
-            renderTypeData.HeaderText = "Render Data Type";
-            renderTypeData.Location = new Point(3, 105);
-            renderTypeData.Name = "renderTypeData";
-            renderTypeData.ReadOnly = false;
-            renderTypeData.Size = new Size(344, 46);
-            renderTypeData.TabIndex = 11;
+            renderTypeCodeData.AutoSize = true;
+            renderTypeCodeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            renderTypeCodeData.Dock = DockStyle.Fill;
+            renderTypeCodeData.DropDownStyle = ComboBoxStyle.DropDown;
+            renderTypeCodeData.HeaderText = "Render Data Type";
+            renderTypeCodeData.Location = new Point(3, 105);
+            renderTypeCodeData.Name = "renderTypeCodeData";
+            renderTypeCodeData.ReadOnly = false;
+            renderTypeCodeData.Size = new Size(344, 46);
+            renderTypeCodeData.TabIndex = 11;
             // 
-            // renderValueAsData
+            // renderNodeTypeData
             // 
-            renderValueAsData.AutoSize = true;
-            renderValueAsData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            renderValueAsData.Dock = DockStyle.Fill;
-            renderValueAsData.DropDownStyle = ComboBoxStyle.DropDown;
-            renderValueAsData.HeaderText = "Render Value as";
-            renderValueAsData.Location = new Point(3, 53);
-            renderValueAsData.Name = "renderValueAsData";
-            renderValueAsData.ReadOnly = false;
-            renderValueAsData.Size = new Size(344, 46);
-            renderValueAsData.TabIndex = 8;
+            renderNodeTypeData.AutoSize = true;
+            renderNodeTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            renderNodeTypeData.Dock = DockStyle.Fill;
+            renderNodeTypeData.DropDownStyle = ComboBoxStyle.DropDown;
+            renderNodeTypeData.HeaderText = "Render Value as";
+            renderNodeTypeData.Location = new Point(3, 53);
+            renderNodeTypeData.Name = "renderNodeTypeData";
+            renderNodeTypeData.ReadOnly = false;
+            renderNodeTypeData.Size = new Size(344, 46);
+            renderNodeTypeData.TabIndex = 8;
             // 
             // SchemaNode
             // 
@@ -361,8 +361,8 @@
         private Controls.ComboBoxData objectScopeData;
         private Controls.TextBoxData objectPropertyData;
         private Controls.ComboBoxData objectTypeData;
-        private Controls.ComboBoxData renderValueAsData;
-        private Controls.ComboBoxData renderTypeData;
+        private Controls.ComboBoxData renderNodeTypeData;
+        private Controls.ComboBoxData renderTypeCodeData;
         private Controls.TextBoxData renderOrderData;
         private SplitContainer splitContainer1;
         private Controls.XmlBuilderTreeView nodesTree;

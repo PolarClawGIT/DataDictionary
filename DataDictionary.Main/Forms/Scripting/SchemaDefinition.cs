@@ -107,8 +107,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
                 formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
 
-                RenderValueAsList.Load(renderValueAsData);
-                formBinding.NodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);
+                XmlNodeTypeList.Load(renderNodeTypeData);
+                formBinding.NodeData.AddBinding(renderNodeTypeData, e => e.RenderNodeType, XmlNodeTypeList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());

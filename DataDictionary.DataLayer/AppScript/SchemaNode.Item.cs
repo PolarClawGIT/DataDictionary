@@ -1,7 +1,7 @@
-﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
+using System.Xml;
 using System.Xml.Schema;
 using Toolbox.BindingTable;
 
@@ -18,19 +18,21 @@ namespace DataDictionary.DataLayer.AppScript
         String? NodeName { get; }
 
         /// <summary>
+        /// The XmlNodeType of Node to be Rendered.
+        /// </summary>
+        /// <see cref="XmlNodeType"/>
+        XmlNodeType RenderNodeType { get; }
+
+        /// <summary>
+        /// The XmlTypeCode of the data type of the Node to be Rendered.
+        /// </summary>
+        /// <see cref="XmlTypeCode"/>
+        XmlTypeCode RenderTypeCode { get; }
+
+        /// <summary>
         /// Order that the Node appears in.
         /// </summary>
         Int32? RenderOrder { get; }
-
-        /// <summary>
-        /// How the Value of the Node is to be rendered.
-        /// </summary>
-        NodeRenderAsType RenderValueAs { get; }
-
-        /// <summary>
-        /// The XmlTypeCode that this node is handled as.
-        /// </summary>
-        XmlTypeCode RenderTypeAs { get; }
     }
 
     /// <summary>
@@ -95,29 +97,29 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public virtual NodeRenderAsType RenderValueAs
+        public XmlNodeType RenderNodeType
         {
             get
             {
-                String? value = GetValue(nameof(RenderValueAs));
-                if (value.TryParse(out NodeRenderAsType result))
+                String? value = GetValue(nameof(RenderNodeType));
+                if (value.TryParse(out XmlNodeType result))
                 { return result; }
-                else { return NodeRenderAsType.None; }
+                else { return XmlNodeType.None; }
             }
             set
             {
-                if (value is NodeRenderAsType.None)
-                { SetValue(nameof(RenderValueAs), null); }
-                else { SetValue(nameof(RenderValueAs), value.GetName()); }
+                if (value is XmlNodeType.None)
+                { SetValue(nameof(RenderNodeType), null); }
+                else { SetValue(nameof(RenderNodeType), value.GetName()); }
             }
         }
 
         /// <inheritdoc/>
-        public virtual XmlTypeCode RenderTypeAs
+        public XmlTypeCode RenderTypeCode 
         {
             get
             {
-                String? value = GetValue(nameof(RenderTypeAs));
+                String? value = GetValue(nameof(RenderTypeCode));
                 if (value.TryParse(out XmlTypeCode result))
                 { return result; }
                 else { return XmlTypeCode.None; }
@@ -125,8 +127,8 @@ namespace DataDictionary.DataLayer.AppScript
             set
             {
                 if (value is XmlTypeCode.None)
-                { SetValue(nameof(RenderTypeAs), null); }
-                else { SetValue(nameof(RenderTypeAs), value.GetName()); }
+                { SetValue(nameof(RenderTypeCode), null); }
+                else { SetValue(nameof(RenderTypeCode), value.GetName()); }
             }
         }
 
@@ -153,6 +155,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
+
 
         /// <summary>
         /// Constructor for Scripting Schema Definition
@@ -186,14 +189,12 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RenderOrder), typeof(Int32)){ AllowDBNull = true},
-            new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RenderTypeAs), typeof(String)){ AllowDBNull = true},
-            //new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectProperty), typeof(String)){ AllowDBNull = true},
-            //new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull =true},
+            new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RenderNodeType), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RenderTypeCode), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RenderOrder), typeof(Int32)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

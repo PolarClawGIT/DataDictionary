@@ -94,11 +94,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 ObjectValueTypeList.Load(objectTypeData);
                 formBinding.NodeData.AddBinding(objectTypeData, e => e.ObjectType, ObjectValueTypeList.NullValue);
 
-                RenderValueAsList.Load(renderValueAsData);
-                formBinding.NodeData.AddBinding(renderValueAsData, e => e.RenderValueAs, RenderValueAsList.NullValue);
+                XmlNodeTypeList.Load(renderNodeTypeData);
+                formBinding.NodeData.AddBinding(renderNodeTypeData, e => e.RenderNodeType, XmlNodeTypeList.NullValue);
 
-                XmlTypeCodeList.Load(renderTypeData);
-                formBinding.NodeData.AddBinding(renderTypeData, e => e.RenderTypeAs, XmlTypeCodeList.NullValue);
+                XmlTypeCodeList.Load(renderTypeCodeData);
+                formBinding.NodeData.AddBinding(renderTypeCodeData, e => e.RenderTypeCode, XmlTypeCodeList.NullValue);
 
                 formBinding.NodeData.AddBinding(renderOrderData, e => e.RenderOrder);
 

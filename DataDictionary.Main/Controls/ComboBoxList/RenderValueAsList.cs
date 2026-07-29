@@ -2,6 +2,7 @@
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
+    [Obsolete("Use XmlNodeTypeList", true)]
     record RenderValueAsList
     {
         public NodeRenderAsType ValueMember { get; init; } = NodeRenderAsType.None;
@@ -10,7 +11,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         public static RenderValueAsList Empty { get; } = new RenderValueAsList();
         public static NodeRenderAsType NullValue { get; } = NodeRenderAsType.None;
 
-        static IReadOnlyList<RenderValueAsList> data = 
+        static IReadOnlyList<RenderValueAsList> data =
             [..Enum.GetValues<NodeRenderAsType>().
                Select(s => new RenderValueAsList() { ValueMember = s })];
 

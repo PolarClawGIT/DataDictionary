@@ -10,7 +10,7 @@ namespace DataDictionary.Resource.Enumerations
     public class XmlTypeCodeEnumeration : Enumeration<XmlTypeCode, XmlTypeCodeEnumeration>, IXmlTypeCodeEnumeration
     {
         // References:
-        // DbType: https://learn.microsoft.com/en-us/dotnet/api/system.xml.schema.xmltypecode?view=net-10.0
+        // Enum: https://learn.microsoft.com/en-us/dotnet/api/system.xml.schema.xmltypecode?view=net-10.0
         // .Net Mapping: https://learn.microsoft.com/en-us/dotnet/standard/data/xml/mapping-xml-data-types-to-clr-types
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace DataDictionary.Resource.Enumerations
         {
             List<XmlTypeCodeEnumeration> data = new List<XmlTypeCodeEnumeration>()
             {
-                new XmlTypeCodeEnumeration(XmlTypeCode.None) {IsInfrastructure = false, IsSupported = true},
+                new XmlTypeCodeEnumeration(XmlTypeCode.None, String.Empty) { DisplayName = "None", IsInfrastructure = false, IsSupported = true},
                 new XmlTypeCodeEnumeration(XmlTypeCode.Item) {IsInfrastructure = false},
                 new XmlTypeCodeEnumeration(XmlTypeCode.Node),
                 new XmlTypeCodeEnumeration(XmlTypeCode.Document),

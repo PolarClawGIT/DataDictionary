@@ -7,7 +7,6 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         public ObjectValueType ValueMember { get; init; } = ObjectValueType.Null;
         public String DisplayMember { get { return ValueMember.GetName(); } }
 
-        public static RenderValueAsList Empty { get; } = new RenderValueAsList();
         public static ObjectValueType NullValue { get; } = ObjectValueType.Null;
 
         static IReadOnlyList<ObjectValueTypeList> data = Enum.GetValues<ObjectValueType>().

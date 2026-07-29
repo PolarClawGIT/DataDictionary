@@ -46,7 +46,7 @@
             fileSuffixData = new DataDictionary.Main.Controls.TextBoxData();
             fileExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
-            renderValueAsData = new DataDictionary.Main.Controls.ComboBoxData();
+            renderNodeTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             objectPropertyData = new DataDictionary.Main.Controls.TextBoxData();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
@@ -306,7 +306,7 @@
             nodeLayout.ColumnCount = 2;
             nodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             nodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            nodeLayout.Controls.Add(renderValueAsData, 1, 4);
+            nodeLayout.Controls.Add(renderNodeTypeData, 1, 4);
             nodeLayout.Controls.Add(nodeNameData, 1, 3);
             nodeLayout.Controls.Add(objectPropertyData, 1, 2);
             nodeLayout.Controls.Add(objectScopeData, 1, 1);
@@ -325,18 +325,18 @@
             nodeLayout.Size = new Size(522, 298);
             nodeLayout.TabIndex = 6;
             // 
-            // renderValueAsData
+            // renderNodeTypeData
             // 
-            renderValueAsData.AutoSize = true;
-            renderValueAsData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            renderValueAsData.Dock = DockStyle.Fill;
-            renderValueAsData.DropDownStyle = ComboBoxStyle.DropDown;
-            renderValueAsData.HeaderText = "Render Value as";
-            renderValueAsData.Location = new Point(264, 207);
-            renderValueAsData.Name = "renderValueAsData";
-            renderValueAsData.ReadOnly = false;
-            renderValueAsData.Size = new Size(255, 88);
-            renderValueAsData.TabIndex = 7;
+            renderNodeTypeData.AutoSize = true;
+            renderNodeTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            renderNodeTypeData.Dock = DockStyle.Fill;
+            renderNodeTypeData.DropDownStyle = ComboBoxStyle.DropDown;
+            renderNodeTypeData.HeaderText = "Render Value as";
+            renderNodeTypeData.Location = new Point(264, 207);
+            renderNodeTypeData.Name = "renderNodeTypeData";
+            renderNodeTypeData.ReadOnly = false;
+            renderNodeTypeData.Size = new Size(255, 88);
+            renderNodeTypeData.TabIndex = 7;
             // 
             // nodeNameData
             // 
@@ -579,7 +579,7 @@
         private Controls.ComboBoxData objectScopeData;
         private Controls.TextBoxData objectPropertyData;
         private Controls.TextBoxData nodeNameData;
-        private Controls.ComboBoxData renderValueAsData;
+        private Controls.ComboBoxData renderNodeTypeData;
         private BindingSource bindingNode;
         private Controls.XmlBuilderTreeView nodesTree;
     }

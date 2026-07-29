@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.Obsolete
     /// <summary>
     /// Implementation for the Scripting Template Node item.
     /// </summary>
-    [Serializable]
+    [Serializable, Obsolete]
     public class TemplateNodeItem : BindingTableRow, ITemplateNodeItem, ISerializable
     {
         /// <inheritdoc/>

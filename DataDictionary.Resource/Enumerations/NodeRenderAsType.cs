@@ -3,6 +3,7 @@
     /// <summary>
     /// Interface for Scripting NodeValueAs
     /// </summary>
+    [Obsolete("Replace with XmlNodeType",true)]
     public interface INodeRenderAs
     {
         /// <summary>
@@ -14,6 +15,7 @@
     /// <summary>
     /// List of supported rendering methods for Node Values
     /// </summary>
+    [Obsolete("Replace with XmlNodeType",true)]
     public enum NodeRenderAsType // NodeRenderAsTypeEnumeration
     {
         /// <summary>

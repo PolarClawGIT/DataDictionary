@@ -5,10 +5,9 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record XmlTypeCodeList
     {
-        public XmlTypeCode ValueMember { get; init; } = XmlTypeCode.None;
-        public String DisplayMember { get { return ValueMember.GetName(); } }
+        public XmlTypeCode ValueMember { get; init; }
+        public String DisplayMember { get; init; }
 
-        public static RenderValueAsList Empty { get; } = new RenderValueAsList();
         public static XmlTypeCode NullValue { get; } = XmlTypeCode.None;
 
         static IReadOnlyList<XmlTypeCodeList> data = Enum.GetValues<XmlTypeCode>().
@@ -16,8 +15,15 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             Select(s => new XmlTypeCodeList(s)).
             ToList();
 
-        XmlTypeCodeList(XmlTypeCode value) : base()
-        { ValueMember = value; }
+        XmlTypeCodeList(XmlTypeCode xmlType) : base()
+        {
+            ValueMember = xmlType;
+
+            if (xmlType.TryGetValue(out XmlTypeCodeEnumeration? value))
+            { DisplayMember = value.DisplayName; }
+            else
+            { DisplayMember = Enum.GetName<XmlTypeCode>(xmlType) ?? String.Empty; }
+        }
 
         public static void Load(ComboBoxData control)
         {

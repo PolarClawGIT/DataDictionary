@@ -4,6 +4,7 @@ namespace DataDictionary.Resource.Enumerations
     /// <summary>
     /// Enumeration support class for Node Render As type.
     /// </summary>
+    [Obsolete("Replace with XmlNodeType", true)]
     class NodeRenderAsEnumeration : Enumeration<NodeRenderAsType, NodeRenderAsEnumeration>
     {
         /// <summary>
