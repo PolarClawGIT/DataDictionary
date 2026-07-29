@@ -129,6 +129,7 @@
     <Folder Include="AppScript\Triggers" />
     <Folder Include="AppScript\User Defined Table Types" />
     <Folder Include="AppScript\Views" />
+    <Folder Include="Obsolete\Temporal Table" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -606,16 +607,9 @@
     <Build Include="HsScript\Tables\SchemaNode.sql" />
     <Build Include="AppScript\Triggers\trigSchemaNode.sql" />
     <Build Include="AppScript\User Defined Table Types\udttSchemaNode.sql" />
-    <Build Include="AppScript\Tables\SchemaNodeOwner.sql" />
-    <Build Include="HsScript\Tables\SchemaNodeOwner.sql" />
-    <Build Include="AppScript\Triggers\trigSchemaNodeOwner.sql" />
-    <Build Include="AppScript\User Defined Table Types\udttSchemaNodeOwner.sql" />
     <Build Include="AppScript\Views\SchemaNode.HS.sql" />
-    <Build Include="AppScript\Views\SchemaNodeOwner.HS.sql" />
     <Build Include="AppScript\Stored Procedures\procGetSchemaNode.sql" />
-    <Build Include="AppScript\Stored Procedures\procGetSchemaNodeOwner.sql" />
     <Build Include="AppScript\Stored Procedures\procSetSchemaNode.sql" />
-    <Build Include="AppScript\Stored Procedures\procSetSchemaNodeOwner.sql" />
     <Build Include="AppScript\Tables\Transform.sql" />
     <Build Include="AppScript\Tables\TemplateObject.sql" />
     <Build Include="AppScript\User Defined Table Types\udttTransform.sql" />
@@ -649,6 +643,13 @@
     <Build Include="AppScript\Stored Procedures\procSetSchemaDocument.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTransformDocument.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTransformDocument.sql" />
+    <Build Include="Obsolete\Tables\SchemaNodeOwner.sql" />
+    <Build Include="Obsolete\Triggers\trigSchemaNodeOwner.sql" />
+    <Build Include="Obsolete\User Defined Table Types\udttSchemaNodeOwner.sql" />
+    <Build Include="Obsolete\Temporal Table\SchemaNodeOwner.sql" />
+    <Build Include="Obsolete\Stored Procedures\procGetSchemaNodeOwner.sql" />
+    <Build Include="Obsolete\Stored Procedures\procSetSchemaNodeOwner.sql" />
+    <Build Include="Obsolete\Views\SchemaNodeOwner.HS.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
