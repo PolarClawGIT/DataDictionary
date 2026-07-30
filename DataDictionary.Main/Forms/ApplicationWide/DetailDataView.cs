@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +14,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             InitializeComponent();
 
             SetRowState(bindingSource);
+
+            CommandButtons[ButtonType.SaveDatabase].Enabled = false;
+            CommandButtons[ButtonType.OpenDatabase].Enabled = false;
+            CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
         }
 
         public DetailDataView(IBindingTable data) : this()
@@ -57,6 +62,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     dataTableValue.DataSource = data;
                 }
             }
+
+            IsLocked(false);
         }
 
         /// <summary>
