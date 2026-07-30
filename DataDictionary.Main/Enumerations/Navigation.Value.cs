@@ -92,16 +92,8 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.ModelProcessSubjectArea),
 
                 new NavigationValue(ScopeType.Scripting),
-                new NavigationValue(ScopeType.ScriptingData),
-                new NavigationValue(ScopeType.ScriptingDataObject),
-                new NavigationValue(ScopeType.ScriptingTemplateNode),
-                new NavigationValue(ScopeType.ScriptingTemplateNodeOwner),
-                new NavigationValue(ScopeType.ScriptingTemplateData),
-
                 new NavigationValue(ScopeType.ScriptingTemplate),
                 new NavigationValue(ScopeType.ScriptingNode),
-                new NavigationValue(ScopeType.ScriptingNodeOwner),
-                new NavigationValue(ScopeType.ScriptingObject),
                 new NavigationValue(ScopeType.ScriptingSchema) { GroupBy = false},
                 new NavigationValue(ScopeType.ScriptingTransform) { GroupBy = false},
                 new NavigationValue(ScopeType.ScriptingDocument),

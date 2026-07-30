@@ -113,17 +113,9 @@ class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>,
             new ScopeEnumeration(ScopeType.ScriptingTemplate,          ScopeType.Scripting,         "Scripting.Template"),
             new ScopeEnumeration(ScopeType.ScriptingDocument,          ScopeType.ScriptingTemplate, "Scripting.Template.Document"),
             new ScopeEnumeration(ScopeType.ScriptingTransform,         ScopeType.ScriptingTemplate, "Scripting.Template.Transform"),
-            new ScopeEnumeration(ScopeType.ScriptingObject,            ScopeType.ScriptingTemplate, "Scripting.Template.Object"),
             new ScopeEnumeration(ScopeType.ScriptingSchema,            ScopeType.ScriptingTemplate, "Scripting.Template.Schema"),
             new ScopeEnumeration(ScopeType.ScriptingNode,              ScopeType.ScriptingSchema,   "Scripting.Template.Schema.Node"),
-            new ScopeEnumeration(ScopeType.ScriptingNodeOwner,         ScopeType.ScriptingSchema,   "Scripting.Template.Schema.NodeOwner"),
-
-            new ScopeEnumeration(ScopeType.ScriptingData,              ScopeType.Scripting,         "Scripting.Data"),
-            new ScopeEnumeration(ScopeType.ScriptingDataObject,        ScopeType.ScriptingData,     "Scripting.Data.Object"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplateNode,      ScopeType.Scripting,         "Scripting.Template.Node"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplateNodeOwner, ScopeType.ScriptingTemplate, "Scripting.Template.NodeOwner"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplateData,      ScopeType.ScriptingTemplate, "Scripting.Template.Data"),
-
+            new ScopeEnumeration(ScopeType.ScriptingBuilder,           ScopeType.Scripting,         "Scripting.Builder"),
         };
 
         BuildDictionary(data);

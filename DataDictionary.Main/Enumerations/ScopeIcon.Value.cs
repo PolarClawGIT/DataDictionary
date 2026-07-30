@@ -83,22 +83,12 @@ namespace DataDictionary.Main.Enumerations
             { ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram },
 
             { ScopeType.Scripting,                  Resources.Icon_Script },
-            //{ ScopeType.ScriptingTemplate,          Resources.Icon_XMLSchema },
-            { ScopeType.ScriptingData,              Resources.Icon_XPath },
-            { ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant },
-            //{ ScopeType.ScriptingDocument,          Resources.Icon_XMLFile },
-            { ScopeType.ScriptingTemplateNode,      Resources.Icon_Tag },
-            { ScopeType.ScriptingTemplateNodeOwner, Resources.Icon_XMLElement },
-            { ScopeType.ScriptingTemplateData,      Resources.Icon_XPath },
-
-            {ScopeType.ScriptingTemplate,           Resources.Icon_Template},
-            {ScopeType.ScriptingNode,               Resources.Icon_XMLElement},
-            {ScopeType.ScriptingNodeOwner,          Resources.Icon_XMLDescendant},
-            {ScopeType.ScriptingObject,             Resources.Icon_Tag},
-            {ScopeType.ScriptingSchema,             Resources.Icon_XMLSchema},
-            {ScopeType.ScriptingTransform,          Resources.Icon_XMLTransformation},
-            {ScopeType.ScriptingDocument,           Resources.Icon_XMLFile},
-
+            { ScopeType.ScriptingTemplate,          Resources.Icon_Template},
+            { ScopeType.ScriptingNode,              Resources.Icon_XMLElement},
+            { ScopeType.ScriptingSchema,            Resources.Icon_XMLSchema},
+            { ScopeType.ScriptingTransform,         Resources.Icon_XMLTransformation},
+            { ScopeType.ScriptingDocument,          Resources.Icon_XMLFile},
+            { ScopeType.ScriptingBuilder,           Resources.Icon_BuildDefinition},
 
             { ScopeType.Security,                   Resources.Icon_Lock },
             { ScopeType.SecurityPrincipal,          Resources.Icon_User },

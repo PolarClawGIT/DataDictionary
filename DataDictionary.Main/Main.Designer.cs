@@ -140,7 +140,6 @@
             menuTemplateSchemata = new ToolStripMenuItem();
             menuTemplateSchemaDocument = new ToolStripMenuItem();
             menuTemplateNode = new ToolStripMenuItem();
-            menuTemplateNodeOwner = new ToolStripMenuItem();
             menuTemplateTransform = new ToolStripMenuItem();
             menuTemplateTransformDocument = new ToolStripMenuItem();
             bindingModel = new BindingSource(components);
@@ -921,9 +920,9 @@
             // 
             // templateContextMenu
             // 
-            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateSchemata, menuTemplateSchemaDocument, menuTemplateNode, menuTemplateNodeOwner, menuTemplateTransform, menuTemplateTransformDocument });
+            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateSchemata, menuTemplateSchemaDocument, menuTemplateNode, menuTemplateTransform, menuTemplateTransformDocument });
             templateContextMenu.Name = "templateContextMenu";
-            templateContextMenu.Size = new Size(234, 202);
+            templateContextMenu.Size = new Size(234, 180);
             // 
             // menuNewTemplate
             // 
@@ -959,13 +958,6 @@
             menuTemplateNode.Size = new Size(233, 22);
             menuTemplateNode.Text = "browse Schema Nodes";
             menuTemplateNode.Click += MenuTemplateNode_Click;
-            // 
-            // menuTemplateNodeOwner
-            // 
-            menuTemplateNodeOwner.Name = "menuTemplateNodeOwner";
-            menuTemplateNodeOwner.Size = new Size(233, 22);
-            menuTemplateNodeOwner.Text = "browse Schema Node Owners";
-            menuTemplateNodeOwner.Click += MenuTemplateNodeOwner_Click;
             // 
             // menuTemplateTransform
             // 
@@ -1134,7 +1126,6 @@
         private ToolStripMenuItem menuTemplateTransform;
         private ToolStripMenuItem menuTemplateSchemata;
         private ToolStripMenuItem menuTemplateNode;
-        private ToolStripMenuItem menuTemplateNodeOwner;
         private ToolStripSplitButton manageTemplateCommand;
         private ToolStripMenuItem menuNewTemplate;
         private ToolStripMenuItem menuTemplateSchemaDocument;

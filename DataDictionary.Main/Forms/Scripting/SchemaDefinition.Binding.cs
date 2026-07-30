@@ -48,7 +48,6 @@ namespace DataDictionary.Main.Forms.Scripting
             protected void RemoveValue(SchemaDefinitionIndex key)
             {
                 GetData().Schemata.Remove(key);
-                GetData().SchemataNodeOwners.Remove(key);
                 GetData().SchemataNodes.Remove(key);
                 GetData().SchemaDocuments.Remove(key);
                 throw new NotImplementedException();
