@@ -30,11 +30,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ISchemaNodeData SchemataNodes { get; }
 
         /// <summary>
-        /// Node Owners of the SchemaDefinitions
-        /// </summary>
-        ISchemaNodeOwnerData SchemataNodeOwners { get; }
-
-        /// <summary>
         /// Transforms for the Templates
         /// </summary>
         ITransformData Transforms { get; }
@@ -74,10 +69,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         SchemaNodeData schemaNodeValues;
 
         /// <inheritdoc/>
-        public ISchemaNodeOwnerData SchemataNodeOwners { get { return schemaNodeOwnerValues; } }
-        SchemaNodeOwnerData schemaNodeOwnerValues;
-
-        /// <inheritdoc/>
         public ITransformData Transforms { get { return transformValues; } }
         TransformData transformValues;
 
@@ -97,7 +88,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             schemaDefinitionValues = new SchemaDefinitionData();
             schemaNodeValues = new SchemaNodeData();
-            schemaNodeOwnerValues = new SchemaNodeOwnerData();
             schemaDocumentValues = new SchemaDocumentData();
             transformValues = new TransformData();
             transformDocumentValues = new TransformDocumentData();
@@ -124,7 +114,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(this, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaDefinitionValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey));
-            work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(transformValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (IModelKey)dataKey));
@@ -138,7 +127,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaDefinitionValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey, asOfUtcDate));
-            work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (IModelKey)dataKey, asOfUtcDate));
@@ -152,7 +140,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(this, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaDefinitionValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey));
-            work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(transformValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (ITemplateKey)dataKey));
@@ -166,7 +153,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaDefinitionValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey, asOfUtcDate));
-            work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (ITemplateKey)dataKey, asOfUtcDate));
@@ -180,7 +166,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateSave(this, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(schemaDefinitionValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeValues, (ITemplateKey)dataKey));
-            work.AddRange(factory.CreateSave(schemaNodeOwnerValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(schemaDocumentValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(transformValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(transformDocumentValues, (ITemplateKey)dataKey));
@@ -194,7 +179,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateSave(this, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(schemaDefinitionValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeValues, (IModelKey)dataKey));
-            work.AddRange(factory.CreateSave(schemaNodeOwnerValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(schemaDocumentValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(transformValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(transformDocumentValues, (IModelKey)dataKey));
@@ -207,7 +191,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(new WorkItem() { WorkName = "Remove Scripting Template", DoWork = () => { Remove(dataKey); } });
             work.AddRange(schemaNodeValues.Delete(dataKey));
-            work.AddRange(schemaNodeOwnerValues.Delete(dataKey));
             work.AddRange(schemaDocumentValues.Delete(dataKey));
             work.AddRange(transformValues.Delete(dataKey));
             work.AddRange(transformDocumentValues.Delete(dataKey));
@@ -221,7 +204,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(new WorkItem() { WorkName = "Remove Scripting Template", DoWork = () => { Clear(); } });
             work.AddRange(schemaDefinitionValues.Delete());
             work.AddRange(schemaNodeValues.Delete());
-            work.AddRange(schemaNodeOwnerValues.Delete());
             work.AddRange(schemaDocumentValues.Delete());
             work.AddRange(transformValues.Delete());
             work.AddRange(transformDocumentValues.Delete());
@@ -239,7 +221,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             schemaDefinitionValues.Remove(dataKey);
             schemaNodeValues.Remove(dataKey);
-            schemaNodeOwnerValues.Remove(dataKey);
             schemaDocumentValues.Remove(dataKey);
             transformValues.Remove(dataKey);
             transformDocumentValues.Remove(dataKey);
@@ -252,7 +233,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             schemaDefinitionValues.Clear();
             schemaNodeValues.Clear();
-            schemaNodeOwnerValues.Clear();
             schemaDocumentValues.Clear();
             transformValues.Clear();
             transformDocumentValues.Clear();
@@ -287,7 +267,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             result.Add(this.ToDataTable());
             result.Add(schemaDefinitionValues.ToDataTable());
             result.Add(schemaNodeValues.ToDataTable());
-            result.Add(schemaNodeOwnerValues.ToDataTable());
             result.Add(schemaDocumentValues.ToDataTable());
             result.Add(transformValues.ToDataTable());
             result.Add(transformDocumentValues.ToDataTable());
@@ -301,7 +280,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             this.Import(source);
             schemaDefinitionValues.Load(source);
             schemaNodeValues.Load(source);
-            schemaNodeOwnerValues.Load(source);
             schemaDocumentValues.Load(source);
             transformValues.Load(source);
             transformDocumentValues.Load(source);
