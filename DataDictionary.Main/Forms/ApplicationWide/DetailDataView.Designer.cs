@@ -79,6 +79,8 @@
             bindingTableValue.ReadOnly = true;
             bindingTableValue.Size = new Size(594, 295);
             bindingTableValue.TabIndex = 0;
+            bindingTableValue.CellMouseClick += CellMouseClick;
+            bindingTableValue.RowHeaderMouseClick += RowHeaderMouseClick;
             bindingTableValue.RowHeaderMouseDoubleClick += RowHeaderMouseDoubleClick;
             // 
             // dataTableLayout
@@ -103,6 +105,9 @@
             dataTableValue.ReadOnly = true;
             dataTableValue.Size = new Size(594, 295);
             dataTableValue.TabIndex = 0;
+            dataTableValue.CellMouseClick += CellMouseClick;
+            dataTableValue.RowHeaderMouseClick += RowHeaderMouseClick;
+            dataTableValue.RowHeaderMouseDoubleClick += RowHeaderMouseDoubleClick;
             // 
             // DetailDataView
             // 
