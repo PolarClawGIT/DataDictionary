@@ -7,7 +7,7 @@ namespace DataDictionary.Main.Enumerations
     {
         static Dictionary<ScopeType, Icon> scopeIconMap = new Dictionary<ScopeType, Icon>()
         {   // Most images are set using the Resource file.
-            // There is an alteritive using: SystemIcons.GetStockIcon(StockIconId)
+            // There is an alterative using: SystemIcons.GetStockIcon(StockIconId)
             // This allows the application to use icon for the current version of Windows.
             // The number of icons is limited and does not include things like copy/paste.
             // Other images are simply blank.
@@ -83,22 +83,12 @@ namespace DataDictionary.Main.Enumerations
             { ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram },
 
             { ScopeType.Scripting,                  Resources.Icon_Script },
-            //{ ScopeType.ScriptingTemplate,          Resources.Icon_XMLSchema },
-            { ScopeType.ScriptingData,              Resources.Icon_XPath },
-            { ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant },
-            //{ ScopeType.ScriptingDocument,          Resources.Icon_XMLFile },
-            { ScopeType.ScriptingTemplateNode,      Resources.Icon_Tag },
-            { ScopeType.ScriptingTemplateNodeOwner, Resources.Icon_XMLElement },
-            { ScopeType.ScriptingTemplateData,      Resources.Icon_XPath },
-
-            {ScopeType.ScriptingTemplate,           Resources.Icon_Template},
-            {ScopeType.ScriptingNode,               Resources.Icon_XMLElement},
-            {ScopeType.ScriptingNodeOwner,          Resources.Icon_XMLDescendant},
-            {ScopeType.ScriptingObject,             Resources.Icon_Tag},
-            {ScopeType.ScriptingSchema,             Resources.Icon_XMLSchema},
-            {ScopeType.ScriptingTransform,          Resources.Icon_XMLTransformation},
-            {ScopeType.ScriptingDocument,           Resources.Icon_XMLFile},
-
+            { ScopeType.ScriptingTemplate,          Resources.Icon_Template},
+            { ScopeType.ScriptingNode,              Resources.Icon_XMLElement},
+            { ScopeType.ScriptingSchema,            Resources.Icon_XMLSchema},
+            { ScopeType.ScriptingTransform,         Resources.Icon_XMLTransformation},
+            { ScopeType.ScriptingDocument,          Resources.Icon_XMLFile},
+            { ScopeType.ScriptingBuilder,           Resources.Icon_BuildDefinition},
 
             { ScopeType.Security,                   Resources.Icon_Lock },
             { ScopeType.SecurityPrincipal,          Resources.Icon_User },

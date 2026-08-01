@@ -16,14 +16,19 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <summary>
         /// Path of the Member.
         /// </summary>
-        /// <remarks>Formated, period delimited and square bracket qualified.</remarks>
+        /// <remarks>Formatted, period delimited and square bracket qualified.</remarks>
         String MemberPath { get; }
 
         /// <summary>
         /// Path and Name of the Member.
         /// </summary>
-        /// <remarks>Formated, period delimited and square bracket qualified.</remarks>
+        /// <remarks>Formatted, period delimited and square bracket qualified.</remarks>
         String MemberFullPath { get; }
+
+        /// <summary>
+        /// Parent NameSpace Key for the current item.
+        /// </summary>
+        PathIndex? ParentPath { get; }
     }
 
     /// <summary>
@@ -75,9 +80,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public String MemberFullPath
         { get { return string.Join(".", pathParts.Select(s => string.Format("[{0}]", s))); } }
 
-        /// <summary>
-        /// Parent NameSpace Key for the current item.
-        /// </summary>
+        /// <inheritdoc/>
         public PathIndex? ParentPath
         {
             get
@@ -390,7 +393,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         #endregion
 
         /// <summary>
-        /// Allows formating of the NameSpace into a String.
+        /// Allows formatting of the NameSpace into a String.
         /// </summary>
         /// <param name="pattern">
         /// Pattern for String.Format with a single parameter.

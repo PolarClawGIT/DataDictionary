@@ -1,13 +1,34 @@
-﻿// Place holder for file nesting purposes.
-namespace DataDictionary.Resource.Enumerations;
-
-/// <summary>
-/// Interface for DbRoutineType
-/// </summary>
-public interface IDbRoutineType
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// Type of Routine (such as procedure or function)
+    /// Interface for DbRoutineType
     /// </summary>
-    DbRoutineType RoutineType { get; }
+    public interface IDbRoutineType
+    {
+        /// <summary>
+        /// Type of Routine (such as procedure or function)
+        /// </summary>
+        DbRoutineType RoutineType { get; }
+    }
+
+    /// <summary>
+    /// List of supported Routine Types.
+    /// </summary>
+    public enum DbRoutineType
+    {
+        /// <summary>
+        /// Unknown Routine Type
+        /// </summary>
+        Null,
+
+        /// <summary>
+        /// SQL Function
+        /// </summary>
+        Function,
+
+        /// <summary>
+        /// SQL Procedure
+        /// </summary>
+        Procedure,
+    }
 }

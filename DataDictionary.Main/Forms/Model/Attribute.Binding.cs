@@ -259,7 +259,7 @@ namespace DataDictionary.Main.Forms.Model
             }
 
             public XElement GetXElement()
-            { return BusinessData.XmlBuilders.Build(Attribute, Properties); }
+            { return BusinessData.Templates.XmlBuilders.Build(Attribute, Properties); }
         }
     }
 }

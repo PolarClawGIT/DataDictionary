@@ -50,6 +50,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public class SchemaNodeValue : SchemaNodeItem, ISchemaNodeValue, IPathValue, INamedScopeSourceValue
     {
+        /// <summary>
+        /// Delegate to get the XML Builder for the SchemaNode
+        /// </summary>
+        /// <remarks>Set this before creating instances of SchemaNodeValue.</remarks>
+        internal static TryGetXmlBuilder? TryGetBuilder;
+
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
@@ -66,31 +72,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <summary>
         /// XML Builder for this Node.<br/>
-        /// Used to override the default builder and connect the builder to the data object.<br/>
-        /// The passed Builder is Cloned and is not retained by reference.
+        /// Used to override the default builder and connect the builder to the data object.
         /// </summary>
-        public XmlBuilder? Builder
-        {
-            get { return field; }
-
-            set
-            {
-                if (value is XmlBuilder builder)
-                {
-                    field = new XmlBuilder(builder)
-                    {
-                        GetRenderAs = () => RenderValueAs,
-                        SetRenderAs = (value) => RenderValueAs = value,
-                        GetScope = () => ObjectScope,
-                        SetScope = (value) => ObjectScope = value,
-                        GetName = () => NodeName??String.Empty,
-                        SetName = (value) => { NodeName = value; }
-                    };
-                }
-                else { field = null; }
-            }
-
-        }
+        /// <remarks>
+        /// This may not return the same object on each call.<br/>
+        /// If the Object Scope or Property changes, a new XmlBuilder is needed.<br/>
+        /// This is dependent on the static delegate TryGetBuilder.</remarks>
+        //private XmlBuilder Builder { get; }
 
         /* Not being supported
         // TODO: Remove?
@@ -189,6 +177,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
+            //Builder = GetBuilder();
+
             /* Not being supported
             // TODO: Remove?
 
@@ -220,6 +210,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
 
+            //Builder = GetBuilder();
+
+
             /* Not being supported
             // TODO: Remove?
 
@@ -236,6 +229,29 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             if (!String.IsNullOrWhiteSpace(FixedValue))
             { IsNameOverride = true; }*/
+        }
+
+        /// <summary>
+        /// Used to Set the current XmlBuilder
+        /// </summary>
+        /// <param name="objectScope">target ObjectScope, null = current ObjectScope</param>
+        /// <param name="objectProperty">target ObjectProperty, null = current ObjectProperty</param>
+        /// <returns></returns>
+        public virtual XmlBuilder GetBuilder(ScopeType? objectScope = null, String? objectProperty = null)
+        {
+            // <remarks>
+            // Used as part of Get on the property "Builder" and the constructors.<br/>
+            // When the SchemaNodeValue is initialized from the UI, the ObjectScope and ObjectProperty is not set and must be updated.<br/>
+            // When the SchemaNodeValue is initialized from the database, the ObjectScope and ObjectProperty has a value.<br/>
+            // This is dependent on the static delegate SchemaNodeValue.TryGetBuilder.
+            // </remarks>
+
+            XmlBuilderIndex key = new XmlBuilderIndex(objectScope ?? ObjectScope, objectProperty ?? ObjectProperty ?? String.Empty);
+
+            if (TryGetBuilder is not null
+                && TryGetBuilder(key, out XmlBuilder? builder))
+            { return builder; }
+            else { return new XmlBuilder(this.ObjectScope); }
         }
 
         /// <inheritdoc/>

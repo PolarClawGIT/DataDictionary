@@ -27,12 +27,6 @@ namespace DataDictionary.Main.Forms
         public virtual Boolean IsOpenItem(Object? item) { return true; }
 
         /// <summary>
-        /// The set of Command Buttons
-        /// </summary>
-        protected IReadOnlyDictionary<ButtonType, CommandState> CommandButtons { get { return commandButtons; } }
-        Dictionary<ButtonType, CommandState> commandButtons = new Dictionary<ButtonType, CommandState>();
-
-        /// <summary>
         /// Function called to determine if a given Button has authorization.
         /// </summary>
         protected Func<Enumerations.ButtonType, Boolean> GetAuthorization { get; private set; } = (button) => true;
@@ -50,116 +44,9 @@ namespace DataDictionary.Main.Forms
         public ApplicationData() : base()
         {
             InitializeComponent();
+            InitCommands();
 
             helpCommand.Image = ScopeType.ApplicationHelp.GetImage(ButtonType.Default);
-
-            new CommandState(browseCommand)
-            {
-                Command = ButtonType.Browse,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(selectCommand)
-            {
-                Command = ButtonType.Select,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(newCommand)
-            {
-                Command = ButtonType.Add,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(deleteCommand)
-            {
-                Command = ButtonType.Delete,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(saveCommand)
-            {
-                Command = ButtonType.Save,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(openCommand)
-            {
-                Command = ButtonType.Open,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(importCommand)
-            {
-                Command = ButtonType.Import,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(exportCommand)
-            {
-                Command = ButtonType.Export,
-                Visible = false,
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            toolStripSeparator.Visible = false;
-
-            new CommandState(openFromDatabaseCommand)
-            {
-                Scope = ScopeType.Database,
-                Command = ButtonType.OpenDatabase,
-                Visible = true,
-                Enabled = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(saveToDatabaseCommand)
-            {
-                Scope = ScopeType.Database,
-                Command = ButtonType.SaveDatabase,
-                Visible = true,
-                Enabled = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Detached),
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(deleteFromDatabaseCommand)
-            {
-                Scope = ScopeType.Database,
-                Command = ButtonType.DeleteDatabase,
-                Visible = true,
-                Enabled = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(securityCommand)
-            {
-                Scope = ScopeType.Security,
-                Command = ButtonType.SecurityDatabase,
-                Visible = false,
-                Enabled = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
-
-            new CommandState(historyCommand)
-            {
-                Scope = ScopeType.ApplicationTimeLine,
-                Command = ButtonType.HistoryDatabase,
-                Visible = false,
-                Enabled = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
-                IsAuthorized = GetAuthorization
-            }.AddTo(commandButtons);
         }
 
         private void ApplicationData_Load(object sender, EventArgs e)
@@ -341,8 +228,6 @@ namespace DataDictionary.Main.Forms
 
         }
 
-
-
         /// <summary>
         /// Sets the Title based on the BindingSource provided.
         /// Allows for the Title to be changed if the Title of the object changes.
@@ -350,7 +235,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="data"></param>
         /// <param name="defaultTitle"></param>
         /// <remarks>
-        /// The data in the BindingSource must be an IDataValue.
+        /// If the BindingSource is a IDataValue, the Title attribute is used. Otherwise the ToString is used.
         /// </remarks>
         protected void SetTitle(BindingSource data, String? defaultTitle = null)
         {
@@ -366,9 +251,16 @@ namespace DataDictionary.Main.Forms
 
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
-                if (data.Position >= 0 && data.Current is IDataValue dataValue)
-                { SetTitle(dataValue.Title); }
-                else { SetTitle(defaultTitle ?? String.Empty); }
+                if (data.Position >= 0)
+                {
+                    if (data.Current is IDataValue dataValue)
+                    { SetTitle(dataValue.Title); }
+                    else if (data.Current is not null
+                        && data.Current.ToString() is String objectValue
+                        && !String.IsNullOrWhiteSpace(objectValue))
+                    { SetTitle(objectValue); }
+                    else { SetTitle(defaultTitle ?? String.Empty); }
+                }
             }
 
             void Data_Disposed(Object? sender, EventArgs e)
@@ -445,7 +337,7 @@ namespace DataDictionary.Main.Forms
             {
                 foreach (ButtonType item in commands)
                 {
-                    if (CommandButtons.TryGetValue(item, out CommandState? value))
+                    if (CommandButtons.TryGetValue(item, out ToolStripCommand? value))
                     {
                         value.Visible = true;
                         value.Enabled = true;
@@ -594,7 +486,7 @@ namespace DataDictionary.Main.Forms
         protected virtual void AddCommand_Click(object? sender, EventArgs e)
         { }
 
-        protected virtual void SelectCommand_Click(object sender, EventArgs e)
+        protected virtual void SelectCommand_Click(object? sender, EventArgs e)
         { }
 
         protected virtual void DeleteCommand_Click(object? sender, EventArgs e)
@@ -621,9 +513,9 @@ namespace DataDictionary.Main.Forms
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            commandButtons[Enumerations.ButtonType.OpenDatabase].Refresh();
-            commandButtons[Enumerations.ButtonType.SaveDatabase].Refresh();
-            commandButtons[Enumerations.ButtonType.DeleteDatabase].Refresh();
+            CommandButtons[Enumerations.ButtonType.OpenDatabase].Refresh();
+            CommandButtons[Enumerations.ButtonType.SaveDatabase].Refresh();
+            CommandButtons[Enumerations.ButtonType.DeleteDatabase].Refresh();
         }
 
 

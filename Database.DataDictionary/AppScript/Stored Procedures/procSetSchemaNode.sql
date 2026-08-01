@@ -25,31 +25,33 @@ Begin Try
 	Declare @Values Table (
 		[NodeId]				UniqueIdentifier Not Null,
 		[SchemaId]				UniqueIdentifier Not Null,
-		[NodeName]				[AppGeneral].[uddtMember] Null,
-		[NodeOrder]				Int Not Null,
-		[RenderValueAs]			NVarChar(20) Null,
-		[FixedValue]			NVarChar(250) Null,
 		[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
 		[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
-		[PropertyId]			UniqueIdentifier NULL,
+		[NodeName]				[AppGeneral].[uddtMember] Null,
+		[RenderNodeType]		NVarChar(30) Null,
+		[RenderTypeCode]		NVarChar(30) Null,
+		[RenderOrder]			Int Not Null,
 		Primary Key([NodeId]))
 
 	Insert Into @Values
 	Select	X.[NodeId],
 			D.[SchemaId],
-			NullIf(Trim(D.[NodeName]),'') As [NodeName],
-			IIF([NodeOrder]<0,0,IsNull([NodeOrder],0)) As [NodeOrder],
-			IsNull(NullIf(Trim(D.[RenderValueAs]),''),'Element') As [RenderValueAs],
-			NullIf(Trim(D.[FixedValue]),'') As [FixedValue],
 			NullIf(Trim(D.[ObjectScope]),'') As [ObjectScope],
 			NullIf(Trim(D.[ObjectProperty]),'') As [ObjectProperty],
-			D.[PropertyId]
+			NullIf(Trim(D.[NodeName]),'') As [NodeName],
+			NullIf(Trim(D.[RenderNodeType]),'') As [RenderNodeType],
+			NullIf(Trim(D.[RenderTypeCode]),'') As [RenderTypeCode],
+			IIF(D.[RenderOrder]<0,0,IsNull(D.[RenderOrder],0)) As [RenderOrder]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
 			On	D.[TemplateId] = M.[TemplateId] And
 				@ModelId = M.[ModelId]
+			Left Join [AppScript].[SchemaNode] T
+			On	D.[SchemaId] = T.[SchemaId] And
+				IsNull(NullIf(Trim(D.[ObjectScope]),''),'') = IsNull(T.[ObjectScope],'') And
+				IsNull(NullIf(Trim(D.[ObjectProperty]),''),'') = IsNull(T.[ObjectProperty],'')
 			Cross Apply (
-				Select	Coalesce(D.[NodeId], NewId()) As [NodeId]) X
+				Select	Coalesce(T.[NodeId], D.[NodeId], NewId()) As [NodeId]) X
 	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -74,43 +76,37 @@ Begin Try
 				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppScript].[SchemaNode]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	-- TODO: Add child table delete
-
-
 	;With [Delta] As (
 		Select	[NodeId],
 				[SchemaId],
-				[NodeName],
-				[NodeOrder],
-				[RenderValueAs],
-				[FixedValue],
 				[ObjectScope],
 				[ObjectProperty],
-				[PropertyId]
+				[NodeName],
+				[RenderNodeType],
+				[RenderTypeCode],
+				[RenderOrder]
 		From	@Values
 		Except
 		Select	[NodeId],
 				[SchemaId],
-				[NodeName],
-				[NodeOrder],
-				[RenderValueAs],
-				[FixedValue],
 				[ObjectScope],
 				[ObjectProperty],
-				[PropertyId]
+				[NodeName],
+				[RenderNodeType],
+				[RenderTypeCode],
+				[RenderOrder]
 		From	[AppScript].[SchemaNode])
 	Update [AppScript].[SchemaNode]
 	Set		[SchemaId] = S.[SchemaId],
-			[NodeName] = S.[NodeName],
-			[NodeOrder] = S.[NodeOrder],
-			[RenderValueAs] = S.[RenderValueAs],
-			[FixedValue] = S.[FixedValue],
 			[ObjectScope] = S.[ObjectScope],
 			[ObjectProperty] = S.[ObjectProperty],
-			[PropertyId] = S.[PropertyId]
+			[NodeName] = S.[NodeName],
+			[RenderNodeType] = S.[RenderNodeType],
+			[RenderTypeCode] = S.[RenderTypeCode],
+			[RenderOrder] = S.[RenderOrder]
 	From	[AppScript].[SchemaNode] T
 			Inner Join [Delta] S
-			On	T.[SchemaId] = S.[SchemaId]
+			On	T.[NodeId] = S.[NodeId]
 			Inner Join [AppScript].[SchemaDefinition] F
 			On	T.[SchemaId] = F.[SchemaId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](F.[TemplateId], 1)
@@ -119,27 +115,25 @@ Begin Try
 	Insert Into [AppScript].[SchemaNode] (
 			[NodeId],
 			[SchemaId],
-			[NodeName],
-			[NodeOrder],
-			[RenderValueAs],
-			[FixedValue],
 			[ObjectScope],
 			[ObjectProperty],
-			[PropertyId])
+			[NodeName],
+			[RenderNodeType],
+			[RenderTypeCode],
+			[RenderOrder])
 	Select	S.[NodeId],
 			S.[SchemaId],
-			S.[NodeName],
-			S.[NodeOrder],
-			S.[RenderValueAs],
-			S.[FixedValue],
 			S.[ObjectScope],
 			S.[ObjectProperty],
-			S.[PropertyId]
+			S.[NodeName],
+			S.[RenderNodeType],
+			S.[RenderTypeCode],
+			S.[RenderOrder]
 	From	@Values S
 			Inner Join [AppScript].[SchemaDefinition] F
 			On	S.[SchemaId] = F.[SchemaId]
 			Left Join [AppScript].[SchemaNode] T
-			On	S.[SchemaId] = T.[SchemaId]
+			On	S.[NodeId] = T.[NodeId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](F.[TemplateId], 1)
 	Where	T.[SchemaId] is Null
 	Print FormatMessage ('Insert [AppScript].[SchemaNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

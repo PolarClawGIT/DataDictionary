@@ -14,13 +14,12 @@ With [Dates] As (
 Select	D.[NodeId], -- PK
 		D.[SchemaId],
 		F.[TemplateId],
-		D.[NodeName],
-		D.[NodeOrder],
-		D.[RenderValueAs],
-		D.[FixedValue],
 		D.[ObjectScope],
 		D.[ObjectProperty],
-		D.[PropertyId],
+		D.[NodeName],
+		D.[RenderNodeType],
+		D.[RenderTypeCode],
+		D.[RenderOrder],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

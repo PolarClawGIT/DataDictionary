@@ -1,21 +1,86 @@
-﻿namespace DataDictionary.Resource.Enumerations;
-
-/// <summary>
-/// Interface for Level1 MS Extended Property Type.
-/// </summary>
-public interface IDbLevelObjectType : IDbLevelCatalogType
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// Level1 MS Extended Property Type.
+    /// Interface for Level1 MS Extended Property Type.
     /// </summary>
-    public DbLevelObjectType ObjectScope { get; }
-}
+    public interface IDbLevelObjectType : IDbLevelCatalogType
+    {
+        /// <summary>
+        /// Level1 MS Extended Property Type.
+        /// </summary>
+        public DbLevelObjectType ObjectScope { get; }
+    }
 
-public static class DbLevelObject
-{
-    public static DbLevelObjectType GetDbLevel(String? value)
-    { return DbLevelObjectEnumeration.Parse(value ?? String.Empty, null).Value; }
+    /// <summary>
+    /// Level1 MS Extended Property Types. These are Object Level.
+    /// Not all types are supported by the Application.
+    /// </summary>
+    /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
+    public enum DbLevelObjectType
+    {
+        /// <summary>
+        /// Not defined, default value.
+        /// </summary>
+        Null,
 
-    public static String GetName(this DbLevelObjectType value)
-    { return DbLevelObjectEnumeration.GetValue(value).Name; }
+        /// <summary>
+        /// MS SQL Aggregate.
+        /// </summary>
+        Aggregate,
+
+        /// <summary>
+        /// MS SQL Default.
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// MS SQL Function. Application Supported.
+        /// </summary>
+        Function,
+
+        /// <summary>
+        /// MS SQL LogicalFileName.
+        /// </summary>
+        LogicalFileName,
+
+        /// <summary>
+        /// MS SQL Procedure. Application Supported.
+        /// </summary>
+        Procedure,
+
+        /// <summary>
+        /// MS SQL Queue.
+        /// </summary>
+        Queue,
+
+        /// <summary>
+        /// MS SQL Rule.
+        /// </summary>
+        Rule,
+
+        /// <summary>
+        /// MS SQL Synonym.
+        /// </summary>
+        Synonym,
+
+        /// <summary>
+        /// MS SQL Table. Application Supported.
+        /// </summary>
+        Table,
+
+        /// <summary>
+        /// MS SQL Type. Application Supported.
+        /// </summary>
+        Type,
+
+        /// <summary>
+        /// MS SQL View. Application Supported.
+        /// </summary>
+        View,
+
+        /// <summary>
+        /// MS SQL XmlSchemaCollection.
+        /// </summary>
+        XmlSchemaCollection,
+    }
 }

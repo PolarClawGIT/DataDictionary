@@ -34,8 +34,12 @@ namespace DataDictionary.Resource.Enumerations
     /// </summary>
     class DbTypeEnumeration : Enumeration<DbType, DbTypeEnumeration>, IDbTypeEnumeration
     {
+        // References:
+        // DbType: https://learn.microsoft.com/en-us/dotnet/api/system.data.dbtype?view=net-9.0
+        // SQL to .Net Mapping: https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-data-type-mappings
+
         /// <summary>
-        /// Database Specfic equvalent data types.
+        /// Database Specific equivalent data types.
         /// </summary>
         public IEnumerable<String> EngineType { get; init; }
 
@@ -51,9 +55,6 @@ namespace DataDictionary.Resource.Enumerations
         /// <inheritdoc/>
         public Boolean IsDate { get; init; } = false;
 
-        // References:
-        // DbType: https://learn.microsoft.com/en-us/dotnet/api/system.data.dbtype?view=net-9.0
-        // SQL to .Net Mapping: https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-data-type-mappings
 
         /// <summary>
         /// Internal Constructor for Database Constraint Enumeration

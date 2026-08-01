@@ -121,8 +121,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IDefinitionData Definitions { get { return definitionValues; } }
         private readonly DefinitionData definitionValues;
 
-
-
         public Model() : base()
         {
             modelValues = new ModelData();

@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Controls
         /// The Worker Method of ApplicationData.DoWork
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?>? DoWork { get; set; } = null;
+        public Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; set; }
 
         /// <summary>
         /// Text that appears at the top of the control
@@ -41,6 +41,15 @@ namespace DataDictionary.Main.Controls
             data = new NamedScopeTreeViewData(treeViewData);
             treeViewData.ImageList = new ImageList();
             treeViewData.ImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
+
+            DoWork = (work, complete) =>
+            {   // No worker assigned, do the work in the foreground.
+                foreach (WorkItem item in work)
+                { item.DoWork(); }
+
+                if (complete is not null)
+                { complete(new RunWorkerCompletedEventArgs(this, null, false)); }
+            };
         }
 
         /// <summary>
@@ -48,8 +57,7 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         public void RefreshCommand()
         {
-            if (DoWork is not null)
-            { DoWork(RefreshWork(), onComplete); }
+            DoWork(RefreshWork(), onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
             { }
@@ -76,8 +84,7 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         public void ReloadCommand()
         {
-            if (DoWork is not null)
-            { DoWork(ReloadWork(), onComplete); }
+            DoWork(ReloadWork(), onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
             { }

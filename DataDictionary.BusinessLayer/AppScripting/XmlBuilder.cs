@@ -1,7 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -9,137 +12,96 @@ namespace DataDictionary.BusinessLayer.AppScripting
     //public delegate Boolean TryGetDefinition(IDefinitionIndex key, [NotNullWhen(true)] out IDefinitionValue? value);
 
     /// <summary>
+    /// Interface for the XmlBuilder
+    /// </summary>
+    public interface IXmlBuilder : IXmlBuilderIndex, ISchemaNodeObject
+    { }
+
+    /// <summary>
     /// Definition to Build an Xml Element
     /// </summary>
-    public partial class XmlBuilder
+    /// <remarks>Does not support Binding</remarks>
+    public partial class XmlBuilder : IXmlBuilder
     {
         /// <summary>
-        /// Scope of the Object to be Rendered. This is normally the owning Object Scope Type.
+        /// Path to the Object to be Rendered. This is normally a Property of the Object.
         /// </summary>
-        public ScopeType ObjectScope
+        public virtual XmlBuilderIndex BuilderPath { get; set; }
+
+        /// <inheritdoc/>
+        public virtual ScopeType ObjectScope
         {
-            get
+            get;
+            protected set
             {
-                if (GetScope is not null)
-                { field = GetScope(); }
-
-                return field;
-            }
-            set
-            {
-                // Remember the current Node Name, if it is different then the MemberName of the NodePath.
-                String nodeName = NodeName; 
-
                 field = value;
-                NodePath = new PathIndex(PathIndex.Parse(field.GetName()));
-                NodeName = nodeName; // Reset the NodeName
+                BuilderPath = new XmlBuilderIndex(field, ObjectProperty);
+            }
+        }
 
-                if (SetScope is not null)
-                { SetScope(value); }
+        /// <inheritdoc/>
+        public virtual String? ObjectProperty
+        {
+            get;
+            protected set
+            {
+                field = value;
+                BuilderPath = new XmlBuilderIndex(ObjectScope, field);
             }
         }
 
         /// <summary>
-        /// Delegate used to assign a call back when Get ObjectScope is called.
+        /// Type of Value the Object Property represents.
         /// </summary>
-        public Func<ScopeType>? GetScope { protected get; init; }
+        public virtual ObjectValueType ObjectType { get; init; } = ObjectValueType.Null;
 
-        /// <summary>
-        /// Delegate used to assign a call back when Get ObjectScope is called.
-        /// </summary>
-        public Action<ScopeType>? SetScope { protected get; init; }
-
-        /// <summary>
-        /// The Name of the Node. Default is the MemberName of the NodePath.
-        /// </summary>
-        public String NodeName
+        /// <inheritdoc/>
+        public virtual String NodeName
         {
             get
             {
-                if (GetName is not null)
-                { field = GetName(); }
-
-                String value = field ?? String.Empty;
-
-                if (String.IsNullOrWhiteSpace(value) && NodePath is not null)
-                {   // Use the ObjectPath after it has been cleaned up for XML.
-                    value = String.Concat(NodePath.Member.Where(c => !Char.IsWhiteSpace(c)));
+                if(String.IsNullOrWhiteSpace(field))
+                {
+                    String value = String.Concat(((PathIndex)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
+                    return value;
                 }
-
-                return value;
+                else { return field; }
             }
             set
             {
                 if (String.IsNullOrWhiteSpace(value))
                 { field = String.Empty; }
                 else
-                {   // Clean up the value before storing.
+                {   
+                    // Clean up the value before storing.
                     value = String.Concat(value.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
 
                     // compare this to the ObjectPath
-                    String path = String.Concat(NodePath.Member.Where(c => !Char.IsWhiteSpace(c)));
+                    String path = String.Concat(((PathIndex)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
                     path = XmlConvert.EncodeName(value);
 
-                    if (value == path) // Set to use the ObjectPath instead.
+                    if (value == path) // Flag get to use the Member name.
                     { field = String.Empty; }
                     else { field = value; }
-
-                    if (SetName is not null)
-                    { SetName(value); }
                 }
             }
         }
 
-        /// <summary>
-        /// Delegate used to assign a call back when Get NodeName is called.
-        /// </summary>
-        public Func<String>? GetName { protected get; init; }
-
-        /// <summary>
-        /// Delegate used to assign a call back when Set NodeName is called.
-        /// </summary>
-        public Action<String>? SetName { protected get; init; }
-
-        /// <summary>
-        /// Path to the Object to be Rendered. This is normally a Property of the Object.
-        /// </summary>
-        public PathIndex NodePath { get; private set; }
-
-        /// <inheritdoc cref="INodeRenderAs.NodeRenderAs"/>
-        public NodeRenderAsType RenderValueAs
-        {
-            get
-            {
-                if (GetRenderAs is not null)
-                { field = GetRenderAs(); }
-
-                return field;
-            }
-            set
-            {
-                field = value;
-
-                if (SetRenderAs is not null)
-                { SetRenderAs(value); }
-            }
-        }
-
-        /// <summary>
-        /// Delegate used to assign a call back when Get RenderValueAs is called.
-        /// </summary>
-        public Func<NodeRenderAsType>? GetRenderAs { protected get; init; }
-
-        /// <summary>
-        /// Delegate used to assign a call back when Set RenderValueAs is called.
-        /// </summary>
-        public Action<NodeRenderAsType>? SetRenderAs { protected get; init; }
+        /// <inheritdoc/>
+        public virtual Int32? RenderOrder { get; set; }
 
         /// <summary>
         /// Function that returns the NodeValue.
         /// </summary>
         protected Func<Object, String> GetValue { get; set; }
+
+        /// <inheritdoc/>
+        public XmlNodeType RenderNodeType { get; set; }
+
+        /// <inheritdoc/>
+        public XmlTypeCode RenderTypeCode { get; set; }
 
         /// <summary>
         /// Basic XmlBuilder constructor. The value is set to the ToString of the Build object.
@@ -148,8 +110,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public XmlBuilder(ScopeType scope) : base()
         {
             ObjectScope = scope;
-            NodePath = new PathIndex(PathIndex.Parse(scope.GetName()));
-            RenderValueAs = NodeRenderAsType.Element;
+            BuilderPath = new XmlBuilderIndex(scope);
+            RenderNodeType = XmlNodeType.Element;
+            RenderTypeCode = XmlTypeCode.Node;
+            NodeName = String.Empty;
 
             GetValue = (value) => GetValueDelegate((dynamic)value);
         }
@@ -158,11 +122,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Creates a Clone of the XML Builder
         /// </summary>
         /// <param name="source"></param>
-        public XmlBuilder(XmlBuilder source) : this(source.ObjectScope)
+        protected XmlBuilder(XmlBuilder source) : this(source.ObjectScope)
         {
-            NodePath = new PathIndex(source.NodePath);
-            RenderValueAs = source.RenderValueAs;
+            BuilderPath = new XmlBuilderIndex(source);
             NodeName = source.NodeName;
+
+            ObjectProperty = source.ObjectProperty;
+            ObjectType = source.ObjectType;
+            RenderTypeCode = source.RenderTypeCode;
+            RenderNodeType = source.RenderNodeType;
+            RenderOrder = source.RenderOrder;
+            
             GetValue = source.GetValue;
         }
 
@@ -201,48 +171,35 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             String? nodeValue = GetValue(value);
 
-            if (String.IsNullOrEmpty(NodeName) || RenderValueAs is NodeRenderAsType.none)
+            if (String.IsNullOrEmpty(NodeName) || RenderNodeType is XmlNodeType.None)
             { return null; }
 
-            switch (RenderValueAs)
+            switch (RenderNodeType)
             {
-                case NodeRenderAsType.none:
+                case XmlNodeType.None:
                     return null;
-                case NodeRenderAsType.Element:
+                case XmlNodeType.Element:
                     return new XElement(NodeName);
-                case NodeRenderAsType.ElementText:
+                case XmlNodeType.Text:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XElement(NodeName, nodeValue);
-                case NodeRenderAsType.ElementCData:
+                case XmlNodeType.CDATA:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XElement(NodeName, new XCData(nodeValue));
-                case NodeRenderAsType.ElementXML:
-                    try
-                    {
-                        if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
-                        return new XElement(NodeName, XElement.Parse(nodeValue));
-                    }
-                    catch (Exception fragementEx)
-                    {
-                        fragementEx.Data.Add(nameof(NodeName), NodeName);
-                        fragementEx.Data.Add(nameof(nodeValue), nodeValue);
-                        fragementEx.Data.Add(nameof(RenderValueAs), RenderValueAs.ToString());
-                        throw;
-                    }
-                case NodeRenderAsType.AttributeText:
+                case XmlNodeType.Attribute:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XAttribute(NodeName, nodeValue);
                 default:
-                    Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(NodeRenderAsType)));
+                    Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(RenderNodeType)));
                     ex.Data.Add(nameof(NodeName), NodeName);
-                    ex.Data.Add(nameof(RenderValueAs), RenderValueAs.ToString());
+                    ex.Data.Add(nameof(RenderNodeType), RenderNodeType.ToString());
                     throw ex;
             }
         }
 
         /// <inheritdoc/>
         public override String ToString()
-        { return NodePath.MemberFullPath; }
+        { return BuilderPath.MemberFullPath; }
 
         /// <inheritdoc cref="ICloneable.Clone"/>
         public XmlBuilder Clone()

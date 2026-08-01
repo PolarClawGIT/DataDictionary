@@ -31,5 +31,11 @@ namespace DataDictionary.Resource.Enumerations
             { result = enumeration.Value; return true; }
             else { result = DbLevelObjectType.Null; return false; }
         }
+
+        public static DbLevelObjectType GetDbLevel(String? value)
+        { return DbLevelObjectEnumeration.Parse(value ?? String.Empty, null).Value; }
+
+        public static String GetName(this DbLevelObjectType value)
+        { return DbLevelObjectEnumeration.GetValue(value).Name; }
     }
 }

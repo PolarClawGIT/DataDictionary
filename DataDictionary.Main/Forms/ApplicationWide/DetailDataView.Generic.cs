@@ -30,9 +30,24 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public DetailDataView(ScopeType scope, IBindingTable data) : base(scope, data)
         { }
 
+        protected override void BindingDataView_Load(Object sender, EventArgs e)
+        {
+            base.BindingDataView_Load(sender, e);
+
+            CommandButtons[ButtonType.Open].Enabled = SelectedForm is not null;
+        }
+
         protected override void RowHeaderMouseDoubleClick(Object sender, DataGridViewCellMouseEventArgs e)
         {
             base.RowHeaderMouseDoubleClick(sender, e);
+
+            if (SelectedItem is TValue value && SelectedForm is not null)
+            { Activate(() => SelectedForm(value)); }
+        }
+
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenCommand_Click(sender, e);
 
             if (SelectedItem is TValue value && SelectedForm is not null)
             { Activate(() => SelectedForm(value)); }

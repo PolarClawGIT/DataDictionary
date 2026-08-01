@@ -7,36 +7,23 @@ namespace DataDictionary.BusinessLayer
     partial class BusinessLayerData
     {
         /// <summary>
-        /// List of XmlBuilders supported by the application.
-        /// </summary>
-        /// <remarks>Initialized when the Get is first called.</remarks>
-        public XmlBuilderDictionary XmlBuilders
-        {
-            get
-            {
-                if (field is null || field.Count == 0)
-                { field = InitXmlBuilders(); }
-
-                return field;
-            }
-        }
-
-        /// <summary>
-        /// Initializes all the XML Builders.
+        /// Generates a list of <b>default</b> XmlBuilders.
         /// </summary>
         /// <returns></returns>
-        protected XmlBuilderDictionary InitXmlBuilders()
+        public List<XmlBuilder> GetXmlBuilders()
         {   //TODO: Once working, move to various classes?
+            
+            List<XmlBuilder> builders = new List<XmlBuilder>();
 
-            List<XmlBuilder> result = new List<XmlBuilder>();
+            if (Model.Properties.Count > 0)
+            {   // This could be called before Model.Properties has been loaded.
+                builders.Add(new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute));
+                builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties));
 
-            result.Add(new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute));
-            result.Add(new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties));
-
-            result.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
-            result.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
-
-            return new XmlBuilderDictionary(result);
+                builders.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
+                builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
+            }
+            return builders;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +14,13 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             InitializeComponent();
 
             SetRowState(bindingSource);
+            SetCommand(ButtonType.Open);
+
+            // Override default setting for these buttons.
+            CommandButtons[ButtonType.SaveDatabase].Enabled = false;
+            CommandButtons[ButtonType.OpenDatabase].Enabled = false;
+            CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
+            CommandButtons[ButtonType.Open].Enabled = false;
         }
 
         public DetailDataView(IBindingTable data) : this()
@@ -45,7 +53,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public override Boolean IsOpenItem(Object? item)
         { return ReferenceEquals(bindingSource.DataSource, item); }
 
-        private void BindingDataView_Load(object sender, EventArgs e)
+        virtual protected void BindingDataView_Load(object sender, EventArgs e)
         {
             bindingTableValue.DataSource = bindingSource;
 
@@ -57,6 +65,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     dataTableValue.DataSource = data;
                 }
             }
+
+            IsLocked(false); // Override Locked based on RowState.
         }
 
         /// <summary>
@@ -87,5 +97,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         protected virtual void RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         { SelectedItem = bindingTableValue.Rows[e.RowIndex].DataBoundItem; }
 
+        private void RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        { SelectedItem = bindingTableValue.Rows[e.RowIndex].DataBoundItem; }
+
+        private void CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        { SelectedItem = bindingTableValue.Rows[e.RowIndex].DataBoundItem; }
     }
 }

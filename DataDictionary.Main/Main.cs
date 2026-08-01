@@ -103,7 +103,6 @@ namespace DataDictionary.Main
             menuTemplateSchemaDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
             menuTemplateTransformDocument.Image = ScopeType.ApplicationDocument.GetImage(ButtonType.Default);
             menuTemplateNode.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Default);
-            menuTemplateNodeOwner.Image = ScopeType.ScriptingNodeOwner.GetImage(ButtonType.Default);
             menuTemplateSchemata.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Default);
             menuTemplateTransform.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Default);
 

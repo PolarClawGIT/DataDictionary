@@ -20,20 +20,28 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema);
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode)
+            {
+                OnSchemaChanged = (value) =>
+                {
+                    if (value.SchemaNode is null)
+                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value), FontStyle.Regular); }
+                    else
+                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value.SchemaNode), FontStyle.Bold); }
+                }
+            }; ;
 
             SetRowState(bindingSchema);
             SetTitle(bindingSchema);
             SetIcon(bindingSchema);
 
             SetCommand(ButtonType.Delete);
-            AddCommands(nodeMenu);
 
-            openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
-            openNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+
+            nodesTree.DoWork = DoWork;
         }
 
         public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
@@ -95,14 +103,28 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(fileSuffixData, e => e.FileSuffix);
                 formBinding.SchemaData.AddBinding(fileExtensionData, e => e.FileExtension);
 
-                ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
+                ScopeNameList.Load(forEachScopeData, ScopeType.Null, ScopeType.ModelAttribute, ScopeType.ModelEntity);
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
+
+                nodesTree.LoadTree(formBinding.GetBuilders());
+                nodesTree.CommandButtons[ButtonType.Browse].Click += BrowseNodeCommand_Click;
+
+                ScopeNameList.Load(objectScopeData, ScopeType.Null,
+                    ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
+                    ScopeType.ModelEntity, ScopeType.ModelEntityProperty);
+                formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+                formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
+                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+
+                XmlNodeTypeList.Load(renderNodeTypeData);
+                formBinding.NodeData.AddBinding(renderNodeTypeData, e => e.RenderNodeType, XmlNodeTypeList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
             }
         }
+
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
@@ -202,6 +224,20 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.LoadValue(schemaIndex);
                 SendMessage(new RefreshRow<SchemaDefinitionIndex>(schemaIndex));
             }
+        }
+
+        private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
+        {
+            formBinding.TrySetNode(e);
+        }
+
+
+        private void BrowseNodeCommand_Click(Object? sender, EventArgs e)
+        {
+            Activate(
+                () => new SchemaNode(schemaIndex),
+                (form) => form.IsOpenItem(schemaIndex));
+
         }
     }
 }

@@ -311,12 +311,6 @@ namespace DataDictionary.Main
                 (ScopeType.ScriptingSchema, BusinessData.Templates.SchemataNodes));
         }
 
-        private void MenuTemplateNodeOwner_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingNodeOwner, BusinessData.Templates.SchemataNodeOwners));
-        }
-
         private void MenuTemplateSchemaDocument_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView

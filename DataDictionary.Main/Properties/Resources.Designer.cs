@@ -183,6 +183,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Boolean {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Boolean", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_BuildDefinition {
+            get {
+                object obj = ResourceManager.GetObject("Icon_BuildDefinition", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Class {
             get {
                 object obj = ResourceManager.GetObject("Icon_Class", resourceCulture);
@@ -243,6 +263,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_DateTime {
+            get {
+                object obj = ResourceManager.GetObject("Icon_DateTime", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Dependancy {
             get {
                 object obj = ResourceManager.GetObject("Icon_Dependancy", resourceCulture);
@@ -286,6 +316,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_Entities {
             get {
                 object obj = ResourceManager.GetObject("Icon_Entities", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_Enumeration {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Enumeration", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -383,6 +423,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Interface {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Interface", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Key {
             get {
                 object obj = ResourceManager.GetObject("Icon_Key", resourceCulture);
@@ -453,6 +503,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Numeric {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Numeric", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Parameter {
             get {
                 object obj = ResourceManager.GetObject("Icon_Parameter", resourceCulture);
@@ -496,6 +556,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_Property {
             get {
                 object obj = ResourceManager.GetObject("Icon_Property", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_RadioButtonList {
+            get {
+                object obj = ResourceManager.GetObject("Icon_RadioButtonList", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -663,6 +733,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_String {
+            get {
+                object obj = ResourceManager.GetObject("Icon_String", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_Structure {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Structure", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Synonym {
             get {
                 object obj = ResourceManager.GetObject("Icon_Synonym", resourceCulture);
@@ -766,6 +856,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_TreeView {
             get {
                 object obj = ResourceManager.GetObject("Icon_TreeView", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_UniqueIdentifier {
+            get {
+                object obj = ResourceManager.GetObject("Icon_UniqueIdentifier", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -966,6 +1066,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap ItemExport {
             get {
                 object obj = ResourceManager.GetObject("ItemExport", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ItemField {
+            get {
+                object obj = ResourceManager.GetObject("ItemField", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
