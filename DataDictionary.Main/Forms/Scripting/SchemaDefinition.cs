@@ -20,7 +20,16 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode);
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode)
+            {
+                OnSchemaChanged = (value) =>
+                {
+                    if (value.SchemaNode is null)
+                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value), FontStyle.Regular); }
+                    else
+                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value.SchemaNode), FontStyle.Bold); }
+                }
+            }; ;
 
             SetRowState(bindingSchema);
             SetTitle(bindingSchema);

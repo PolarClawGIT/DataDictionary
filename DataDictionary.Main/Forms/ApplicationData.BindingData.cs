@@ -583,6 +583,9 @@ namespace DataDictionary.Main.Forms
             }
             #endregion
             #region ICollection
+            /// <inheritdoc cref="IList.this[Int32]"/>
+            public TRow this[Int32 index] { get { return bindingValues[index]; } }
+
             /// <inheritdoc/>
             public void Add(TRow item)
             { ((ICollection<TRow>)bindingValues).Add(item); }

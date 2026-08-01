@@ -92,6 +92,15 @@ namespace DataDictionary.Main.Controls
             { }
         }
 
+        public void SetNodeFont(XmlBuilderIndex key, FontStyle style)
+        {   
+            if (data.TryGetNode(key, out TreeNode? node))
+            {
+                node.NodeFont = new Font(treeViewData.Font, style);
+                node.Text = node.Text; // Forces control to re-compute size of the text
+            }
+        }
+
         /// <summary>
         /// Used in determine if the node should expand the node or not.
         /// </summary>
@@ -141,12 +150,9 @@ namespace DataDictionary.Main.Controls
                 && e.Node.TreeView is not null
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && OnNodeSelected is EventHandler<XmlBuilderIndex> hander
-                && data.GetValue(e.Node) is XmlBuilderIndex value)
+                && data.TryGetValue(e.Node, out XmlBuilderIndex? value))
             { hander(this, new XmlBuilderIndex(value)); }
         }
-
-        // TODO: Remodel using the "CommandButton" from the ApplicationData form.
-        // Can the CommandButton be moved out of the ApplicationData? Its own control?
 
         /// <summary>
         /// Event raised when a Button is pressed. The type of button is returned.

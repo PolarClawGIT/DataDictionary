@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Controls
@@ -15,11 +16,21 @@ namespace DataDictionary.Main.Controls
         public XmlBuilderTreeViewData(TreeView tree)
         { treeControl = tree; }
 
-        public XmlBuilderIndex? GetValue(TreeNode node)
+        public Boolean TryGetValue(TreeNode node, [NotNullWhen(true)] out XmlBuilderIndex? key)
         {
             if (treeValues.TryGetValue(node, out XmlBuilderIndex? value))
-            { return value; }
-            else { return null; }
+            { key = value; return true; }
+            else { key = null; return false; }
+        }
+
+        public Boolean TryGetNode(XmlBuilderIndex key, [NotNullWhen(true)] out TreeNode? node)
+        {
+            var value = treeValues.Where(w => key.Equals(w.Value)).ToList();
+
+            if (value.Count == 0)
+            { node = null; return false; }
+            else
+            { node = value.First().Key; return true; }
         }
 
         public IEnumerable<WorkItem> BeginUpdate()

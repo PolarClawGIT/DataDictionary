@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         protected XmlBuilderIndex() : base() { }
 
         /// <summary>
-        /// Constructor for the Schema Node Key Name. Cloner.
+        /// Constructor for the XmlBuilderIndex Key Name. Cloner.
         /// </summary>
         /// <param name="source"></param>
         public XmlBuilderIndex(IXmlBuilderIndex source) : this()
@@ -55,11 +55,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
             ObjectProperty = source.ObjectProperty;
         }
 
-        //public XmlBuilderIndex(ISchemaNodeObjectName source) : this()
-        //{
-        //    ObjectScope = source.ObjectScope;
-        //    ObjectProperty = source.ObjectProperty;
-        //}
+        /// <summary>
+        /// Constructor for the XmlBuilderIndex Key Name.
+        /// </summary>
+        /// <param name="source"></param>
+        public XmlBuilderIndex(ISchemaNodeObjectName source) : this()
+        {
+            ObjectScope = source.ObjectScope;
+            ObjectProperty = source.ObjectProperty;
+        }
 
         /// <summary>
         /// Constructor for the Schema Node Key Name.

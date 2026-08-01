@@ -35,6 +35,8 @@
             TableLayoutPanel objectLayout;
             GroupBox nodeRenderGroup;
             TableLayoutPanel renderAsLayout;
+            GroupBox nodeGroup;
+            TableLayoutPanel nodeSummaryLayout;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             splitContainer1 = new SplitContainer();
@@ -49,12 +51,15 @@
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingNode = new BindingSource(components);
+            isOverrideData = new CheckBox();
             schemaNodeLayout = new TableLayoutPanel();
             nodeLayout = new TableLayoutPanel();
             objectNodeGroup = new GroupBox();
             objectLayout = new TableLayoutPanel();
             nodeRenderGroup = new GroupBox();
             renderAsLayout = new TableLayoutPanel();
+            nodeGroup = new GroupBox();
+            nodeSummaryLayout = new TableLayoutPanel();
             schemaNodeLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -68,6 +73,8 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
+            nodeGroup.SuspendLayout();
+            nodeSummaryLayout.SuspendLayout();
             SuspendLayout();
             // 
             // schemaNodeLayout
@@ -84,7 +91,7 @@
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            schemaNodeLayout.Size = new Size(555, 508);
+            schemaNodeLayout.Size = new Size(555, 555);
             schemaNodeLayout.TabIndex = 4;
             // 
             // templateTitleData
@@ -126,7 +133,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(nodeLayout);
-            splitContainer1.Size = new Size(549, 402);
+            splitContainer1.Size = new Size(549, 449);
             splitContainer1.SplitterDistance = 183;
             splitContainer1.TabIndex = 2;
             // 
@@ -135,7 +142,7 @@
             nodesTree.Dock = DockStyle.Fill;
             nodesTree.Location = new Point(0, 0);
             nodesTree.Name = "nodesTree";
-            nodesTree.Size = new Size(183, 402);
+            nodesTree.Size = new Size(183, 449);
             nodesTree.TabIndex = 0;
             nodesTree.OnNodeSelected += NodesTree_OnNodeSelected;
             nodesTree.OnButtonClick += NodesTree_OnButtonClick;
@@ -144,15 +151,17 @@
             // 
             nodeLayout.ColumnCount = 1;
             nodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            nodeLayout.Controls.Add(objectNodeGroup, 0, 0);
-            nodeLayout.Controls.Add(nodeRenderGroup, 0, 1);
+            nodeLayout.Controls.Add(nodeRenderGroup, 0, 2);
+            nodeLayout.Controls.Add(objectNodeGroup, 0, 1);
+            nodeLayout.Controls.Add(nodeGroup, 0, 0);
             nodeLayout.Dock = DockStyle.Fill;
             nodeLayout.Location = new Point(0, 0);
             nodeLayout.Name = "nodeLayout";
-            nodeLayout.RowCount = 2;
+            nodeLayout.RowCount = 3;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle());
-            nodeLayout.Size = new Size(362, 402);
+            nodeLayout.RowStyles.Add(new RowStyle());
+            nodeLayout.Size = new Size(362, 449);
             nodeLayout.TabIndex = 0;
             // 
             // objectNodeGroup
@@ -161,7 +170,7 @@
             objectNodeGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             objectNodeGroup.Controls.Add(objectLayout);
             objectNodeGroup.Dock = DockStyle.Fill;
-            objectNodeGroup.Location = new Point(3, 3);
+            objectNodeGroup.Location = new Point(3, 81);
             objectNodeGroup.Name = "objectNodeGroup";
             objectNodeGroup.Size = new Size(356, 176);
             objectNodeGroup.TabIndex = 8;
@@ -231,9 +240,9 @@
             nodeRenderGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             nodeRenderGroup.Controls.Add(renderAsLayout);
             nodeRenderGroup.Dock = DockStyle.Fill;
-            nodeRenderGroup.Location = new Point(3, 185);
+            nodeRenderGroup.Location = new Point(3, 263);
             nodeRenderGroup.Name = "nodeRenderGroup";
-            nodeRenderGroup.Size = new Size(356, 226);
+            nodeRenderGroup.Size = new Size(356, 183);
             nodeRenderGroup.TabIndex = 9;
             nodeRenderGroup.TabStop = false;
             nodeRenderGroup.Text = "Render As";
@@ -243,19 +252,17 @@
             renderAsLayout.AutoSize = true;
             renderAsLayout.ColumnCount = 1;
             renderAsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            renderAsLayout.Controls.Add(nodeNameData, 0, 0);
-            renderAsLayout.Controls.Add(renderOrderData, 0, 3);
-            renderAsLayout.Controls.Add(renderTypeCodeData, 0, 2);
+            renderAsLayout.Controls.Add(renderOrderData, 0, 2);
             renderAsLayout.Controls.Add(renderNodeTypeData, 0, 1);
+            renderAsLayout.Controls.Add(renderTypeCodeData, 0, 0);
             renderAsLayout.Dock = DockStyle.Fill;
             renderAsLayout.Location = new Point(3, 19);
             renderAsLayout.Name = "renderAsLayout";
-            renderAsLayout.RowCount = 4;
+            renderAsLayout.RowCount = 3;
             renderAsLayout.RowStyles.Add(new RowStyle());
             renderAsLayout.RowStyles.Add(new RowStyle());
             renderAsLayout.RowStyles.Add(new RowStyle());
-            renderAsLayout.RowStyles.Add(new RowStyle());
-            renderAsLayout.Size = new Size(350, 204);
+            renderAsLayout.Size = new Size(350, 161);
             renderAsLayout.TabIndex = 0;
             // 
             // nodeNameData
@@ -267,7 +274,7 @@
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = false;
-            nodeNameData.Size = new Size(344, 44);
+            nodeNameData.Size = new Size(267, 44);
             nodeNameData.TabIndex = 7;
             nodeNameData.WordWrap = true;
             // 
@@ -276,12 +283,12 @@
             renderOrderData.AutoSize = true;
             renderOrderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             renderOrderData.Dock = DockStyle.Fill;
-            renderOrderData.HeaderText = "Render Order";
-            renderOrderData.Location = new Point(3, 157);
+            renderOrderData.HeaderText = "Order";
+            renderOrderData.Location = new Point(3, 107);
             renderOrderData.Multiline = false;
             renderOrderData.Name = "renderOrderData";
             renderOrderData.ReadOnly = false;
-            renderOrderData.Size = new Size(344, 44);
+            renderOrderData.Size = new Size(344, 51);
             renderOrderData.TabIndex = 12;
             renderOrderData.WordWrap = true;
             // 
@@ -291,8 +298,8 @@
             renderTypeCodeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             renderTypeCodeData.Dock = DockStyle.Fill;
             renderTypeCodeData.DropDownStyle = ComboBoxStyle.DropDown;
-            renderTypeCodeData.HeaderText = "Render Data Type";
-            renderTypeCodeData.Location = new Point(3, 105);
+            renderTypeCodeData.HeaderText = "Data Type (XSD)";
+            renderTypeCodeData.Location = new Point(3, 3);
             renderTypeCodeData.Name = "renderTypeCodeData";
             renderTypeCodeData.ReadOnly = false;
             renderTypeCodeData.Size = new Size(344, 46);
@@ -304,18 +311,58 @@
             renderNodeTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             renderNodeTypeData.Dock = DockStyle.Fill;
             renderNodeTypeData.DropDownStyle = ComboBoxStyle.DropDown;
-            renderNodeTypeData.HeaderText = "Render Value as";
-            renderNodeTypeData.Location = new Point(3, 53);
+            renderNodeTypeData.HeaderText = "Value as";
+            renderNodeTypeData.Location = new Point(3, 55);
             renderNodeTypeData.Name = "renderNodeTypeData";
             renderNodeTypeData.ReadOnly = false;
             renderNodeTypeData.Size = new Size(344, 46);
             renderNodeTypeData.TabIndex = 8;
             // 
+            // nodeGroup
+            // 
+            nodeGroup.AutoSize = true;
+            nodeGroup.Controls.Add(nodeSummaryLayout);
+            nodeGroup.Dock = DockStyle.Fill;
+            nodeGroup.Location = new Point(3, 3);
+            nodeGroup.Name = "nodeGroup";
+            nodeGroup.Size = new Size(356, 72);
+            nodeGroup.TabIndex = 10;
+            nodeGroup.TabStop = false;
+            nodeGroup.Text = "Node";
+            // 
+            // nodeSummaryLayout
+            // 
+            nodeSummaryLayout.AutoSize = true;
+            nodeSummaryLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeSummaryLayout.ColumnCount = 2;
+            nodeSummaryLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            nodeSummaryLayout.ColumnStyles.Add(new ColumnStyle());
+            nodeSummaryLayout.Controls.Add(nodeNameData, 0, 0);
+            nodeSummaryLayout.Controls.Add(isOverrideData, 1, 0);
+            nodeSummaryLayout.Dock = DockStyle.Fill;
+            nodeSummaryLayout.Location = new Point(3, 19);
+            nodeSummaryLayout.Name = "nodeSummaryLayout";
+            nodeSummaryLayout.RowCount = 1;
+            nodeSummaryLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            nodeSummaryLayout.Size = new Size(350, 50);
+            nodeSummaryLayout.TabIndex = 0;
+            // 
+            // isOverrideData
+            // 
+            isOverrideData.AutoSize = true;
+            isOverrideData.Enabled = false;
+            isOverrideData.Location = new Point(276, 3);
+            isOverrideData.Name = "isOverrideData";
+            isOverrideData.Size = new Size(71, 19);
+            isOverrideData.TabIndex = 8;
+            isOverrideData.Text = "Override";
+            isOverrideData.UseVisualStyleBackColor = true;
+            // 
             // SchemaNode
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(555, 533);
+            ClientSize = new Size(555, 580);
             Controls.Add(schemaNodeLayout);
             Name = "SchemaNode";
             Text = "SchemaNode";
@@ -340,6 +387,10 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
+            nodeGroup.ResumeLayout(false);
+            nodeGroup.PerformLayout();
+            nodeSummaryLayout.ResumeLayout(false);
+            nodeSummaryLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -354,7 +405,7 @@
         private TableLayoutPanel schemaNodeLayout;
         private TableLayoutPanel nodeDetailLayout;
         private Controls.TextBoxData nodeNameData;
-        private GroupBox groupBox1;
+        private GroupBox nodeGroup;
         private GroupBox nodeRenderGroup;
         private TableLayoutPanel objectLayout;
         private TableLayoutPanel renderAsLayout;
@@ -366,5 +417,6 @@
         private Controls.TextBoxData renderOrderData;
         private SplitContainer splitContainer1;
         private Controls.XmlBuilderTreeView nodesTree;
+        private CheckBox isOverrideData;
     }
 }

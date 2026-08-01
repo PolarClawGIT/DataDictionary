@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using System.ComponentModel;
 using System.Data;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -8,6 +9,7 @@ namespace DataDictionary.Main.Forms.Scripting
         partial class FormBinding : PresenterData<SchemaDefinitionIndex>
         {
             public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
+            public Action<XmlBuilderValue> OnSchemaChanged { get; init; } = (value) => { return; };
 
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
@@ -26,6 +28,20 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
+
+                nodeBinding.ListChanged += NodeBinding_ListChanged;
+
+                void NodeBinding_ListChanged(Object? sender, ListChangedEventArgs e)
+                {   //TODO: Currently not bubbling into both SchemaNode and SchemaDefinition screens.
+                    if (e.ListChangedType is ListChangedType.ItemChanged
+                        && e.PropertyDescriptor is PropertyDescriptor property
+                        && property.Name is nameof(XmlBuilderValue.IsOverride)
+                        )
+                    {
+                        if (e.NewIndex < NodeData.Count && NodeData.Count > 0)
+                        { OnSchemaChanged(nodeValues[e.NewIndex]); }
+                    }
+                }
             }
 
             public Boolean TrySetNode(XmlBuilderIndex key)

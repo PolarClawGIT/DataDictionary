@@ -39,6 +39,15 @@ namespace DataDictionary.Main.Forms.Scripting
                     value.RowStateChanged += Value_RowStateChanged;
                     value.PropertyChanged += Value_PropertyChanged;
                     field = value;
+
+                    this.OnPropertyChanged(PropertyChanged, nameof(IsOverride));
+                    this.OnPropertyChanged(PropertyChanged, nameof(ObjectScope));
+                    this.OnPropertyChanged(PropertyChanged, nameof(ObjectProperty));
+                    this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
+                    this.OnPropertyChanged(PropertyChanged, nameof(RenderNodeType));
+                    this.OnPropertyChanged(PropertyChanged, nameof(RenderTypeCode));
+                    this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
+                    this.OnPropertyChanged(PropertyChanged, nameof(SchemaNode));
                 }
                 else if (value is null && field is not null)
                 {
@@ -100,9 +109,9 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         /// <summary>
-        /// This is Read Only. No SchemaNode is associated with this instance.
+        /// This is Override. No SchemaNode is associated with this instance.
         /// </summary>
-        public Boolean IsReadOnly { get { return SchemaNode is not null; } }
+        public Boolean IsOverride { get { return SchemaNode is not null; } }
 
         /// <inheritdoc/>
         public XmlNodeType RenderNodeType
@@ -156,10 +165,10 @@ namespace DataDictionary.Main.Forms.Scripting
     }
 
     /// <summary>
-    /// Wrapper list class used with the SchemaNodeTreeView to provided a list to bind to.
+    /// Wrapper list class used with the XmlBuilderTreeView to provided a list to bind to.
     /// </summary>
     class XmlBuilderData : BindingList<XmlBuilderValue>, IBindingList<XmlBuilderValue>
-    { 
+    {
         public void Load(SchemaDefinitionIndex key, ISchemaNodeData data)
         {
             Clear();

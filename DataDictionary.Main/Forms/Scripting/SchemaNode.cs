@@ -32,7 +32,16 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding(
                 templateBinding: bindingTemplate,
                 schemaBinding: bindingSchema,
-                nodeBinding: bindingNode);
+                nodeBinding: bindingNode)
+            {
+                OnSchemaChanged = (value) =>
+                {   
+                    if(value.SchemaNode is null)
+                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value), FontStyle.Regular); }
+                    else
+                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value.SchemaNode), FontStyle.Bold); }
+                }
+            };
 
             SetRowState(
                 bindingSchema,
@@ -83,6 +92,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
                 formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+                formBinding.NodeData.AddBinding(isOverrideData, e => e.IsOverride);
 
                 ScopeNameList.Load(objectScopeData, ScopeType.Null,
                     ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
