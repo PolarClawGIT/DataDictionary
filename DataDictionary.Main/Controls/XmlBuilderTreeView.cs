@@ -2,6 +2,7 @@
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Controls
@@ -9,6 +10,7 @@ namespace DataDictionary.Main.Controls
     /// <summary>
     /// TreeView Control wired up to the XmlBuilder.
     /// </summary>
+    [Obsolete]
     partial class XmlBuilderTreeView : UserControl
     {
         /// <summary>
@@ -93,12 +95,20 @@ namespace DataDictionary.Main.Controls
         }
 
         public void SetNodeFont(XmlBuilderIndex key, FontStyle style)
-        {   
+        {
             if (data.TryGetNode(key, out TreeNode? node))
             {
                 node.NodeFont = new Font(treeViewData.Font, style);
                 node.Text = node.Text; // Forces control to re-compute size of the text
             }
+        }
+
+        public Boolean TryGetCurrent([NotNullWhen(true)] out XmlBuilderIndex? key)
+        {
+            key = null;
+
+            return (treeViewData.SelectedNode is not null
+                && data.TryGetValue(treeViewData.SelectedNode, out key));
         }
 
         /// <summary>

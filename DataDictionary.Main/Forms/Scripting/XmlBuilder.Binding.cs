@@ -100,9 +100,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (SchemaNode is not null) { return SchemaNode.RenderOrder; }
                 else { return Builder.RenderOrder; }
             }
-
             set
-            {   
+            {
                 if (SchemaNode is not null) { SchemaNode.RenderOrder = value; }
                 this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
             }

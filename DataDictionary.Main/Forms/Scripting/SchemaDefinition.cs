@@ -12,6 +12,7 @@ namespace DataDictionary.Main.Forms.Scripting
         SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex();
         //TemporalIndex? temporalIndex = null;
         FormBinding formBinding;
+        TreeBinding nodesTree;
 
         public override Boolean IsOpenItem(object? item)
         { return item is ISchemaDefinitionIndex key && schemaIndex.Equals(key); }
@@ -20,16 +21,8 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode)
-            {
-                OnSchemaChanged = (value) =>
-                {
-                    if (value.SchemaNode is null)
-                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value), FontStyle.Regular); }
-                    else
-                    { nodesTree.SetNodeFont(new XmlBuilderIndex(value.SchemaNode), FontStyle.Bold); }
-                }
-            }; ;
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode);
+            nodesTree = new TreeBinding(schemaNodeTree);
 
             SetRowState(bindingSchema);
             SetTitle(bindingSchema);
@@ -41,7 +34,8 @@ namespace DataDictionary.Main.Forms.Scripting
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
 
-            nodesTree.DoWork = DoWork;
+
+            //nodesTree.DoWork = DoWork;
         }
 
         public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
@@ -92,6 +86,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
+                // Main Tab
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
 
@@ -106,25 +101,36 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(forEachScopeData, ScopeType.Null, ScopeType.ModelAttribute, ScopeType.ModelEntity);
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
 
+
+                // Node Tab
                 nodesTree.LoadTree(formBinding.GetBuilders());
-                nodesTree.CommandButtons[ButtonType.Browse].Click += BrowseNodeCommand_Click;
+
+                formBinding.BuilderData.AddBinding(nodeNameData, e => e.NodeName);
 
                 ScopeNameList.Load(objectScopeData, ScopeType.Null,
                     ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
                     ScopeType.ModelEntity, ScopeType.ModelEntityProperty);
-                formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
-                formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
-                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
+                formBinding.BuilderData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+
+                formBinding.BuilderData.AddBinding(objectPropertyData, e => e.ObjectProperty);
+
+                ObjectValueTypeList.Load(objectTypeData);
+                formBinding.BuilderData.AddBinding(objectTypeData, e => e.ObjectType, ObjectValueTypeList.NullValue);
 
                 XmlNodeTypeList.Load(renderNodeTypeData);
-                formBinding.NodeData.AddBinding(renderNodeTypeData, e => e.RenderNodeType, XmlNodeTypeList.NullValue);
+                formBinding.BuilderData.AddBinding(renderNodeTypeData, e => e.RenderNodeType, XmlNodeTypeList.NullValue);
+
+                XmlTypeCodeList.Load(renderTypeCodeData);
+                formBinding.BuilderData.AddBinding(renderTypeCodeData, e => e.RenderTypeCode, XmlTypeCodeList.NullValue);
+
+                formBinding.BuilderData.AddBinding(renderOrderData, e => e.RenderOrder);
+
 
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
             }
         }
-
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
@@ -176,9 +182,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenNodeCommand_Click(object sender, EventArgs e)
         {
-            Activate(() => new Forms.Scripting.SchemaNode(
-                template: templateIndex, schema: schemaIndex,
-                getData: formBinding.GetData));
+
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)
@@ -226,18 +230,43 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
+        #region Node TreeView
+        Boolean? isTreeNodePlusMinus = null;
+        private void SchemaNodeTree_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
-            formBinding.TrySetNode(e);
+            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterCollapse does not fire
+            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
+            else { } // Was not triggered by Click event
+
+            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
         }
 
-
-        private void BrowseNodeCommand_Click(Object? sender, EventArgs e)
+        private void SchemaNodeTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            Activate(
-                () => new SchemaNode(schemaIndex),
-                (form) => form.IsOpenItem(schemaIndex));
+            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterExpanded does not fire
+            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
+            else { } // Was not triggered by Click event
 
+            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
         }
+
+        private void SchemaNodeTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node is not null && e.Node.TreeView is not null)
+            { isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus; }
+
+            if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
+        }
+
+        private void SchemaNodeTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // Need to get the Hit Location itself because the flag may have been reset.
+            if (e.Node is not null
+                && e.Node.TreeView is not null
+                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
+                && nodesTree.TryGetValue(e.Node, out XmlBuilderIndex? value))
+            { formBinding.TrySetNode(value); }
+        }
+        #endregion
     }
 }

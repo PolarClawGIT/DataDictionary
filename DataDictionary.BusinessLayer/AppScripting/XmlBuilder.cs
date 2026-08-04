@@ -90,7 +90,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public virtual Int32? RenderOrder { get; set; }
+        public virtual Int32? RenderOrder { get; set; } = 0;
 
         /// <summary>
         /// Function that returns the NodeValue.

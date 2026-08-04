@@ -6,6 +6,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Controls
 {
+    [Obsolete]
     class XmlBuilderTreeViewData
     {
         TreeView treeControl;

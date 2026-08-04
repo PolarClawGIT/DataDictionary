@@ -15,6 +15,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete]
     partial class SchemaNode : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();
@@ -91,26 +92,26 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
-                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
-                formBinding.NodeData.AddBinding(isOverrideData, e => e.IsOverride);
+                formBinding.BuilderData.AddBinding(nodeNameData, e => e.NodeName);
+                formBinding.BuilderData.AddBinding(isOverrideData, e => e.IsOverride);
 
                 ScopeNameList.Load(objectScopeData, ScopeType.Null,
                     ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
                     ScopeType.ModelEntity, ScopeType.ModelEntityProperty);
-                formBinding.NodeData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+                formBinding.BuilderData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
 
-                formBinding.NodeData.AddBinding(objectPropertyData, e => e.ObjectProperty);
+                formBinding.BuilderData.AddBinding(objectPropertyData, e => e.ObjectProperty);
 
                 ObjectValueTypeList.Load(objectTypeData);
-                formBinding.NodeData.AddBinding(objectTypeData, e => e.ObjectType, ObjectValueTypeList.NullValue);
+                formBinding.BuilderData.AddBinding(objectTypeData, e => e.ObjectType, ObjectValueTypeList.NullValue);
 
                 XmlNodeTypeList.Load(renderNodeTypeData);
-                formBinding.NodeData.AddBinding(renderNodeTypeData, e => e.RenderNodeType, XmlNodeTypeList.NullValue);
+                formBinding.BuilderData.AddBinding(renderNodeTypeData, e => e.RenderNodeType, XmlNodeTypeList.NullValue);
 
                 XmlTypeCodeList.Load(renderTypeCodeData);
-                formBinding.NodeData.AddBinding(renderTypeCodeData, e => e.RenderTypeCode, XmlTypeCodeList.NullValue);
+                formBinding.BuilderData.AddBinding(renderTypeCodeData, e => e.RenderTypeCode, XmlTypeCodeList.NullValue);
 
-                formBinding.NodeData.AddBinding(renderOrderData, e => e.RenderOrder);
+                formBinding.BuilderData.AddBinding(renderOrderData, e => e.RenderOrder);
 
                 nodesTree.LoadTree(formBinding.GetBuilders());
 
@@ -124,7 +125,11 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+
             formBinding.AddNew(templateIndex, schemaIndex);
+            CommandButtons[ButtonType.Delete].Enabled =
+                formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value)
+                && value.IsOverride;
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
@@ -145,7 +150,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void NodesTree_OnNodeSelected(object sender, XmlBuilderIndex e)
         {
-            formBinding.TrySetNode(e);
+            CommandButtons[ButtonType.Delete].Enabled =
+                formBinding.TrySetNode(e)
+                && formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value)
+                && value.IsOverride;
         }
 
         private void NodesTree_OnButtonClick(object sender, ButtonType e)
