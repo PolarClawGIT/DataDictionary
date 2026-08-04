@@ -12,7 +12,6 @@ namespace DataDictionary.Main.Forms.Scripting
         SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex();
         //TemporalIndex? temporalIndex = null;
         FormBinding formBinding;
-        TreeBinding nodesTree;
 
         public override Boolean IsOpenItem(object? item)
         { return item is ISchemaDefinitionIndex key && schemaIndex.Equals(key); }
@@ -33,9 +32,6 @@ namespace DataDictionary.Main.Forms.Scripting
             documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
-
-
-            //nodesTree.DoWork = DoWork;
         }
 
         public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
@@ -100,7 +96,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 ScopeNameList.Load(forEachScopeData, ScopeType.Null, ScopeType.ModelAttribute, ScopeType.ModelEntity);
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
-
 
                 // Node Tab
                 nodesTree.LoadTree(formBinding.GetBuilders());
@@ -180,11 +175,6 @@ namespace DataDictionary.Main.Forms.Scripting
             Activate(static () => new Forms.Scripting.SchemaDocument());
         }
 
-        private void OpenNodeCommand_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void RootFolderData_Validated(object sender, EventArgs e)
         {
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
@@ -230,43 +220,6 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        #region Node TreeView
-        Boolean? isTreeNodePlusMinus = null;
-        private void SchemaNodeTree_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
-        {
-            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterCollapse does not fire
-            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
-            else { } // Was not triggered by Click event
 
-            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
-        }
-
-        private void SchemaNodeTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-        {
-            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterExpanded does not fire
-            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
-            else { } // Was not triggered by Click event
-
-            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
-        }
-
-        private void SchemaNodeTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if (e.Node is not null && e.Node.TreeView is not null)
-            { isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus; }
-
-            if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
-        }
-
-        private void SchemaNodeTree_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            // Need to get the Hit Location itself because the flag may have been reset.
-            if (e.Node is not null
-                && e.Node.TreeView is not null
-                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
-                && nodesTree.TryGetValue(e.Node, out XmlBuilderIndex? value))
-            { formBinding.TrySetNode(value); }
-        }
-        #endregion
     }
 }
