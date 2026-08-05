@@ -37,7 +37,6 @@
             Label fileBaseName;
             TableLayoutPanel nodeLayout;
             TableLayoutPanel tableLayoutPanel1;
-            GroupBox nodeRenderGroup;
             TableLayoutPanel renderAsLayout;
             GroupBox objectNodeGroup;
             TableLayoutPanel objectLayout;
@@ -54,6 +53,7 @@
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
             forEachScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             schemaNodeTab = new TabPage();
+            nodeRenderGroup = new GroupBox();
             renderOrderData = new DataDictionary.Main.Controls.TextBoxData();
             renderNodeTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             renderTypeCodeData = new DataDictionary.Main.Controls.ComboBoxData();
@@ -63,6 +63,8 @@
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             isOverrideData = new CheckBox();
             nodeToolStrip = new ToolStrip();
+            nodeNewCommand = new ToolStripButton();
+            nodeDeleteCommand = new ToolStripButton();
             schemaNodeTree = new TreeView();
             documentTab = new TabPage();
             fileLayout = new TableLayoutPanel();
@@ -85,7 +87,6 @@
             fileBaseName = new Label();
             nodeLayout = new TableLayoutPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            nodeRenderGroup = new GroupBox();
             renderAsLayout = new TableLayoutPanel();
             objectNodeGroup = new GroupBox();
             objectLayout = new TableLayoutPanel();
@@ -106,6 +107,7 @@
             objectLayout.SuspendLayout();
             groupBox1.SuspendLayout();
             nodeSummaryLayout.SuspendLayout();
+            nodeToolStrip.SuspendLayout();
             documentTab.SuspendLayout();
             fileLayout.SuspendLayout();
             documentToolStrip.SuspendLayout();
@@ -571,11 +573,32 @@
             // nodeToolStrip
             // 
             nodeLayout.SetColumnSpan(nodeToolStrip, 2);
+            nodeToolStrip.Items.AddRange(new ToolStripItem[] { nodeNewCommand, nodeDeleteCommand });
             nodeToolStrip.Location = new Point(0, 0);
             nodeToolStrip.Name = "nodeToolStrip";
             nodeToolStrip.Size = new Size(562, 25);
             nodeToolStrip.TabIndex = 0;
             nodeToolStrip.Text = "toolStrip1";
+            // 
+            // nodeNewCommand
+            // 
+            nodeNewCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            nodeNewCommand.Image = (Image)resources.GetObject("nodeNewCommand.Image");
+            nodeNewCommand.ImageTransparentColor = Color.Magenta;
+            nodeNewCommand.Name = "nodeNewCommand";
+            nodeNewCommand.Size = new Size(23, 22);
+            nodeNewCommand.Text = "New Node Definition (Override)";
+            nodeNewCommand.Click += NodeNewCommand_Click;
+            // 
+            // nodeDeleteCommand
+            // 
+            nodeDeleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            nodeDeleteCommand.Image = (Image)resources.GetObject("nodeDeleteCommand.Image");
+            nodeDeleteCommand.ImageTransparentColor = Color.Magenta;
+            nodeDeleteCommand.Name = "nodeDeleteCommand";
+            nodeDeleteCommand.Size = new Size(23, 22);
+            nodeDeleteCommand.Text = "Delete Node Definition (reset to Default)";
+            nodeDeleteCommand.Click += NodeDeleteCommand_Click;
             // 
             // schemaNodeTree
             // 
@@ -695,6 +718,10 @@
             schemaTitleData.TabIndex = 1;
             schemaTitleData.WordWrap = true;
             // 
+            // bindingNode
+            // 
+            bindingNode.CurrentChanged += BindingNode_CurrentChanged;
+            // 
             // SchemaDefinition
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -732,6 +759,8 @@
             groupBox1.PerformLayout();
             nodeSummaryLayout.ResumeLayout(false);
             nodeSummaryLayout.PerformLayout();
+            nodeToolStrip.ResumeLayout(false);
+            nodeToolStrip.PerformLayout();
             documentTab.ResumeLayout(false);
             fileLayout.ResumeLayout(false);
             fileLayout.PerformLayout();
@@ -785,5 +814,8 @@
         private Controls.TextBoxData nodeNameData;
         private CheckBox isOverrideData;
         private Controls.ComboBoxData forEachScopeData;
+        private ToolStripButton nodeNewCommand;
+        private ToolStripButton nodeDeleteCommand;
+        private GroupBox nodeRenderGroup;
     }
 }

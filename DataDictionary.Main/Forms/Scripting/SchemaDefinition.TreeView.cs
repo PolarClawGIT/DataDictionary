@@ -2,10 +2,8 @@
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -58,12 +56,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 return treeControl.SelectedNode is not null && treeValues.TryGetValue(treeControl.SelectedNode, out key);
             }
 
-            public void LoadTree(IEnumerable<XmlBuilder> builders)
+            public void LoadTree(IEnumerable<XmlBuilderValue> builders)
             {
                 BeginUpdate();
                 BuildNodes(builders);
                 EndUpdate();
-
 
                 void BeginUpdate()
                 {
@@ -84,21 +81,20 @@ namespace DataDictionary.Main.Forms.Scripting
                                     Distinct());
                 }
 
-                void BuildNodes(IEnumerable<XmlBuilder> builders)
+                void BuildNodes(IEnumerable<XmlBuilderValue> builders)
                 {
                     ClearNodes(treeControl.Nodes);
 
-                    foreach (XmlBuilder item in builders.
-                            Where(w => !builders.Any(a => a.BuilderPath.Equals(w.BuilderPath.ParentPath))).
+                    treeControl.Font = new Font(treeControl.Font, FontStyle.Bold); // Make space for bold face fonts.
+
+                    foreach (XmlBuilderValue item in builders.
+                            Where(w => !builders.Any(a => a.Builder.BuilderPath.Equals(w.Builder.BuilderPath.ParentPath))).
                             OrderBy(o => o.RenderOrder).
-                            ThenBy(o => o.BuilderPath))
+                            ThenBy(o => o.Builder.BuilderPath))
                     {
-                        treeControl.Invoke(() =>
-                        {
-                            TreeNode node = CreateNode(item);
-                            treeControl.Nodes.Add(node);
-                            BuildChildren(node, item.BuilderPath);
-                        });
+                        TreeNode node = CreateNode(item);
+                        treeControl.Nodes.Add(node);
+                        BuildChildren(node, item.Builder.BuilderPath);
                     }
                 }
 
@@ -114,22 +110,27 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void BuildChildren(TreeNode parentNode, XmlBuilderIndex key)
                 {
-                    foreach (XmlBuilder item in builders.
-                        Where(w => key.Equals(w.BuilderPath.ParentPath)).
+                    foreach (XmlBuilderValue item in builders.
+                        Where(w => key.Equals(w.Builder.BuilderPath.ParentPath)).
                         OrderBy(o => o.RenderOrder).
-                        ThenBy(o => o.BuilderPath))
+                        ThenBy(o => o.Builder.BuilderPath))
                     {
                         TreeNode childNode = CreateNode(item);
                         parentNode.Nodes.Add(childNode);
 
-                        BuildChildren(childNode, item.BuilderPath);
+                        BuildChildren(childNode, item.Builder.BuilderPath);
                     }
                 }
 
-                TreeNode CreateNode(XmlBuilder item)
+                TreeNode CreateNode(XmlBuilderValue item)
                 {
-                    TreeNode node = new TreeNode(item.BuilderPath.Member);
-                    node.ToolTipText = item.BuilderPath.MemberFullPath;
+                    TreeNode node = new TreeNode(item.Builder.BuilderPath.Member)
+                    {
+                        NodeFont = new Font(treeControl.Font, FontStyle.Bold),
+                        ToolTipText = item.Builder.BuilderPath.MemberFullPath
+                    };
+
+                    item.PropertyChanged += Item_PropertyChanged;
 
                     XmlBuilderIndex key = new XmlBuilderIndex(item);
 
@@ -152,10 +153,28 @@ namespace DataDictionary.Main.Forms.Scripting
                         }
                     }
 
+                    if (item.IsOverride) // Reset to desired font
+                    { node.NodeFont = new Font(treeControl.Font, FontStyle.Bold); }
+                    else { node.NodeFont = new Font(treeControl.Font, FontStyle.Regular); }
+
                     if (!treeValues.ContainsValue(key))
                     { treeValues.Add(node, key); }
 
                     return node;
+
+                    void Item_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                    {
+                        if (sender is XmlBuilderValue item
+                            && e.PropertyName is nameof(XmlBuilderValue.IsOverride)
+                            && TryGetNode(new XmlBuilderIndex(item), out TreeNode? node))
+                        {
+                            if (item.IsOverride) // Set to desired font on data change
+                            { node.NodeFont = new Font(treeControl.Font, FontStyle.Bold); }
+                            else { node.NodeFont = new Font(treeControl.Font, FontStyle.Regular); }
+
+                            node.Text = node.Text; // Force redraw of the font.
+                        }
+                    }
                 }
 
                 void EndUpdate()
@@ -212,7 +231,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 && e.Node.TreeView is not null
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && nodesTree.TryGetValue(e.Node, out XmlBuilderIndex? value))
-            { formBinding.TrySetNode(value); }
+            { formBinding.BuilderData.TrySetValue(w => value.Equals(w)); }
         }
         #endregion
     }

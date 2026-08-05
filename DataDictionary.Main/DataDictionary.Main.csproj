@@ -19,6 +19,12 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Forms\ProofOfConcept\**" />
+    <EmbeddedResource Remove="Forms\ProofOfConcept\**" />
+    <None Remove="Forms\ProofOfConcept\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Forms\Scripting\ScriptingTemplate.Binding.cs" />
     <Compile Remove="Forms\Scripting\ScriptingTemplate.cs" />
     <Compile Remove="Forms\Scripting\ScriptingTemplate.Designer.cs" />
@@ -91,10 +97,6 @@ Allows entry of MS Description and custom properties for Entities and Attributes
     <Using Include="DataDictionary.Main.Global">
       <Static>True</Static>
     </Using>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Forms\ProofOfConcept\" />
   </ItemGroup>
 
 </Project>

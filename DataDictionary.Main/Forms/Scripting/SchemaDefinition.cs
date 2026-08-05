@@ -32,6 +32,9 @@ namespace DataDictionary.Main.Forms.Scripting
             documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+
+            nodeNewCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Add);
+            nodeDeleteCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Delete);
         }
 
         public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
@@ -98,7 +101,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
 
                 // Node Tab
-                nodesTree.LoadTree(formBinding.GetBuilders());
+                nodesTree.LoadTree(formBinding.BuilderData);
 
                 formBinding.BuilderData.AddBinding(nodeNameData, e => e.NodeName);
 
@@ -220,6 +223,46 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void NodeNewCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value)
+                && value.SchemaNode is null)
+            {
+                SchemaNodeValue node = new SchemaNodeValue(templateIndex, schemaIndex);
+                value.SchemaNode = node;
+                OnNodeChanged();
+            }
+        }
 
+        private void NodeDeleteCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value)
+                && value.SchemaNode is not null)
+            {
+                value.SchemaNode = null;
+                OnNodeChanged();
+            }
+
+                
+        }
+
+        private void BindingNode_CurrentChanged(object sender, EventArgs e)
+        { OnNodeChanged(); }
+
+        void OnNodeChanged()
+        {
+            if (formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value))
+            {
+                nodeRenderGroup.Enabled = value.IsOverride;
+                nodeNewCommand.Enabled = !value.IsOverride;
+                nodeDeleteCommand.Enabled = value.IsOverride;
+            }
+            else
+            {   // Should not occur. No selected Node.
+                nodeRenderGroup.Enabled = false;
+                nodeNewCommand.Enabled = false;
+                nodeDeleteCommand.Enabled = false;
+            }
+        }
     }
 }

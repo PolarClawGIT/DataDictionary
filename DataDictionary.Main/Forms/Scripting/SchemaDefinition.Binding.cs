@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.Main.Controls;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -27,34 +26,33 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
-                schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes);
+                schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes,w => 1==2);
                 BuilderData = new DataBinding<XmlBuilderValue>(nodeBinding, () => nodeValues);
 
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
 
-                schemaNodes.ListChanged += SchemaNodes_ListChanged;
+                BuilderData.ListChanged += BuilderData_ListChanged;
 
-                void SchemaNodes_ListChanged(Object? sender, ListChangedEventArgs e)
+                void BuilderData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    // Reset list
-                    foreach (var builder in BuilderData)
+                    if (e.ListChangedType is ListChangedType.ItemChanged
+                        && e.PropertyDescriptor is PropertyDescriptor property
+                        && property.Name is nameof(XmlBuilderValue.SchemaNode)
+                        && e.NewIndex >= 0
+                        && e.NewIndex < BuilderData.Count)
                     {
-                        XmlBuilderIndex key = new XmlBuilderIndex(builder);
-                        SchemaNodeValue? node = schemaNodes.FirstOrDefault(w => key.Equals(w));
+                        XmlBuilderValue value = BuilderData[e.NewIndex];
+                        XmlBuilderIndex key = new XmlBuilderIndex(value);
+                        SchemaNodeValue? item = schemaNodes.SingleOrDefault(w => key.Equals(w));
 
-                        if (builder.SchemaNode is null && node is not null)
-                        { builder.SchemaNode = node; }
-                        else if (builder.SchemaNode is not null && node is null)
-                        { builder.SchemaNode = null; }
-
-                        OnSchemaChanged(builder);
+                        if (value.SchemaNode is null && item is not null)
+                        { schemaNodes.Remove(item); }
+                        else if (value.SchemaNode is not null && item is null)
+                        { schemaNodes.Add(value.SchemaNode); }
                     }
                 }
             }
-
-            public Boolean TrySetNode(XmlBuilderIndex key)
-            { return BuilderData.TrySetValue(w => key.Equals(w)); }
 
             public override void LoadValue(SchemaDefinitionIndex key)
             {
@@ -68,6 +66,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 nodeValues.Load(key, GetData().SchemataNodes);
                 BuilderData.LoadBinding();
+
+                foreach (var item in schemaNodes)
+                {
+                    XmlBuilderIndex builderKey = new XmlBuilderIndex(item);
+                    XmlBuilderValue builder = BuilderData.Single(w => builderKey.Equals(w));
+                    builder.SchemaNode = item;
+                }
             }
 
             protected void RemoveValue(SchemaDefinitionIndex key)
@@ -80,6 +85,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public IEnumerable<XmlBuilder> GetBuilders()
             { return nodeValues.Select(s => s.Builder); }
+
         }
     }
 }

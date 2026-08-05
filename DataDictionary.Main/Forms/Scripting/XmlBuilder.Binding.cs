@@ -11,7 +11,7 @@ namespace DataDictionary.Main.Forms.Scripting
     /// <summary>
     /// Wrapper item class used to connect the XMLBuilder to the SchemaNodeValue
     /// </summary>
-    class XmlBuilderValue : IXmlBuilder, IBindingPropertyChanged, IBindingRowState
+    class XmlBuilderValue : IXmlBuilder, IBindingPropertyChanged, IBindingRowState, IXmlBuilderIndex
     {
         public required XmlBuilder Builder { get; init; }
 
@@ -39,15 +39,6 @@ namespace DataDictionary.Main.Forms.Scripting
                     value.RowStateChanged += Value_RowStateChanged;
                     value.PropertyChanged += Value_PropertyChanged;
                     field = value;
-
-                    this.OnPropertyChanged(PropertyChanged, nameof(IsOverride));
-                    this.OnPropertyChanged(PropertyChanged, nameof(ObjectScope));
-                    this.OnPropertyChanged(PropertyChanged, nameof(ObjectProperty));
-                    this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
-                    this.OnPropertyChanged(PropertyChanged, nameof(RenderNodeType));
-                    this.OnPropertyChanged(PropertyChanged, nameof(RenderTypeCode));
-                    this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
-                    this.OnPropertyChanged(PropertyChanged, nameof(SchemaNode));
                 }
                 else if (value is null && field is not null)
                 {
@@ -55,6 +46,15 @@ namespace DataDictionary.Main.Forms.Scripting
                     field.PropertyChanged -= Value_PropertyChanged;
                     field = null;
                 }
+
+                this.OnPropertyChanged(PropertyChanged, nameof(IsOverride));
+                this.OnPropertyChanged(PropertyChanged, nameof(ObjectScope));
+                this.OnPropertyChanged(PropertyChanged, nameof(ObjectProperty));
+                this.OnPropertyChanged(PropertyChanged, nameof(NodeName));
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderNodeType));
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderTypeCode));
+                this.OnPropertyChanged(PropertyChanged, nameof(RenderOrder));
+                this.OnPropertyChanged(PropertyChanged, nameof(SchemaNode));
             }
         }
 

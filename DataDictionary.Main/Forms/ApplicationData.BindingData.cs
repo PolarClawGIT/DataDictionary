@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms
         /// Provides functionality for managing a set of Data used by DataBinding.
         /// </summary>
         /// <typeparam name="TRow"></typeparam>
-        protected class DataBinding<TRow> : ICollection<TRow>
+        protected class DataBinding<TRow> : ICollection<TRow>, IBindListChanged
             where TRow : class, IBindingPropertyChanged, IBindingRowState
         {
             /// <summary>
@@ -155,6 +155,7 @@ namespace DataDictionary.Main.Forms
                 { return bindingValues.Remove(value); }
                 else { return false; }
             }
+
             #endregion
             #region Security
             /// <summary>
@@ -202,6 +203,24 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <remarks>Starts RaiseListChangedEvents</remarks>
             public event EventHandler LoadBindingComplete;
+
+            /// <inheritdoc/>
+            public event ListChangedEventHandler ListChanged
+            {
+                add { BindingData.ListChanged += value; }
+                remove { BindingData.ListChanged -= value; }
+            }
+
+            /// <inheritdoc/>
+            public void ResetBindings()
+            { BindingData.ResetBindings(false); }
+
+            /// <inheritdoc/>
+            public Boolean RaiseListChangedEvents
+            {
+                get { return BindingData.RaiseListChangedEvents; }
+                set { BindingData.RaiseListChangedEvents = value; }
+            }
 
             /// <summary>
             /// Part of the Load process linking to the data values and restarts binding.
@@ -614,11 +633,15 @@ namespace DataDictionary.Main.Forms
             IEnumerator IEnumerable.GetEnumerator()
             { return ((IEnumerable)bindingValues).GetEnumerator(); }
 
+
+
             /// <inheritdoc/>
             public Int32 Count => ((ICollection<TRow>)bindingValues).Count;
 
             /// <inheritdoc/>
             public Boolean IsReadOnly => ((ICollection<TRow>)bindingValues).IsReadOnly;
+
+
             #endregion
         }
 
