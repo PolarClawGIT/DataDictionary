@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode);
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingNode, bindingDocument);
             nodesTree = new TreeBinding(schemaNodeTree);
 
             SetRowState(bindingSchema);
@@ -61,22 +61,16 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (schemaIndex.HasValue)
             { formBinding.LoadValue(schemaIndex); }
-            else
+            else if (templateIndex.HasValue)
             {
-                if (templateIndex.HasValue)
-                {
-                    SchemaDefinitionValue value = new SchemaDefinitionValue(templateIndex);
-                    formBinding.SchemaData.Add(value);
-                    schemaIndex = new SchemaDefinitionIndex(value);
-                    formBinding.LoadValue(schemaIndex);
-                    SendMessage(new RefreshNavigation());
-                }
-                else
-                {   // This should never occur.
-                    Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(templateIndex), templateIndex);
-                    throw ex;
-                }
+                formBinding.LoadValue(templateIndex, out schemaIndex);
+                SendMessage(new RefreshNavigation());
+            }
+            else
+            {   // This should never occur.
+                Exception ex = new InvalidOperationException("Template not found");
+                ex.Data.Add(nameof(templateIndex), templateIndex);
+                throw ex;
             }
 
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? _))
@@ -123,6 +117,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 formBinding.BuilderData.AddBinding(renderOrderData, e => e.RenderOrder);
 
+                // Document Tab
+                formBinding.DocumentData.AddBinding(documentData);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -164,6 +160,33 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.HistoryCommand_Click(sender, e);
             throw new NotImplementedException();
+        }
+
+        private void DocumentBuildCommand_Click(object sender, EventArgs e)
+        {
+            if(formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            {
+                switch (value.ForEachScope)
+                {
+                    case ScopeType.Model:
+                        break;
+                    case ScopeType.ModelAttribute:
+                        foreach (var item in BusinessData.Model.Attribute.Attributes)
+                        {
+                            
+                        }
+                        break;
+                    /*case ScopeType.ModelEntity:
+                        break;
+                    case ScopeType.ModelProcess:
+                        break;*/
+
+                    default:
+                        Exception ex = new InvalidOperationException("Not supported");
+                        ex.Data.Add(nameof(value.ForEachScope), value.ForEachScope.GetName());
+                        break;
+                }
+            }
         }
 
         private void DocumentNewCommand_Click(object sender, EventArgs e)
@@ -243,7 +266,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 OnNodeChanged();
             }
 
-                
+
         }
 
         private void BindingNode_CurrentChanged(object sender, EventArgs e)
@@ -264,5 +287,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeDeleteCommand.Enabled = false;
             }
         }
+
+
     }
 }

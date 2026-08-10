@@ -28,20 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel schemaDocumentLayout;
             GroupBox objectGroupBox;
             TableLayoutPanel objectLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDocument));
             TableLayoutPanel objectBehaviorLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDocument));
             documentFileContentData = new DataDictionary.Main.Controls.TextBoxData();
+            objectKeepOrphaned = new CheckBox();
+            objectIsExcluded = new CheckBox();
+            isInModelData = new CheckBox();
+            objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            objectNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             documentFileData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            objectNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
-            isInModelData = new CheckBox();
-            objectIsExcluded = new CheckBox();
-            objectKeepOrphaned = new CheckBox();
+            bindingTemplate = new BindingSource(components);
+            bindingSchema = new BindingSource(components);
+            bindingDocument = new BindingSource(components);
             schemaDocumentLayout = new TableLayoutPanel();
             objectGroupBox = new GroupBox();
             objectLayout = new TableLayoutPanel();
@@ -50,6 +54,9 @@
             objectGroupBox.SuspendLayout();
             objectLayout.SuspendLayout();
             objectBehaviorLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
             SuspendLayout();
             // 
             // schemaDocumentLayout
@@ -85,6 +92,111 @@
             documentFileContentData.Size = new Size(502, 293);
             documentFileContentData.TabIndex = 6;
             documentFileContentData.WordWrap = false;
+            // 
+            // objectGroupBox
+            // 
+            objectGroupBox.AutoSize = true;
+            objectGroupBox.Controls.Add(objectLayout);
+            objectGroupBox.Dock = DockStyle.Fill;
+            objectGroupBox.Location = new Point(3, 103);
+            objectGroupBox.Name = "objectGroupBox";
+            objectGroupBox.Size = new Size(502, 155);
+            objectGroupBox.TabIndex = 5;
+            objectGroupBox.TabStop = false;
+            objectGroupBox.Text = "Model Object";
+            // 
+            // objectLayout
+            // 
+            objectLayout.AutoSize = true;
+            objectLayout.ColumnCount = 1;
+            objectLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            objectLayout.Controls.Add(objectBehaviorLayout, 0, 2);
+            objectLayout.Controls.Add(objectScopeData, 0, 0);
+            objectLayout.Controls.Add(objectNameData, 0, 1);
+            objectLayout.Dock = DockStyle.Fill;
+            objectLayout.Location = new Point(3, 19);
+            objectLayout.Name = "objectLayout";
+            objectLayout.RowCount = 3;
+            objectLayout.RowStyles.Add(new RowStyle());
+            objectLayout.RowStyles.Add(new RowStyle());
+            objectLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            objectLayout.Size = new Size(496, 133);
+            objectLayout.TabIndex = 0;
+            // 
+            // objectBehaviorLayout
+            // 
+            objectBehaviorLayout.AutoSize = true;
+            objectBehaviorLayout.ColumnCount = 3;
+            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            objectBehaviorLayout.Controls.Add(objectKeepOrphaned, 2, 0);
+            objectBehaviorLayout.Controls.Add(objectIsExcluded, 1, 0);
+            objectBehaviorLayout.Controls.Add(isInModelData, 0, 0);
+            objectBehaviorLayout.Dock = DockStyle.Fill;
+            objectBehaviorLayout.Location = new Point(3, 105);
+            objectBehaviorLayout.Name = "objectBehaviorLayout";
+            objectBehaviorLayout.RowCount = 1;
+            objectBehaviorLayout.RowStyles.Add(new RowStyle());
+            objectBehaviorLayout.Size = new Size(490, 25);
+            objectBehaviorLayout.TabIndex = 5;
+            // 
+            // objectKeepOrphaned
+            // 
+            objectKeepOrphaned.AutoSize = true;
+            objectKeepOrphaned.Location = new Point(329, 3);
+            objectKeepOrphaned.Name = "objectKeepOrphaned";
+            objectKeepOrphaned.Size = new Size(108, 19);
+            objectKeepOrphaned.TabIndex = 3;
+            objectKeepOrphaned.Text = "Keep Orphaned";
+            objectKeepOrphaned.UseVisualStyleBackColor = true;
+            // 
+            // objectIsExcluded
+            // 
+            objectIsExcluded.AutoSize = true;
+            objectIsExcluded.Location = new Point(166, 3);
+            objectIsExcluded.Name = "objectIsExcluded";
+            objectIsExcluded.Size = new Size(84, 19);
+            objectIsExcluded.TabIndex = 2;
+            objectIsExcluded.Text = "Is Excluded";
+            objectIsExcluded.UseVisualStyleBackColor = true;
+            // 
+            // isInModelData
+            // 
+            isInModelData.AutoSize = true;
+            isInModelData.Enabled = false;
+            isInModelData.Location = new Point(3, 3);
+            isInModelData.Name = "isInModelData";
+            isInModelData.Size = new Size(73, 19);
+            isInModelData.TabIndex = 1;
+            isInModelData.Text = "in Model";
+            isInModelData.UseVisualStyleBackColor = true;
+            // 
+            // objectScopeData
+            // 
+            objectScopeData.AutoSize = true;
+            objectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectScopeData.Dock = DockStyle.Fill;
+            objectScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            objectScopeData.HeaderText = "Scope";
+            objectScopeData.Location = new Point(3, 3);
+            objectScopeData.Name = "objectScopeData";
+            objectScopeData.ReadOnly = false;
+            objectScopeData.Size = new Size(490, 46);
+            objectScopeData.TabIndex = 2;
+            // 
+            // objectNameData
+            // 
+            objectNameData.AutoSize = true;
+            objectNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectNameData.Dock = DockStyle.Fill;
+            objectNameData.HeaderText = "Object";
+            objectNameData.Location = new Point(3, 55);
+            objectNameData.Name = "objectNameData";
+            objectNameData.ReadOnly = false;
+            objectNameData.SelectIcon = (Image)resources.GetObject("objectNameData.SelectIcon");
+            objectNameData.Size = new Size(490, 44);
+            objectNameData.TabIndex = 3;
             // 
             // documentFileData
             // 
@@ -125,111 +237,6 @@
             templateTitleData.TabIndex = 2;
             templateTitleData.WordWrap = true;
             // 
-            // objectGroupBox
-            // 
-            objectGroupBox.AutoSize = true;
-            objectGroupBox.Controls.Add(objectLayout);
-            objectGroupBox.Dock = DockStyle.Fill;
-            objectGroupBox.Location = new Point(3, 103);
-            objectGroupBox.Name = "objectGroupBox";
-            objectGroupBox.Size = new Size(502, 155);
-            objectGroupBox.TabIndex = 5;
-            objectGroupBox.TabStop = false;
-            objectGroupBox.Text = "Model Object";
-            // 
-            // objectLayout
-            // 
-            objectLayout.AutoSize = true;
-            objectLayout.ColumnCount = 1;
-            objectLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            objectLayout.Controls.Add(objectBehaviorLayout, 0, 2);
-            objectLayout.Controls.Add(objectScopeData, 0, 0);
-            objectLayout.Controls.Add(objectNameData, 0, 1);
-            objectLayout.Dock = DockStyle.Fill;
-            objectLayout.Location = new Point(3, 19);
-            objectLayout.Name = "objectLayout";
-            objectLayout.RowCount = 3;
-            objectLayout.RowStyles.Add(new RowStyle());
-            objectLayout.RowStyles.Add(new RowStyle());
-            objectLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            objectLayout.Size = new Size(496, 133);
-            objectLayout.TabIndex = 0;
-            // 
-            // objectScopeData
-            // 
-            objectScopeData.AutoSize = true;
-            objectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            objectScopeData.Dock = DockStyle.Fill;
-            objectScopeData.DropDownStyle = ComboBoxStyle.DropDown;
-            objectScopeData.HeaderText = "Scope";
-            objectScopeData.Location = new Point(3, 3);
-            objectScopeData.Name = "objectScopeData";
-            objectScopeData.ReadOnly = false;
-            objectScopeData.Size = new Size(490, 46);
-            objectScopeData.TabIndex = 2;
-            // 
-            // objectNameData
-            // 
-            objectNameData.AutoSize = true;
-            objectNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            objectNameData.Dock = DockStyle.Fill;
-            objectNameData.HeaderText = "Object";
-            objectNameData.Location = new Point(3, 55);
-            objectNameData.Name = "objectNameData";
-            objectNameData.ReadOnly = false;
-            objectNameData.SelectIcon = (Image)resources.GetObject("objectNameData.SelectIcon");
-            objectNameData.Size = new Size(490, 44);
-            objectNameData.TabIndex = 3;
-            // 
-            // objectBehaviorLayout
-            // 
-            objectBehaviorLayout.AutoSize = true;
-            objectBehaviorLayout.ColumnCount = 3;
-            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            objectBehaviorLayout.Controls.Add(objectKeepOrphaned, 2, 0);
-            objectBehaviorLayout.Controls.Add(objectIsExcluded, 1, 0);
-            objectBehaviorLayout.Controls.Add(isInModelData, 0, 0);
-            objectBehaviorLayout.Dock = DockStyle.Fill;
-            objectBehaviorLayout.Location = new Point(3, 105);
-            objectBehaviorLayout.Name = "objectBehaviorLayout";
-            objectBehaviorLayout.RowCount = 1;
-            objectBehaviorLayout.RowStyles.Add(new RowStyle());
-            objectBehaviorLayout.Size = new Size(490, 25);
-            objectBehaviorLayout.TabIndex = 5;
-            // 
-            // isInModelData
-            // 
-            isInModelData.AutoSize = true;
-            isInModelData.Enabled = false;
-            isInModelData.Location = new Point(3, 3);
-            isInModelData.Name = "isInModelData";
-            isInModelData.Size = new Size(73, 19);
-            isInModelData.TabIndex = 1;
-            isInModelData.Text = "in Model";
-            isInModelData.UseVisualStyleBackColor = true;
-            // 
-            // objectIsExcluded
-            // 
-            objectIsExcluded.AutoSize = true;
-            objectIsExcluded.Location = new Point(166, 3);
-            objectIsExcluded.Name = "objectIsExcluded";
-            objectIsExcluded.Size = new Size(84, 19);
-            objectIsExcluded.TabIndex = 2;
-            objectIsExcluded.Text = "Is Excluded";
-            objectIsExcluded.UseVisualStyleBackColor = true;
-            // 
-            // objectKeepOrphaned
-            // 
-            objectKeepOrphaned.AutoSize = true;
-            objectKeepOrphaned.Location = new Point(329, 3);
-            objectKeepOrphaned.Name = "objectKeepOrphaned";
-            objectKeepOrphaned.Size = new Size(108, 19);
-            objectKeepOrphaned.TabIndex = 3;
-            objectKeepOrphaned.Text = "Keep Orphaned";
-            objectKeepOrphaned.UseVisualStyleBackColor = true;
-            // 
             // SchemaDocument
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -248,6 +255,9 @@
             objectLayout.PerformLayout();
             objectBehaviorLayout.ResumeLayout(false);
             objectBehaviorLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -266,5 +276,8 @@
         private CheckBox isInModelData;
         private CheckBox objectIsExcluded;
         private CheckBox objectKeepOrphaned;
+        private BindingSource bindingTemplate;
+        private BindingSource bindingSchema;
+        private BindingSource bindingDocument;
     }
 }

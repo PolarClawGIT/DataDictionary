@@ -42,7 +42,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc cref="SchemaDocumentItem.SchemaDocumentItem(ITemplateKey, ISchemaDefinitionKey)"/>
-        public SchemaDocumentValue(ISchemaComposite schema) : base(schema, schema)
+        public SchemaDocumentValue(ITemplateIndex template, ISchemaDefinitionIndex schema) : base(template, schema)
         {
             pathValue = new PathValue(this)
             {
@@ -54,6 +54,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
             };
         }
+
 
     }
 }

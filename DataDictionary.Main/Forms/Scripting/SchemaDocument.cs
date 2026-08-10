@@ -14,8 +14,11 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaDocument : ApplicationData
     {
+        TemplateIndex templateIndex = new TemplateIndex();
+        SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex();
         DocumentIndex documentIndex = new DocumentIndex();
-        TemporalIndex? temporalIndex = null;
+        //TemporalIndex? temporalIndex = null;
+        FormBinding formBinding;
 
         public override Boolean IsOpenItem(object? item)
         { return item is IDocumentIndex key && documentIndex.Equals(key); }
@@ -24,51 +27,82 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingDocument);
             SetIcon(ScopeType.ScriptingDocument);
 
             SetCommand(ButtonType.Delete);
         }
 
-        public SchemaDocument(IDocumentIndex document) : this()
+        public SchemaDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
         { documentIndex = new DocumentIndex(document); }
 
-        public SchemaDocument(IDocumentIndex document, ITemporalIndex temporal) : this(document)
-        { temporalIndex = new TemporalIndex(); }
+        public SchemaDocument(ISchemaDefinitionIndex schema, Func<ITemplateData> getData) : this()
+        { schemaIndex = new SchemaDefinitionIndex(schema); }
+
 
         private void SchemaDocument_Load(object sender, EventArgs e)
         {
+            if (documentIndex.HasValue)
+            {
+                formBinding.LoadValue(documentIndex);
+            }
+            else if(schemaIndex.HasValue)
+            {
+                formBinding.LoadValue(schemaIndex, out documentIndex);
+            }
+            else
+            {   // This should never occur.
+                Exception ex = new InvalidOperationException("SchemaDefinition not found");
+                ex.Data.Add(nameof(schemaIndex), schemaIndex);
+                throw ex;
+            }
 
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? _))
+            { DoBinding(); }
+            else { IsLocked(true); }
+
+            void DoBinding()
+            {
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
+            }
         }
 
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
     }
 }

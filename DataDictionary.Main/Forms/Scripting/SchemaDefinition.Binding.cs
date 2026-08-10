@@ -17,17 +17,21 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<XmlBuilderValue> BuilderData { get; }
             BindingView<SchemaNodeValue> schemaNodes;
             XmlBuilderData nodeValues = new XmlBuilderData();
+            public DataBinding<SchemaDocumentValue> DocumentData { get; }
 
             public FormBinding(
                 BindingSource templateBinding,
                 BindingSource schemaBinding,
-                BindingSource nodeBinding) : base()
+                BindingSource nodeBinding,
+                BindingSource documentBinding) : base()
             {
 
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
+                DocumentData = new DataBinding<SchemaDocumentValue>(documentBinding, () => GetData().SchemaDocuments);
                 schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes,w => 1==2);
                 BuilderData = new DataBinding<XmlBuilderValue>(nodeBinding, () => nodeValues);
+                
 
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
@@ -57,9 +61,10 @@ namespace DataDictionary.Main.Forms.Scripting
             public override void LoadValue(SchemaDefinitionIndex key)
             {
                 SchemaData.LoadBinding(w => key.Equals(w));
+                DocumentData.LoadBinding(w => key.Equals(w));
                 schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes, w => key.Equals(w));
 
-                if (SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
+                if (SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
                 { TemplateData.LoadBinding(w => new TemplateIndex(schemaValue).Equals(w)); }
                 else
                 { TemplateData.LoadBinding(w => new TemplateIndex().Equals(w)); }
@@ -73,6 +78,14 @@ namespace DataDictionary.Main.Forms.Scripting
                     XmlBuilderValue builder = BuilderData.Single(w => builderKey.Equals(w));
                     builder.SchemaNode = item;
                 }
+            }
+
+            public void LoadValue(TemplateIndex key, out SchemaDefinitionIndex schema)
+            {
+                SchemaDefinitionValue value = new SchemaDefinitionValue(key);
+                GetData().SchemaDocuments.Add(value);
+                schema = new SchemaDefinitionIndex(value);
+                LoadValue(schema);
             }
 
             protected void RemoveValue(SchemaDefinitionIndex key)

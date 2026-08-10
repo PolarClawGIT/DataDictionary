@@ -141,6 +141,34 @@ namespace DataDictionary.Main.Forms
                 else { return false; }
             }
 
+            /// <summary>
+            /// Try/Get to locate a single item in the values.
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public virtual Boolean TryGetSingle([NotNullWhen(true)] out TRow? result)
+            {
+                if (bindingValues.Count() == 1 && bindingValues.Single() is TRow value)
+                { result = value; return true; }
+                else
+                { result = default; return false; }
+            }
+
+            /// <summary>
+            /// Try/Get to locate a single item in the values.
+            /// </summary>
+            /// <param name="predicate"></param>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            /// <see cref="System.Linq.Enumerable.SingleOrDefault{TSource}(IEnumerable{TSource})"/>
+            public virtual Boolean TryGetSingle(Func<TRow, Boolean> predicate, [NotNullWhen(true)] out TRow? result)
+            {
+                if (bindingValues.Count(predicate) == 1 && bindingValues.Single(predicate) is TRow value)
+                { result = value; return true; }
+                else
+                { result = default; return false; }
+            }
+
             /// <inheritdoc cref="BindingSource.ResetCurrentItem"/>
             public void ResetCurrent()
             { BindingData.ResetCurrentItem(); }
@@ -500,18 +528,34 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
-            /// <remarks>Specialized for DataGridViewComboBoxColumn, does not call CreateBinding.</remarks>
-            public virtual void AddBinding<TProperty>(
-                DataGridViewComboBoxColumn formControl,
-                Expression<Func<TRow, TProperty>> expression)
+            /// <summary>
+            /// Helper method to Add DataSource to a DataGridView
+            /// </summary>
+            /// <param name="documentData"></param>
+            public virtual void AddBinding(DataGridView documentData)
             {
-                IReadOnlyList<String> bindingMember = ParseExpression(expression);
-                Exception? bindingException = ValidateProperty<TProperty>(bindingMember);
+                PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
 
-                if (bindingException is null)
-                { formControl.DataPropertyName = String.Join(".", bindingMember); }
-                else { throw bindingException; }
+                foreach (DataGridViewColumn item in documentData.Columns)
+                {
+                    if(!String.IsNullOrWhiteSpace(item.DataPropertyName))
+                    {
+                        if(properties.Find(item.DataPropertyName, false) is PropertyDescriptor property)
+                        {
+                            //TODO: Property found, but is it what is expected?
+                            //TODO: How does each type of control need to be checked?
+                        }
+                        else
+                        {   // If the DataPropertyName is not in the dataset, the DataGridView just shows the column as blank.
+                            Exception ex = new ArgumentException("Property not found in Dataset");
+                            ex.Data.Add(nameof(item.DataPropertyName), item.DataPropertyName);
+                            throw ex;
+                        }
+                    }
+                }
+
+                documentData.AutoGenerateColumns = false;
+                documentData.DataSource = BindingData;
             }
 
 
@@ -547,7 +591,7 @@ namespace DataDictionary.Main.Forms
                 }
                 else if (valueException is not null) { throw valueException; }
                 else if (displayException is not null) { throw displayException; }
-                else { throw new InvalidOperationException("Untrap If/Else"); } // This should never happen.
+                else { throw new InvalidOperationException("Un-trapped If/Else"); } // This should never happen.
             }
 
             /// <summary>
@@ -632,8 +676,6 @@ namespace DataDictionary.Main.Forms
             /// <inheritdoc/>
             IEnumerator IEnumerable.GetEnumerator()
             { return ((IEnumerable)bindingValues).GetEnumerator(); }
-
-
 
             /// <inheritdoc/>
             public Int32 Count => ((ICollection<TRow>)bindingValues).Count;
