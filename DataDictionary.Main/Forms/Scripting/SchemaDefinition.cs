@@ -190,15 +190,15 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void DocumentNewCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.SchemaDocument());
-        }
+        {   Activate(() => new Forms.Scripting.SchemaDocument(schemaIndex, formBinding.GetData)); }
 
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.SchemaDocument());
+            if(formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
+            {
+                DocumentIndex key = new DocumentIndex(value);
+                Activate(() => new Forms.Scripting.SchemaDocument(key,formBinding.GetData), o=> o.IsOpenItem(key));
+            }
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)

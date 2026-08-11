@@ -83,7 +83,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public void LoadValue(TemplateIndex key, out SchemaDefinitionIndex schema)
             {
                 SchemaDefinitionValue value = new SchemaDefinitionValue(key);
-                GetData().SchemaDocuments.Add(value);
+                GetData().Schemata.Add(value);
                 schema = new SchemaDefinitionIndex(value);
                 LoadValue(schema);
             }
