@@ -30,6 +30,10 @@ namespace DataDictionary.Main.Dialogs
             new BindingList<NamedScopeIndex>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
 
+        /// <inheritdoc cref="ListView.MultiSelect"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public Boolean MultiSelect { get; set; }
+
         SelectionDialogData formData;
 
         protected SelectionDialog() : base()
@@ -201,7 +205,7 @@ namespace DataDictionary.Main.Dialogs
 
         private void SelectionData_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if(formData.FirstOrDefault(w => w.ListView.Equals(e.Item)) is SelectionDialogValue current)
+            if (formData.FirstOrDefault(w => w.ListView.Equals(e.Item)) is SelectionDialogValue current)
             {
                 titleData.Text = current.Title;
                 scopeData.Text = current.ScopeName;
@@ -238,6 +242,14 @@ namespace DataDictionary.Main.Dialogs
                 else if (e.NewValue is CheckState.Unchecked && Selected.Contains(key))
                 { Selected.Remove(key); }
                 // Everything else does not change state. Avoids infinite Loop.
+
+                // Handle MultiSelect behavior.
+                if (!MultiSelect && e.NewValue is CheckState.Checked)
+                {
+                    foreach (ListViewItem item in selectionData.Items.OfType<ListViewItem>())
+                    { if (item.Index != e.Index) { item.Checked = false; } }
+
+                }
 
                 titleData.Text = current.Title;
                 scopeData.Text = current.ScopeName;

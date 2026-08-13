@@ -5,13 +5,6 @@ using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -117,9 +110,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 using (SelectionDialog dialog = new SelectionDialog(ParentForm))
                 {
-                    //dialog.FilterScopes.AddRange(filterScope);
-                    //dialog.BuildData(Aliases.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
-
+                    dialog.MultiSelect = false;
                     dialog.FilterScopes.AddRange(
                              ScopeType.ModelAttribute, ScopeType.ModelAttributeAlias,
                              ScopeType.ModelEntity, ScopeType.ModelEntityAlias,
@@ -130,16 +121,12 @@ namespace DataDictionary.Main.Forms.Scripting
                     {
                         foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
                         {
-                            var x = item.Path;
-                            var y = item.Scope;
                             value.ObjectName = item.Path.MemberFullPath;
                             value.ObjectScope = item.Scope;
                         }
                     }
                 }
             }
-
-            //throw new NotImplementedException();
         }
     }
 }
