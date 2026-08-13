@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     SchemaDocumentValue document = new SchemaDocumentValue(templateIndex, schemaIndex);
                     DocumentIndex documentIndex = new DocumentIndex(document);
 
-                    GetData().SchemaDocuments.Add(new SchemaDocumentValue(templateIndex, schemaIndex));
+                    GetData().SchemaDocuments.Add(document);
                     TemplateData.LoadBinding(w => templateIndex.Equals(w));
                     DocumentData.LoadBinding(w => documentIndex.Equals(w));
 

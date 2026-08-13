@@ -1,6 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -9,6 +12,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -46,7 +50,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 formBinding.LoadValue(documentIndex);
             }
-            else if(schemaIndex.HasValue)
+            else if (schemaIndex.HasValue)
             {
                 formBinding.LoadValue(schemaIndex, out documentIndex);
             }
@@ -103,6 +107,39 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.HistoryCommand_Click(sender, e);
             throw new NotImplementedException();
+        }
+
+        private void ObjectNameData_SelectCommand(object sender, EventArgs e)
+        {
+            if (bindingDocument is not null
+                && ParentForm is not null
+                && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
+            {
+                using (SelectionDialog dialog = new SelectionDialog(ParentForm))
+                {
+                    //dialog.FilterScopes.AddRange(filterScope);
+                    //dialog.BuildData(Aliases.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
+
+                    dialog.FilterScopes.AddRange(
+                             ScopeType.ModelAttribute, ScopeType.ModelAttributeAlias,
+                             ScopeType.ModelEntity, ScopeType.ModelEntityAlias,
+                             ScopeType.ModelProcess, ScopeType.ModelProcessAlias);
+                    dialog.BuildData(new List<PathIndex>() { new PathIndex(value.ObjectName) });
+
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    {
+                        foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
+                        {
+                            var x = item.Path;
+                            var y = item.Scope;
+                            value.ObjectName = item.Path.MemberFullPath;
+                            value.ObjectScope = item.Scope;
+                        }
+                    }
+                }
+            }
+
+            //throw new NotImplementedException();
         }
     }
 }

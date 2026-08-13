@@ -197,6 +197,7 @@
             objectNameData.SelectIcon = (Image)resources.GetObject("objectNameData.SelectIcon");
             objectNameData.Size = new Size(490, 44);
             objectNameData.TabIndex = 3;
+            objectNameData.SelectCommand += ObjectNameData_SelectCommand;
             // 
             // documentFileData
             // 
