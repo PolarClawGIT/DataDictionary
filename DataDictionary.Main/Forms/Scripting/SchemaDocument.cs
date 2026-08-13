@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
@@ -62,6 +63,11 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
+
+                ScopeNameList.Load(objectScopeData);
+                formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
+                formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);
+
             }
         }
 
