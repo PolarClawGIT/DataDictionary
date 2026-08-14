@@ -192,6 +192,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Used to Compare two Document Values.
     /// </summary>
     /// <remarks>Used with Linq Union</remarks>
+    [Obsolete("POC code")]
     public class DocumentCompare : IEqualityComparer<DocumentValue>
     {
         /// <inheritdoc/>

@@ -50,9 +50,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             SchemaFile = new FileValue()
             {
-                //GetRootFolder = () => RootFolder,
-                //GetDirectory = () => RelativePath ?? String.Empty,
-                //SetDirectory = (value) => RelativePath = value,
                 GetFileName = () => FileName ?? String.Empty,
                 SetFileName = (value) => FileName = value,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
@@ -74,9 +71,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             SchemaFile = new FileValue()
             {
-                //GetRootFolder = () => RootFolder,
-                //GetDirectory = () => RelativePath ?? String.Empty,
-                //SetDirectory = (value) => RelativePath = value,
                 GetFileName = () => FileName ?? String.Empty,
                 SetFileName = (value) => FileName = value,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
