@@ -321,7 +321,7 @@ namespace DataDictionary.Main.Forms
                     Boolean needsFormatting = false;
 
                     // This logic is intended to handle issues that just do not throw exceptions.
-                    if (properties.Find(members.Last(), false) is PropertyDescriptor detail)
+                    if (Find(properties, members) is PropertyDescriptor detail)
                     {   //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
                         if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                         { needsFormatting = true; }
@@ -347,6 +347,21 @@ namespace DataDictionary.Main.Forms
                     };
                 }
                 else { throw memberException; }
+
+                PropertyDescriptor? Find(PropertyDescriptorCollection source, IEnumerable<String> target)
+                {   // Data Binding allows for items nested inside child classes.
+                    // The notation being a period separated list of property names.
+                    // This works down each layer looking for the target name and returns it, if possible.
+                    if (target.FirstOrDefault() is String value)
+                    {
+                        PropertyDescriptor? result = source.Find(value, false);
+
+                        if (result is not null && target.Count() > 1)
+                        { return Find(result.GetChildProperties(), target.Skip(1)); }
+                        else { return result; }
+                    }
+                    return null;
+                }
             }
 
             /// <summary>
@@ -455,7 +470,10 @@ namespace DataDictionary.Main.Forms
             /// <typeparam name="TProperty">Data Type of the property of the expression.</typeparam>
             /// <param name="formControl">Control that is to be Bound</param>
             /// <param name="expression">The LINQ expression that is the name of the property.</param>
-            /// <example><![CDATA[dataBinding.AddBinding(control, e => e.PropertyName);]]></example>
+            /// <example><![CDATA[
+            /// dataBinding.AddBinding(control, e => e.PropertyName);
+            /// dataBinding.AddBinding(control, e => e.parentName.childName);
+            /// ]]></example>
             public virtual void AddBinding<TProperty>(
                 Control formControl,
                 Expression<Func<TRow, TProperty>> expression)
@@ -538,9 +556,9 @@ namespace DataDictionary.Main.Forms
 
                 foreach (DataGridViewColumn item in documentData.Columns)
                 {
-                    if(!String.IsNullOrWhiteSpace(item.DataPropertyName))
+                    if (!String.IsNullOrWhiteSpace(item.DataPropertyName))
                     {
-                        if(properties.Find(item.DataPropertyName, false) is PropertyDescriptor property)
+                        if (properties.Find(item.DataPropertyName, false) is PropertyDescriptor property)
                         {
                             //TODO: Property found, but is it what is expected?
                             //TODO: How does each type of control need to be checked?

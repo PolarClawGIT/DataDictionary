@@ -64,6 +64,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
 
+                formBinding.SchemaData.AddBinding(localPathData, e => e.SchemaDirectory.InitialDirectory);
+
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
                 formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);

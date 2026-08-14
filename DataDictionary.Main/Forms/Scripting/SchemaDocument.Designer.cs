@@ -47,6 +47,7 @@
             bindingSchema = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             openFileDialog = new OpenFileDialog();
+            localPathData = new DataDictionary.Main.Controls.TextBoxData();
             schemaDocumentLayout = new TableLayoutPanel();
             objectGroupBox = new GroupBox();
             objectLayout = new TableLayoutPanel();
@@ -64,15 +65,17 @@
             // 
             schemaDocumentLayout.ColumnCount = 1;
             schemaDocumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            schemaDocumentLayout.Controls.Add(documentFileContentData, 0, 4);
+            schemaDocumentLayout.Controls.Add(localPathData, 0, 3);
+            schemaDocumentLayout.Controls.Add(documentFileContentData, 0, 5);
             schemaDocumentLayout.Controls.Add(objectGroupBox, 0, 2);
-            schemaDocumentLayout.Controls.Add(documentFileData, 0, 3);
+            schemaDocumentLayout.Controls.Add(documentFileData, 0, 4);
             schemaDocumentLayout.Controls.Add(schemaTitleData, 0, 1);
             schemaDocumentLayout.Controls.Add(templateTitleData, 0, 0);
             schemaDocumentLayout.Dock = DockStyle.Fill;
             schemaDocumentLayout.Location = new Point(0, 25);
             schemaDocumentLayout.Name = "schemaDocumentLayout";
-            schemaDocumentLayout.RowCount = 5;
+            schemaDocumentLayout.RowCount = 6;
+            schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
@@ -86,11 +89,11 @@
             documentFileContentData.AutoSize = true;
             documentFileContentData.Dock = DockStyle.Fill;
             documentFileContentData.HeaderText = "Document Content";
-            documentFileContentData.Location = new Point(3, 314);
+            documentFileContentData.Location = new Point(3, 364);
             documentFileContentData.Multiline = true;
             documentFileContentData.Name = "documentFileContentData";
             documentFileContentData.ReadOnly = false;
-            documentFileContentData.Size = new Size(502, 293);
+            documentFileContentData.Size = new Size(502, 243);
             documentFileContentData.TabIndex = 6;
             documentFileContentData.WordWrap = false;
             // 
@@ -205,8 +208,8 @@
             documentFileData.AutoSize = true;
             documentFileData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             documentFileData.Dock = DockStyle.Fill;
-            documentFileData.HeaderText = "Document (Local Path)";
-            documentFileData.Location = new Point(3, 264);
+            documentFileData.HeaderText = "Document";
+            documentFileData.Location = new Point(3, 314);
             documentFileData.Name = "documentFileData";
             documentFileData.ReadOnly = false;
             documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
@@ -243,6 +246,19 @@
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog1";
+            // 
+            // localPathData
+            // 
+            localPathData.AutoSize = true;
+            localPathData.Dock = DockStyle.Fill;
+            localPathData.HeaderText = "Local Path";
+            localPathData.Location = new Point(3, 264);
+            localPathData.Multiline = false;
+            localPathData.Name = "localPathData";
+            localPathData.ReadOnly = true;
+            localPathData.Size = new Size(502, 44);
+            localPathData.TabIndex = 8;
+            localPathData.WordWrap = false;
             // 
             // SchemaDocument
             // 
@@ -288,5 +304,6 @@
         private BindingSource bindingDocument;
         private OpenFileDialog openFileDialog;
         private FolderBrowserDialog folderBrowserDialog1;
+        private Controls.TextBoxData localPathData;
     }
 }
