@@ -13,6 +13,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Wrapper Interface for the Document Types.
     /// </summary>
+    [Obsolete("POC code")]
     public interface IDocumentValue : IDocumentItem,
         IBindingRowState, IBindingPropertyChanged,
         IDocumentIndex, ITemplateIndex,
@@ -32,6 +33,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Wrapper Class for the Document Types.
     /// </summary>
+    [Obsolete("POC code")]
     public class DocumentValue : IDocumentValue
     {
         SchemaDocumentItem? schemaItem;

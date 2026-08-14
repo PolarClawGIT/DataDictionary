@@ -67,7 +67,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
                 formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);
-
+                formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName);
+                //documentFileData  FileName
             }
         }
 
@@ -118,9 +119,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     dialog.MultiSelect = false;
                     dialog.FilterScopes.AddRange(
-                             ScopeType.ModelAttribute, ScopeType.ModelAttributeAlias,
-                             ScopeType.ModelEntity, ScopeType.ModelEntityAlias,
-                             ScopeType.ModelProcess, ScopeType.ModelProcessAlias);
+                             ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
+                    // TODO: Support for Alias, ScopeType.ModelAttributeAlias, ScopeType.ModelEntityAlias, ScopeType.ModelProcessAlias
+
                     dialog.BuildData(new List<PathIndex>() { new PathIndex(value.ObjectName) });
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
@@ -133,6 +134,11 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                 }
             }
+        }
+
+        private void DocumentFileData_SelectCommand(object sender, EventArgs e)
+        {
+
         }
     }
 }

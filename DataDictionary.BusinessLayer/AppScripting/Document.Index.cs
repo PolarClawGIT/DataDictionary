@@ -8,10 +8,12 @@ using System.Text;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("POC code")]
     public interface IDocumentIndex : IDocumentKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete("POC code")]
     public class DocumentIndex : DocumentKey, IDocumentIndex,
         IKeyEquality<IDocumentIndex>, IKeyEquality<DocumentIndex>
     {

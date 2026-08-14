@@ -8,7 +8,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ISchemaComposite,
         IScopeType, ITemporal
-    { }
+    {
+        /// <summary>
+        /// File information to be used with the File Save/Open Dialog.
+        /// </summary>
+        IFileValue SchemaFile { get; }
+    }
 
     /// <inheritdoc/>
     public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue
@@ -28,6 +33,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
         /// <inheritdoc/>
+        public IFileValue SchemaFile { get; }
+
+        /// <inheritdoc/>
         public SchemaDocumentValue() : base()
         {
             pathValue = new PathValue(this)
@@ -38,6 +46,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+            };
+
+            SchemaFile = new FileValue()
+            {
+                //GetRootFolder = () => RootFolder,
+                //GetDirectory = () => RelativePath ?? String.Empty,
+                //SetDirectory = (value) => RelativePath = value,
+                GetFileName = () => FileName ?? String.Empty,
+                SetFileName = (value) => FileName = value,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
             };
         }
 
@@ -52,6 +70,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+            };
+
+            SchemaFile = new FileValue()
+            {
+                //GetRootFolder = () => RootFolder,
+                //GetDirectory = () => RelativePath ?? String.Empty,
+                //SetDirectory = (value) => RelativePath = value,
+                GetFileName = () => FileName ?? String.Empty,
+                SetFileName = (value) => FileName = value,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
             };
         }
 

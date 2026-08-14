@@ -46,6 +46,7 @@
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingDocument = new BindingSource(components);
+            openFileDialog = new OpenFileDialog();
             schemaDocumentLayout = new TableLayoutPanel();
             objectGroupBox = new GroupBox();
             objectLayout = new TableLayoutPanel();
@@ -211,6 +212,7 @@
             documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
             documentFileData.Size = new Size(502, 44);
             documentFileData.TabIndex = 5;
+            documentFileData.SelectCommand += DocumentFileData_SelectCommand;
             // 
             // schemaTitleData
             // 
@@ -237,6 +239,10 @@
             templateTitleData.Size = new Size(502, 44);
             templateTitleData.TabIndex = 2;
             templateTitleData.WordWrap = true;
+            // 
+            // openFileDialog
+            // 
+            openFileDialog.FileName = "openFileDialog1";
             // 
             // SchemaDocument
             // 
@@ -280,5 +286,7 @@
         private BindingSource bindingTemplate;
         private BindingSource bindingSchema;
         private BindingSource bindingDocument;
+        private OpenFileDialog openFileDialog;
+        private FolderBrowserDialog folderBrowserDialog1;
     }
 }
