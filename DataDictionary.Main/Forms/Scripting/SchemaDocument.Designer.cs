@@ -83,6 +83,7 @@
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            schemaDocumentLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             schemaDocumentLayout.Size = new Size(508, 610);
             schemaDocumentLayout.TabIndex = 4;
             // 

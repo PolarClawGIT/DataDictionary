@@ -328,7 +328,7 @@ namespace DataDictionary.Main.Forms
                         throw ex;
                     }
 
-                    if(BindingData.DataSource is IEnumerable<Object> values
+                    if (BindingData.DataSource is IEnumerable<Object> values
                         && values.Any(a => !(a is INotifyPropertyChanged)))
                     {
                         Exception ex = new InvalidOperationException("Not a INotifyPropertyChanged");
@@ -493,7 +493,13 @@ namespace DataDictionary.Main.Forms
             public virtual void AddBinding<TProperty>(
                 Control formControl,
                 Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(nameof(Control.Text), expression)); }
+            {   // Intended to trap issues when a control type does not have an overload.
+                // These may not bind as expected.
+                Exception ex = new NotSupportedException("Overload not defined");
+                ex.Data.Add(nameof(formControl), formControl.Name);
+                ex.Data.Add(nameof(GetType), formControl.GetType().Name);
+                throw ex;
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
@@ -504,6 +510,12 @@ namespace DataDictionary.Main.Forms
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 TextBoxData formControl,
+                Expression<Func<TRow, TProperty>> expression)
+            { formControl.DataBindings.Add(CreateBinding(nameof(TextBox.Text), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding<TProperty>(
+                SelectTextBoxData formControl,
                 Expression<Func<TRow, TProperty>> expression)
             { formControl.DataBindings.Add(CreateBinding(nameof(TextBox.Text), expression)); }
 

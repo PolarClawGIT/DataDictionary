@@ -68,8 +68,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
-                formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);
-                formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName);
+                formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName); 
+                formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName); 
+
                 //documentFileData  FileName
 
                 ValidateFile();
@@ -145,6 +146,17 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void DocumentFileData_SelectCommand(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LocalPathData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
+
+        private void DocumentFileData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
+
         void ValidateFile()
         {
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
@@ -162,16 +174,5 @@ namespace DataDictionary.Main.Forms.Scripting
                 { errorProvider.SetError(localPathData.ErrorControl, exception.Message); }
             }
         }
-
-        private void DocumentFileData_SelectCommand(object sender, EventArgs e)
-        {
-
-        }
-
-        private void LocalPathData_Validated(object sender, EventArgs e)
-        { ValidateFile(); }
-
-        private void DocumentFileData_Validated(object sender, EventArgs e)
-        { ValidateFile(); }
     }
 }
