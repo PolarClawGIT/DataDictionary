@@ -34,6 +34,7 @@
             TableLayoutPanel objectLayout;
             TableLayoutPanel objectBehaviorLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDocument));
+            localPathData = new DataDictionary.Main.Controls.TextBoxData();
             documentFileContentData = new DataDictionary.Main.Controls.TextBoxData();
             objectKeepOrphaned = new CheckBox();
             objectIsExcluded = new CheckBox();
@@ -47,7 +48,7 @@
             bindingSchema = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             openFileDialog = new OpenFileDialog();
-            localPathData = new DataDictionary.Main.Controls.TextBoxData();
+            errorProvider = new ErrorProvider(components);
             schemaDocumentLayout = new TableLayoutPanel();
             objectGroupBox = new GroupBox();
             objectLayout = new TableLayoutPanel();
@@ -59,6 +60,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // schemaDocumentLayout
@@ -83,6 +85,20 @@
             schemaDocumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             schemaDocumentLayout.Size = new Size(508, 610);
             schemaDocumentLayout.TabIndex = 4;
+            // 
+            // localPathData
+            // 
+            localPathData.AutoSize = true;
+            localPathData.Dock = DockStyle.Fill;
+            localPathData.HeaderText = "Local Path";
+            localPathData.Location = new Point(3, 264);
+            localPathData.Multiline = false;
+            localPathData.Name = "localPathData";
+            localPathData.ReadOnly = true;
+            localPathData.Size = new Size(502, 44);
+            localPathData.TabIndex = 8;
+            localPathData.WordWrap = false;
+            localPathData.Validated += LocalPathData_Validated;
             // 
             // documentFileContentData
             // 
@@ -215,6 +231,7 @@
             documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
             documentFileData.Size = new Size(502, 44);
             documentFileData.TabIndex = 5;
+            documentFileData.Validated += DocumentFileData_Validated;
             documentFileData.SelectCommand += DocumentFileData_SelectCommand;
             // 
             // schemaTitleData
@@ -247,18 +264,9 @@
             // 
             openFileDialog.FileName = "openFileDialog1";
             // 
-            // localPathData
+            // errorProvider
             // 
-            localPathData.AutoSize = true;
-            localPathData.Dock = DockStyle.Fill;
-            localPathData.HeaderText = "Local Path";
-            localPathData.Location = new Point(3, 264);
-            localPathData.Multiline = false;
-            localPathData.Name = "localPathData";
-            localPathData.ReadOnly = true;
-            localPathData.Size = new Size(502, 44);
-            localPathData.TabIndex = 8;
-            localPathData.WordWrap = false;
+            errorProvider.ContainerControl = this;
             // 
             // SchemaDocument
             // 
@@ -281,6 +289,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -305,5 +314,6 @@
         private OpenFileDialog openFileDialog;
         private FolderBrowserDialog folderBrowserDialog1;
         private Controls.TextBoxData localPathData;
+        private ErrorProvider errorProvider;
     }
 }

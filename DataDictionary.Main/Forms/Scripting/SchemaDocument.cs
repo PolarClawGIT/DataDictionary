@@ -71,6 +71,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);
                 formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName);
                 //documentFileData  FileName
+
+                ValidateFile();
             }
         }
 
@@ -128,13 +130,36 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
-                        foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
+                        INamedScopeValue selected = dialog.SelectedByNamedScope().Single();
+                        value.ObjectName = selected.Path.MemberFullPath;
+                        value.ObjectScope = selected.Scope;
+
+                        if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
+                            && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
                         {
-                            value.ObjectName = item.Path.MemberFullPath;
-                            value.ObjectScope = item.Scope;
+                            fileValue.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+                            ValidateFile();
                         }
                     }
                 }
+            }
+        }
+
+        void ValidateFile()
+        {
+            errorProvider.SetError(localPathData.ErrorControl, String.Empty);
+            errorProvider.SetError(documentFileData.ErrorControl, String.Empty);
+
+            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
+            {
+                if (fileValue.SchemaFile.IsInvalid(out Exception? exception))
+                { errorProvider.SetError(documentFileData.ErrorControl, exception.Message); }
+            }
+
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
+            {
+                if (schemaValue.SchemaDirectory.IsInvalid(out Exception? exception))
+                { errorProvider.SetError(localPathData.ErrorControl, exception.Message); }
             }
         }
 
@@ -142,5 +167,11 @@ namespace DataDictionary.Main.Forms.Scripting
         {
 
         }
+
+        private void LocalPathData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
+
+        private void DocumentFileData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
     }
 }

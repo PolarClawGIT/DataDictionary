@@ -42,6 +42,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <param name="directory"></param>
         /// <returns></returns>
         IReadOnlyList<WorkItem> Save(IDirectoryValue directory);
+
+        /// <summary>
+        /// Validates the File info and returns an Exception if there is an issue.
+        /// </summary>
+        /// <returns></returns>
+        Boolean IsInvalid([NotNullWhen(true)] out Exception? exception);
     }
 
     /// <summary>
@@ -79,7 +85,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         String contentValue = String.Empty;
 
         /// <inheritdoc/>
-        public IEnumerable<FileFormatType> FileFormats 
+        public IEnumerable<FileFormatType> FileFormats
         { get { return GetFileFormats(); } }
 
         /// <summary>
@@ -272,6 +278,30 @@ namespace DataDictionary.BusinessLayer.ToolSet
             { document = null; exception = xmlException; return false; }
         }
 
+        /// <inheritdoc/>
+        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
+        {
+            exception = null;
 
+            if (String.IsNullOrWhiteSpace(FileName))
+            { exception = new ArgumentNullException(nameof(FileName)); }
+            else if (FileName.Any(a => Path.GetInvalidFileNameChars().Contains(a)))
+            {
+                exception = new ArgumentException("Invalid FileName Character(s)");
+                exception.Data.Add(nameof(FileName), FileName);
+            }
+            else
+            {
+                try
+                { var file = new FileInfo(FileName); }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                    exception.Data.Add(nameof(FileName), FileName);
+                }
+            }
+
+            return exception is not null;
+        }
     }
 }

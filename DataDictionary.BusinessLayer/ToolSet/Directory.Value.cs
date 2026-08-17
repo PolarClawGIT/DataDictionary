@@ -1,5 +1,6 @@
 ﻿using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.ToolSet
@@ -28,6 +29,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// dialog.InitialDirectory = IDirectoryValue.InitialDirectory;
         /// </example>
         String InitialDirectory { get; set; }
+
+        /// <summary>
+        /// Validates the Directory info and returns an Exception if there is an issue.
+        /// </summary>
+        /// <returns></returns>
+        Boolean IsInvalid([NotNullWhen(true)] out Exception? exception);
     }
 
     /// <summary>
@@ -123,5 +130,31 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
         protected virtual void OnPropertyChanged(String propertyName)
         { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
+
+        /// <inheritdoc/>
+        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
+        {
+            exception = null;
+
+            if (String.IsNullOrWhiteSpace(InitialDirectory))
+            { exception = new ArgumentNullException(nameof(InitialDirectory)); }
+            else if (InitialDirectory.Any(a => Path.GetInvalidPathChars().Contains(a)))
+            {
+                exception = new ArgumentException("Invalid Path Character(s)");
+                exception.Data.Add(nameof(InitialDirectory), InitialDirectory);
+            }
+            else
+            {
+                try
+                { var file = new FileInfo(InitialDirectory); }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                    exception.Data.Add(nameof(InitialDirectory), InitialDirectory);
+                }
+            }
+
+            return exception is not null;
+        }
     }
 }
