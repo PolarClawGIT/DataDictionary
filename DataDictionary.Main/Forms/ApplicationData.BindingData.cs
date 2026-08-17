@@ -313,12 +313,28 @@ namespace DataDictionary.Main.Forms
                 { throw new ArgumentNullException(nameof(BindingData.DataSource), "DataSource is Null. Binding has not been loaded"); }
 
                 IReadOnlyList<String> members = ParseExpression(expression);
+                Type dataSourceType = BindingData.DataSource.GetType();
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
                 Exception? memberException = ValidateProperty<TProperty>(members);
 
                 if (memberException is null)
                 {
                     Boolean needsFormatting = false;
+
+                    if (BindingData.DataSource is not IBindingList)
+                    {
+                        Exception ex = new InvalidOperationException("Not a IBindingList");
+                        ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
+                        throw ex;
+                    }
+
+                    if(BindingData.DataSource is IEnumerable<Object> values
+                        && values.Any(a => !(a is INotifyPropertyChanged)))
+                    {
+                        Exception ex = new InvalidOperationException("Not a INotifyPropertyChanged");
+                        ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
+                        throw ex;
+                    }
 
                     // This logic is intended to handle issues that just do not throw exceptions.
                     if (Find(properties, members) is PropertyDescriptor detail)
