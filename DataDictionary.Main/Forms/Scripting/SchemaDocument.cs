@@ -7,6 +7,8 @@ using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
+using System.Collections;
+using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -170,19 +172,16 @@ namespace DataDictionary.Main.Forms.Scripting
         void ValidateFile()
         {
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
+
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
+                && schemaValue.SchemaDirectory.IsInvalid(out Exception? directoryEx))
+            { errorProvider.SetError(localPathData.ErrorControl, directoryEx); }
+
             errorProvider.SetError(documentFileData.ErrorControl, String.Empty);
 
-            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
-            {
-                if (fileValue.SchemaFile.IsInvalid(out Exception? exception))
-                { errorProvider.SetError(documentFileData.ErrorControl, exception.Message); }
-            }
-
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
-            {
-                if (schemaValue.SchemaDirectory.IsInvalid(out Exception? exception))
-                { errorProvider.SetError(localPathData.ErrorControl, exception.Message); }
-            }
+            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue)
+                && fileValue.SchemaFile.IsInvalid(out Exception? fileEx))
+            {   errorProvider.SetError(documentFileData.ErrorControl, fileEx); }
         }
     }
 }

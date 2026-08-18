@@ -14,15 +14,27 @@ namespace DataDictionary.Main.Controls
         /// <returns></returns>
         public static DialogResult ShowDialog(this FileDialog dialog, IDirectoryValue directory, IFileValue file)
         {
+            String filePath = Path.GetDirectoryName(file.FileName) ?? String.Empty;
+            String fileName = Path.GetFileName(file.FileName);
+
             dialog.Reset();
-            dialog.InitialDirectory = directory.InitialDirectory;
+            dialog.InitialDirectory = Path.Combine(directory.InitialDirectory, filePath);
             dialog.Filter = String.Join('|', file.FileFormats.Select(s => s.DialogFilter()));
-            dialog.FileName = file.FileName;
+            dialog.FileName = fileName;
 
             DialogResult result = dialog.ShowDialog();
 
             if (result is DialogResult.OK)
-            { file.FileName = dialog.FileName; }
+            {
+                String relativePath = String.Empty;
+
+                if (directory.IsInvalid(out _) || String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                { relativePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty; }
+                else
+                { relativePath = Path.GetRelativePath(directory.InitialDirectory, Path.GetDirectoryName(dialog.FileName) ?? String.Empty); }
+
+                file.FileName = Path.Combine(relativePath, Path.GetFileName(dialog.FileName));
+            }
 
             return result;
         }

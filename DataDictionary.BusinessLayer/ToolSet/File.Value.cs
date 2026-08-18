@@ -282,23 +282,43 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
         {
             exception = null;
+            String fileName = Path.GetFileName(FileName);
+            List<String> directories;
 
-            if (String.IsNullOrWhiteSpace(FileName))
-            { exception = new ArgumentNullException(nameof(FileName)); }
-            else if (FileName.Any(a => Path.GetInvalidFileNameChars().Contains(a)))
+            if (String.IsNullOrWhiteSpace(Path.GetPathRoot(FileName)))
             {
-                exception = new ArgumentException("Invalid FileName Character(s)");
-                exception.Data.Add(nameof(FileName), FileName);
+                directories = (Path.GetDirectoryName(FileName) ?? String.Empty).
+                    Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries).
+                    ToList();
             }
+            else
+            {
+                directories = (Path.GetRelativePath(Path.GetPathRoot(FileName) ?? Path.DirectorySeparatorChar.ToString(), FileName)).
+                    Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries).
+                    ToList();
+            }
+
+            if (String.IsNullOrWhiteSpace(fileName))
+            { exception = new ArgumentNullException(nameof(FileName)); }
+            else if (fileName.Length > 255) // TODO: OS handles longer paths, but the database is restricted.
+            { exception = new PathTooLongException(); }
+            else if (fileName.Any(a => Path.GetInvalidFileNameChars().Contains(a)))
+            { exception = new ArgumentException("Invalid FileName Character(s)"); }
+            else if (directories.Any(a => a.Any(b => Path.GetInvalidFileNameChars().Contains(b))))
+            { exception = new ArgumentException("Invalid Directory Character(s)"); }
             else
             {
                 try
                 { var file = new FileInfo(FileName); }
                 catch (Exception ex)
-                {
-                    exception = ex;
-                    exception.Data.Add(nameof(FileName), FileName);
-                }
+                { exception = ex; }
+            }
+
+            if (exception is not null)
+            {
+                exception.Data.Add(nameof(FileName), FileName);
+                exception.Data.Add(nameof(fileName), fileName);
+                exception.Data.Add(nameof(directories), String.Join("//", directories));
             }
 
             return exception is not null;

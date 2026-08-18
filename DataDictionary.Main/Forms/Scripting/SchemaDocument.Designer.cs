@@ -43,12 +43,12 @@
             objectNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            documentFileData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             openFileDialog = new OpenFileDialog();
             errorProvider = new ErrorProvider(components);
-            documentFileData = new DataDictionary.Main.Controls.TextBoxData();
             documentMenu = new ContextMenuStrip(components);
             schemaDocumentLayout = new TableLayoutPanel();
             objectGroupBox = new GroupBox();
@@ -246,14 +246,6 @@
             templateTitleData.TabIndex = 2;
             templateTitleData.WordWrap = true;
             // 
-            // openFileDialog
-            // 
-            openFileDialog.FileName = "openFileDialog";
-            // 
-            // errorProvider
-            // 
-            errorProvider.ContainerControl = this;
-            // 
             // documentFileData
             // 
             documentFileData.AutoSize = true;
@@ -266,11 +258,20 @@
             documentFileData.Size = new Size(502, 44);
             documentFileData.TabIndex = 9;
             documentFileData.WordWrap = true;
+            documentFileData.Validated += DocumentFileData_Validated;
+            // 
+            // openFileDialog
+            // 
+            openFileDialog.FileName = "openFileDialog";
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // documentMenu
             // 
             documentMenu.Name = "documentMenu";
-            documentMenu.Size = new Size(181, 26);
+            documentMenu.Size = new Size(61, 4);
             // 
             // SchemaDocument
             // 

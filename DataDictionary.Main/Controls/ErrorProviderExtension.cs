@@ -1,4 +1,7 @@
-﻿namespace DataDictionary.Main.Controls
+﻿using System.Collections;
+using System.Text;
+
+namespace DataDictionary.Main.Controls
 {
     static class ErrorProviderExtension
     {
@@ -29,6 +32,25 @@
             }
 
             return errors;
+        }
+
+        /// <summary>
+        /// Used to Set the ErrorProvider using the value of an Exception.
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="control"></param>
+        /// <param name="exception"></param>
+        public static void SetError(this ErrorProvider provider, Control control, Exception exception)
+        {
+            StringBuilder builder = new StringBuilder(exception.Message);
+
+            foreach (var item in exception.Data.Cast<DictionaryEntry>().ToDictionary(k => k.Key, v => v.Value))
+            {
+                builder.AppendLine();
+                builder.Append(String.Concat(item.Key.ToString(), ":", (item.Value ?? String.Empty).ToString()));
+            }
+
+            provider.SetError(control, builder.ToString());
         }
     }
 }

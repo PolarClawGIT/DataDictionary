@@ -135,23 +135,38 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
         {
             exception = null;
+            String directory = InitialDirectory;
+            List<String> directories;
 
-            if (String.IsNullOrWhiteSpace(InitialDirectory))
-            { exception = new ArgumentNullException(nameof(InitialDirectory)); }
-            else if (InitialDirectory.Any(a => Path.GetInvalidPathChars().Contains(a)))
+            if (String.IsNullOrWhiteSpace(Path.GetPathRoot(directory)))
             {
-                exception = new ArgumentException("Invalid Path Character(s)");
-                exception.Data.Add(nameof(InitialDirectory), InitialDirectory);
+                directories = (Path.GetDirectoryName(directory) ?? String.Empty).
+                    Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries).
+                    ToList();
             }
             else
             {
+                directories = (Path.GetRelativePath(Path.GetPathRoot(directory) ?? Path.DirectorySeparatorChar.ToString(), directory)).
+                    Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries).
+                    ToList();
+            }
+
+            if (String.IsNullOrWhiteSpace(directory))
+            { exception = new ArgumentNullException(nameof(directory)); }
+            else if (directories.Any(a => a.Any(b => Path.GetInvalidFileNameChars().Contains(b))))
+            { exception = new ArgumentException("Invalid Directory Character(s)"); }
+            else
+            {
                 try
-                { var file = new FileInfo(InitialDirectory); }
+                { var file = new DirectoryInfo(directory); }
                 catch (Exception ex)
-                {
-                    exception = ex;
-                    exception.Data.Add(nameof(InitialDirectory), InitialDirectory);
-                }
+                { exception = ex; }
+            }
+
+            if (exception is not null)
+            {
+                exception.Data.Add(nameof(directory), directory);
+                exception.Data.Add(nameof(directories), String.Join("//", directories));
             }
 
             return exception is not null;
