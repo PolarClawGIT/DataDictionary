@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
@@ -28,7 +29,7 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingDocument);
             SetIcon(ScopeType.ScriptingDocument);
 
-            SetCommand(ButtonType.Delete);
+            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Delete);
         }
 
         public SchemaDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
@@ -68,10 +69,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
-                formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName); 
-                formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName); 
-
-                //documentFileData  FileName
+                formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);
+                formBinding.DocumentData.AddBinding(documentFileData, e => e.SchemaFile.FileName);
+                formBinding.DocumentData.AddBinding(documentContentData, e => e.SchemaFile.FileContent);
 
                 ValidateFile();
             }
@@ -81,6 +81,21 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            throw new NotImplementedException();
+        }
+
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenCommand_Click(sender, e);
+
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
+                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            { file.Open(directory); }
+        }
+
+        protected override void SaveCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveCommand_Click(sender, e);
             throw new NotImplementedException();
         }
 
@@ -144,11 +159,6 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                 }
             }
-        }
-
-        private void DocumentFileData_SelectCommand(object sender, EventArgs e)
-        {
-
         }
 
         private void LocalPathData_Validated(object sender, EventArgs e)

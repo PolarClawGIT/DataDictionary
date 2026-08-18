@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -76,6 +78,17 @@ namespace DataDictionary.Main.Forms.Scripting
                     ex.Data.Add(nameof(SchemaDefinitionValue), schema);
                     throw ex;
                 }
+            }
+
+            public Boolean TryGetFile([NotNullWhen(true)] out IDirectoryValue? directory, [NotNullWhen(true)] out IFileValue? file)
+            {
+                directory = null;
+                file = null;
+
+                if(SchemaData.TryGetValue(out SchemaDefinitionValue? schema)
+                    && DocumentData.TryGetValue(out SchemaDocumentValue? document)) 
+                { directory = schema.SchemaDirectory; file = document.SchemaFile; return true; }
+                else { return false; }
             }
         }
     }

@@ -35,13 +35,12 @@
             TableLayoutPanel objectBehaviorLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDocument));
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
-            documentFileContentData = new DataDictionary.Main.Controls.TextBoxData();
+            documentContentData = new DataDictionary.Main.Controls.TextBoxData();
             objectKeepOrphaned = new CheckBox();
             objectIsExcluded = new CheckBox();
             isInModelData = new CheckBox();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             objectNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
-            documentFileData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
@@ -49,6 +48,8 @@
             bindingDocument = new BindingSource(components);
             openFileDialog = new OpenFileDialog();
             errorProvider = new ErrorProvider(components);
+            documentFileData = new DataDictionary.Main.Controls.TextBoxData();
+            documentMenu = new ContextMenuStrip(components);
             schemaDocumentLayout = new TableLayoutPanel();
             objectGroupBox = new GroupBox();
             objectLayout = new TableLayoutPanel();
@@ -68,11 +69,11 @@
             schemaDocumentLayout.ColumnCount = 1;
             schemaDocumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             schemaDocumentLayout.Controls.Add(localPathData, 0, 3);
-            schemaDocumentLayout.Controls.Add(documentFileContentData, 0, 5);
+            schemaDocumentLayout.Controls.Add(documentContentData, 0, 5);
             schemaDocumentLayout.Controls.Add(objectGroupBox, 0, 2);
-            schemaDocumentLayout.Controls.Add(documentFileData, 0, 4);
             schemaDocumentLayout.Controls.Add(schemaTitleData, 0, 1);
             schemaDocumentLayout.Controls.Add(templateTitleData, 0, 0);
+            schemaDocumentLayout.Controls.Add(documentFileData, 0, 4);
             schemaDocumentLayout.Dock = DockStyle.Fill;
             schemaDocumentLayout.Location = new Point(0, 25);
             schemaDocumentLayout.Name = "schemaDocumentLayout";
@@ -83,7 +84,6 @@
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            schemaDocumentLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             schemaDocumentLayout.Size = new Size(508, 610);
             schemaDocumentLayout.TabIndex = 4;
             // 
@@ -101,18 +101,18 @@
             localPathData.WordWrap = false;
             localPathData.Validated += LocalPathData_Validated;
             // 
-            // documentFileContentData
+            // documentContentData
             // 
-            documentFileContentData.AutoSize = true;
-            documentFileContentData.Dock = DockStyle.Fill;
-            documentFileContentData.HeaderText = "Document Content";
-            documentFileContentData.Location = new Point(3, 364);
-            documentFileContentData.Multiline = true;
-            documentFileContentData.Name = "documentFileContentData";
-            documentFileContentData.ReadOnly = false;
-            documentFileContentData.Size = new Size(502, 243);
-            documentFileContentData.TabIndex = 6;
-            documentFileContentData.WordWrap = false;
+            documentContentData.AutoSize = true;
+            documentContentData.Dock = DockStyle.Fill;
+            documentContentData.HeaderText = "Document Content";
+            documentContentData.Location = new Point(3, 364);
+            documentContentData.Multiline = true;
+            documentContentData.Name = "documentContentData";
+            documentContentData.ReadOnly = false;
+            documentContentData.Size = new Size(502, 243);
+            documentContentData.TabIndex = 6;
+            documentContentData.WordWrap = false;
             // 
             // objectGroupBox
             // 
@@ -220,21 +220,6 @@
             objectNameData.TabIndex = 3;
             objectNameData.SelectCommand += ObjectNameData_SelectCommand;
             // 
-            // documentFileData
-            // 
-            documentFileData.AutoSize = true;
-            documentFileData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            documentFileData.Dock = DockStyle.Fill;
-            documentFileData.HeaderText = "Document";
-            documentFileData.Location = new Point(3, 314);
-            documentFileData.Name = "documentFileData";
-            documentFileData.ReadOnly = false;
-            documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
-            documentFileData.Size = new Size(502, 44);
-            documentFileData.TabIndex = 5;
-            documentFileData.Validated += DocumentFileData_Validated;
-            documentFileData.SelectCommand += DocumentFileData_SelectCommand;
-            // 
             // schemaTitleData
             // 
             schemaTitleData.AutoSize = true;
@@ -263,11 +248,29 @@
             // 
             // openFileDialog
             // 
-            openFileDialog.FileName = "openFileDialog1";
+            openFileDialog.FileName = "openFileDialog";
             // 
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
+            // 
+            // documentFileData
+            // 
+            documentFileData.AutoSize = true;
+            documentFileData.Dock = DockStyle.Fill;
+            documentFileData.HeaderText = "Document";
+            documentFileData.Location = new Point(3, 314);
+            documentFileData.Multiline = false;
+            documentFileData.Name = "documentFileData";
+            documentFileData.ReadOnly = false;
+            documentFileData.Size = new Size(502, 44);
+            documentFileData.TabIndex = 9;
+            documentFileData.WordWrap = true;
+            // 
+            // documentMenu
+            // 
+            documentMenu.Name = "documentMenu";
+            documentMenu.Size = new Size(181, 26);
             // 
             // SchemaDocument
             // 
@@ -300,8 +303,7 @@
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData schemaTitleData;
         private Controls.ComboBoxData sourceObjectData;
-        private Controls.SelectTextBoxData documentFileData;
-        private Controls.TextBoxData documentFileContentData;
+        private Controls.TextBoxData documentContentData;
         private TableLayoutPanel objectLayout;
         private Controls.ComboBoxData objectScopeData;
         private Controls.SelectTextBoxData objectNameData;
@@ -316,5 +318,7 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private Controls.TextBoxData localPathData;
         private ErrorProvider errorProvider;
+        private Controls.TextBoxData documentFileData;
+        private ContextMenuStrip documentMenu;
     }
 }
