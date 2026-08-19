@@ -162,8 +162,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                     catch (Exception ex)
                     {
                         cancel = true;
-                        ex.Data.Add(nameof(directory.InitialDirectory), directory.InitialDirectory);
-                        ex.Data.Add(nameof(FileName), FileName);
+                        ex.Data.Add(nameof(file), file.FullName);
                         throw;
                     }
                 }
@@ -171,14 +170,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 {
                     cancel = true;
                     Exception ex = new FileNotFoundException();
-
-                    ex.Data.Add(nameof(directory.InitialDirectory), directory.InitialDirectory);
-                    ex.Data.Add(nameof(FileName), FileName);
+                    ex.Data.Add(nameof(file), file.FullName);
                     throw ex;
                 }
             }
-
-
         }
 
         /// <inheritdoc/>
@@ -206,15 +201,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
                     // TODO: This is still adding the Byte Order Mark (BOM) to the file.
                     // This is not necessary an in some cases, may cause issues with other tools.
                     if (TryParse(out XDocument? document, out Exception? _))
-                    { document.Save(Path.Combine(directory.InitialDirectory, FileName)); }
+                    { document.Save(file.FullName); }
                     else // Save the file as Text. This is expected to have a BOM.
-                    { File.WriteAllText(Path.Combine(directory.InitialDirectory, FileName), GetContent()); }
+                    { File.WriteAllText(file.FullName, GetContent()); }
                 }
                 catch (Exception ex)
                 {
                     cancel = true;
-                    ex.Data.Add(nameof(directory.InitialDirectory), directory.InitialDirectory);
-                    ex.Data.Add(nameof(FileName), FileName);
+                    ex.Data.Add(nameof(file), file.FullName);
                     throw;
                 }
             }
@@ -300,7 +294,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
             if (String.IsNullOrWhiteSpace(fileName))
             { exception = new ArgumentNullException(nameof(FileName)); }
-            else if (fileName.Length > 255) // TODO: OS handles longer paths, but the database is restricted.
+            else if (fileName.Length > 255) // TODO: OS handles longer paths, but the database is restricted by indexing limits.
             { exception = new PathTooLongException(); }
             else if (fileName.Any(a => Path.GetInvalidFileNameChars().Contains(a)))
             { exception = new ArgumentException("Invalid FileName Character(s)"); }

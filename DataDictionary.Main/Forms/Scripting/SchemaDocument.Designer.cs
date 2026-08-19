@@ -50,6 +50,7 @@
             openFileDialog = new OpenFileDialog();
             errorProvider = new ErrorProvider(components);
             documentMenu = new ContextMenuStrip(components);
+            saveFileDialog = new SaveFileDialog();
             schemaDocumentLayout = new TableLayoutPanel();
             objectGroupBox = new GroupBox();
             objectLayout = new TableLayoutPanel();
@@ -321,5 +322,6 @@
         private ErrorProvider errorProvider;
         private Controls.TextBoxData documentFileData;
         private ContextMenuStrip documentMenu;
+        private SaveFileDialog saveFileDialog;
     }
 }

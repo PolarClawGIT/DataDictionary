@@ -27,11 +27,14 @@ namespace DataDictionary.Main.Controls
             if (result is DialogResult.OK)
             {
                 String relativePath = String.Empty;
+                String fileDirectory = Path.GetDirectoryName(dialog.FileName)??String.Empty;
 
                 if (directory.IsInvalid(out _) || String.IsNullOrWhiteSpace(directory.InitialDirectory))
-                { relativePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty; }
+                { relativePath = fileDirectory ?? String.Empty; }
+                else if (String.Equals(directory.InitialDirectory, fileDirectory))
+                { relativePath = String.Empty; }
                 else
-                { relativePath = Path.GetRelativePath(directory.InitialDirectory, Path.GetDirectoryName(dialog.FileName) ?? String.Empty); }
+                { relativePath = Path.GetRelativePath(directory.InitialDirectory, fileDirectory); }
 
                 file.FileName = Path.Combine(relativePath, Path.GetFileName(dialog.FileName));
             }

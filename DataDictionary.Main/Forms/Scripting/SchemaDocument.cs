@@ -8,6 +8,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.Collections;
+using System.ComponentModel;
 using System.Text;
 using Toolbox.BindingTable;
 
@@ -92,13 +93,28 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
                 && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
-            { file.Open(directory); }
+            { DoWork(file.Open(directory), onCompleting); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is not null)
+                { throw args.Error; }
+            }
         }
 
         protected override void SaveCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
+                && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            { DoWork(file.Save(directory), onCompleting); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is not null)
+                { throw args.Error; }
+            }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
@@ -135,7 +151,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingDocument is not null
                 && ParentForm is not null
-                && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
+                && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
             {
                 using (SelectionDialog dialog = new SelectionDialog(ParentForm))
                 {
@@ -144,16 +160,15 @@ namespace DataDictionary.Main.Forms.Scripting
                              ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
                     // TODO: Support for Alias, ScopeType.ModelAttributeAlias, ScopeType.ModelEntityAlias, ScopeType.ModelProcessAlias
 
-                    dialog.BuildData(new List<PathIndex>() { new PathIndex(value.ObjectName) });
+                    dialog.BuildData(new List<PathIndex>() { new PathIndex(fileValue.ObjectName) });
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
                         INamedScopeValue selected = dialog.SelectedByNamedScope().Single();
-                        value.ObjectName = selected.Path.MemberFullPath;
-                        value.ObjectScope = selected.Scope;
+                        fileValue.ObjectName = selected.Path.MemberFullPath;
+                        fileValue.ObjectScope = selected.Scope;
 
-                        if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
-                            && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
+                        if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
                         {
                             fileValue.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
                             ValidateFile();
@@ -163,13 +178,15 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+
+
         private void LocalPathData_Validated(object sender, EventArgs e)
         { ValidateFile(); }
 
         private void DocumentFileData_Validated(object sender, EventArgs e)
         { ValidateFile(); }
 
-        void ValidateFile()
+        private void ValidateFile()
         {
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
 
@@ -181,7 +198,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue)
                 && fileValue.SchemaFile.IsInvalid(out Exception? fileEx))
-            {   errorProvider.SetError(documentFileData.ErrorControl, fileEx); }
+            { errorProvider.SetError(documentFileData.ErrorControl, fileEx); }
         }
     }
 }
