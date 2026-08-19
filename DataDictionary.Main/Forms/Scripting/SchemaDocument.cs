@@ -70,7 +70,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 formBinding.SchemaData.AddBinding(localPathData, e => e.SchemaDirectory.InitialDirectory);
 
-                ScopeNameList.Load(objectScopeData);
+                ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
                 formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);
                 formBinding.DocumentData.AddBinding(documentFileData, e => e.SchemaFile.FileName);
@@ -156,9 +156,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 using (SelectionDialog dialog = new SelectionDialog(ParentForm))
                 {
                     dialog.MultiSelect = false;
-                    dialog.FilterScopes.AddRange(
-                             ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
-                    // TODO: Support for Alias, ScopeType.ModelAttributeAlias, ScopeType.ModelEntityAlias, ScopeType.ModelProcessAlias
+                    dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
 
                     dialog.BuildData(new List<PathIndex>() { new PathIndex(fileValue.ObjectName) });
 
@@ -177,8 +175,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
         }
-
-
 
         private void LocalPathData_Validated(object sender, EventArgs e)
         { ValidateFile(); }

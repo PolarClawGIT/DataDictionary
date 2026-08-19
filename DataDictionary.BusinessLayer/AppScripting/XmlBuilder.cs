@@ -208,5 +208,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
             else if (this is PropertyType propertyType) { return new PropertyType(propertyType); }
             else { return new XmlBuilder(this); }
         }
+
+        /// <summary>
+        /// Returns a list of Supported ScopeTypes
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<ScopeType> SupportedScopes ()
+        {   // TODO: Need to add more types.
+            return new List<ScopeType>() { ScopeType.Null, ScopeType.ModelAttribute };
+        }
     }
 }

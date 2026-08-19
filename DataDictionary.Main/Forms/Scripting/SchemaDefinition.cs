@@ -91,7 +91,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(fileSuffixData, e => e.FileSuffix);
                 formBinding.SchemaData.AddBinding(fileExtensionData, e => e.FileExtension);
 
-                ScopeNameList.Load(forEachScopeData, ScopeType.Null, ScopeType.ModelAttribute, ScopeType.ModelEntity);
+                ScopeNameList.Load(forEachScopeData, XmlBuilder.SupportedScopes());
                 formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
 
                 // Node Tab
