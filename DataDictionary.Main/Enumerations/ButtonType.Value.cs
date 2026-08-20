@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Enumerations
 
             };
 
-        static readonly Dictionary<ScopeType, Icon> commmandOverride
+        static readonly Dictionary<ScopeType, Icon> commandOverride
             = new Dictionary<ScopeType, Icon>() 
             {
                 {ScopeType.ApplicationHelp, Resources.Icon_HelpOffset },

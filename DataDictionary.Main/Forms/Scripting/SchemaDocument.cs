@@ -34,7 +34,11 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle(bindingDocument);
             SetIcon(bindingDocument);
 
-            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Import);
+            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Export);
+            CommandButtons[ButtonType.SaveDatabase].Visible = false;
+            CommandButtons[ButtonType.OpenDatabase].Visible = false;
+            CommandButtons[ButtonType.DeleteDatabase].Visible = false;
+            CommandButtons[ButtonType.Export].ToolTipText = "Build XML";
         }
 
         public SchemaDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
@@ -113,35 +117,12 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        protected override void ImportCommand_Click(Object? sender, EventArgs e)
+        protected override void ExportCommand_Click(Object? sender, EventArgs e)
         {
-            base.ImportCommand_Click(sender, e);
+            base.ExportCommand_Click(sender, e);
             throw new NotImplementedException();
         }
 
-        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.OpenFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
-        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.SaveToDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
-        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
 
         private void ObjectNameData_SelectCommand(object sender, EventArgs e)
         {

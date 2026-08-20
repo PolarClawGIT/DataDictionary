@@ -11,7 +11,7 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// The set of Command Buttons
         /// </summary>
-        public IReadOnlyDictionary<ButtonType, ToolStripCommand> CommandButtons { get { return commandItems; } }
+        protected IReadOnlyDictionary<ButtonType, ToolStripCommand> CommandButtons { get { return commandItems; } }
         ToolStripCommandCollection commandItems = new ToolStripCommandCollection();
 
         /// <summary>
