@@ -72,12 +72,16 @@ namespace DataDictionary.Main.Forms
                     if (sender is not null)
                     {
                         var senderData = sender.GetType();
-                        ex.Data.Add(nameof(senderData.Name), senderData.Name);
+                        ex.Data.Add(nameof(sender), senderData.Name);
                     }
 
                     if (sender is BindingSource source)
                     {
-                        //TODO: Collect more data
+                        if (source.DataSource is not null)
+                        { ex.Data.Add(nameof(source.DataSource), source.DataSource.GetType()); }
+
+                        ex.Data.Add(nameof(source.Count), source.Count);
+                        ex.Data.Add(nameof(source.Position), source.Position);
                     }
 
                     throw ex;
@@ -524,6 +528,12 @@ namespace DataDictionary.Main.Forms
                 ComboBox formControl,
                 Expression<Func<TRow, TProperty>> expression)
             { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding<TProperty>(
+                ToolStripComboBox formControl,
+                Expression<Func<TRow, TProperty>> expression)
+            { AddBinding(formControl.ComboBox, expression); }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
