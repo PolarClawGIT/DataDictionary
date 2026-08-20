@@ -32,6 +32,7 @@ namespace DataDictionary.Main.Forms.Scripting
             documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+            documentDeleteCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Delete);
 
             nodeNewCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Add);
             nodeDeleteCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Delete);
@@ -91,9 +92,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(fileSuffixData, e => e.FileSuffix);
                 formBinding.SchemaData.AddBinding(fileExtensionData, e => e.FileExtension);
 
-                ScopeNameList.Load(forEachScopeData, XmlBuilder.SupportedScopes());
-                formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
-
                 // Node Tab
                 nodesTree.LoadTree(formBinding.BuilderData);
 
@@ -118,6 +116,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.BuilderData.AddBinding(renderOrderData, e => e.RenderOrder);
 
                 // Document Tab
+                ScopeNameList.Load(documentBuildScope, XmlBuilder.SupportedScopes());
+                formBinding.SchemaData.AddBinding(documentBuildScope, e => e.ForEachScope);
+
+                documentOpenCommand.Enabled = false;
+                documentDeleteCommand.Enabled = false;
                 formBinding.DocumentData.AddBinding(documentData);
 
                 // Security
@@ -164,7 +167,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentBuildCommand_Click(object sender, EventArgs e)
         {
-            if(formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
             {
                 switch (value.ForEachScope)
                 {
@@ -173,7 +176,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     case ScopeType.ModelAttribute:
                         foreach (var item in BusinessData.Model.Attribute.Attributes)
                         {
-                            
+
                         }
                         break;
                     /*case ScopeType.ModelEntity:
@@ -190,14 +193,33 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void DocumentNewCommand_Click(object sender, EventArgs e)
-        {   Activate(() => new Forms.Scripting.SchemaDocument(schemaIndex, formBinding.GetData)); }
+        { Activate(() => new Forms.Scripting.SchemaDocument(schemaIndex, formBinding.GetData)); }
 
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            if(formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
+            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
             {
                 DocumentIndex key = new DocumentIndex(value);
-                Activate(() => new Forms.Scripting.SchemaDocument(key,formBinding.GetData), o=> o.IsOpenItem(key));
+                Activate(() => new Forms.Scripting.SchemaDocument(key, formBinding.GetData), o => o.IsOpenItem(key));
+            }
+        }
+
+        private void DocumentDeleteCommand_Click(object sender, EventArgs e)
+        {
+            formBinding.DocumentData.Remove();
+        }
+
+        private void BindingDocument_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
+            {
+                documentOpenCommand.Enabled = true;
+                documentDeleteCommand.Enabled = true;
+            }
+            else
+            {
+                documentOpenCommand.Enabled = false;
+                documentDeleteCommand.Enabled = false;
             }
         }
 

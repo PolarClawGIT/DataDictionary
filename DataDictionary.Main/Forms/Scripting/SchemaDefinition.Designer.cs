@@ -51,7 +51,6 @@
             fileSuffixData = new DataDictionary.Main.Controls.TextBoxData();
             fileExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
-            forEachScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             schemaNodeTab = new TabPage();
             nodeRenderGroup = new GroupBox();
             renderOrderData = new DataDictionary.Main.Controls.TextBoxData();
@@ -70,8 +69,10 @@
             fileLayout = new TableLayoutPanel();
             documentToolStrip = new ToolStrip();
             documentBuildCommand = new ToolStripButton();
+            documentBuildScope = new ToolStripComboBox();
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
+            documentDeleteCommand = new ToolStripButton();
             documentData = new DataGridView();
             objectNameColumn = new DataGridViewTextBoxColumn();
             FileNameColumn = new DataGridViewTextBoxColumn();
@@ -193,7 +194,7 @@
             filePatternGroup.Dock = DockStyle.Fill;
             filePatternGroup.Location = new Point(3, 3);
             filePatternGroup.Name = "filePatternGroup";
-            filePatternGroup.Size = new Size(556, 226);
+            filePatternGroup.Size = new Size(556, 174);
             filePatternGroup.TabIndex = 5;
             filePatternGroup.TabStop = false;
             filePatternGroup.Text = "File Pattern";
@@ -213,16 +214,14 @@
             filePatternLayout.Controls.Add(fileSuffixData, 2, 2);
             filePatternLayout.Controls.Add(fileExtensionData, 3, 2);
             filePatternLayout.Controls.Add(localPathData, 0, 1);
-            filePatternLayout.Controls.Add(forEachScopeData, 0, 3);
             filePatternLayout.Dock = DockStyle.Fill;
             filePatternLayout.Location = new Point(3, 19);
             filePatternLayout.Name = "filePatternLayout";
-            filePatternLayout.RowCount = 4;
+            filePatternLayout.RowCount = 3;
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
-            filePatternLayout.RowStyles.Add(new RowStyle());
-            filePatternLayout.Size = new Size(550, 204);
+            filePatternLayout.Size = new Size(550, 152);
             filePatternLayout.TabIndex = 0;
             // 
             // rootFolderData
@@ -318,20 +317,6 @@
             localPathData.Size = new Size(544, 44);
             localPathData.TabIndex = 7;
             localPathData.WordWrap = false;
-            // 
-            // forEachScopeData
-            // 
-            forEachScopeData.AutoSize = true;
-            forEachScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            filePatternLayout.SetColumnSpan(forEachScopeData, 2);
-            forEachScopeData.Dock = DockStyle.Fill;
-            forEachScopeData.DropDownStyle = ComboBoxStyle.DropDown;
-            forEachScopeData.HeaderText = "For each";
-            forEachScopeData.Location = new Point(3, 155);
-            forEachScopeData.Name = "forEachScopeData";
-            forEachScopeData.ReadOnly = false;
-            forEachScopeData.Size = new Size(239, 46);
-            forEachScopeData.TabIndex = 8;
             // 
             // schemaNodeTab
             // 
@@ -642,7 +627,7 @@
             // 
             // documentToolStrip
             // 
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildCommand, documentNewCommand, documentOpenCommand });
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildCommand, documentBuildScope, documentNewCommand, documentOpenCommand, documentDeleteCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
             documentToolStrip.Size = new Size(562, 25);
@@ -656,8 +641,15 @@
             documentBuildCommand.ImageTransparentColor = Color.Magenta;
             documentBuildCommand.Name = "documentBuildCommand";
             documentBuildCommand.Size = new Size(23, 22);
-            documentBuildCommand.Text = "Build";
+            documentBuildCommand.Text = "Build Documents";
             documentBuildCommand.Click += DocumentBuildCommand_Click;
+            // 
+            // documentBuildScope
+            // 
+            documentBuildScope.DropDownStyle = ComboBoxStyle.DropDownList;
+            documentBuildScope.Name = "documentBuildScope";
+            documentBuildScope.Size = new Size(121, 25);
+            documentBuildScope.ToolTipText = "for Each";
             // 
             // documentNewCommand
             // 
@@ -666,7 +658,7 @@
             documentNewCommand.ImageTransparentColor = Color.Magenta;
             documentNewCommand.Name = "documentNewCommand";
             documentNewCommand.Size = new Size(23, 22);
-            documentNewCommand.Text = "New";
+            documentNewCommand.Text = "New Document";
             documentNewCommand.Click += DocumentNewCommand_Click;
             // 
             // documentOpenCommand
@@ -676,8 +668,18 @@
             documentOpenCommand.ImageTransparentColor = Color.Magenta;
             documentOpenCommand.Name = "documentOpenCommand";
             documentOpenCommand.Size = new Size(23, 22);
-            documentOpenCommand.Text = "Open";
+            documentOpenCommand.Text = "Open Document";
             documentOpenCommand.Click += DocumentOpenCommand_Click;
+            // 
+            // documentDeleteCommand
+            // 
+            documentDeleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentDeleteCommand.Image = (Image)resources.GetObject("documentDeleteCommand.Image");
+            documentDeleteCommand.ImageTransparentColor = Color.Magenta;
+            documentDeleteCommand.Name = "documentDeleteCommand";
+            documentDeleteCommand.Size = new Size(23, 22);
+            documentDeleteCommand.Text = "Delete Document";
+            documentDeleteCommand.Click += DocumentDeleteCommand_Click;
             // 
             // documentData
             // 
@@ -724,6 +726,10 @@
             // bindingNode
             // 
             bindingNode.CurrentChanged += BindingNode_CurrentChanged;
+            // 
+            // bindingDocument
+            // 
+            bindingDocument.CurrentChanged += BindingDocument_CurrentChanged;
             // 
             // SchemaDefinition
             // 
@@ -805,7 +811,6 @@
         private FolderBrowserDialog folderBrowserDialog;
         private DataGridViewTextBoxColumn objectNameColumn;
         private DataGridViewTextBoxColumn FileNameColumn;
-        private ToolStripButton documentBuildCommand;
         private BindingSource bindingNode;
         private TabPage schemaNodeTab;
         private TreeView schemaNodeTree;
@@ -817,10 +822,12 @@
         private Controls.ComboBoxData objectScopeData;
         private Controls.TextBoxData nodeNameData;
         private CheckBox isOverrideData;
-        private Controls.ComboBoxData forEachScopeData;
         private ToolStripButton nodeNewCommand;
         private ToolStripButton nodeDeleteCommand;
         private GroupBox nodeRenderGroup;
         private BindingSource bindingDocument;
+        private ToolStripButton documentBuildCommand;
+        private ToolStripComboBox documentBuildScope;
+        private ToolStripButton documentDeleteCommand;
     }
 }
