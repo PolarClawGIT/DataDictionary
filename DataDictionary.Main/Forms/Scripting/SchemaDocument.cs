@@ -30,9 +30,11 @@ namespace DataDictionary.Main.Forms.Scripting
             InitializeComponent();
 
             formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingDocument);
-            SetIcon(ScopeType.ScriptingDocument);
+            SetRowState(bindingDocument);
+            SetTitle(bindingDocument);
+            SetIcon(bindingDocument);
 
-            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Delete);
+            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Import);
         }
 
         public SchemaDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
@@ -81,12 +83,6 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
 
-        protected override void AddCommand_Click(Object? sender, EventArgs e)
-        {
-            base.AddCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenCommand_Click(sender, e);
@@ -117,9 +113,9 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        protected override void ImportCommand_Click(Object? sender, EventArgs e)
         {
-            base.DeleteCommand_Click(sender, e);
+            base.ImportCommand_Click(sender, e);
             throw new NotImplementedException();
         }
 
