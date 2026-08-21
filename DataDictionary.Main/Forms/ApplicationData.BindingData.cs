@@ -348,7 +348,10 @@ namespace DataDictionary.Main.Forms
 
                         // Strings are already assumed to be formatted.
                         if (detail.PropertyType == typeof(String))
-                        { needsFormatting = false; }
+                        {
+                            needsFormatting = false;
+                            nullValue = nullValue ?? String.Empty;
+                        }
                     }
                     else
                     {
@@ -627,6 +630,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="displayExpression"></param>
             /// <exception cref="InvalidOperationException"></exception>
             /// <remarks>Base method for LoadCombBox methods</remarks>
+            [Obsolete("Not in use", true)]
             protected virtual void LoadCombBoxCore<TValueMember, TDisplayMember>(
                 Action<String> setValueMember,
                 Action<String> setDisplayMember,
@@ -660,6 +664,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="displayExpression"></param>
             /// <exception cref="ArgumentNullException"></exception>
             /// <exception cref="InvalidOperationException"></exception>
+            [Obsolete("Not in use", true)]
             public virtual void LoadCombBox<TValueMember, TDisplayMember>(
                 ComboBox comboBox,
                 Expression<Func<TRow, TValueMember>> valueExpression,
@@ -674,6 +679,7 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <inheritdoc cref="LoadCombBox{TValueMember, TDisplayMember}(ComboBox, Expression{Func{TRow, TValueMember}}, Expression{Func{TRow, TDisplayMember}})"/>
+            [Obsolete("Not in use", true)]
             public virtual void LoadCombBox<TValueMember, TDisplayMember>(
                 DataGridViewComboBoxColumn comboBox,
                 Expression<Func<TRow, TValueMember>> valueExpression,
@@ -688,6 +694,7 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <inheritdoc cref="LoadCombBox{TValueMember, TDisplayMember}(ComboBox, Expression{Func{TRow, TValueMember}}, Expression{Func{TRow, TDisplayMember}})"/>
+            [Obsolete("Not in use", true)]
             public virtual void LoadCombBox<TValueMember, TDisplayMember>(
                 ComboBoxData comboBox,
                 Expression<Func<TRow, TValueMember>> valueExpression,
