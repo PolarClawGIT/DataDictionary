@@ -23,6 +23,7 @@ namespace DataDictionary.BusinessLayer
                 builders.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
                 builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
             }
+
             return builders;
         }
     }

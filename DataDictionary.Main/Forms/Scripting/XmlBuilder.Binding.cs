@@ -172,7 +172,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             Clear();
 
-            foreach (var item in BusinessData.Templates.XmlBuilders.Values)
+            foreach (var item in BusinessData.Templates.XmlBuilders)
             {
                 XmlBuilderValue newValue = new XmlBuilderValue() { Builder = item };
                 XmlBuilderIndex builderKey = new XmlBuilderIndex(item);
