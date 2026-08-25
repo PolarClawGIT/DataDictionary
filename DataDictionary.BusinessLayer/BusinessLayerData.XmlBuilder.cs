@@ -12,16 +12,26 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public List<XmlBuilder> GetXmlBuilders()
         {   //TODO: Once working, move to various classes?
-            
+
             List<XmlBuilder> builders = new List<XmlBuilder>();
 
             if (Model.Properties.Count > 0)
             {   // This could be called before Model.Properties has been loaded.
-                builders.Add(new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute));
-                builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties));
+                var attributeValue = new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute);
+                builders.Add(attributeValue);
+                builders.AddRange(attributeValue.Children.Select(s => s.Value));
 
-                builders.Add(new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity));
-                builders.Add(new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties));
+                var attributeProperty = new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties);
+                builders.Add(attributeProperty);
+                builders.AddRange(attributeProperty.Children.Select(s => s.Value));
+
+                var entityValue = new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity);
+                builders.Add(entityValue);
+                builders.AddRange(entityValue.Children.Select(s => s.Value));
+                
+                var entityProperty = new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties);
+                builders.Add(entityProperty);
+                builders.AddRange(entityProperty.Children.Select(s => s.Value));
             }
 
             return builders;

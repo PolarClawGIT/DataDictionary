@@ -154,7 +154,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     }
                     else if (item is XmlBuilder.ValueType valType)
                     {
-                        foreach (var child in valType.Properties.Values)
+                        foreach (var child in valType.Children.Values)
                         { data.Add(child.BuilderPath, child); }
                     }
                 }

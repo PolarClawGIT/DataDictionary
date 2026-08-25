@@ -302,7 +302,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 DoWork = () =>
                 {
-                    foreach (var item in builders())
+                    foreach (var item in builders().ToList())
                     {
                         XmlBuilderIndex key = new XmlBuilderIndex(item);
                         if (xmlBuilderValues.Any(w => key.Equals(w)))
