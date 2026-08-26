@@ -325,7 +325,7 @@
             schemaNodeTab.Location = new Point(4, 24);
             schemaNodeTab.Name = "schemaNodeTab";
             schemaNodeTab.Padding = new Padding(3);
-            schemaNodeTab.Size = new Size(192, 72);
+            schemaNodeTab.Size = new Size(568, 495);
             schemaNodeTab.TabIndex = 2;
             schemaNodeTab.Text = "Node";
             // 
@@ -343,7 +343,7 @@
             nodeLayout.RowCount = 2;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle());
-            nodeLayout.Size = new Size(186, 66);
+            nodeLayout.Size = new Size(562, 489);
             nodeLayout.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -354,7 +354,7 @@
             tableLayoutPanel1.Controls.Add(objectNodeGroup, 0, 1);
             tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(-179, 28);
+            tableLayoutPanel1.Location = new Point(197, 28);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -563,7 +563,7 @@
             nodeToolStrip.Items.AddRange(new ToolStripItem[] { nodeNewCommand, nodeDeleteCommand });
             nodeToolStrip.Location = new Point(0, 0);
             nodeToolStrip.Name = "nodeToolStrip";
-            nodeToolStrip.Size = new Size(186, 25);
+            nodeToolStrip.Size = new Size(562, 25);
             nodeToolStrip.TabIndex = 0;
             nodeToolStrip.Text = "toolStrip1";
             // 
@@ -592,7 +592,7 @@
             schemaNodeTree.Dock = DockStyle.Fill;
             schemaNodeTree.Location = new Point(3, 28);
             schemaNodeTree.Name = "schemaNodeTree";
-            schemaNodeTree.Size = new Size(1, 458);
+            schemaNodeTree.Size = new Size(188, 458);
             schemaNodeTree.TabIndex = 1;
             schemaNodeTree.BeforeCollapse += SchemaNodeTree_BeforeCollapse;
             schemaNodeTree.BeforeExpand += SchemaNodeTree_BeforeExpand;
@@ -606,7 +606,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(568, 495);
+            documentTab.Size = new Size(192, 72);
             documentTab.TabIndex = 1;
             documentTab.Text = "Documents";
             // 
@@ -622,7 +622,7 @@
             fileLayout.RowCount = 2;
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            fileLayout.Size = new Size(562, 489);
+            fileLayout.Size = new Size(186, 66);
             fileLayout.TabIndex = 5;
             // 
             // documentToolStrip
@@ -630,7 +630,7 @@
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildCommand, documentBuildScope, documentNewCommand, documentOpenCommand, documentDeleteCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(562, 25);
+            documentToolStrip.Size = new Size(186, 25);
             documentToolStrip.TabIndex = 15;
             documentToolStrip.Text = "Document Tools";
             // 
@@ -691,7 +691,7 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(556, 458);
+            documentData.Size = new Size(180, 35);
             documentData.TabIndex = 9;
             // 
             // objectNameColumn

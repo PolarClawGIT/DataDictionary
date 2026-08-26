@@ -175,7 +175,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged(IBindingPropertyChanged, PropertyChangedEventHandler?, String?)"/>
         protected virtual void OnPropertyChanged(String propertyName)
-        { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
+        { this.OnPropertyChanged(PropertyChanged, propertyName); }
 
         /// <summary>
         /// GetValue function that returns the ToString of the object passed.

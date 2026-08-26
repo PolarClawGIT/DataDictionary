@@ -96,6 +96,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodesTree.LoadTree(formBinding.BuilderData);
 
                 formBinding.BuilderData.AddBinding(nodeNameData, e => e.NodeName);
+                formBinding.BuilderData.AddBinding(isOverrideData, e => e.IsOverride);
 
                 ScopeNameList.Load(objectScopeData, ScopeType.Null,
                     ScopeType.ModelAttribute, ScopeType.ModelAttributeProperty,
@@ -270,7 +271,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void NodeNewCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value)
+            if (formBinding.BuilderData.TryGetValue(out XmlBuilderNode? value)
                 && value.SchemaNode is null)
             {
                 SchemaNodeValue node = new SchemaNodeValue(templateIndex, schemaIndex);
@@ -281,7 +282,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void NodeDeleteCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value)
+            if (formBinding.BuilderData.TryGetValue(out XmlBuilderNode? value)
                 && value.SchemaNode is not null)
             {
                 value.SchemaNode = null;
@@ -296,11 +297,11 @@ namespace DataDictionary.Main.Forms.Scripting
 
         void OnNodeChanged()
         {
-            if (formBinding.BuilderData.TryGetValue(out XmlBuilderValue? value))
+            if (formBinding.BuilderData.TryGetValue(out XmlBuilderNode? value))
             {
-                nodeRenderGroup.Enabled = value.IsOverride;
-                nodeNewCommand.Enabled = !value.IsOverride;
-                nodeDeleteCommand.Enabled = value.IsOverride;
+                nodeRenderGroup.Enabled = value.SchemaNode is not null;
+                nodeNewCommand.Enabled = value.SchemaNode is null;
+                nodeDeleteCommand.Enabled = value.SchemaNode is not null;
             }
             else
             {   // Should not occur. No selected Node.
