@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -200,7 +201,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                     // Detect if the data is XML and use XML save instead of normal text.
                     // TODO: This is still adding the Byte Order Mark (BOM) to the file.
                     // This is not necessary an in some cases, may cause issues with other tools.
-                    if (TryParse(out XDocument? document, out Exception? _))
+                    if (FileContent.TryParse(out XDocument? document, out Exception? _))
                     { document.Save(file.FullName); }
                     else // Save the file as Text. This is expected to have a BOM.
                     { File.WriteAllText(file.FullName, GetContent()); }
@@ -221,6 +222,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <param name="exception"></param>
         /// <param name="option"></param>
         /// <returns></returns>
+        [Obsolete("Not being used", true)]
         public Boolean TryParse([NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
         {
             try
@@ -245,6 +247,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <param name="exception"></param>
         /// <param name="option"></param>
         /// <returns></returns>
+        [Obsolete("Not being used",true)]
         public Boolean TryParse([NotNullWhen(true)] out String? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
         {
             //Note: Online Sources use StringWriter to convert an XDocument to String.
@@ -253,7 +256,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
             //that the correct Declaration to be known and that is be compatible with a String Encoding.
             //This approach is to add the Declaration using the StringBuilder as a simple string.
 
-            if (TryParse(out XDocument? value, out Exception? xmlException, option))
+            if (FileContent.TryParse(out XDocument? value, out Exception? xmlException, option))
             {
                 StringBuilder result = new StringBuilder();
 

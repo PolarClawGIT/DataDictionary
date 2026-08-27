@@ -36,7 +36,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// Convert ModelIndex to a SecurableIndex
         /// </summary>
         /// <param name="source"></param>
-        [Obsolete]
         public static implicit operator SecurableIndex(ModelIndex source)
         { return new SecurableIndex() { SecurableId = source.ModelId ?? Guid.Empty }; }
 

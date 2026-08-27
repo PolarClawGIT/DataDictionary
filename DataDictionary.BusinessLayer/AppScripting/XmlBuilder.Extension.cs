@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -148,8 +149,63 @@ namespace DataDictionary.BusinessLayer.AppScripting
             TemplateObjectNameIndex key = new TemplateObjectNameIndex(templateObject);
             PathIndex path = new PathIndex(key.ObjectPath);
 
-
             return namedScope.PathKeys(path).Select(s => namedScope.GetData(s));
+        }
+
+
+        /// <summary>
+        /// Try to Parse a String into an XDocument.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="document"></param>
+        /// <param name="exception"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public static Boolean TryParse(this String source, [NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
+        {
+            document = null;
+            exception = null;
+
+            try
+            {
+                document = XDocument.Parse(source, option);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Try to Parse an XDocument into a String.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="document"></param>
+        /// <returns></returns>
+        public static Boolean TryParse(this XDocument source, [NotNullWhen(true)] out String? document)
+        {
+            //Note: Online Sources use StringWriter to convert an XDocument to String.
+            //This alters the Declaration of the XDocument and forces it to UTF-16, which is the format of Windows Strings.
+            //Other solutions run the XDocument thru several more steps that also alter the Declaration or require
+            //that the correct Declaration to be known and that is be compatible with a String Encoding.
+            //This approach is to add the Declaration using the StringBuilder as a simple string.
+
+            document = null;
+            StringBuilder result = new StringBuilder();
+
+            // XDocument.ToString() does not contain the Header, put that back in.
+            if (source.Declaration is XDeclaration declaration)
+            { result.Append(declaration.ToString()); }
+            //else { result.AppendLine(new XDeclaration(null, null, null).ToString()); }
+
+            result.AppendLine(source.ToString());
+
+            document = result.ToString();
+            return true;
         }
     }
 }
+

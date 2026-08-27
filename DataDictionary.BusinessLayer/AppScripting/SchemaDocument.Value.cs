@@ -2,6 +2,8 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -13,6 +15,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// File information to be used with the File Save/Open Dialog.
         /// </summary>
         IFileValue SchemaFile { get; }
+
+        /// <summary>
+        /// XML version of the File Contents.
+        /// </summary>
+        XDocument Content { get; }
     }
 
     /// <inheritdoc/>
@@ -36,6 +43,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IFileValue SchemaFile { get; }
 
         /// <inheritdoc/>
+        public XDocument Content
+        {
+            get;
+            set { field = value; OnPropertyChanged(nameof(Content)); }
+        } = new XDocument();
+
+        /// <inheritdoc/>
+        public Exception? ContentException
+        {
+            get;
+            set { field = value; OnPropertyChanged(nameof(ContentException)); }
+        }
+
+        /// <inheritdoc/>
         public SchemaDocumentValue() : base()
         {
             pathValue = new PathValue(this)
@@ -52,7 +73,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => FileName ?? String.Empty,
                 SetFileName = (value) => FileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
+                GetContent = () =>
+                {
+                    if (Content.TryParse(out String? document))
+                    { return document; }
+                    else { return String.Empty; }
+                },
+                SetContent = (value) =>
+                {
+                    if (value.TryParse(out XDocument? document, out Exception? exception))
+                    {
+                        Content = document;
+                        ContentException = null;
+                    }
+                    else { Content = new XDocument(); ContentException = exception; }
+                }
             };
         }
 
