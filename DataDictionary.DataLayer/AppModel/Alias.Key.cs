@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.AppModel
         public ScopeType AliasScope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
-        public virtual Boolean HasValue { get { return AliasScope != ScopeType.Null; } }
+        public override Boolean HasValue { get { return base.HasValue && AliasScope != ScopeType.Null; } }
 
         /// <summary>
         /// Constructor for the Key used by Aliases

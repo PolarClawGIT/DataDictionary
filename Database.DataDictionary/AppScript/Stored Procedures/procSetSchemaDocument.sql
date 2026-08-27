@@ -37,7 +37,7 @@ Begin Try
 		Select	[TemplateId],
 				[ObjectId],
 				[ObjectScope],
-				[AppScript].[funcObjectPath] ([ObjectId]) As [ObjectName],
+				[AppScript].[funcObjectPath] ([ObjectId]) As [ObjectPath],
 				Convert(Int, NullIf([IsExcluded],0)) As [IsExcluded],
 				Convert(Int, NullIf([KeepOrphaned],0)) As [KeepOrphaned]
 		From	[AppScript].[TemplateObject]
@@ -52,50 +52,50 @@ Begin Try
 	[Data] As (
 		Select	IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
 				D.[ObjectScope],
-				P.[QualifiedName] As [ObjectName],
+				P.[QualifiedName] As [ObjectPath],
 				Convert(Int, IsNull(D.[IsExcluded],0)) As [IsExcluded],
 				Convert(Int, IsNull(D.[KeepOrphaned],0)) As [KeepOrphaned]
 		From	@Data D
-				Cross Apply [AppGeneral].[funcParseName](D.[ObjectName]) P
+				Cross Apply [AppGeneral].[funcParseName](D.[ObjectPath]) P
 		Where	P.[IsBase] = 1 And
-				D.[ObjectName] is Not Null And
+				D.[ObjectPath] is Not Null And
 				D.[ObjectScope] is Not Null),
 	[Combine] As (
 		Select	[TemplateId],
 				[ObjectScope],
-				[ObjectName]
+				[ObjectPath]
 		From	[Object]
 		Union	
 		Select	[TemplateId],
 				[ObjectScope],
-				[ObjectName]
+				[ObjectPath]
 		From	[Data] D)
 	Insert Into @Objects (
 		[TemplateId],
 		[ObjectId],
 		[ObjectScope],
-		[ObjectName],
+		[ObjectPath],
 		[IsExcluded],
 		[KeepOrphaned])
 	Select	C.[TemplateId],
 			IsNull(O.[ObjectId], NewId()) As [ObjectId],
 			C.[ObjectScope],
-			C.[ObjectName],
+			C.[ObjectPath],
 			Max(Coalesce(D.[IsExcluded], O.[IsExcluded], 0)) As [IsExcluded],
 			Max(Coalesce(D.[KeepOrphaned], O.[KeepOrphaned], 0)) As [KeepOrphaned]
 	From	[Combine] C
 			Left Join [Data] D
 			On	C.[TemplateId] = D.[TemplateId] And
 				C.[ObjectScope] = D.[ObjectScope] And
-				C.[ObjectName] = D.[ObjectName]
+				C.[ObjectPath] = D.[ObjectPath]
 			Left Join [Object] O
 			On	C.[TemplateId] = O.[TemplateId] And
 				C.[ObjectScope] = O.[ObjectScope] And
-				C.[ObjectName] = O.[ObjectName]
+				C.[ObjectPath] = O.[ObjectPath]
 	Group By C.[TemplateId],
 			O.[ObjectId],
 			C.[ObjectScope],
-			C.[ObjectName]
+			C.[ObjectPath]
 	Print FormatMessage ('@Objects: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Build Values
@@ -111,11 +111,11 @@ Begin Try
 				@ModelId = M.[ModelId]
 			Cross Apply (
 				Select	Coalesce(D.[DocumentId], NewId()) As [DocumentId]) X
-			Cross Apply  [AppGeneral].[funcParseName](D.[ObjectName]) P
+			Cross Apply  [AppGeneral].[funcParseName](D.[ObjectPath]) P
 			Left Join @Objects O
 			On	IsNull(D.[TemplateId], @TemplateId)  = O.[TemplateId] And
 				D.[ObjectScope] = O.[ObjectScope] And
-				P.[QualifiedName] = O.[ObjectName]
+				P.[QualifiedName] = O.[ObjectPath]
 	Where	P.[IsBase] = 1 And
 			(@TemplateId is Null Or @TemplateId = IsNull(D.[TemplateId], @TemplateId)) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)

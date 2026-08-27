@@ -78,7 +78,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
-                formBinding.DocumentData.AddBinding(objectNameData, e => e.ObjectName);
+                formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
                 formBinding.DocumentData.AddBinding(documentFileData, e => e.SchemaFile.FileName);
                 formBinding.DocumentData.AddBinding(documentContentData, e => e.SchemaFile.FileContent);
 
@@ -135,12 +135,12 @@ namespace DataDictionary.Main.Forms.Scripting
                     dialog.MultiSelect = false;
                     dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
 
-                    dialog.BuildData(new List<PathIndex>() { new PathIndex(fileValue.ObjectName) });
+                    dialog.BuildData(new List<PathIndex>() { new PathIndex(fileValue.ObjectPath) });
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
                         INamedScopeValue selected = dialog.SelectedByNamedScope().Single();
-                        fileValue.ObjectName = selected.Path.MemberFullPath;
+                        fileValue.ObjectPath = selected.Path.MemberFullPath;
                         fileValue.ObjectScope = selected.Scope;
 
                         if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))

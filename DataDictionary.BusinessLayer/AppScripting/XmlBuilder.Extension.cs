@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
@@ -133,6 +135,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             if (result is XElement) { return result; }
             else { return new XElement(ScopeType.ModelAttribute.GetName()); }
+        }
+
+        /// <summary>
+        /// Gets the NamedScopeSource for the xmlBuilder
+        /// </summary>
+        /// <param name="namedScope"></param>
+        /// <param name="templateObject"></param>
+        /// <returns></returns>
+        public static IEnumerable<INamedScopeSourceValue> GetData(this INamedScopeData namedScope, ITemplateObjectNameIndex templateObject)
+        {
+            TemplateObjectNameIndex key = new TemplateObjectNameIndex(templateObject);
+            PathIndex path = new PathIndex(key.ObjectPath);
+
+
+            return namedScope.PathKeys(path).Select(s => namedScope.GetData(s));
         }
     }
 }

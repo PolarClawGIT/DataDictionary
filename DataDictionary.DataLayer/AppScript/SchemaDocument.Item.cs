@@ -64,10 +64,10 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? ObjectName
+        public String? ObjectPath
         {
-            get { return GetValue(nameof(ObjectName)); }
-            set { SetValue(nameof(ObjectName), value); }
+            get { return GetValue(nameof(ObjectPath)); }
+            set { SetValue(nameof(ObjectPath), value); }
         }
 
         /// <inheritdoc/>
@@ -124,7 +124,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectScope), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ObjectName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ObjectPath), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsExcluded), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(KeepOrphaned), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(FileName), typeof(String)){ AllowDBNull = true},

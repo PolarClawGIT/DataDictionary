@@ -40,7 +40,7 @@
             objectIsExcluded = new CheckBox();
             isInModelData = new CheckBox();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            objectNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             documentFileData = new DataDictionary.Main.Controls.TextBoxData();
@@ -134,7 +134,7 @@
             objectLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             objectLayout.Controls.Add(objectBehaviorLayout, 0, 2);
             objectLayout.Controls.Add(objectScopeData, 0, 0);
-            objectLayout.Controls.Add(objectNameData, 0, 1);
+            objectLayout.Controls.Add(objectPathData, 0, 1);
             objectLayout.Dock = DockStyle.Fill;
             objectLayout.Location = new Point(3, 19);
             objectLayout.Name = "objectLayout";
@@ -207,19 +207,19 @@
             objectScopeData.Size = new Size(490, 46);
             objectScopeData.TabIndex = 2;
             // 
-            // objectNameData
+            // objectPathData
             // 
-            objectNameData.AutoSize = true;
-            objectNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            objectNameData.Dock = DockStyle.Fill;
-            objectNameData.HeaderText = "Object";
-            objectNameData.Location = new Point(3, 55);
-            objectNameData.Name = "objectNameData";
-            objectNameData.ReadOnly = false;
-            objectNameData.SelectIcon = (Image)resources.GetObject("objectNameData.SelectIcon");
-            objectNameData.Size = new Size(490, 44);
-            objectNameData.TabIndex = 3;
-            objectNameData.SelectCommand += ObjectNameData_SelectCommand;
+            objectPathData.AutoSize = true;
+            objectPathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectPathData.Dock = DockStyle.Fill;
+            objectPathData.HeaderText = "Object";
+            objectPathData.Location = new Point(3, 55);
+            objectPathData.Name = "objectPathData";
+            objectPathData.ReadOnly = false;
+            objectPathData.SelectIcon = (Image)resources.GetObject("objectPathData.SelectIcon");
+            objectPathData.Size = new Size(490, 44);
+            objectPathData.TabIndex = 3;
+            objectPathData.SelectCommand += ObjectNameData_SelectCommand;
             // 
             // schemaTitleData
             // 
@@ -308,7 +308,7 @@
         private Controls.TextBoxData documentContentData;
         private TableLayoutPanel objectLayout;
         private Controls.ComboBoxData objectScopeData;
-        private Controls.SelectTextBoxData objectNameData;
+        private Controls.SelectTextBoxData objectPathData;
         private TableLayoutPanel objectBehaviorLayout;
         private CheckBox isInModelData;
         private CheckBox objectIsExcluded;
