@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -59,7 +61,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 SchemaData.LoadBinding(w => schema.Equals(w));
 
-                if(SchemaData.TryGetSingle(out SchemaDefinitionValue? definition))
+                if (SchemaData.TryGetSingle(out SchemaDefinitionValue? definition))
                 {
                     TemplateIndex templateIndex = new TemplateIndex(definition);
                     SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex(definition);
@@ -85,10 +87,29 @@ namespace DataDictionary.Main.Forms.Scripting
                 directory = null;
                 file = null;
 
-                if(SchemaData.TryGetValue(out SchemaDefinitionValue? schema)
-                    && DocumentData.TryGetValue(out SchemaDocumentValue? document)) 
+                if (SchemaData.TryGetValue(out SchemaDefinitionValue? schema)
+                    && DocumentData.TryGetValue(out SchemaDocumentValue? document))
                 { directory = schema.SchemaDirectory; file = document.SchemaFile; return true; }
                 else { return false; }
+            }
+
+            public void BuildFileContent()
+            {
+
+
+                if (DocumentData.TryGetValue(out SchemaDocumentValue? value))
+                {
+                    SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(value);
+                    XmlBuilderData nodeValues = new XmlBuilderData();
+                    nodeValues.Load(schemaKey, GetData().SchemataNodes);
+
+                    if (BusinessData.Model.TryGetBuilder(value, out Func<IEnumerable<XmlBuilder>, XElement>? builder))
+                    { value.Content = new XDocument(builder(nodeValues)); }
+
+                    
+                }
+
+
             }
         }
     }

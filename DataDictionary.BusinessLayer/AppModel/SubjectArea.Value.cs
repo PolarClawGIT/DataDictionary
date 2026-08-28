@@ -28,6 +28,20 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelSubjectArea; } }
 
+        /// <summary>
+        /// Path Index version of the SubjectName
+        /// </summary>
+        public PathIndex SubjectAreaPath
+        {
+            get
+            { return new PathIndex(new PathIndex(PathIndex.Parse(SubjectName).ToArray())); }
+            set
+            {
+                SubjectName = value.MemberFullPath;
+                OnPropertyChanged(nameof(SubjectAreaPath));
+            }
+        }
+
         /// <inheritdoc/>
         public SubjectAreaValue() : base()
         {

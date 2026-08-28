@@ -272,7 +272,7 @@
             // documentMenu
             // 
             documentMenu.Name = "documentMenu";
-            documentMenu.Size = new Size(61, 4);
+            documentMenu.Size = new Size(181, 26);
             // 
             // SchemaDocument
             // 

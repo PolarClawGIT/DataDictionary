@@ -80,7 +80,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
                 formBinding.DocumentData.AddBinding(documentFileData, e => e.SchemaFile.FileName);
-                formBinding.DocumentData.AddBinding(documentContentData, e => e.SchemaFile.FileContent);
+                formBinding.DocumentData.AddBinding(documentContentData, e => e.Content);
 
                 ValidateFile();
             }
@@ -120,9 +120,10 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void ExportCommand_Click(Object? sender, EventArgs e)
         {
             base.ExportCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
 
+            formBinding.BuildFileContent();
+            //throw new NotImplementedException();
+        }
 
         private void ObjectNameData_SelectCommand(object sender, EventArgs e)
         {
