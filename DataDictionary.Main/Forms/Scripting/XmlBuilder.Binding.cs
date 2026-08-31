@@ -9,7 +9,7 @@ namespace DataDictionary.Main.Forms.Scripting
     /// Wrapper list class used with the Data Binding.
     /// </summary>
     class XmlBuilderData : BindingList<XmlBuilderNode>, IBindingList<XmlBuilderNode>
-    {   
+    {
         public void Load(SchemaDefinitionIndex key, ISchemaNodeData data)
         {
             Clear();
@@ -19,8 +19,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 XmlBuilderIndex builderKey = new XmlBuilderIndex(item);
                 XmlBuilderNode newValue;
 
-                if (data.Where(w => key.Equals(w) && builderKey.Equals(w)) is SchemaNodeValue value)
-                {   newValue = new XmlBuilderNode(item, value); }
+                if (data.TryGetSingle(w => key.Equals(w) && builderKey.Equals(w), out SchemaNodeValue? value))
+                { newValue = new XmlBuilderNode(item, value); }
                 else { newValue = new XmlBuilderNode(item); }
 
                 Add(newValue);
