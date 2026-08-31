@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml.Linq;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -37,11 +38,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.Attribute.SubjectArea,
                         attribute => new AttributeIndex(attribute),
                         subject => new AttributeIndex(subject),
-                        (Attribute, Subject) => new {Attribute, Subject}).
+                        (Attribute, Subject) => new { Attribute, Subject }).
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (attributeSubject, subject) => new {Path = new PathIndex(subject.SubjectAreaPath, attributeSubject.Attribute.AttributePath), attributeSubject.Attribute }).
+                        (attributeSubject, subject) => new { Path = new PathIndex(subject.SubjectAreaPath, attributeSubject.Attribute.AttributePath), attributeSubject.Attribute }).
                     Union(model.Attribute.Attributes.
                         Select(s => new { Path = s.AttributePath, Attribute = s })).
                     Where(w => key.Equals(w.Path) && w.Attribute.Scope == targetObject.ObjectScope).
@@ -77,6 +78,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Where(w => key.Equals(w.Path) && w.Process.Scope == targetObject.ObjectScope).
                     ToList();
 
+            // Wow, this Linq logic actually worked. Not certain how stable or east to debug it is. Consider breaking it up?
 
             if (attributes.Count > 0)
             {
@@ -88,6 +90,51 @@ namespace DataDictionary.BusinessLayer.AppScripting
             else { return false; }
         }
 
+        public static XElement? Build(
+                this IEnumerable<XmlBuilder> builders,
+                IEnumerable<IXmlBuilderIndex> items)
+        {
+            XElement root = new XElement("root");
+            List<IXmlBuilderIndex> itemList = items.ToList(); // To Protect against add/delete in the middle of the process.
+
+
+            if (itemList.Count == 0)
+            { return null; }
+            else if (itemList.TryGetSingle(out IXmlBuilderIndex? value))
+            {
+                XmlBuilderIndex rootKey = new XmlBuilderIndex(value);
+                if (builders.TryGetXmlBuilder(rootKey, out XmlBuilder? builder))
+                {
+                    XObject? xObject = builder.Build(value);
+
+                    if (xObject is XElement element)
+                    {
+                        root = element;
+
+                        foreach (var item in builders.Where(w => rootKey.MemberFullPath.Equals(w.BuilderPath.ParentPath)))
+                        { element.Add(item.Build(value)); }
+                    }
+                    else
+                    {
+                        root = new XElement(builder.NodeName);
+                        root.Add(xObject);
+                    }
+
+                    return root;
+                }
+                else { return null; }
+            }
+            else
+            {
+                foreach (var item in items)
+                {
+
+                }
+            }
+
+
+            throw new NotFiniteNumberException();
+        }
 
         /// <summary>
         /// Generic XElement that the specific builder are based on.
@@ -108,7 +155,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             Int32 rootCount = roots.Count(w => w.Scope == scope);
             XElement root = new XElement(scope.GetName());
 
-            // TODO: it calls the root but none of the child builders. Need to switch to path based.
+            // TODO: it calls the root but none of the child builders. Need to switch to path based?
 
             if (builders.TryGetXmlBuilder(rootKey, out XmlBuilder? builder))
             {
@@ -119,15 +166,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     if (rootCount == 1)
                     {
                         TRoot rootItem = roots.First();
-                        XObject? firstNode = builder.Build(rootItem);
+                        XObject? node = builder.Build(rootItem);
 
-                        if (firstNode is XElement firstRoot)
-                        { root = firstRoot; }
+                        if (node is XElement rootNode)
+                        {
+                            foreach (var child in builders.Where(w => w.ObjectScope.Equals(scope) && !rootKey.Equals(w)))
+                            { rootNode.Add(child.Build(rootItem)); }
+
+                            root = rootNode;
+                        }
                         else
                         {
                             root = new XElement(builder.NodeName);
-                            root.Add(firstNode);
+                            root.Add(node);
                         }
+
+
+
 
                         foreach (var child in children)
                         {
