@@ -10,7 +10,8 @@ namespace Toolbox.BindingTable
 {
     public static class BindingExtension
     {
-        public static void AddRange<T>(this BindingList<T> target, IEnumerable<T> source)
+        /// <inheritdoc cref="List{T}.AddRange(IEnumerable{T})"/>
+        public static void AddRange<T>(this BindingList<T> target, params IEnumerable<T> source)
         {
             foreach (T item in source.ToList())
             { target.Add(item); }

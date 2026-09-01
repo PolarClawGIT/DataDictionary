@@ -10,7 +10,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface for Single File of a Document.
     /// </summary>
-    public interface IDocumentFile : IFileValue, IBindingPropertyChanged
+    [Obsolete("POC code")]
+    public interface IDocumentFile : IFileValue, IDirectoryValue, IBindingPropertyChanged
     {
         /// <summary>
         /// Text Content of the File
@@ -40,6 +41,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Used to hold Input, Transform, and Output file information.
     /// This is a Wrapper around the fields in the main Document so that they can be treated as a single unit.
     /// </summary>
+    [Obsolete("POC code")]
     public class DocumentFile : FileValue, IDocumentFile
     {
         /// <inheritdoc/>
@@ -54,6 +56,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
         internal Func<String> GetContent { private get; init; }
         internal Action<String> SetContent { private get; init; }
+
+        /// <inheritdoc/>
+        public Environment.SpecialFolder RootFolder => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public String InitialDirectory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         String contentValue = String.Empty;
 
         /// <summary>

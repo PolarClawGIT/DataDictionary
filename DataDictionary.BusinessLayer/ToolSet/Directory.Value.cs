@@ -1,5 +1,6 @@
 ﻿using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.ToolSet
@@ -28,6 +29,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// dialog.InitialDirectory = IDirectoryValue.InitialDirectory;
         /// </example>
         String InitialDirectory { get; set; }
+
+        /// <summary>
+        /// Validates the Directory info and returns an Exception if there is an issue.
+        /// </summary>
+        /// <returns></returns>
+        Boolean IsInvalid([NotNullWhen(true)] out Exception? exception);
     }
 
     /// <summary>
@@ -123,5 +130,46 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
         protected virtual void OnPropertyChanged(String propertyName)
         { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
+
+        /// <inheritdoc/>
+        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
+        {
+            exception = null;
+            String directory = InitialDirectory;
+            List<String> directories;
+
+            if (String.IsNullOrWhiteSpace(Path.GetPathRoot(directory)))
+            {
+                directories = (Path.GetDirectoryName(directory) ?? String.Empty).
+                    Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries).
+                    ToList();
+            }
+            else
+            {
+                directories = (Path.GetRelativePath(Path.GetPathRoot(directory) ?? Path.DirectorySeparatorChar.ToString(), directory)).
+                    Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries).
+                    ToList();
+            }
+
+            if (String.IsNullOrWhiteSpace(directory))
+            { exception = new ArgumentNullException(nameof(directory)); }
+            else if (directories.Any(a => a.Any(b => Path.GetInvalidFileNameChars().Contains(b))))
+            { exception = new ArgumentException("Invalid Directory Character(s)"); }
+            else
+            {
+                try
+                { var file = new DirectoryInfo(directory); }
+                catch (Exception ex)
+                { exception = ex; }
+            }
+
+            if (exception is not null)
+            {
+                exception.Data.Add(nameof(directory), directory);
+                exception.Data.Add(nameof(directories), String.Join("//", directories));
+            }
+
+            return exception is not null;
+        }
     }
 }

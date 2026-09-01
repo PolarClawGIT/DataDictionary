@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Object Node
     /// </summary>
-    public interface ISchemaNodeObjectName
+    public interface ISchemaNodeObjectName: IKey
     {
         /// <summary>
         /// Object Scope of the item to be rendered.

@@ -56,5 +56,8 @@ namespace DataDictionary.Main.Dialogs
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public override String ToString()
+        { return PathName; }
+
     }
 }

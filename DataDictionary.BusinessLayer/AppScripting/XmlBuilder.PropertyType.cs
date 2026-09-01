@@ -77,27 +77,27 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
 
             /// <inheritdoc/>
-            public override XObject? Build<TMethod>(TMethod value)
-            {
-                XObject? result = base.Build(value);
+            //public override XObject? Build<TMethod>(TMethod value)
+            //{
+            //    XObject? result = base.Build(value);
 
-                if (result is XElement element
-                    && value is IPropertySubType property)
-                {
-                    PropertyIndex key = new PropertyIndex(property);
-                    if (Children.TryGetValue(key, out XmlBuilder? builder))
-                    { result = builder.Build(value); }
-                }
-                else if (result is null) { return result; }
-                else
-                {
-                    Exception ex = new InvalidOperationException("XmlBuilder.Build returned something other then an XElement");
-                    ex.Data.Add(nameof(base.Build), result.GetType().Name);
-                    throw ex;
-                }
+            //    if (result is XElement element
+            //        && value is IPropertySubType property)
+            //    {
+            //        PropertyIndex key = new PropertyIndex(property);
+            //        if (Children.TryGetValue(key, out XmlBuilder? builder))
+            //        { result = builder.Build(value); }
+            //    }
+            //    else if (result is null) { return result; }
+            //    else
+            //    {
+            //        Exception ex = new InvalidOperationException("XmlBuilder.Build returned something other then an XElement");
+            //        ex.Data.Add(nameof(base.Build), result.GetType().Name);
+            //        throw ex;
+            //    }
 
-                return result;
-            }
+            //    return result;
+            //}
 
             /// <summary>
             /// Try to Convert the PropertyInfo into an ObjectValueType.

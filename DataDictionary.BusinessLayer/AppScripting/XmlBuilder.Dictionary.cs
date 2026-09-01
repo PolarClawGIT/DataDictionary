@@ -20,6 +20,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Provides a list of XML Builders.
     /// </summary>
+    [Obsolete("Use generic instead", true)]
     public class XmlBuilderDictionary : IReadOnlyDictionary<XmlBuilderIndex, XmlBuilder>
     {
         // TODO: Need to return a list including children so a tree structure can be built.
@@ -153,7 +154,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     }
                     else if (item is XmlBuilder.ValueType valType)
                     {
-                        foreach (var child in valType.Properties.Values)
+                        foreach (var child in valType.Children.Values)
                         { data.Add(child.BuilderPath, child); }
                     }
                 }
@@ -191,48 +192,5 @@ namespace DataDictionary.BusinessLayer.AppScripting
         #endregion
     }
 
-    /// <summary>
-    /// Default Builders for the different supported objects.
-    /// </summary>
-    public static class XmlBuilderExtension
-    {   // TODO: These can be moved to the various classes, once things are working.
 
-        /// <summary>
-        /// Execute the XML Builders for AttributeValue.
-        /// </summary>
-        /// <param name="builders"></param>
-        /// <param name="attributes"></param>
-        /// <param name="properties"></param>
-        /// <returns></returns>
-        public static XElement Build(this XmlBuilderDictionary builders,
-            IEnumerable<AttributeValue> attributes,
-            IEnumerable<AttributePropertyValue> properties)
-        {
-            XElement? result = builders.Build<AttributeValue, IAttributeIndex>(ScopeType.ModelAttribute, attributes,
-                        (ScopeType.ModelAttributeProperty, properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c)))
-                        );
-
-            if (result is XElement) { return result; }
-            else { return new XElement(ScopeType.ModelAttribute.GetName()); }
-        }
-
-        /// <summary>
-        /// Execute the XML Builders for EntityValue.
-        /// </summary>
-        /// <param name="builders"></param>
-        /// <param name="entities"></param>
-        /// <param name="properties"></param>
-        /// <returns></returns>
-        public static XElement Build(this XmlBuilderDictionary builders,
-            IEnumerable<EntityValue> entities,
-            IEnumerable<EntityPropertyValue> properties)
-        {
-            XElement? result = builders.Build<EntityValue, IEntityIndex>(ScopeType.ModelEntity, entities,
-                        (ScopeType.ModelEntityProperty, properties, (r, c) => new EntityIndex(r).Equals(new EntityIndex(c)))
-                        );
-
-            if (result is XElement) { return result; }
-            else { return new XElement(ScopeType.ModelEntity.GetName()); }
-        }
-    }
 }

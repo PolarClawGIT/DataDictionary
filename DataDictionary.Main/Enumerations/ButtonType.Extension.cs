@@ -37,9 +37,9 @@ namespace DataDictionary.Main.Enumerations
             {
                 value = scopeImage;
 
-                if (commmandOverride.ContainsKey(scope) 
+                if (commandOverride.ContainsKey(scope) 
                     && command is not ButtonType.Default)
-                { value = commmandOverride[scope].GetSmallImage(); }
+                { value = commandOverride[scope].GetSmallImage(); }
 
                 if (commandOverlay.ContainsKey(command))
                 { value = value.MergeImage(commandOverlay[command]); }

@@ -6,6 +6,7 @@ using DataDictionary.DataLayer.AppScript;
 using System.Data;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
+using System.Collections.ObjectModel;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -47,7 +48,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// List of <b>default</b> XmlBuilders supported by the application.
         /// </summary>
-        XmlBuilderDictionary XmlBuilders { get; }
+        IEnumerable<XmlBuilder> XmlBuilders { get; }
 
         /// <summary>
         /// Creates an empty ITemplateData.
@@ -81,7 +82,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         TransformDocumentData transformDocumentValues;
 
         /// <inheritdoc/>
-        public XmlBuilderDictionary XmlBuilders { get; } = new XmlBuilderDictionary();
+        public IEnumerable<XmlBuilder> XmlBuilders { get { return xmlBuilderValues; } }
+        static Collection<XmlBuilder> xmlBuilderValues = new Collection<XmlBuilder>();
 
         /// <inheritdoc cref="TemplateCollection{TItem}.TemplateCollection"/>
         public TemplateData() : base()
@@ -283,6 +285,40 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaDocumentValues.Load(source);
             transformValues.Load(source);
             transformDocumentValues.Load(source);
+        }
+
+        /// <summary>
+        /// Adds Xml Builders to the list.
+        /// </summary>
+        /// <param name="builders"></param>
+        /// <exception cref="ArgumentException">
+        /// A XmlBuilder with the same key already exists in the list. Duplicates are not allowed.
+        /// </exception>
+        public IReadOnlyList<WorkItem> AddBuilders(Func<IEnumerable<XmlBuilder>> builders)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                DoWork = () =>
+                {
+                    foreach (var item in builders().ToList())
+                    {
+                        XmlBuilderIndex key = new XmlBuilderIndex(item);
+                        if (xmlBuilderValues.Any(w => key.Equals(w)))
+                        {
+                            Exception ex = new ArgumentException("Duplicate Key");
+                            ex.Data.Add(nameof(key), key);
+                            throw ex;
+                        }
+                        else
+                        { xmlBuilderValues.Add(item); }
+                    }
+                }
+            });
+
+            return work;
+
         }
     }
 }

@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     public class XmlBuilderIndex : IXmlBuilderIndex, IPathItem,
         IKeyComparable<XmlBuilderIndex>, IKeyComparable<IXmlBuilderIndex>,
-        IKeyEquality<PathIndex>
+        IKeyEquality<PathIndex>, IKeyEquality<ISchemaNodeObjectName>
     {
         /// <inheritdoc/>
         public ScopeType ObjectScope { get; init; } = ScopeType.Null;
@@ -114,6 +114,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public Boolean Equals(IXmlBuilderIndex? other)
         { return other is IXmlBuilderIndex value && Equals(new XmlBuilderIndex(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(ISchemaNodeObjectName? other)
+        { return other is ISchemaNodeObjectName value && Equals(new XmlBuilderIndex(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(PathIndex? other)

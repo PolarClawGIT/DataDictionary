@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms
         /// Provides functionality for managing a set of Data used by DataBinding.
         /// </summary>
         /// <typeparam name="TRow"></typeparam>
-        protected class DataBinding<TRow> : ICollection<TRow>
+        protected class DataBinding<TRow> : ICollection<TRow>, IBindListChanged
             where TRow : class, IBindingPropertyChanged, IBindingRowState
         {
             /// <summary>
@@ -72,12 +72,16 @@ namespace DataDictionary.Main.Forms
                     if (sender is not null)
                     {
                         var senderData = sender.GetType();
-                        ex.Data.Add(nameof(senderData.Name), senderData.Name);
+                        ex.Data.Add(nameof(sender), senderData.Name);
                     }
 
                     if (sender is BindingSource source)
                     {
-                        //TODO: Collect more data
+                        if (source.DataSource is not null)
+                        { ex.Data.Add(nameof(source.DataSource), source.DataSource.GetType()); }
+
+                        ex.Data.Add(nameof(source.Count), source.Count);
+                        ex.Data.Add(nameof(source.Position), source.Position);
                     }
 
                     throw ex;
@@ -141,6 +145,34 @@ namespace DataDictionary.Main.Forms
                 else { return false; }
             }
 
+            /// <summary>
+            /// Try/Get to locate a single item in the values.
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public virtual Boolean TryGetSingle([NotNullWhen(true)] out TRow? result)
+            {
+                if (bindingValues.Count() == 1 && bindingValues.Single() is TRow value)
+                { result = value; return true; }
+                else
+                { result = default; return false; }
+            }
+
+            /// <summary>
+            /// Try/Get to locate a single item in the values.
+            /// </summary>
+            /// <param name="predicate"></param>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            /// <see cref="System.Linq.Enumerable.SingleOrDefault{TSource}(IEnumerable{TSource})"/>
+            public virtual Boolean TryGetSingle(Func<TRow, Boolean> predicate, [NotNullWhen(true)] out TRow? result)
+            {
+                if (bindingValues.Count(predicate) == 1 && bindingValues.Single(predicate) is TRow value)
+                { result = value; return true; }
+                else
+                { result = default; return false; }
+            }
+
             /// <inheritdoc cref="BindingSource.ResetCurrentItem"/>
             public void ResetCurrent()
             { BindingData.ResetCurrentItem(); }
@@ -155,6 +187,7 @@ namespace DataDictionary.Main.Forms
                 { return bindingValues.Remove(value); }
                 else { return false; }
             }
+
             #endregion
             #region Security
             /// <summary>
@@ -202,6 +235,24 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <remarks>Starts RaiseListChangedEvents</remarks>
             public event EventHandler LoadBindingComplete;
+
+            /// <inheritdoc/>
+            public event ListChangedEventHandler ListChanged
+            {
+                add { BindingData.ListChanged += value; }
+                remove { BindingData.ListChanged -= value; }
+            }
+
+            /// <inheritdoc/>
+            public void ResetBindings()
+            { BindingData.ResetBindings(false); }
+
+            /// <inheritdoc/>
+            public Boolean RaiseListChangedEvents
+            {
+                get { return BindingData.RaiseListChangedEvents; }
+                set { BindingData.RaiseListChangedEvents = value; }
+            }
 
             /// <summary>
             /// Part of the Load process linking to the data values and restarts binding.
@@ -266,6 +317,7 @@ namespace DataDictionary.Main.Forms
                 { throw new ArgumentNullException(nameof(BindingData.DataSource), "DataSource is Null. Binding has not been loaded"); }
 
                 IReadOnlyList<String> members = ParseExpression(expression);
+                Type dataSourceType = BindingData.DataSource.GetType();
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
                 Exception? memberException = ValidateProperty<TProperty>(members);
 
@@ -273,15 +325,33 @@ namespace DataDictionary.Main.Forms
                 {
                     Boolean needsFormatting = false;
 
+                    if (BindingData.DataSource is not IBindingList)
+                    {
+                        Exception ex = new InvalidOperationException("Not a IBindingList");
+                        ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
+                        throw ex;
+                    }
+
+                    if (BindingData.DataSource is IEnumerable<Object> values
+                        && values.Any(a => !(a is INotifyPropertyChanged)))
+                    {
+                        Exception ex = new InvalidOperationException("Not a INotifyPropertyChanged");
+                        ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
+                        throw ex;
+                    }
+
                     // This logic is intended to handle issues that just do not throw exceptions.
-                    if (properties.Find(members.Last(), false) is PropertyDescriptor detail)
+                    if (Find(properties, members) is PropertyDescriptor detail)
                     {   //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
                         if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                         { needsFormatting = true; }
 
                         // Strings are already assumed to be formatted.
                         if (detail.PropertyType == typeof(String))
-                        { needsFormatting = false; }
+                        {
+                            needsFormatting = false;
+                            nullValue = nullValue ?? String.Empty;
+                        }
                     }
                     else
                     {
@@ -300,6 +370,21 @@ namespace DataDictionary.Main.Forms
                     };
                 }
                 else { throw memberException; }
+
+                PropertyDescriptor? Find(PropertyDescriptorCollection source, IEnumerable<String> target)
+                {   // Data Binding allows for items nested inside child classes.
+                    // The notation being a period separated list of property names.
+                    // This works down each layer looking for the target name and returns it, if possible.
+                    if (target.FirstOrDefault() is String value)
+                    {
+                        PropertyDescriptor? result = source.Find(value, false);
+
+                        if (result is not null && target.Count() > 1)
+                        { return Find(result.GetChildProperties(), target.Skip(1)); }
+                        else { return result; }
+                    }
+                    return null;
+                }
             }
 
             /// <summary>
@@ -408,11 +493,20 @@ namespace DataDictionary.Main.Forms
             /// <typeparam name="TProperty">Data Type of the property of the expression.</typeparam>
             /// <param name="formControl">Control that is to be Bound</param>
             /// <param name="expression">The LINQ expression that is the name of the property.</param>
-            /// <example><![CDATA[dataBinding.AddBinding(control, e => e.PropertyName);]]></example>
+            /// <example><![CDATA[
+            /// dataBinding.AddBinding(control, e => e.PropertyName);
+            /// dataBinding.AddBinding(control, e => e.parentName.childName);
+            /// ]]></example>
             public virtual void AddBinding<TProperty>(
                 Control formControl,
                 Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(nameof(Control.Text), expression)); }
+            {   // Intended to trap issues when a control type does not have an overload.
+                // These may not bind as expected.
+                Exception ex = new NotSupportedException("Overload not defined");
+                ex.Data.Add(nameof(formControl), formControl.Name);
+                ex.Data.Add(nameof(GetType), formControl.GetType().Name);
+                throw ex;
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
@@ -428,9 +522,21 @@ namespace DataDictionary.Main.Forms
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
+                SelectTextBoxData formControl,
+                Expression<Func<TRow, TProperty>> expression)
+            { formControl.DataBindings.Add(CreateBinding(nameof(TextBox.Text), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding<TProperty>(
                 ComboBox formControl,
                 Expression<Func<TRow, TProperty>> expression)
             { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding<TProperty>(
+                ToolStripComboBox formControl,
+                Expression<Func<TRow, TProperty>> expression)
+            { AddBinding(formControl.ComboBox, expression); }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
@@ -481,18 +587,34 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
-            /// <remarks>Specialized for DataGridViewComboBoxColumn, does not call CreateBinding.</remarks>
-            public virtual void AddBinding<TProperty>(
-                DataGridViewComboBoxColumn formControl,
-                Expression<Func<TRow, TProperty>> expression)
+            /// <summary>
+            /// Helper method to Add DataSource to a DataGridView
+            /// </summary>
+            /// <param name="documentData"></param>
+            public virtual void AddBinding(DataGridView documentData)
             {
-                IReadOnlyList<String> bindingMember = ParseExpression(expression);
-                Exception? bindingException = ValidateProperty<TProperty>(bindingMember);
+                PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
 
-                if (bindingException is null)
-                { formControl.DataPropertyName = String.Join(".", bindingMember); }
-                else { throw bindingException; }
+                foreach (DataGridViewColumn item in documentData.Columns)
+                {
+                    if (!String.IsNullOrWhiteSpace(item.DataPropertyName))
+                    {
+                        if (properties.Find(item.DataPropertyName, false) is PropertyDescriptor property)
+                        {
+                            //TODO: Property found, but is it what is expected?
+                            //TODO: How does each type of control need to be checked?
+                        }
+                        else
+                        {   // If the DataPropertyName is not in the dataset, the DataGridView just shows the column as blank.
+                            Exception ex = new ArgumentException("Property not found in Dataset");
+                            ex.Data.Add(nameof(item.DataPropertyName), item.DataPropertyName);
+                            throw ex;
+                        }
+                    }
+                }
+
+                documentData.AutoGenerateColumns = false;
+                documentData.DataSource = BindingData;
             }
 
 
@@ -508,6 +630,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="displayExpression"></param>
             /// <exception cref="InvalidOperationException"></exception>
             /// <remarks>Base method for LoadCombBox methods</remarks>
+            [Obsolete("Not in use", true)]
             protected virtual void LoadCombBoxCore<TValueMember, TDisplayMember>(
                 Action<String> setValueMember,
                 Action<String> setDisplayMember,
@@ -528,7 +651,7 @@ namespace DataDictionary.Main.Forms
                 }
                 else if (valueException is not null) { throw valueException; }
                 else if (displayException is not null) { throw displayException; }
-                else { throw new InvalidOperationException("Untrap If/Else"); } // This should never happen.
+                else { throw new InvalidOperationException("Un-trapped If/Else"); } // This should never happen.
             }
 
             /// <summary>
@@ -541,6 +664,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="displayExpression"></param>
             /// <exception cref="ArgumentNullException"></exception>
             /// <exception cref="InvalidOperationException"></exception>
+            [Obsolete("Not in use", true)]
             public virtual void LoadCombBox<TValueMember, TDisplayMember>(
                 ComboBox comboBox,
                 Expression<Func<TRow, TValueMember>> valueExpression,
@@ -555,6 +679,7 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <inheritdoc cref="LoadCombBox{TValueMember, TDisplayMember}(ComboBox, Expression{Func{TRow, TValueMember}}, Expression{Func{TRow, TDisplayMember}})"/>
+            [Obsolete("Not in use", true)]
             public virtual void LoadCombBox<TValueMember, TDisplayMember>(
                 DataGridViewComboBoxColumn comboBox,
                 Expression<Func<TRow, TValueMember>> valueExpression,
@@ -569,6 +694,7 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <inheritdoc cref="LoadCombBox{TValueMember, TDisplayMember}(ComboBox, Expression{Func{TRow, TValueMember}}, Expression{Func{TRow, TDisplayMember}})"/>
+            [Obsolete("Not in use", true)]
             public virtual void LoadCombBox<TValueMember, TDisplayMember>(
                 ComboBoxData comboBox,
                 Expression<Func<TRow, TValueMember>> valueExpression,
@@ -619,6 +745,8 @@ namespace DataDictionary.Main.Forms
 
             /// <inheritdoc/>
             public Boolean IsReadOnly => ((ICollection<TRow>)bindingValues).IsReadOnly;
+
+
             #endregion
         }
 

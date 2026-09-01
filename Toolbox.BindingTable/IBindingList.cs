@@ -28,7 +28,7 @@ namespace Toolbox.BindingTable
         //}
         //
         //Note: I have had lots of issues with the ListChanged event.
-        //It does not always bubble up as expected thru interfaces or inhreted classes.
+        //It does not always bubble up as expected thru interfaces or inherited classes.
         //Interfaces do not have an instance so I cannot put event related code in one spot.
         //Instead the code has to be copied all over the place and is prone to errors.
 

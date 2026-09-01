@@ -65,9 +65,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             
             TransformFile = new FileValue()
             {
-                GetRootFolder = () => RootFolder,
-                GetDirectory = () => RelativePath ?? String.Empty,
-                SetDirectory = (value) => RelativePath = value,
                 GetFileName = () => TransformFileName ?? String.Empty,
                 SetFileName = (value) => TransformFileName = value,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform }
@@ -96,9 +93,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             TransformFile = new FileValue()
             {
-                GetRootFolder = () => RootFolder,
-                GetDirectory = () => RelativePath ?? String.Empty,
-                SetDirectory = (value) => RelativePath = value,
                 GetFileName = () => TransformFileName ?? String.Empty,
                 SetFileName = (value) => TransformFileName = value,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform }

@@ -1,10 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
-using System.Reflection;
+using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -14,7 +15,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface for the XmlBuilder
     /// </summary>
-    public interface IXmlBuilder : IXmlBuilderIndex, ISchemaNodeObject
+    public interface IXmlBuilder : IBindingPropertyChanged, IXmlBuilderIndex, ISchemaNodeObject
     { }
 
     /// <summary>
@@ -26,7 +27,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Path to the Object to be Rendered. This is normally a Property of the Object.
         /// </summary>
-        public virtual XmlBuilderIndex BuilderPath { get; set; }
+        public virtual XmlBuilderIndex BuilderPath
+        {
+            get;
+            set
+            {
+                field = value;
+                OnPropertyChanged(nameof(BuilderPath));
+            }
+        }
 
         /// <inheritdoc/>
         public virtual ScopeType ObjectScope
@@ -36,6 +45,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 field = value;
                 BuilderPath = new XmlBuilderIndex(field, ObjectProperty);
+                OnPropertyChanged(nameof(ObjectScope));
             }
         }
 
@@ -47,6 +57,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 field = value;
                 BuilderPath = new XmlBuilderIndex(ObjectScope, field);
+                OnPropertyChanged(nameof(ObjectScope));
             }
         }
 
@@ -60,7 +71,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                if(String.IsNullOrWhiteSpace(field))
+                if (String.IsNullOrWhiteSpace(field))
                 {
                     String value = String.Concat(((PathIndex)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
@@ -73,7 +84,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 if (String.IsNullOrWhiteSpace(value))
                 { field = String.Empty; }
                 else
-                {   
+                {
                     // Clean up the value before storing.
                     value = String.Concat(value.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
@@ -86,11 +97,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     { field = String.Empty; }
                     else { field = value; }
                 }
+
+                OnPropertyChanged(nameof(NodeName));
             }
         }
 
         /// <inheritdoc/>
-        public virtual Int32? RenderOrder { get; set; }
+        public virtual Int32? RenderOrder
+        {
+            get; set
+            {
+                field = value;
+                OnPropertyChanged(nameof(RenderOrder));
+            }
+        } = 0;
 
         /// <summary>
         /// Function that returns the NodeValue.
@@ -98,10 +118,24 @@ namespace DataDictionary.BusinessLayer.AppScripting
         protected Func<Object, String> GetValue { get; set; }
 
         /// <inheritdoc/>
-        public XmlNodeType RenderNodeType { get; set; }
+        public virtual XmlNodeType RenderNodeType
+        {
+            get; set
+            {
+                field = value;
+                OnPropertyChanged(nameof(RenderNodeType));
+            }
+        }
 
         /// <inheritdoc/>
-        public XmlTypeCode RenderTypeCode { get; set; }
+        public virtual XmlTypeCode RenderTypeCode
+        {
+            get; set
+            {
+                field = value;
+                OnPropertyChanged(nameof(RenderTypeCode));
+            }
+        }
 
         /// <summary>
         /// Basic XmlBuilder constructor. The value is set to the ToString of the Build object.
@@ -132,9 +166,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
             RenderTypeCode = source.RenderTypeCode;
             RenderNodeType = source.RenderNodeType;
             RenderOrder = source.RenderOrder;
-            
+
             GetValue = source.GetValue;
         }
+
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged(IBindingPropertyChanged, PropertyChangedEventHandler?, String?)"/>
+        protected virtual void OnPropertyChanged(String propertyName)
+        { this.OnPropertyChanged(PropertyChanged, propertyName); }
 
         /// <summary>
         /// GetValue function that returns the ToString of the object passed.
@@ -207,6 +248,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
             if (this is ValueType valueType) { return new ValueType(valueType); }
             else if (this is PropertyType propertyType) { return new PropertyType(propertyType); }
             else { return new XmlBuilder(this); }
+        }
+
+        /// <summary>
+        /// Returns a list of Supported ScopeTypes
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<ScopeType> SupportedScopes()
+        {   // TODO: Need to add more types.
+            return new List<ScopeType>() { ScopeType.Null, ScopeType.ModelAttribute };
         }
     }
 }

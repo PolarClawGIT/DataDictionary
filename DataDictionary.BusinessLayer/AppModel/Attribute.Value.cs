@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
         /// <summary>
-        /// Path Index version of the AttributePath
+        /// Path Index version of the AttributeName
         /// </summary>
         public PathIndex AttributePath
         {

@@ -9,7 +9,7 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[ObjectId],
 		[TemplateId],
 		[ObjectScope],
-		[AppGeneral].[funcConcatPath]([ObjectPath],[ObjectMember]) As [ObjectName],
+		[AppGeneral].[funcConcatPath]([ObjectPath],[ObjectMember]) As [ObjectPath],
 		[IsExcluded],
 		[KeepOrphaned],
 		-- Temporal Data

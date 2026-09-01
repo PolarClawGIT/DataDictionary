@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting TemplateObject Name Key
     /// </summary>
-    public interface ITemplateObjectKeyName: ITemplateKey
+    public interface ITemplateObjectKeyName: IKey
     {
         /// <summary>
         ///  Scope of the Object being referenced.
@@ -16,20 +16,23 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// The Object Name and Path being referenced.
         /// </summary>
-        String? ObjectName { get; }
+        String? ObjectPath { get; }
     }
 
     /// <summary>
     /// Implementation for the Scripting TemplateObject Name Key
     /// </summary>
-    public class TemplateObjectKeyName : TemplateKey, ITemplateObjectKeyName,
+    public class TemplateObjectKeyName : ITemplateObjectKeyName,
             IKeyComparable<ITemplateObjectKeyName>, IKeyComparable<TemplateObjectKeyName>
     {
         /// <inheritdoc/>
         public ScopeType ObjectScope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
-        public String ObjectName { get; init; } = string.Empty;
+        public String ObjectPath { get; init; } = string.Empty;
+
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return ObjectScope is ScopeType.Null || !String.IsNullOrEmpty(ObjectPath); } }
 
         /// <summary>
         /// Constructor for Scripting TemplateObject Name Key
@@ -39,15 +42,10 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting TemplateObject Name Key
         /// </summary>
-        protected TemplateObjectKeyName(ITemplateKey key): base(key) { }
-
-        /// <summary>
-        /// Constructor for Scripting TemplateObject Name Key
-        /// </summary>
-        public TemplateObjectKeyName(ITemplateObjectKeyName source) : base(source)
+        public TemplateObjectKeyName(ITemplateObjectKeyName source) : this()
         {
             ObjectScope = source.ObjectScope;
-            ObjectName = source.ObjectName??String.Empty;
+            ObjectPath = source.ObjectPath??String.Empty;
         }
 
         #region IEquatable, IComparable
@@ -56,11 +54,10 @@ namespace DataDictionary.DataLayer.AppScript
         {
             return
                 other is TemplateObjectKeyName &&
-                new TemplateKey(this).Equals(other) &&
-                !String.IsNullOrEmpty(ObjectName) &&
-                !String.IsNullOrEmpty(other.ObjectName) &&
+                !String.IsNullOrEmpty(ObjectPath) &&
+                !String.IsNullOrEmpty(other.ObjectPath) &&
                 ObjectScope.Equals(other.ObjectScope) &&
-                ObjectName.Equals(other.ObjectName, KeyExtension.CompareString);
+                ObjectPath.Equals(other.ObjectPath, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
@@ -75,7 +72,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Int32 CompareTo(TemplateObjectKeyName? other)
         {
             if (other is null) { return 1; }
-            else { return String.Compare(ObjectName, other.ObjectName, true); }
+            else { return String.Compare(ObjectPath, other.ObjectPath, true); }
         }
 
         /// <inheritdoc/>
@@ -112,11 +109,11 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), ObjectName.GetHashCode(KeyExtension.CompareString)); }
+        { return HashCode.Combine(base.GetHashCode(), ObjectPath.GetHashCode(KeyExtension.CompareString)); }
         #endregion
 
         /// <inheritdoc/>
         public override String ToString()
-        { return ObjectName; }
+        { return ObjectPath; }
     }
 }

@@ -2,13 +2,25 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ISchemaComposite,
+    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateObjectNameIndex, ISchemaComposite,
         IScopeType, ITemporal
-    { }
+    {
+        /// <summary>
+        /// File information to be used with the File Save/Open Dialog.
+        /// </summary>
+        IFileValue SchemaFile { get; }
+
+        /// <summary>
+        /// XML version of the File Contents.
+        /// </summary>
+        XDocument Content { get; }
+    }
 
     /// <inheritdoc/>
     public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue
@@ -28,6 +40,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
         /// <inheritdoc/>
+        public IFileValue SchemaFile { get; }
+
+        /// <inheritdoc/>
+        public XDocument Content
+        {
+            get;
+            set { field = value; OnPropertyChanged(nameof(Content)); }
+        } = new XDocument();
+
+        /// <inheritdoc/>
+        public Exception? ContentException
+        {
+            get;
+            set { field = value; OnPropertyChanged(nameof(ContentException)); }
+        }
+
+        /// <inheritdoc/>
         public SchemaDocumentValue() : base()
         {
             pathValue = new PathValue(this)
@@ -39,10 +68,32 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
             };
+
+            SchemaFile = new FileValue()
+            {
+                GetFileName = () => FileName ?? String.Empty,
+                SetFileName = (value) => FileName = value,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
+                GetContent = () =>
+                {
+                    if (Content.TryParse(out String? document))
+                    { return document; }
+                    else { return String.Empty; }
+                },
+                SetContent = (value) =>
+                {
+                    if (value.TryParse(out XDocument? document, out Exception? exception))
+                    {
+                        Content = document;
+                        ContentException = null;
+                    }
+                    else { Content = new XDocument(); ContentException = exception; }
+                }
+            };
         }
 
         /// <inheritdoc cref="SchemaDocumentItem.SchemaDocumentItem(ITemplateKey, ISchemaDefinitionKey)"/>
-        public SchemaDocumentValue(ISchemaComposite schema) : base(schema, schema)
+        public SchemaDocumentValue(ITemplateIndex template, ISchemaDefinitionIndex schema) : base(template, schema)
         {
             pathValue = new PathValue(this)
             {
@@ -53,7 +104,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
             };
+
+            SchemaFile = new FileValue()
+            {
+                GetFileName = () => FileName ?? String.Empty,
+                SetFileName = (value) => FileName = value,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
+            };
         }
+
 
     }
 }

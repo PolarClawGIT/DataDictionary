@@ -26,7 +26,6 @@ Begin Try
 		[ObjectId]			UniqueIdentifier Not NULL,
 		[TemplateId]		UniqueIdentifier Not NULL,
 		[ObjectScope]		[AppGeneral].[uddtScopeName] Null,
-		[ObjectName]		[AppGeneral].[uddtPath] Not Null,
 		[ObjectPath]		[AppGeneral].[uddtPath] Null,
 		[ObjectMember]		[AppGeneral].[uddtMember] Not Null,
 		[IsExcluded]		Bit Not Null,
@@ -37,26 +36,24 @@ Begin Try
 		Select	IIF(N.[IsBase] =1, D.[ObjectId], Null) As [ObjectId],
 				IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
 				IIF(N.[IsBase] =1, D.[ObjectScope], Null) As [ObjectScope],
-				N.[QualifiedName] As [ObjectName],
 				N.[ParentName] As [ObjectPath],
 				N.[MemberName] As [ObjectMember],
 				IIF(N.[IsBase] =1, D.[IsExcluded], Null) As [IsExcluded],
 				IIF(N.[IsBase] =1, D.[KeepOrphaned], Null) As [KeepOrphaned]
 		From	@Data D
-				Cross Apply [AppGeneral].[funcParseName](D.[ObjectName]) N),
+				Cross Apply [AppGeneral].[funcParseName](D.[ObjectPath]) N),
 	[Group] As (
 		Select	X.[ObjectId],
 				IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
 				D.[ObjectScope],
-				D.[ObjectName],
 				D.[ObjectPath],
 				D.[ObjectMember],
 				Convert(Bit,Max(Convert(TinyInt, IsNull(D.[IsExcluded],0))) Over (
-					Partition By D.[TemplateId], D.[ObjectName])) As [IsExcluded],
+					Partition By D.[TemplateId], D.[ObjectPath])) As [IsExcluded],
 				Convert(Bit,Max(Convert(TinyInt, IsNull(D.[KeepOrphaned],0))) Over (
-					Partition By D.[TemplateId], D.[ObjectName])) As [KeepOrphaned],
+					Partition By D.[TemplateId], D.[ObjectPath])) As [KeepOrphaned],
 				Dense_Rank() Over (
-					Partition By D.[TemplateId], D.[ObjectName]
+					Partition By D.[TemplateId], D.[ObjectPath]
 					Order By 
 						Case When D.[ObjectScope] is Not Null Then 0 Else 1 End,
 						Case When H.[ObjectId] is Not Null Then 0 Else 1 End,
@@ -72,7 +69,6 @@ Begin Try
 	Select	[ObjectId],
 			[TemplateId],
 			[ObjectScope],
-			[ObjectName],
 			[ObjectPath],
 			[ObjectMember],
 			[IsExcluded],
@@ -123,7 +119,7 @@ Begin Try
 		From	@Values C
 				Left Join @Values P
 				On	C.[TemplateId] = P.[TemplateId] And
-					C.[ObjectPath] = P.[ObjectName]
+					C.[ObjectPath] = P.[ObjectPath]
 		Except
 		Select	[ObjectId],
 				[TemplateId],
@@ -164,7 +160,7 @@ Begin Try
 	From	@Values S
 				Left Join @Values P
 				On	S.[TemplateId] = P.[TemplateId] And
-					S.[ObjectPath] = P.[ObjectName]
+					S.[ObjectPath] = P.[ObjectPath]
 			Left Join [AppScript].[TemplateObject] T
 			On	S.[ObjectId] = T.[ObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)

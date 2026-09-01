@@ -44,9 +44,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
             //TODO: This is messy. How do I get rid of this? What value does it add?
 
             /// <summary>
-            /// List of Child Properties of the Class and the builders to go with them.
+            /// Child XML Builders of the Class (PropertyInfo)
             /// </summary>
-            public Dictionary<PropertyInfo, XmlBuilder> Properties = new Dictionary<PropertyInfo, XmlBuilder>();
+            public Dictionary<PropertyInfo, XmlBuilder> Children = new Dictionary<PropertyInfo, XmlBuilder>();
 
             /// <summary>
             /// Specialized constructor for handling generic classes.
@@ -68,7 +68,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         ObjectType = GetObjectType(item)
                     };
 
-                    Properties.Add(item, child);
+                    Children.Add(item, child);
                 }
 
                 ObjectValueType GetObjectType(PropertyInfo info)
@@ -87,30 +87,30 @@ namespace DataDictionary.BusinessLayer.AppScripting
             /// <param name="source"></param>
             public ValueType(ValueType source) : base(source)
             {
-                foreach (var item in source.Properties)
-                { Properties.Add(item.Key, new XmlBuilder(item.Value)); }
+                foreach (var item in source.Children)
+                { Children.Add(item.Key, new XmlBuilder(item.Value)); }
             }
 
             /// <inheritdoc/>
-            public override XObject? Build<TMethod>(TMethod value)
-            {
-                XObject? result = base.Build(value);
+            //public override XObject? Build<TMethod>(TMethod value)
+            //{
+            //    XObject? result = base.Build(value);
 
-                if (result is XElement element)
-                {
-                    foreach (var item in Properties.Values)
-                    { element.Add(item.Build(value)); }
+            //    if (result is XElement element)
+            //    {
+            //        foreach (var item in Children.Values)
+            //        { element.Add(item.Build(value)); }
 
-                    return result;
-                }
-                else if (result is null) { return result; }
-                else
-                {
-                    Exception ex = new InvalidOperationException("XmlBuilder.Build returned something other then an XElement");
-                    ex.Data.Add(nameof(base.Build), result.GetType().Name);
-                    throw ex;
-                }
-            }
+            //        return result;
+            //    }
+            //    else if (result is null) { return result; }
+            //    else
+            //    {
+            //        Exception ex = new InvalidOperationException("XmlBuilder.Build returned something other then an XElement");
+            //        ex.Data.Add(nameof(base.Build), result.GetType().Name);
+            //        throw ex;
+            //    }
+            //}
         }
     }
 }
