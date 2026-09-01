@@ -90,51 +90,51 @@ namespace DataDictionary.BusinessLayer.AppScripting
             else { return false; }
         }
 
-        public static XElement? Build(
+        [Obsolete("POC, Does not work", true)]
+        public static XElement? Build<TItem>(
                 this IEnumerable<XmlBuilder> builders,
-                IEnumerable<IXmlBuilderIndex> items)
+                IEnumerable<TItem> items,
+                params IEnumerable<Func<TItem, XElement?>> forEachItem)
+        where TItem : class, IScopeType
         {
-            XElement root = new XElement("root");
-            List<IXmlBuilderIndex> itemList = items.ToList(); // To Protect against add/delete in the middle of the process.
+            // TODO: Working on revised logic of Build. Not dependent on Scope of the root.
+            // Pass to the child node function the parent?
 
+            XElement? root = null;
+            List<TItem> itemList = items.ToList(); // To Protect against add/delete in the middle of the process.
 
-            if (itemList.Count == 0)
-            { return null; }
-            else if (itemList.TryGetSingle(out IXmlBuilderIndex? value))
+            foreach (TItem item in items)
             {
-                XmlBuilderIndex rootKey = new XmlBuilderIndex(value);
-                if (builders.TryGetXmlBuilder(rootKey, out XmlBuilder? builder))
+                XmlBuilderIndex key = new XmlBuilderIndex(item.Scope);
+                if (builders.TryGetXmlBuilder(key, out XmlBuilder? builder))
                 {
-                    XObject? xObject = builder.Build(value);
+                    XObject? node = builder.Build(item);
 
-                    if (xObject is XElement element)
+                    if (root is null)
                     {
-                        root = element;
-
-                        foreach (var item in builders.Where(w => rootKey.MemberFullPath.Equals(w.BuilderPath.ParentPath)))
-                        { element.Add(item.Build(value)); }
-                    }
-                    else
-                    {
-                        root = new XElement(builder.NodeName);
-                        root.Add(xObject);
+                        root = new XElement(item.Scope.GetName());
+                        root.Add(node);
                     }
 
-                    return root;
-                }
-                else { return null; }
-            }
-            else
-            {
-                foreach (var item in items)
-                {
+                    foreach (XmlBuilder child in builders.
+                        Where(w => key.ObjectScope.Equals(w.ObjectScope) && !String.IsNullOrWhiteSpace(w.ObjectProperty)))
+                    {
+                        if (node is XElement parentNode)
+                        { parentNode.Add(child.Build(item)); }
+                    }
 
+                    foreach (var childNode in forEachItem)
+                    {
+                        XElement? childValue = childNode(item);
+                        if (childValue is not null && node is XElement parentNode)
+                        { parentNode.Add(childValue); }
+                    }
                 }
             }
 
-
-            throw new NotFiniteNumberException();
+            return root;
         }
+
 
         /// <summary>
         /// Generic XElement that the specific builder are based on.
@@ -146,6 +146,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="roots"></param>
         /// <param name="children"></param>
         /// <returns></returns>
+        [Obsolete("The structure of the builder list has changed. Does not work.",true)]
         public static XElement? Build<TRoot, TChild>(this IEnumerable<XmlBuilder> builders, ScopeType scope, IEnumerable<TRoot> roots,
                 params IEnumerable<(ScopeType scope, IEnumerable<TChild> values, Func<TRoot, TChild, Boolean> filter)> children)
                 where TRoot : class, IScopeType
@@ -180,9 +181,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                             root = new XElement(builder.NodeName);
                             root.Add(node);
                         }
-
-
-
 
                         foreach (var child in children)
                         {
@@ -236,8 +234,120 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return root;
         }
 
+        static XElement Build<TRoot, TChild>(
+                IEnumerable<XmlBuilder> builders,
+                IEnumerable<TRoot> rootMembers,
+                params IEnumerable<(IEnumerable<TChild> values, Func<TRoot, TChild, Boolean> filter)> childMembers)
+                where TRoot : class, IScopeType
+                where TChild : class, IScopeType
+        {
+            XElement? rootNode = null;
+
+            var elementKeys = rootMembers.
+                Select(s => new XmlBuilderIndex(s.Scope)).
+                Distinct().
+                OrderBy(o => o).
+                ToList();
+
+            foreach (var elementKey in elementKeys)
+            {
+                var rootItems = rootMembers.
+                    Where(w => elementKey.Equals(new XmlBuilderIndex(w.Scope))).
+                    ToList();
+
+                foreach (var rootItem in rootItems)
+                {
+                    XElement? elementRoot = null;
+
+                    var elementBuilders = builders.
+                        Where(w => rootItem.Scope == w.ObjectScope).
+                        OrderBy(o => o.BuilderPath.ParentPath).
+                        ThenBy(o => o.RenderOrder).
+                        ThenBy(o => o.NodeName).
+                        ToList();
+
+                    foreach (var builder in elementBuilders)
+                    {
+                        XObject? elementNode = builder.Build(rootItem);
+
+                        if (elementRoot is null && elementNode is XElement rootElement)
+                        { elementRoot = new XElement(rootElement); }
+                        else if (elementRoot is null)
+                        {
+                            elementRoot = new XElement(builder.BuilderPath.Member);
+                            elementRoot.Add(elementNode);
+                        }
+                        else
+                        { elementRoot.Add(elementNode); }
+                    }
+
+                    foreach (var childMember in childMembers)
+                    {
+                        XElement? elementChild = null;
+
+                        var childValues = childMember.values.
+                            Where(w => childMember.filter(rootItem, w)).
+                            ToList();
+
+                        var childKeys = childValues.
+                            Select(s => new XmlBuilderIndex(s.Scope)).
+                            Distinct().
+                            OrderBy(o => o).
+                            ToList();
+
+                        foreach (var childKey in childKeys)
+                        {
+                            var childItems = childValues.Where(w => childKey.Equals(new XmlBuilderIndex(w.Scope)));
+
+                            foreach (var childItem in childItems)
+                            {
+                                var childBuilders = builders.
+                                     Where(w => childItem.Scope == w.ObjectScope).
+                                     OrderBy(o => o.BuilderPath.ParentPath).
+                                     ThenBy(o => o.RenderOrder).
+                                     ThenBy(o => o.NodeName).
+                                     ToList();
+
+                                foreach (var childBuilder in childBuilders)
+                                {
+                                    XObject? childNode = childBuilder.Build(childItem);
+
+                                    if (elementChild is null && childNode is XElement rootElement)
+                                    { elementChild = new XElement(rootElement); }
+                                    else if (elementChild is null && childNode is not null)
+                                    {
+                                        elementChild = new XElement(childBuilder.BuilderPath.Member);
+                                        elementChild.Add(childNode);
+                                    }
+                                    else if (elementChild is not null)
+                                    { elementChild.Add(childNode); }
+                                }
+                            }
+                        }
+
+                        if (elementRoot is not null)
+                        { elementRoot.Add(elementChild); }
+                        else { throw new InvalidOperationException(); } // Should never occur.
+                    }
+
+                    if (rootNode is null && rootItems.Count == 1)
+                    { rootNode = elementRoot; }
+                    else if (rootNode is null)
+                    {
+                        rootNode = new XElement("root");
+                        rootNode.Add(elementRoot);
+                    }
+
+                }
+            }
+
+            if (rootNode is null)
+            { return new XElement("root"); }
+            else { return rootNode; }
+        }
+
         /// <summary>
-        /// XElement build for AttributeValue.
+        /// XElement builder for AttributeValue
         /// </summary>
         /// <param name="builders"></param>
         /// <param name="attributes"></param>
@@ -247,13 +357,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IEnumerable<AttributeValue> attributes,
                 IEnumerable<AttributePropertyValue> properties)
         {
-            XElement? result = builders.Build<AttributeValue, IAttributeIndex>(ScopeType.ModelAttribute, attributes,
-                        (ScopeType.ModelAttributeProperty, properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c)))
-                        );
+            XElement result = Build<AttributeValue, AttributePropertyValue>(
+                builders,
+                attributes,
+                (properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c))
+                ));
 
-            if (result is XElement) { return result; }
-            else { return new XElement(ScopeType.ModelAttribute.GetName()); }
+            return result;
         }
-
     }
 }

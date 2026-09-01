@@ -92,25 +92,25 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
 
             /// <inheritdoc/>
-            public override XObject? Build<TMethod>(TMethod value)
-            {
-                XObject? result = base.Build(value);
+            //public override XObject? Build<TMethod>(TMethod value)
+            //{
+            //    XObject? result = base.Build(value);
 
-                if (result is XElement element)
-                {
-                    foreach (var item in Children.Values)
-                    { element.Add(item.Build(value)); }
+            //    if (result is XElement element)
+            //    {
+            //        foreach (var item in Children.Values)
+            //        { element.Add(item.Build(value)); }
 
-                    return result;
-                }
-                else if (result is null) { return result; }
-                else
-                {
-                    Exception ex = new InvalidOperationException("XmlBuilder.Build returned something other then an XElement");
-                    ex.Data.Add(nameof(base.Build), result.GetType().Name);
-                    throw ex;
-                }
-            }
+            //        return result;
+            //    }
+            //    else if (result is null) { return result; }
+            //    else
+            //    {
+            //        Exception ex = new InvalidOperationException("XmlBuilder.Build returned something other then an XElement");
+            //        ex.Data.Add(nameof(base.Build), result.GetType().Name);
+            //        throw ex;
+            //    }
+            //}
         }
     }
 }
