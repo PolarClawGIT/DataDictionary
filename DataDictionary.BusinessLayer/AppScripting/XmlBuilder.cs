@@ -138,6 +138,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <summary>
+        /// Provides a place to store the thing that was used to build the XMLBuilder.
+        /// </summary>
+        /// <remarks>This is for debugging. It really does not have any application purpose.</remarks>
+        public virtual Object? BuilderSource { get; protected set; }
+
+        /// <summary>
         /// Basic XmlBuilder constructor. The value is set to the ToString of the Build object.
         /// </summary>
         /// <param name="scope"></param>
@@ -163,6 +169,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             ObjectProperty = source.ObjectProperty;
             ObjectType = source.ObjectType;
+            BuilderSource = source.BuilderSource;
             RenderTypeCode = source.RenderTypeCode;
             RenderNodeType = source.RenderNodeType;
             RenderOrder = source.RenderOrder;
@@ -244,11 +251,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc cref="ICloneable.Clone"/>
         public XmlBuilder Clone()
-        {
-            if (this is ValueType valueType) { return new ValueType(valueType); }
-            else if (this is PropertyType propertyType) { return new PropertyType(propertyType); }
-            else { return new XmlBuilder(this); }
-        }
+        { return new XmlBuilder(this); }
 
         /// <summary>
         /// Returns a list of Supported ScopeTypes
