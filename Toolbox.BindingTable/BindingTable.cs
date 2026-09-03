@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections;
 using System.ComponentModel;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Toolbox.BindingTable
 {
@@ -19,7 +12,9 @@ namespace Toolbox.BindingTable
     /// When an item is added to the collection, a copy of the original data row is used.
     /// The added item then wrappers the copy of the row.
     /// </remarks>
-    public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>, IBindingList<TBindingItem>
+    public class BindingTable<TBindingItem> :
+        BindingList<TBindingItem>, IBindingTable<TBindingItem>, IBindingList<TBindingItem>,
+        IDataErrorInfo, INotifyDataErrorInfo
         where TBindingItem : BindingTableRow, IBindingPropertyChanged, IBindingTableRow, new()
     {
         /// <summary>
@@ -88,9 +83,6 @@ namespace Toolbox.BindingTable
         #endregion
 
         #region DataTable
-        /// <inheritdoc cref="DataTable.HasErrors"/>
-        public virtual Boolean HasErrors { get { return dataItems.HasErrors; } }
-
         public virtual void Load(IDataReader reader)
         { this.Load(reader, LoadOption.PreserveChanges, null); }
 
@@ -113,23 +105,23 @@ namespace Toolbox.BindingTable
                 // Validation Check
                 List<String> columnNames = dataItems.Columns.Cast<DataColumn>().Select(s => s.ColumnName).
                     Union(newData.Columns.Cast<DataColumn>().Select(s => s.ColumnName)).ToList();
-                InvalidOperationException? coloumMismatch = null;
+                InvalidOperationException? columnMismatch = null;
 
                 foreach (String item in columnNames)
                 {
                     if (!dataItems.Columns.Contains(item) || !newData.Columns.Contains(item))
                     {
-                        if (coloumMismatch is null)
+                        if (columnMismatch is null)
                         {
-                            coloumMismatch = new InvalidOperationException("Column Name not found");
-                            coloumMismatch.Data.Add(nameof(dataItems.TableName), dataItems.TableName);
+                            columnMismatch = new InvalidOperationException("Column Name not found");
+                            columnMismatch.Data.Add(nameof(dataItems.TableName), dataItems.TableName);
                         }
 
-                        coloumMismatch.Data.Add(item, String.Format("Target- {0}, Source- {1}", dataItems.Columns.Contains(item), newData.Columns.Contains(item)));
+                        columnMismatch.Data.Add(item, String.Format("Target- {0}, Source- {1}", dataItems.Columns.Contains(item), newData.Columns.Contains(item)));
                     }
                 }
 
-                if (coloumMismatch is not null) { throw coloumMismatch; }
+                if (columnMismatch is not null) { throw columnMismatch; }
 
                 // Transfer the work table to the data table, building the Binding Rows as we go.
                 foreach (DataRow row in newData.Rows)
@@ -161,22 +153,22 @@ namespace Toolbox.BindingTable
             }
         }
 
-        public virtual Boolean Load(DataSet source, String? tableName = null, Boolean isSkipable = false)
+        public virtual Boolean Load(DataSet source, String? tableName = null, Boolean isSkippable = false)
         {
-            String? fullame = GetType().FullName;
+            String? fullName = GetType().FullName;
             String shortName = GetType().Name;
             String loadTable = String.Empty;
 
             if (!String.IsNullOrWhiteSpace(tableName) && source.Tables.Contains(tableName))
             { loadTable = tableName; }
-            else if (fullame is String && source.Tables.Contains(fullame))
-            { loadTable = fullame; }
+            else if (fullName is String && source.Tables.Contains(fullName))
+            { loadTable = fullName; }
             else if (source.Tables.Contains(shortName))
             { loadTable = shortName; }
-            else if (!isSkipable)
+            else if (!isSkippable)
             {
                 Exception ex = new ArgumentNullException(nameof(tableName), "Could not determine table name to load");
-                ex.Data.Add(nameof(Type.FullName), fullame);
+                ex.Data.Add(nameof(Type.FullName), fullName);
                 ex.Data.Add(nameof(Type.Name), shortName);
                 throw ex;
             }
@@ -187,10 +179,10 @@ namespace Toolbox.BindingTable
                 Load(data.CreateDataReader());
                 return true;
             }
-            else if (!isSkipable)
+            else if (!isSkippable)
             {
                 Exception ex = new InvalidOperationException("Expected TableName not found");
-                ex.Data.Add(nameof(Type.FullName), fullame);
+                ex.Data.Add(nameof(Type.FullName), fullName);
                 ex.Data.Add(nameof(Type.Name), shortName);
                 ex.Data.Add(nameof(loadTable), loadTable);
                 throw ex;
@@ -408,8 +400,8 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Backing attribute for SortPropertyCore property.
         /// </summary>
-        PropertyDescriptor? sortProrty = null;
-        protected override PropertyDescriptor? SortPropertyCore { get { return sortProrty; } }
+        PropertyDescriptor? sortProperty = null;
+        protected override PropertyDescriptor? SortPropertyCore { get { return sortProperty; } }
 
         /// <summary>
         /// Sets the behavior of String Comparisons for Sort and Search on Properties
@@ -491,7 +483,7 @@ namespace Toolbox.BindingTable
         protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
         {
             sortDirection = direction;
-            sortProrty = prop;
+            sortProperty = prop;
 
             List<TBindingItem> newOrder = this.Order(Comparer).ToList();
 
@@ -520,7 +512,7 @@ namespace Toolbox.BindingTable
         /// </remarks>
         protected override void RemoveSortCore()
         {
-            sortProrty = null;
+            sortProperty = null;
 
             List<TBindingItem> newOrder = new List<TBindingItem>();
 
@@ -551,7 +543,7 @@ namespace Toolbox.BindingTable
         /// <returns></returns>
         protected override int FindCore(PropertyDescriptor prop, Object key)
         {
-            //TODO: This is probably incomplete and may not work. Check for IEquatable and handle String with StringComparison.
+            //TODO: This is probably incomplete and may not work. Check for IEquitable and handle String with StringComparison.
             if (this.FirstOrDefault(w => prop.GetValue(w) == key) is TBindingItem value)
             { return this.IndexOf(value); }
             else { return -1; }
@@ -602,6 +594,43 @@ namespace Toolbox.BindingTable
             GC.SuppressFinalize(this);
         }
 
+        #endregion
+
+        #region Error Notification
+        // This is an attempt to catch more of the DataBinding Errors.
+        // The problem is that I don't know what to do because the documentation is for custom exceptions.
+        // But, at best, the error comes from the DataTable (dataItems).
+        // At this point, I am just throwing exceptions to know when/if it is called.
+        // I have yet to catch any calls except to HasErrors.
+
+        /// <inheritdoc cref="IDataErrorInfo.Error"/>
+        String IDataErrorInfo.Error
+        {
+            get
+            { throw new NotImplementedException(); }
+        }
+
+        /// <inheritdoc cref="IDataErrorInfo"/>
+        String IDataErrorInfo.this[String columnName]
+        {
+            get
+            { throw new NotImplementedException(); }
+        }
+
+        /// <inheritdoc cref="INotifyDataErrorInfo.GetErrors"/>
+        IEnumerable INotifyDataErrorInfo.GetErrors(String? propertyName)
+        { throw new NotImplementedException(); }
+
+        /// <inheritdoc cref="INotifyDataErrorInfo.ErrorsChanged"/>
+        event EventHandler<DataErrorsChangedEventArgs>? INotifyDataErrorInfo.ErrorsChanged
+        {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
+        }
+
+        /// <inheritdoc cref="INotifyDataErrorInfo.HasErrors"/>
+        /// <inheritdoc cref="DataTable.HasErrors"/>
+        public virtual Boolean HasErrors { get { return dataItems.HasErrors; } }
         #endregion
 
         #region ICloneable

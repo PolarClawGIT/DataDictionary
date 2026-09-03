@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.ComponentModel;
 
 namespace Toolbox.BindingTable
 {
@@ -14,7 +15,8 @@ namespace Toolbox.BindingTable
     /// ChangedList events are fired after the data has been inserted/removed in both lists.
     /// The base BindingList occurs first followed by the BindingView events.
     /// </remarks>
-    public class BindingView<TRow> : BindingList<TRow>
+    public class BindingView<TRow> : BindingList<TRow>,
+        IDataErrorInfo, INotifyDataErrorInfo
         where TRow : class, IBindingPropertyChanged
     {
         Func<Int32> BaseCount { get; set; }
@@ -27,7 +29,8 @@ namespace Toolbox.BindingTable
         Func<TRow, Boolean> FilterBy { get; set; }
         Func<TRow, Object> OrderBy { get; set; }
 
-        List<TRow> directAdd = new List<TRow>(); // Contains a list of items added directly to the BindingView so they are not filterd out.
+        // Contains a list of items added directly to the BindingView so they are not filtered out.
+        List<TRow> directAdd = new List<TRow>(); 
 
         /// <summary>
         /// Constructor for a BindingView.
@@ -221,5 +224,41 @@ namespace Toolbox.BindingTable
             { OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1)); }
         }
 
+
+        #region Error Notification
+        // This is an attempt to catch more of the DataBinding Errors.
+        // The problem is that I don't know what to do because the documentation is for custom exceptions.
+        // But, at best, the error comes from the DataTable (dataItems).
+        // At this point, I am just throwing exceptions to know when/if it is called.
+        // I have yet to catch any calls to these.
+
+        /// <inheritdoc cref="IDataErrorInfo.Error"/>
+        String IDataErrorInfo.Error
+        {
+            get
+            { throw new NotImplementedException(); }
+        }
+
+        /// <inheritdoc cref="IDataErrorInfo"/>
+        String IDataErrorInfo.this[String columnName]
+        {
+            get
+            { throw new NotImplementedException(); }
+        }
+
+        /// <inheritdoc cref="INotifyDataErrorInfo.GetErrors"/>
+        IEnumerable INotifyDataErrorInfo.GetErrors(String? propertyName)
+        { throw new NotImplementedException(); }
+
+        /// <inheritdoc cref="INotifyDataErrorInfo.ErrorsChanged"/>
+        event EventHandler<DataErrorsChangedEventArgs>? INotifyDataErrorInfo.ErrorsChanged
+        {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
+        }
+
+        /// <inheritdoc cref="INotifyDataErrorInfo.HasErrors"/>
+        public virtual Boolean HasErrors { get { throw new NotImplementedException(); } }
+        #endregion
     }
 }
