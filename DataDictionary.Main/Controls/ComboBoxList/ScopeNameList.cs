@@ -29,6 +29,9 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.DataSource = list;
             control.ValueMember = nameof(scopeNameItem.ScopeType);
             control.DisplayMember = nameof(scopeNameItem.ScopeName);
+
+            if (control.DropDownStyle is ComboBoxStyle.DropDownList)
+            { control.SelectedValue = list.First(); }
         }
 
         /// <inheritdoc cref="Load(ComboBox)"/>
@@ -52,6 +55,9 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.DataSource = list;
             control.ValueMember = nameof(scopeNameItem.ScopeType);
             control.DisplayMember = nameof(scopeNameItem.ScopeName);
+
+            if (control.DropDownStyle is ComboBoxStyle.DropDownList)
+            { control.SelectedValue = list.First(); }
         }
 
         /// <inheritdoc cref="Load(ComboBox)"/>

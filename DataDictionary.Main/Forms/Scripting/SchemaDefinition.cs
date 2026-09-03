@@ -118,7 +118,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 // Document Tab
                 ScopeNameList.Load(documentBuildScope, XmlBuilder.SupportedScopes());
-                formBinding.SchemaData.AddBinding(documentBuildScope, e => e.ForEachScope);
+                formBinding.SchemaData.AddBinding(documentBuildScope, e => e.ForEachScope); // TODO: Suspected databinding issue. Think Fixed.
 
                 documentOpenCommand.Enabled = false;
                 documentDeleteCommand.Enabled = false;
@@ -299,12 +299,14 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.BuilderData.TryGetValue(out XmlBuilderNode? value))
             {
+                nodeNameData.Enabled = value.SchemaNode is not null;
                 nodeRenderGroup.Enabled = value.SchemaNode is not null;
                 nodeNewCommand.Enabled = value.SchemaNode is null;
                 nodeDeleteCommand.Enabled = value.SchemaNode is not null;
             }
             else
             {   // Should not occur. No selected Node.
+                nodeNameData.Enabled = false;
                 nodeRenderGroup.Enabled = false;
                 nodeNewCommand.Enabled = false;
                 nodeDeleteCommand.Enabled = false;

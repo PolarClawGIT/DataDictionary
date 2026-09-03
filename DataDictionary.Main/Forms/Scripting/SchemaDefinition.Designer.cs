@@ -74,14 +74,14 @@
             documentOpenCommand = new ToolStripButton();
             documentDeleteCommand = new ToolStripButton();
             documentData = new DataGridView();
+            objectPathColumn = new DataGridViewTextBoxColumn();
+            FileNameColumn = new DataGridViewTextBoxColumn();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             bindingSchema = new BindingSource(components);
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
             bindingNode = new BindingSource(components);
             bindingDocument = new BindingSource(components);
-            objectPathColumn = new DataGridViewTextBoxColumn();
-            FileNameColumn = new DataGridViewTextBoxColumn();
             schemaLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -694,6 +694,22 @@
             documentData.Size = new Size(556, 458);
             documentData.TabIndex = 9;
             // 
+            // objectPathColumn
+            // 
+            objectPathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            objectPathColumn.DataPropertyName = "ObjectPath";
+            objectPathColumn.HeaderText = "Object";
+            objectPathColumn.Name = "objectPathColumn";
+            objectPathColumn.ReadOnly = true;
+            // 
+            // FileNameColumn
+            // 
+            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            FileNameColumn.DataPropertyName = "FileName";
+            FileNameColumn.HeaderText = "File Name";
+            FileNameColumn.Name = "FileNameColumn";
+            FileNameColumn.ReadOnly = true;
+            // 
             // schemaTitleData
             // 
             schemaTitleData.AutoSize = true;
@@ -714,22 +730,6 @@
             // bindingDocument
             // 
             bindingDocument.CurrentChanged += BindingDocument_CurrentChanged;
-            // 
-            // objectPathColumn
-            // 
-            objectPathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            objectPathColumn.DataPropertyName = "ObjectPath";
-            objectPathColumn.HeaderText = "Object";
-            objectPathColumn.Name = "objectPathColumn";
-            objectPathColumn.ReadOnly = true;
-            // 
-            // FileNameColumn
-            // 
-            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            FileNameColumn.DataPropertyName = "FileName";
-            FileNameColumn.HeaderText = "File Name";
-            FileNameColumn.Name = "FileNameColumn";
-            FileNameColumn.ReadOnly = true;
             // 
             // SchemaDefinition
             // 

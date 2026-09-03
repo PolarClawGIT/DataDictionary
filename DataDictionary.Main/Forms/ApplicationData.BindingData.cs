@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Reflection;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
@@ -82,6 +83,14 @@ namespace DataDictionary.Main.Forms
 
                         ex.Data.Add(nameof(source.Count), source.Count);
                         ex.Data.Add(nameof(source.Position), source.Position);
+
+                        if (source.Current is not null)
+                        {
+                            List<PropertyInfo> properties = source.Current.GetType().GetProperties().ToList();
+
+                            foreach (var item in properties)
+                            { ex.Data.Add(item.Name, item.GetValue(source.Current)); }
+                        }
                     }
 
                     throw ex;
