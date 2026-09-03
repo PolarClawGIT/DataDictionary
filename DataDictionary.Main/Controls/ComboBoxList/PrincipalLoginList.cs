@@ -48,7 +48,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.PrincipalLogin));
                 },
                 orderBy: (o) => o.PrincipalLogin,
-                areEquel: (a, b) => new PrincipalIndex(a).Equals(b),
+                areEqual: (a, b) => new PrincipalIndex(a).Equals(b),
                 emptyValue: () => new PrincipalLoginList(emptyText));
 
             return comboList;

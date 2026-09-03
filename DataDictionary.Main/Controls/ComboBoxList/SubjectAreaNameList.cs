@@ -48,7 +48,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.SubjectAreaTitle));
                 },
                 orderBy: (o) => o.SubjectAreaTitle,
-                areEquel: (a, b) => new SubjectAreaIndex(a).Equals(b),
+                areEqual: (a, b) => new SubjectAreaIndex(a).Equals(b),
                 emptyValue: () => new SubjectAreaNameList(emptyText));
 
             return comboList;

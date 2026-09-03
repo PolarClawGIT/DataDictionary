@@ -12,7 +12,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
     class BindingComboList<T> : BindingList<T>
     {
         /// <summary>
-        /// Binds the Combobox control
+        /// Binds the ComboBox control
         /// </summary>
         /// <param name="control"></param>
         /// <param name="valueMember"></param>
@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Binds the ComboboxData control
+        /// Binds the ComboBoxData control
         /// </summary>
         /// <param name="control"></param>
         /// <param name="valueMember"></param>
@@ -65,7 +65,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <param name="onItemChanged"></param>
         /// <param name="filterBy"></param>
         /// <param name="orderBy"></param>
-        /// <param name="areEquel"></param>
+        /// <param name="areEqual"></param>
         /// <param name="emptyValue"></param>
         public void BuildList<TSource>(
             IBindingList<TSource> source,
@@ -73,13 +73,13 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             Action<TSource, T>? onItemChanged = null,
             Func<TSource, Boolean>? filterBy = null,
             Func<T, Object>? orderBy = null,
-            Func<T, T, Boolean>? areEquel = null,
+            Func<T, T, Boolean>? areEqual = null,
             Func<T>? emptyValue = null)
             where TSource : IBindingPropertyChanged
         {
             filterBy = filterBy ?? (f => 1 == 1);
             orderBy = orderBy ?? (o => 1);
-            areEquel = areEquel ?? ((a, b) => false);
+            areEqual = areEqual ?? ((a, b) => false);
             onItemChanged = onItemChanged ?? ((t, s) => { });
             Func<IReadOnlyList<T>> getList = () => source.
                     Where(w => filterBy(w)).
@@ -87,7 +87,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                     OrderBy(orderBy).
                     ToList().
                     AsReadOnly();
-
+            
             Boolean isRaised = RaiseListChangedEvents;
             RaiseListChangedEvents = false;
             T? emptyItem = default;
@@ -113,7 +113,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         isRaised = RaiseListChangedEvents;
                         RaiseListChangedEvents = false;
                         this.RemoveRange(this.
-                            Where(w => !(emptyItem is not null && areEquel(w, emptyItem))));
+                            Where(w => !(emptyItem is not null && areEqual(w, emptyItem))));
 
                         this.AddRange(getList());
 
@@ -134,7 +134,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                             ToList();
 
                         List<T> current = this.
-                            Where(w => !(emptyItem is not null && areEquel(w, emptyItem))).
+                            Where(w => !(emptyItem is not null && areEqual(w, emptyItem))).
                             ToList();
 
                         this.RemoveRange(current.Except(disired));
@@ -144,7 +144,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         {
                             T itemChanged = constructor(source[e.NewIndex]);
 
-                            foreach (T item in this.Where(w => areEquel(w, itemChanged)).ToList())
+                            foreach (T item in this.Where(w => areEqual(w, itemChanged)).ToList())
                             { onItemChanged(source[e.NewIndex], item); }
 
                             SortBy(orderBy);
