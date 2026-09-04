@@ -118,7 +118,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 // Document Tab
                 ScopeNameList.Load(documentBuildScope, XmlBuilder.SupportedScopes());
-                formBinding.SchemaData.AddBinding(documentBuildScope, e => e.ForEachScope); // TODO: Suspected databinding issue. Think Fixed.
+                formBinding.SchemaData.AddBinding(documentBuildScope, e => e.ForEachScope, ScopeNameList.NullValue); // TODO: Suspected databinding issue. Think Fixed.
 
                 documentOpenCommand.Enabled = false;
                 documentDeleteCommand.Enabled = false;

@@ -538,20 +538,16 @@ namespace DataDictionary.Main.Forms
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 ComboBox formControl,
-                Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression)); }
+                Expression<Func<TRow, TProperty>> expression,
+                TProperty nullValue)
+            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression, nullValue)); }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 ToolStripComboBox formControl,
-                Expression<Func<TRow, TProperty>> expression)
-            { AddBinding(formControl.ComboBox, expression); }
-
-            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
-            public virtual void AddBinding<TProperty>(
-                ComboBoxData formControl,
-                Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression)); }
+                Expression<Func<TRow, TProperty>> expression,
+                TProperty nullValue)
+            { AddBinding(formControl.ComboBox, expression, nullValue); }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
