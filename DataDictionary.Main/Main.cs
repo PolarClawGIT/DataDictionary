@@ -171,7 +171,7 @@ namespace DataDictionary.Main
             // Handle Splash timer timed out.
             void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
             {
-                if (dataLoaded)
+                if (dataLoaded && !IsDisposed)
                 { this.Invoke(() => { if (!splashScreen.IsDisposed) { splashScreen.Close(); } }); }
 
                 splashTimer.Elapsed -= MinTime_Elapsed;
