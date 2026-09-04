@@ -154,8 +154,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandButtons[ButtonType.SaveDatabase].Enabled = false;
                 CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
             }
-
-            SetAuthorization(formBinding.Authorize);
         }
     }
 }

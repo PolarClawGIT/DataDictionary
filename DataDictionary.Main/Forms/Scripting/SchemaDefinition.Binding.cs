@@ -31,7 +31,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 DocumentData = new DataBinding<SchemaDocumentValue>(documentBinding, () => GetData().SchemaDocuments);
                 schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes,w => 1==2);
                 BuilderData = new DataBinding<XmlBuilderNode>(nodeBinding, () => nodeValues);
-                
 
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);

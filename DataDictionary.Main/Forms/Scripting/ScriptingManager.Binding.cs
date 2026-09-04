@@ -24,6 +24,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 ManagerData = new DataBinding<BindingValue>(managerBinding, () => managerValues);
                 modelData.ListChanged += ModelData_ListChanged;
 
+                GetLocked = ManagerData.GetLocked;
+                GetAuthorization = () => ManagerData.GetAuthorization(BusinessData.Authorization);
+
                 void ModelData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
                     if (e.ListChangedType is

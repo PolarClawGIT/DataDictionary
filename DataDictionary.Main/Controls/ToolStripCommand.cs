@@ -188,7 +188,7 @@ namespace DataDictionary.Main.Controls
         public void Refresh()
         {
             if (AllowEnabled())
-            { Control.Enabled = true && Enabled; }
+            { Control.Enabled = Enabled; }
             else { Control.Enabled = false; }
         }
 
