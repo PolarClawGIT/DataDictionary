@@ -6,10 +6,7 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
-using System.Collections;
 using System.ComponentModel;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -77,10 +74,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(localPathData, e => e.SchemaDirectory.InitialDirectory);
 
                 ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
-                formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
+                formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
-                formBinding.DocumentData.AddBinding(documentFileData, e => e.SchemaFile.FileName);
-                formBinding.DocumentData.AddBinding(documentContentData, e => e.Content);
+                formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName);
+                formBinding.DocumentData.AddBinding(documentContentData, e => e.FileContent);
 
                 ValidateFile();
             }
@@ -92,7 +89,7 @@ namespace DataDictionary.Main.Forms.Scripting
             base.OpenCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+                && ValidateFile())
             { DoWork(file.Open(directory), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
@@ -107,7 +104,7 @@ namespace DataDictionary.Main.Forms.Scripting
             base.SaveCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+                && ValidateFile())
             { DoWork(file.Save(directory), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
@@ -117,12 +114,27 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void DocumentFileData_SelectCommand(object sender, EventArgs e)
+        {
+            openFileDialog.Title = "Select file";
+            openFileDialog.CheckFileExists = false;
+
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
+                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            {
+                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                { file.FileName = openFileDialog.FileName; }
+                else
+                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName); }
+            }
+        }
+
         protected override void ExportCommand_Click(Object? sender, EventArgs e)
         {
             base.ExportCommand_Click(sender, e);
 
             formBinding.BuildFileContent();
-            //throw new NotImplementedException();
+            ValidateFile();
         }
 
         private void ObjectNameData_SelectCommand(object sender, EventArgs e)
@@ -138,13 +150,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     dialog.BuildData(new List<PathIndex>() { new PathIndex(fileValue.ObjectPath) });
 
-                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    if (dialog.ShowDialog(this) is DialogResult.OK
+                        && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))
                     {
-                        INamedScopeValue selected = dialog.SelectedByNamedScope().Single();
                         fileValue.ObjectPath = selected.Path.MemberFullPath;
                         fileValue.ObjectScope = selected.Scope;
 
-                        if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
+                        if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
                         {
                             fileValue.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
                             ValidateFile();
@@ -160,19 +172,32 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DocumentFileData_Validated(object sender, EventArgs e)
         { ValidateFile(); }
 
-        private void ValidateFile()
+        private Boolean ValidateFile()
         {
+            Boolean result = true;
+
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
 
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
                 && schemaValue.SchemaDirectory.IsInvalid(out Exception? directoryEx))
-            { errorProvider.SetError(localPathData.ErrorControl, directoryEx); }
+            { errorProvider.SetError(localPathData.ErrorControl, directoryEx); result = false; }
 
             errorProvider.SetError(documentFileData.ErrorControl, String.Empty);
+            errorProvider.SetError(documentContentData.ErrorControl, String.Empty);
 
-            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue)
-                && fileValue.SchemaFile.IsInvalid(out Exception? fileEx))
-            { errorProvider.SetError(documentFileData.ErrorControl, fileEx); }
+            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
+            {
+                if (fileValue.IsInvalid(out Exception? fileEx))
+                { errorProvider.SetError(documentFileData.ErrorControl, fileEx); result = false; }
+
+                if (fileValue.ContentException is not null)
+                { errorProvider.SetError(documentContentData.ErrorControl, fileValue.ContentException); result = false; }
+            }
+
+            return result;
         }
+
+        private void DocumentContentData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
     }
 }

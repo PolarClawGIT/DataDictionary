@@ -43,7 +43,7 @@
             objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            documentFileData = new DataDictionary.Main.Controls.TextBoxData();
+            documentFileData = new DataDictionary.Main.Controls.SelectTextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingDocument = new BindingSource(components);
@@ -114,6 +114,7 @@
             documentContentData.Size = new Size(502, 243);
             documentContentData.TabIndex = 6;
             documentContentData.WordWrap = false;
+            documentContentData.Validated += DocumentContentData_Validated;
             // 
             // objectGroupBox
             // 
@@ -250,16 +251,16 @@
             // documentFileData
             // 
             documentFileData.AutoSize = true;
+            documentFileData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             documentFileData.Dock = DockStyle.Fill;
             documentFileData.HeaderText = "Document";
             documentFileData.Location = new Point(3, 314);
-            documentFileData.Multiline = false;
             documentFileData.Name = "documentFileData";
             documentFileData.ReadOnly = false;
+            documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
             documentFileData.Size = new Size(502, 44);
             documentFileData.TabIndex = 9;
-            documentFileData.WordWrap = true;
-            documentFileData.Validated += DocumentFileData_Validated;
+            documentFileData.SelectCommand += DocumentFileData_SelectCommand;
             // 
             // openFileDialog
             // 
@@ -272,7 +273,7 @@
             // documentMenu
             // 
             documentMenu.Name = "documentMenu";
-            documentMenu.Size = new Size(181, 26);
+            documentMenu.Size = new Size(61, 4);
             // 
             // SchemaDocument
             // 
@@ -320,8 +321,8 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private Controls.TextBoxData localPathData;
         private ErrorProvider errorProvider;
-        private Controls.TextBoxData documentFileData;
         private ContextMenuStrip documentMenu;
         private SaveFileDialog saveFileDialog;
+        private Controls.SelectTextBoxData documentFileData;
     }
 }

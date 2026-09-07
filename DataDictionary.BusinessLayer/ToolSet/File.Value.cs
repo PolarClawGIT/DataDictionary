@@ -222,7 +222,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <param name="exception"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        [Obsolete("Not being used", true)]
         public Boolean TryParse([NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
         {
             try
@@ -247,7 +246,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <param name="exception"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        [Obsolete("Not being used",true)]
         public Boolean TryParse([NotNullWhen(true)] out String? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
         {
             //Note: Online Sources use StringWriter to convert an XDocument to String.

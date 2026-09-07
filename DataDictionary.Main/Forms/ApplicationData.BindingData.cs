@@ -154,34 +154,6 @@ namespace DataDictionary.Main.Forms
                 else { return false; }
             }
 
-            /// <summary>
-            /// Try/Get to locate a single item in the values.
-            /// </summary>
-            /// <param name="result"></param>
-            /// <returns></returns>
-            public virtual Boolean TryGetSingle([NotNullWhen(true)] out TRow? result)
-            {
-                if (bindingValues.Count() == 1 && bindingValues.Single() is TRow value)
-                { result = value; return true; }
-                else
-                { result = default; return false; }
-            }
-
-            /// <summary>
-            /// Try/Get to locate a single item in the values.
-            /// </summary>
-            /// <param name="predicate"></param>
-            /// <param name="result"></param>
-            /// <returns></returns>
-            /// <see cref="System.Linq.Enumerable.SingleOrDefault{TSource}(IEnumerable{TSource})"/>
-            public virtual Boolean TryGetSingle(Func<TRow, Boolean> predicate, [NotNullWhen(true)] out TRow? result)
-            {
-                if (bindingValues.Count(predicate) == 1 && bindingValues.Single(predicate) is TRow value)
-                { result = value; return true; }
-                else
-                { result = default; return false; }
-            }
-
             /// <inheritdoc cref="BindingSource.ResetCurrentItem"/>
             public void ResetCurrent()
             { BindingData.ResetCurrentItem(); }

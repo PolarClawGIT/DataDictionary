@@ -2,8 +2,10 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using System.Xml.Linq;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -14,16 +16,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// File information to be used with the File Save/Open Dialog.
         /// </summary>
-        IFileValue SchemaFile { get; }
-
-        /// <summary>
-        /// XML version of the File Contents.
-        /// </summary>
-        XDocument Content { get; }
+        //IFileValue SchemaFile { get; }
     }
 
     /// <inheritdoc/>
-    public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue
+    public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue, IFileValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -39,22 +36,37 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
-        /// <inheritdoc/>
-        public IFileValue SchemaFile { get; }
+        FileValue SchemaFile { get; }
 
         /// <inheritdoc/>
-        public XDocument Content
+        public String FileContent
         {
             get;
-            set { field = value; OnPropertyChanged(nameof(Content)); }
-        } = new XDocument();
+            set
+            {
+                field = value;
+
+                if (SchemaFile.TryParse(out XDocument? document, out Exception? exception))
+                { field = document.ToString(); }
+
+                OnPropertyChanged(nameof(FileContent));
+                OnPropertyChanged(nameof(ContentException));
+            }
+        } = String.Empty;
 
         /// <inheritdoc/>
         public Exception? ContentException
         {
-            get;
-            set { field = value; OnPropertyChanged(nameof(ContentException)); }
+            get
+            {
+                if (SchemaFile.TryParse(out XDocument? document, out Exception? exception))
+                { return null; }
+                else { return exception; }
+            }
         }
+
+        /// <inheritdoc/>
+        public IEnumerable<FileFormatType> FileFormats { get { return SchemaFile.FileFormats; } }
 
         /// <inheritdoc/>
         public SchemaDocumentValue() : base()
@@ -74,21 +86,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetFileName = () => FileName ?? String.Empty,
                 SetFileName = (value) => FileName = value,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
-                GetContent = () =>
-                {
-                    if (Content.TryParse(out String? document))
-                    { return document; }
-                    else { return String.Empty; }
-                },
-                SetContent = (value) =>
-                {
-                    if (value.TryParse(out XDocument? document, out Exception? exception))
-                    {
-                        Content = document;
-                        ContentException = null;
-                    }
-                    else { Content = new XDocument(); ContentException = exception; }
-                }
+                GetContent = () => FileContent ?? String.Empty,
+                SetContent = (value) => FileContent = value
             };
         }
 
@@ -109,10 +108,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => FileName ?? String.Empty,
                 SetFileName = (value) => FileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
+                GetContent = () => FileContent ?? String.Empty,
+                SetContent = (value) => FileContent = value
             };
+
         }
 
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Open(IDirectoryValue directory)
+        { return SchemaFile.Open(directory); }
 
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Save(IDirectoryValue directory)
+        { return SchemaFile.Save(directory); }
+
+        /// <inheritdoc/>
+        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
+        { return SchemaFile.IsInvalid(out exception); }
     }
 }

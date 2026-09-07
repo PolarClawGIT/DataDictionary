@@ -40,9 +40,9 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
-        public String? FileName
+        public String FileName
         {
-            get { return GetValue(nameof(FileName)); }
+            get { return GetValue(nameof(FileName)) ?? String.Empty; }
             set { SetValue(nameof(FileName), value); }
         }
 

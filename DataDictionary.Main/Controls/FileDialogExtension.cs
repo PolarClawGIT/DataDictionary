@@ -14,13 +14,19 @@ namespace DataDictionary.Main.Controls
         /// <returns></returns>
         public static DialogResult ShowDialog(this FileDialog dialog, IDirectoryValue directory, IFileValue file)
         {
+            // Save current settings
             String filePath = Path.GetDirectoryName(file.FileName) ?? String.Empty;
             String fileName = Path.GetFileName(file.FileName);
+            String title = dialog.Title;
+            Boolean checkFile = dialog.CheckFileExists;
 
+            // Reset then restore settings.
             dialog.Reset();
             dialog.InitialDirectory = Path.Combine(directory.InitialDirectory, filePath);
             dialog.Filter = String.Join('|', file.FileFormats.Select(s => s.DialogFilter()));
             dialog.FileName = fileName;
+            dialog.Title = title;
+            dialog.CheckFileExists = checkFile;
 
             DialogResult result = dialog.ShowDialog();
 

@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -66,6 +67,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     TemplateIndex templateIndex = new TemplateIndex(definition);
                     SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex(definition);
                     SchemaDocumentValue document = new SchemaDocumentValue(templateIndex, schemaIndex);
+                    document.FileName = Path.ChangeExtension(document.FileName, definition.FileExtension);
                     DocumentIndex documentIndex = new DocumentIndex(document);
 
                     GetData().SchemaDocuments.Add(document);
@@ -89,7 +91,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 if (SchemaData.TryGetValue(out SchemaDefinitionValue? schema)
                     && DocumentData.TryGetValue(out SchemaDocumentValue? document))
-                { directory = schema.SchemaDirectory; file = document.SchemaFile; return true; }
+                { directory = schema.SchemaDirectory; file = document; return true; }
                 else { return false; }
             }
 
@@ -104,7 +106,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     nodeValues.Load(schemaKey, GetData().SchemataNodes);
 
                     if (BusinessData.Model.TryGetBuilder(value, out Func<IEnumerable<XmlBuilder>, XElement>? builder))
-                    { value.Content = new XDocument(builder(nodeValues)); }
+                    { value.FileContent = new XDocument(builder(nodeValues)).ToString(); }
 
                     
                 }
