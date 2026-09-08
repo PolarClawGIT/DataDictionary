@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -51,7 +52,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="exception"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        /// <remarks>Do not use XDocument.ToString. Use <see cref="Parse(XDocument)"/></remarks>
+        /// <remarks>Do not use XDocument.ToString. Use <see cref="Format(XDocument)"/></remarks>
         public static Boolean TryParse(this String source, [NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
         {
             document = null;
@@ -70,12 +71,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <summary>
-        /// Parse an XDocument into a String.
+        /// Format an XDocument into a String that is easy to read.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        /// <remarks>XDocument.ToString removes the xml declaration. This keeps the declaration.</remarks>
-        public static String Parse(this XDocument source)
+        /// <remarks>
+        /// This uses default formatting of XML where the attributes are indented tree like. 
+        /// This works like XDocument.ToString() but retains the declaration (if any).
+        /// The results approximates what the file is expected to look like.<br/>
+        /// NOTE: XDocument.ToString removes the xml declaration.
+        /// The original XML Declaration is displayed but the data is actually Windows String UTF16.</remarks>
+        public static String Format(this XDocument source)
         {
             //Note: Online Sources use StringWriter to convert an XDocument to String.
             //This alters the Declaration of the XDocument and forces it to UTF-16, which is the format of Windows Strings.
@@ -85,12 +91,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             StringBuilder result = new StringBuilder();
 
-            // XDocument.ToString() does not contain the Header, put that back in.
-            if (source.Declaration is XDeclaration declaration)
-            { result.Append(declaration.ToString()); }
-            //else { result.AppendLine(new XDeclaration(null, null, null).ToString()); }
+            //This is the Online solution but forces the UTF-16 encoding using a StringWriter or XmlWriter or both.
+            //  using (StringWriter writer = new StringWriter(result))
+            //  using (XmlWriter xml = XmlWriter.Create(writer, new XmlWriterSettings() { Indent = true, OmitXmlDeclaration = false }))
+            //  { source.WriteTo(xml); }
 
-            result.AppendLine(source.ToString());
+            // My solution, build the value in pieces using the string builder.
+            // TODO: This can miss pieces. What is important?
+            if (source.Declaration is XDeclaration declaration)
+            { result.AppendLine(declaration.ToString()); }
+
+            if (source.Root is XElement)
+            { result.AppendLine(source.Root.ToString(SaveOptions.None)); }
 
             return result.ToString();
         }

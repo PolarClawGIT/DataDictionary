@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     nodeValues.Load(schemaKey, GetData().SchemataNodes);
 
                     if (BusinessData.Model.TryGetBuilder(value, out Func<IEnumerable<XmlBuilder>, XElement>? builder))
-                    { value.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Parse(); }
+                    { value.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
                 }
 
 

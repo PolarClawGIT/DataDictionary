@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 field = value;
 
                 if (value.TryParse(out XDocument? document, out Exception? exception))
-                { field = document.Parse(); }
+                { field = document.Format(); }
 
                 OnPropertyChanged(nameof(FileContent));
                 OnPropertyChanged(nameof(ContentException));
@@ -59,7 +59,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                if (FileContent.TryParse(out XDocument? document, out Exception? exception))
+                if (FileContent.TryParse(out XDocument? _, out Exception? exception))
                 { return null; }
                 else { return exception; }
             }

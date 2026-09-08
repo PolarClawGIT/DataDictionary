@@ -178,13 +178,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
             {
                 try
                 {
+                    String content = GetContent();
                     // Detect if the data is XML and use XML save instead of normal text.
                     // TODO: This is still adding the Byte Order Mark (BOM) to the file.
                     // This is not necessary an in some cases, may cause issues with other tools.
-                    if (GetContent().TryParse(out XDocument? document, out Exception? _))
+                    if (content.TryParse(out XDocument? document, out Exception? _))
                     { document.Save(file.FullName); }
                     else // Save the file as Text. This is expected to have a BOM.
-                    { File.WriteAllText(file.FullName, GetContent()); }
+                    { File.WriteAllText(file.FullName, content); }
                 }
                 catch (Exception ex)
                 {
