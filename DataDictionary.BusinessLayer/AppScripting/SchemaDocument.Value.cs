@@ -46,8 +46,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 field = value;
 
-                if (SchemaFile.TryParse(out XDocument? document, out Exception? exception))
-                { field = document.ToString(); }
+                if (value.TryParse(out XDocument? document, out Exception? exception))
+                { field = document.Parse(); }
 
                 OnPropertyChanged(nameof(FileContent));
                 OnPropertyChanged(nameof(ContentException));
@@ -59,7 +59,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                if (SchemaFile.TryParse(out XDocument? document, out Exception? exception))
+                if (FileContent.TryParse(out XDocument? document, out Exception? exception))
                 { return null; }
                 else { return exception; }
             }
@@ -116,15 +116,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Open(IDirectoryValue directory)
-        { return SchemaFile.Open(directory); }
+        public IReadOnlyList<WorkItem> Open(FileInfo file)
+        { return SchemaFile.Open(file); }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(IDirectoryValue directory)
-        { return SchemaFile.Save(directory); }
+        public IReadOnlyList<WorkItem> Save(FileInfo file)
+        { return SchemaFile.Save(file); }
 
         /// <inheritdoc/>
-        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
-        { return SchemaFile.IsInvalid(out exception); }
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
+        { return SchemaFile.IsValid(out exception); }
     }
 }

@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// Validates the Directory info and returns an Exception if there is an issue.
         /// </summary>
         /// <returns></returns>
-        Boolean IsInvalid([NotNullWhen(true)] out Exception? exception);
+        Boolean IsValid([NotNullWhen(false)] out Exception? exception);
     }
 
     /// <summary>
@@ -132,7 +132,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
 
         /// <inheritdoc/>
-        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
         {
             exception = null;
             String directory = InitialDirectory;
@@ -169,7 +169,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 exception.Data.Add(nameof(directories), String.Join("//", directories));
             }
 
-            return exception is not null;
+            return exception is null;
         }
     }
 }

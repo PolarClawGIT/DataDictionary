@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Controls
                 String relativePath = String.Empty;
                 String fileDirectory = Path.GetDirectoryName(dialog.FileName)??String.Empty;
 
-                if (directory.IsInvalid(out _) || String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                if (!directory.IsValid(out _) || String.IsNullOrWhiteSpace(directory.InitialDirectory))
                 { relativePath = fileDirectory ?? String.Empty; }
                 else if (String.Equals(directory.InitialDirectory, fileDirectory))
                 { relativePath = String.Empty; }

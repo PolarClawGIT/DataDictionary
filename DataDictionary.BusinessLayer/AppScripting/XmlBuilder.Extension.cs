@@ -43,7 +43,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return namedScope.PathKeys(path).Select(s => namedScope.GetData(s));
         }
 
-
         /// <summary>
         /// Try to Parse a String into an XDocument.
         /// </summary>
@@ -52,6 +51,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="exception"></param>
         /// <param name="option"></param>
         /// <returns></returns>
+        /// <remarks>Do not use XDocument.ToString. Use <see cref="Parse(XDocument)"/></remarks>
         public static Boolean TryParse(this String source, [NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
         {
             document = null;
@@ -65,18 +65,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
             catch (Exception ex)
             {
                 exception = ex;
-                throw;
+                return false;
             }
         }
 
-
         /// <summary>
-        /// Try to Parse an XDocument into a String.
+        /// Parse an XDocument into a String.
         /// </summary>
         /// <param name="source"></param>
-        /// <param name="document"></param>
         /// <returns></returns>
-        public static Boolean TryParse(this XDocument source, [NotNullWhen(true)] out String? document)
+        /// <remarks>XDocument.ToString removes the xml declaration. This keeps the declaration.</remarks>
+        public static String Parse(this XDocument source)
         {
             //Note: Online Sources use StringWriter to convert an XDocument to String.
             //This alters the Declaration of the XDocument and forces it to UTF-16, which is the format of Windows Strings.
@@ -84,7 +83,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             //that the correct Declaration to be known and that is be compatible with a String Encoding.
             //This approach is to add the Declaration using the StringBuilder as a simple string.
 
-            document = null;
             StringBuilder result = new StringBuilder();
 
             // XDocument.ToString() does not contain the Header, put that back in.
@@ -94,9 +92,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             result.AppendLine(source.ToString());
 
-            document = result.ToString();
-            return true;
+            return result.ToString();
         }
+
     }
 }
 

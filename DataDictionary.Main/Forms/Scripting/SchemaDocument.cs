@@ -89,11 +89,20 @@ namespace DataDictionary.Main.Forms.Scripting
             base.OpenCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && ValidateFile())
-            { DoWork(file.Open(directory), onCompleting); }
+                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            {
+                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                { file.FileName = openFileDialog.FileName; }
+                else
+                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName); }
+
+                DoWork(file.Open(new FileInfo(openFileDialog.FileName)), onCompleting);
+            }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
+                ValidateFile();
+
                 if (args.Error is not null)
                 { throw args.Error; }
             }
@@ -104,8 +113,16 @@ namespace DataDictionary.Main.Forms.Scripting
             base.SaveCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && ValidateFile())
-            { DoWork(file.Save(directory), onCompleting); }
+                && ValidateFile()
+                && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            {
+                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                { file.FileName = openFileDialog.FileName; }
+                else
+                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, saveFileDialog.FileName); }
+
+                DoWork(file.Save(new FileInfo(saveFileDialog.FileName)), onCompleting);
+            }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -116,7 +133,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentFileData_SelectCommand(object sender, EventArgs e)
         {
-            openFileDialog.Title = "Select file";
+            openFileDialog.Title = "Select file (does not OPEN)";
             openFileDialog.CheckFileExists = false;
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
@@ -126,6 +143,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 { file.FileName = openFileDialog.FileName; }
                 else
                 { file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName); }
+
+                ValidateFile();
             }
         }
 
@@ -179,7 +198,7 @@ namespace DataDictionary.Main.Forms.Scripting
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
 
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
-                && schemaValue.SchemaDirectory.IsInvalid(out Exception? directoryEx))
+                && !schemaValue.SchemaDirectory.IsValid(out Exception? directoryEx))
             { errorProvider.SetError(localPathData.ErrorControl, directoryEx); result = false; }
 
             errorProvider.SetError(documentFileData.ErrorControl, String.Empty);
@@ -187,13 +206,14 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
             {
-                if (fileValue.IsInvalid(out Exception? fileEx))
+                if (!fileValue.IsValid(out Exception? fileEx))
                 { errorProvider.SetError(documentFileData.ErrorControl, fileEx); result = false; }
 
                 if (fileValue.ContentException is not null)
                 { errorProvider.SetError(documentContentData.ErrorControl, fileValue.ContentException); result = false; }
             }
 
+            CommandButtons[ButtonType.Save].Enabled = result;
             return result;
         }
 
