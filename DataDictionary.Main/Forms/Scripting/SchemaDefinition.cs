@@ -1,8 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls.ComboBoxList;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -116,10 +120,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 formBinding.BuilderData.AddBinding(renderOrderData, e => e.RenderOrder);
 
-                // Document Tab
-                ScopeNameList.Load(documentBuildScope, XmlBuilder.SupportedScopes());
-                formBinding.SchemaData.AddBinding(documentBuildScope, e => e.ForEachScope, ScopeNameList.NullValue); // TODO: Suspected databinding issue. Think Fixed.
-
+                // Document Tab   
                 documentOpenCommand.Enabled = false;
                 documentDeleteCommand.Enabled = false;
                 formBinding.DocumentData.AddBinding(documentData);
@@ -168,27 +169,31 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentBuildCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            using (SelectionDialog dialog = new SelectionDialog(this))
             {
-                switch (value.ForEachScope)
+                dialog.MultiSelect = true;
+                dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
+                dialog.BuildData(formBinding.DocumentData.Select(s => new PathIndex(s.ObjectPath)));
+
+                if (dialog.ShowDialog(this) is DialogResult.OK)
                 {
-                    case ScopeType.Model:
-                        break;
-                    case ScopeType.ModelAttribute:
-                        foreach (var item in BusinessData.Model.Attribute.Attributes)
+                    // Add missing
+                    foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
+                    {
+                        if(formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue)
+                            && !formBinding.DocumentData.Any(w => item.Path.Equals(new PathIndex(w.ObjectPath)) && item.Scope == w.ObjectScope))
                         {
+                            var newDocument = new SchemaDocumentValue(templateIndex, schemaIndex);
+                            newDocument.ObjectScope = item.Scope;
+                            newDocument.ObjectPath = item.Path.MemberFullPath;
+                            newDocument.FileName = String.Concat(schemaValue.FilePrefix, item.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
 
+                            formBinding.DocumentData.Add(newDocument);
                         }
-                        break;
-                    /*case ScopeType.ModelEntity:
-                        break;
-                    case ScopeType.ModelProcess:
-                        break;*/
+                    }
 
-                    default:
-                        Exception ex = new InvalidOperationException("Not supported");
-                        ex.Data.Add(nameof(value.ForEachScope), value.ForEachScope.GetName());
-                        break;
+                    // Build XML
+                    formBinding.BuildDocuments();
                 }
             }
         }

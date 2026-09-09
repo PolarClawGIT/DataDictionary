@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using System.ComponentModel;
 using System.Data;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -93,6 +94,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 GetData().SchemataNodes.Remove(key);
                 GetData().SchemaDocuments.Remove(key);
                 throw new NotImplementedException();
+            }
+
+            public void BuildDocuments()
+            {
+                foreach (SchemaDocumentValue value in DocumentData.ToList())
+                {
+                    if (!value.IsExcluded && BusinessData.Model.TryGetBuilder(value, out Func<IEnumerable<XmlBuilder>, XElement>? builder))
+                    { value.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
+                    else if(!value.KeepOrphaned)
+                    { DocumentData.Remove(value); }
+                }
             }
 
         }

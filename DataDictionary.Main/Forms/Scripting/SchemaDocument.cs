@@ -159,10 +159,9 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ObjectNameData_SelectCommand(object sender, EventArgs e)
         {
             if (bindingDocument is not null
-                && ParentForm is not null
                 && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
             {
-                using (SelectionDialog dialog = new SelectionDialog(ParentForm))
+                using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.MultiSelect = false;
                     dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());

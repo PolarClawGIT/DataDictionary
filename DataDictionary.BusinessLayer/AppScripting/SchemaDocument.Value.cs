@@ -3,7 +3,6 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml;
 using System.Xml.Linq;
 using Toolbox.Threading;
 

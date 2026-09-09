@@ -69,7 +69,6 @@
             fileLayout = new TableLayoutPanel();
             documentToolStrip = new ToolStrip();
             documentBuildCommand = new ToolStripButton();
-            documentBuildScope = new ToolStripComboBox();
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             documentDeleteCommand = new ToolStripButton();
@@ -325,7 +324,7 @@
             schemaNodeTab.Location = new Point(4, 24);
             schemaNodeTab.Name = "schemaNodeTab";
             schemaNodeTab.Padding = new Padding(3);
-            schemaNodeTab.Size = new Size(568, 495);
+            schemaNodeTab.Size = new Size(192, 72);
             schemaNodeTab.TabIndex = 2;
             schemaNodeTab.Text = "Node";
             // 
@@ -343,7 +342,7 @@
             nodeLayout.RowCount = 2;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle());
-            nodeLayout.Size = new Size(562, 489);
+            nodeLayout.Size = new Size(186, 66);
             nodeLayout.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -354,7 +353,7 @@
             tableLayoutPanel1.Controls.Add(objectNodeGroup, 0, 1);
             tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(197, 28);
+            tableLayoutPanel1.Location = new Point(-179, 28);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -563,7 +562,7 @@
             nodeToolStrip.Items.AddRange(new ToolStripItem[] { nodeNewCommand, nodeDeleteCommand });
             nodeToolStrip.Location = new Point(0, 0);
             nodeToolStrip.Name = "nodeToolStrip";
-            nodeToolStrip.Size = new Size(562, 25);
+            nodeToolStrip.Size = new Size(186, 25);
             nodeToolStrip.TabIndex = 0;
             nodeToolStrip.Text = "toolStrip1";
             // 
@@ -592,7 +591,7 @@
             schemaNodeTree.Dock = DockStyle.Fill;
             schemaNodeTree.Location = new Point(3, 28);
             schemaNodeTree.Name = "schemaNodeTree";
-            schemaNodeTree.Size = new Size(188, 458);
+            schemaNodeTree.Size = new Size(1, 458);
             schemaNodeTree.TabIndex = 1;
             schemaNodeTree.BeforeCollapse += SchemaNodeTree_BeforeCollapse;
             schemaNodeTree.BeforeExpand += SchemaNodeTree_BeforeExpand;
@@ -627,7 +626,7 @@
             // 
             // documentToolStrip
             // 
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildCommand, documentBuildScope, documentNewCommand, documentOpenCommand, documentDeleteCommand });
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand, documentDeleteCommand, documentBuildCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
             documentToolStrip.Size = new Size(562, 25);
@@ -643,13 +642,6 @@
             documentBuildCommand.Size = new Size(23, 22);
             documentBuildCommand.Text = "Build Documents";
             documentBuildCommand.Click += DocumentBuildCommand_Click;
-            // 
-            // documentBuildScope
-            // 
-            documentBuildScope.DropDownStyle = ComboBoxStyle.DropDownList;
-            documentBuildScope.Name = "documentBuildScope";
-            documentBuildScope.Size = new Size(121, 25);
-            documentBuildScope.ToolTipText = "for Each";
             // 
             // documentNewCommand
             // 
@@ -825,7 +817,6 @@
         private GroupBox nodeRenderGroup;
         private BindingSource bindingDocument;
         private ToolStripButton documentBuildCommand;
-        private ToolStripComboBox documentBuildScope;
         private ToolStripButton documentDeleteCommand;
         private DataGridViewTextBoxColumn objectPathColumn;
         private DataGridViewTextBoxColumn FileNameColumn;
