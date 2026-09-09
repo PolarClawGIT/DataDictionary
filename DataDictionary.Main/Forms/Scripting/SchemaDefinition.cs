@@ -293,8 +293,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 value.SchemaNode = null;
                 OnNodeChanged();
             }
-
-
         }
 
         private void BindingNode_CurrentChanged(object sender, EventArgs e)

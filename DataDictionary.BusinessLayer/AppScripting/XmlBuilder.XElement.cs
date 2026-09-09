@@ -1,12 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Xml.Linq;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -26,7 +22,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { public ScopeType Scope { get; init; } }
 
         /// <summary>
-        /// Used to find the correct XElement Build method.
+        /// Try/Get the correct XElement Build method for a given object.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="targetObject"></param>
@@ -95,6 +91,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
             else { return false; }
         }
 
+        /// <summary>
+        /// Used to find the correct XElement Build method for a given object.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="targetObject"></param>
+        /// <returns></returns>
+        public static Func<IEnumerable<XmlBuilder>, XElement>? GetBuilder(this IModel model, ITemplateObjectNameIndex targetObject)
+        {
+            if(model.TryGetBuilder(targetObject, out Func<IEnumerable<XmlBuilder>, XElement>? builders))
+            { return builders; }
+            else { return null; }
+        }
 
         static XElement Build<TRoot>(
                 IEnumerable<XmlBuilder> builders,

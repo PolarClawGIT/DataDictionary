@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -99,11 +98,8 @@ namespace DataDictionary.Main.Forms.Scripting
                     XmlBuilderData nodeValues = new XmlBuilderData();
                     nodeValues.Load(schemaKey, GetData().SchemataNodes);
 
-                    if (BusinessData.Model.TryGetBuilder(value, out Func<IEnumerable<XmlBuilder>, XElement>? builder))
-                    { value.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
+                    value.BuildContent(BusinessData.Model.GetBuilder, nodeValues);
                 }
-
-
             }
         }
     }

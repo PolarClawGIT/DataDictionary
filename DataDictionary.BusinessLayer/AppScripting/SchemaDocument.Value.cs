@@ -125,5 +125,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
         { return SchemaFile.IsValid(out exception); }
+
+        /// <summary>
+        /// Builds the XDocument and sets the FileContent to the value.
+        /// </summary>
+        /// <param name="getBuilders"></param>
+        /// <param name="nodeValues"></param>
+        /// <remarks>Use <see cref="XmlBuilderXElement.GetBuilder(AppModel.IModel, ITemplateObjectNameIndex)"/> to get the builders.</remarks>
+        public void BuildContent(Func<ITemplateObjectNameIndex, Func<IEnumerable<XmlBuilder>, XElement>?> getBuilders, IEnumerable<XmlBuilderNode> nodeValues)
+        {
+            var builder = getBuilders(this);
+
+            if (builder is not null)
+            { FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
+
+        }
     }
 }

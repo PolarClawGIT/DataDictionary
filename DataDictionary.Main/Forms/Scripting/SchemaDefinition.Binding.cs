@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 DocumentData = new DataBinding<SchemaDocumentValue>(documentBinding, () => GetData().SchemaDocuments);
-                schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes,w => 1==2);
+                schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes, w => 1 == 2);
                 BuilderData = new DataBinding<XmlBuilderNode>(nodeBinding, () => nodeValues);
 
                 GetLocked = TemplateData.GetLocked;
@@ -99,12 +99,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public void BuildDocuments()
             {
                 foreach (SchemaDocumentValue value in DocumentData.ToList())
-                {
-                    if (!value.IsExcluded && BusinessData.Model.TryGetBuilder(value, out Func<IEnumerable<XmlBuilder>, XElement>? builder))
-                    { value.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
-                    else if(!value.KeepOrphaned)
-                    { DocumentData.Remove(value); }
-                }
+                { value.BuildContent(BusinessData.Model.GetBuilder, nodeValues); }
             }
 
         }
