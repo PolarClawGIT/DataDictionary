@@ -33,7 +33,6 @@
             TableLayoutPanel detailLayout;
             GroupBox filePatternGroup;
             TableLayoutPanel filePatternLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             Label fileBaseName;
             TableLayoutPanel nodeLayout;
             TableLayoutPanel tableLayoutPanel1;
@@ -42,6 +41,7 @@
             TableLayoutPanel objectLayout;
             GroupBox groupBox1;
             TableLayoutPanel nodeSummaryLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTabs = new TabControl();
             schemaTab = new TabPage();
@@ -68,10 +68,12 @@
             documentTab = new TabPage();
             fileLayout = new TableLayoutPanel();
             documentToolStrip = new ToolStrip();
-            documentBuildCommand = new ToolStripButton();
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             documentDeleteCommand = new ToolStripButton();
+            toolStripSeparator = new ToolStripSeparator();
+            documentBuildCommand = new ToolStripButton();
+            documentSaveCommand = new ToolStripButton();
             documentData = new DataGridView();
             objectPathColumn = new DataGridViewTextBoxColumn();
             FileNameColumn = new DataGridViewTextBoxColumn();
@@ -626,22 +628,12 @@
             // 
             // documentToolStrip
             // 
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand, documentDeleteCommand, documentBuildCommand });
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand, documentDeleteCommand, toolStripSeparator, documentBuildCommand, documentSaveCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
             documentToolStrip.Size = new Size(562, 25);
             documentToolStrip.TabIndex = 15;
             documentToolStrip.Text = "Document Tools";
-            // 
-            // documentBuildCommand
-            // 
-            documentBuildCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            documentBuildCommand.Image = (Image)resources.GetObject("documentBuildCommand.Image");
-            documentBuildCommand.ImageTransparentColor = Color.Magenta;
-            documentBuildCommand.Name = "documentBuildCommand";
-            documentBuildCommand.Size = new Size(23, 22);
-            documentBuildCommand.Text = "Build Documents";
-            documentBuildCommand.Click += DocumentBuildCommand_Click;
             // 
             // documentNewCommand
             // 
@@ -672,6 +664,31 @@
             documentDeleteCommand.Size = new Size(23, 22);
             documentDeleteCommand.Text = "Delete Document";
             documentDeleteCommand.Click += DocumentDeleteCommand_Click;
+            // 
+            // toolStripSeparator
+            // 
+            toolStripSeparator.Name = "toolStripSeparator";
+            toolStripSeparator.Size = new Size(6, 25);
+            // 
+            // documentBuildCommand
+            // 
+            documentBuildCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentBuildCommand.Image = (Image)resources.GetObject("documentBuildCommand.Image");
+            documentBuildCommand.ImageTransparentColor = Color.Magenta;
+            documentBuildCommand.Name = "documentBuildCommand";
+            documentBuildCommand.Size = new Size(23, 22);
+            documentBuildCommand.Text = "Build Documents";
+            documentBuildCommand.Click += DocumentBuildCommand_Click;
+            // 
+            // documentSaveCommand
+            // 
+            documentSaveCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentSaveCommand.Image = (Image)resources.GetObject("documentSaveCommand.Image");
+            documentSaveCommand.ImageTransparentColor = Color.Magenta;
+            documentSaveCommand.Name = "documentSaveCommand";
+            documentSaveCommand.Size = new Size(23, 22);
+            documentSaveCommand.Text = "Save All";
+            documentSaveCommand.Click += DocumentSaveCommand_Click;
             // 
             // documentData
             // 
@@ -722,6 +739,7 @@
             // bindingDocument
             // 
             bindingDocument.CurrentChanged += BindingDocument_CurrentChanged;
+            bindingDocument.ListChanged += BindingDocument_ListChanged;
             // 
             // SchemaDefinition
             // 
@@ -820,5 +838,7 @@
         private ToolStripButton documentDeleteCommand;
         private DataGridViewTextBoxColumn objectPathColumn;
         private DataGridViewTextBoxColumn FileNameColumn;
+        private ToolStripSeparator toolStripSeparator;
+        private ToolStripButton documentSaveCommand;
     }
 }

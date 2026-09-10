@@ -6,6 +6,7 @@ using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -33,10 +34,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetCommand(ButtonType.Delete);
 
-            documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
             documentDeleteCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Delete);
+
+            documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
+            documentSaveCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.SaveAll);
 
             nodeNewCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Add);
             nodeDeleteCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Delete);
@@ -123,6 +126,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 // Document Tab   
                 documentOpenCommand.Enabled = false;
                 documentDeleteCommand.Enabled = false;
+                documentSaveCommand.Enabled = false;
                 formBinding.DocumentData.AddBinding(documentData);
 
                 // Security
@@ -180,7 +184,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     // Add missing
                     foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
                     {
-                        if(formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue)
+                        if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue)
                             && !formBinding.DocumentData.Any(w => item.Path.Equals(new PathIndex(w.ObjectPath)) && item.Scope == w.ObjectScope))
                         {
                             var newDocument = new SchemaDocumentValue(templateIndex, schemaIndex);
@@ -211,8 +215,12 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void DocumentDeleteCommand_Click(object sender, EventArgs e)
+        { formBinding.DocumentData.Remove(); }
+
+
+        private void DocumentSaveCommand_Click(object sender, EventArgs e)
         {
-            formBinding.DocumentData.Remove();
+            formBinding.SaveDocuments();
         }
 
         private void BindingDocument_CurrentChanged(object sender, EventArgs e)
@@ -229,12 +237,23 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void BindingDocument_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if (e.ListChangedType is ListChangedType.ItemAdded or ListChangedType.ItemDeleted or ListChangedType.Reset)
+            {
+                if (formBinding.DocumentData.Count == 0)
+                { documentSaveCommand.Enabled = false; }
+                else
+                { documentSaveCommand.Enabled = true; }
+            }
+        }
+
         private void RootFolderData_Validated(object sender, EventArgs e)
         {
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
             {
                 value.RelativePath = String.Empty;
-                localPathData.Text = value.SchemaDirectory.InitialDirectory;
+                localPathData.Text = value.InitialDirectory;
             }
             else { localPathData.Text = String.Empty; }
         }
@@ -242,7 +261,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void RelativePathData_Validated(object sender, EventArgs e)
         {
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
-            { localPathData.Text = value.SchemaDirectory.InitialDirectory; }
+            { localPathData.Text = value.InitialDirectory; }
             else { localPathData.Text = String.Empty; }
         }
 
@@ -251,13 +270,13 @@ namespace DataDictionary.Main.Forms.Scripting
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? current))
             {
                 folderBrowserDialog.Reset();
-                folderBrowserDialog.RootFolder = current.SchemaDirectory.RootFolder;
-                folderBrowserDialog.InitialDirectory = current.SchemaDirectory.InitialDirectory;
+                folderBrowserDialog.RootFolder = current.RootFolder.GetFolder();
+                folderBrowserDialog.InitialDirectory = current.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
                 {
-                    current.SchemaDirectory.InitialDirectory = folderBrowserDialog.SelectedPath;
-                    localPathData.Text = current.SchemaDirectory.InitialDirectory;
+                    current.InitialDirectory = folderBrowserDialog.SelectedPath;
+                    localPathData.Text = current.InitialDirectory;
                 }
             }
         }
@@ -315,7 +334,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeDeleteCommand.Enabled = false;
             }
         }
-
 
     }
 }

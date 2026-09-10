@@ -25,5 +25,29 @@
             { result = enumeration.Value; return true; }
             else { result = DirectoryType.Null; return false; }
         }
+
+        /// <summary>
+        /// Gets the Name of the DirectoryType Enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static String GetName(this DirectoryType value)
+        {
+            if (DirectoryEnumeration.TryGetValue(value, out DirectoryEnumeration? enumeration))
+            { return enumeration.Name; }
+            else { return String.Empty; }
+        }
+
+        /// <summary>
+        /// Gets the SpecialFolder of the DirectoryType Enum. Used as the RootFolder.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Environment.SpecialFolder GetFolder(this DirectoryType value)
+        {
+            if (DirectoryEnumeration.TryGetValue(value, out DirectoryEnumeration? enumeration))
+            { return enumeration.SpecialFolder; }
+            else { return Environment.SpecialFolder.MyDocuments; }
+        }
     }
 }

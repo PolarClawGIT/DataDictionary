@@ -12,6 +12,7 @@ namespace DataDictionary.Main.Enumerations
                 {ButtonType.Add,              Resources.ItemNew},
                 {ButtonType.Open,             Resources.ItemOpen},
                 {ButtonType.Save,             Resources.ItemSave},
+                {ButtonType.SaveAll,          Resources.ItemSaveAll},
                 {ButtonType.Delete,           Resources.ItemDelete},
                 {ButtonType.Export,           Resources.ItemExport},
                 {ButtonType.Import,           Resources.ItemImport},

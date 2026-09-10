@@ -71,7 +71,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
 
-                formBinding.SchemaData.AddBinding(localPathData, e => e.SchemaDirectory.InitialDirectory);
+                formBinding.SchemaData.AddBinding(localPathData, e => e.InitialDirectory);
 
                 ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
@@ -197,7 +197,7 @@ namespace DataDictionary.Main.Forms.Scripting
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
 
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
-                && !schemaValue.SchemaDirectory.IsValid(out Exception? directoryEx))
+                && !schemaValue.IsValid(out Exception? directoryEx))
             { errorProvider.SetError(localPathData.ErrorControl, directoryEx); result = false; }
 
             errorProvider.SetError(documentFileData.ErrorControl, String.Empty);

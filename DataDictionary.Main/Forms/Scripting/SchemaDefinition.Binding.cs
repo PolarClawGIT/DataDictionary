@@ -102,6 +102,19 @@ namespace DataDictionary.Main.Forms.Scripting
                 { value.BuildContent(BusinessData.Model.GetBuilder, nodeValues); }
             }
 
+            public void SaveDocuments()
+            {
+                if(SchemaData.TryGetValue(out SchemaDefinitionValue? schema))
+                {
+                    foreach (var document in DocumentData)
+                    {
+                        FileInfo file = new FileInfo(Path.Combine(schema.InitialDirectory, document.FileName));
+                        if (!document.IsExcluded)
+                        { document.Save(file); }
+                    }
+                }
+            }
+
         }
     }
 }

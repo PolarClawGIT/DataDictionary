@@ -2,23 +2,21 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ISchemaDefinitionValue : ISchemaDefinitionItem, ISchemaComposite,
-        IScopeType, ITemporal
-    {
-        /// <summary>
-        /// Directory information to be used with the Directory Dialog.
-        /// </summary>
-        IDirectoryValue SchemaDirectory { get; }
-    }
+        IScopeType, ITemporal, IDirectoryValue
+    { }
 
     /// <inheritdoc/>
-    public class SchemaDefinitionValue : SchemaDefinitionItem, ISchemaDefinitionValue, IPathValue, INamedScopeSourceValue
+    public class SchemaDefinitionValue : SchemaDefinitionItem, ISchemaDefinitionValue,
+        IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
+        IDirectoryValue directory; // Backing field for IDirectoryValue
 
         /// <inheritdoc/>
         PathIndex IPathIndex.Path { get { return pathValue.Path; } }
@@ -33,7 +31,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingSchema; } }
 
         /// <inheritdoc/>
-        public IDirectoryValue SchemaDirectory { get; }
+        Environment.SpecialFolder IDirectoryValue.RootFolder => directory.RootFolder;
+
+        /// <inheritdoc/>
+        public String InitialDirectory
+        {
+            get { return directory.InitialDirectory; }
+            set { directory.InitialDirectory = value; }
+        }
 
         /// <inheritdoc />
         public SchemaDefinitionValue() : base()
@@ -48,7 +53,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(SchemaTitle)
             };
 
-            SchemaDirectory = new DirectoryValue()
+            directory = new DirectoryValue()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => RelativePath ?? String.Empty,
@@ -69,12 +74,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(SchemaTitle)
             };
 
-            SchemaDirectory = new DirectoryValue()
+            directory = new DirectoryValue()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => RelativePath ?? String.Empty,
                 SetDirectory = (value) => RelativePath = value
             };
+        }
+
+        /// <summary>
+        /// Validates the SchemaDefinitionValue and returns exceptions if there is an issue.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
+        {   
+            exception = null;
+            return ((IDirectoryValue)this).IsValid(out exception);
         }
     }
 }

@@ -86,7 +86,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 if (SchemaData.TryGetValue(out SchemaDefinitionValue? schema)
                     && DocumentData.TryGetValue(out SchemaDocumentValue? document))
-                { directory = schema.SchemaDirectory; file = document; return true; }
+                { directory = schema; file = document; return true; }
                 else { return false; }
             }
 
