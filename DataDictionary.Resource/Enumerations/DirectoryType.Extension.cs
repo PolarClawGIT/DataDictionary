@@ -10,6 +10,7 @@
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        /// <remarks>Use only when direct access to the Enumeration is needed. Otherwise use other extension methods.</remarks>
         public static IDirectoryEnumeration GetEnumeration(this DirectoryType value)
         { return DirectoryEnumeration.GetValue(value); }
 
@@ -43,11 +44,29 @@
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Environment.SpecialFolder GetFolder(this DirectoryType value)
+        public static Environment.SpecialFolder GetSystemFolder(this DirectoryType value)
         {
             if (DirectoryEnumeration.TryGetValue(value, out DirectoryEnumeration? enumeration))
             { return enumeration.SpecialFolder; }
             else { return Environment.SpecialFolder.MyDocuments; }
+        }
+
+        /// <summary>
+        /// Gets the Folder of the DirectoryType Enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static DirectoryInfo GetFolder(this DirectoryType value)
+        {
+            if (DirectoryEnumeration.TryGetValue(value, out DirectoryEnumeration? enumeration)
+                && enumeration.Directory is DirectoryInfo)
+            { return enumeration.Directory; }
+            else
+            {   // Only occurs if the Directory has not been defined, such as DirectoryType.Null.
+                Exception ex = new InvalidOperationException("Directory not defined");
+                ex.Data.Add(nameof(value), value);
+                throw ex;
+            }
         }
     }
 }

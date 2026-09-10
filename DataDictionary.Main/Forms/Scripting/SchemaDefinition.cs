@@ -270,7 +270,7 @@ namespace DataDictionary.Main.Forms.Scripting
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? current))
             {
                 folderBrowserDialog.Reset();
-                folderBrowserDialog.RootFolder = current.RootFolder.GetFolder();
+                folderBrowserDialog.RootFolder = current.RootFolder.GetSystemFolder();
                 folderBrowserDialog.InitialDirectory = current.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)

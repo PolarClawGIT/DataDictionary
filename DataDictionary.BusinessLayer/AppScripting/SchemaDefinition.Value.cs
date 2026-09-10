@@ -31,9 +31,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingSchema; } }
 
         /// <inheritdoc/>
-        Environment.SpecialFolder IDirectoryValue.RootFolder => directory.RootFolder;
-
-        /// <inheritdoc/>
         public String InitialDirectory
         {
             get { return directory.InitialDirectory; }

@@ -11,17 +11,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
     public interface IDirectoryValue : IBindingPropertyChanged
     {
         /// <summary>
-        /// Returns the RootFolder used as a base.
-        /// </summary>
-        /// <remarks>
-        /// Use to set FolderBrowserDialog RootFolder.
-        /// </remarks>
-        /// <example>
-        /// dialog.RootFolder = IDirectoryValue.RootFolder;
-        /// </example>
-        Environment.SpecialFolder RootFolder { get; }
-
-        /// <summary>
         /// Full Directory Path (includes root).
         /// </summary>
         /// <remarks>Use to set the FileDialog (Open File or Save File) initial directory or to update the Relative Path</remarks>
@@ -44,9 +33,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public class DirectoryValue : IDirectoryValue
     {
-        /// <inheritdoc/>
-        public virtual Environment.SpecialFolder RootFolder { get { return GetRootFolder().GetEnumeration().SpecialFolder; } }
-
         /// <summary>
         /// Function that returns the Current root Directory Type.
         /// </summary>
@@ -71,7 +57,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 String relativeDirectory = GetDirectory();
                 DirectoryType rootFolder = GetRootFolder();
                 String rootPath = String.Empty;
-                if (rootFolder.GetEnumeration().Directory is DirectoryInfo rootDirectory)
+                if (rootFolder.GetFolder() is DirectoryInfo rootDirectory)
                 { rootPath = rootDirectory.FullName; }
 
                 if (rootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(relativeDirectory))
@@ -84,7 +70,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
             {
                 DirectoryType rootFolder = GetRootFolder();
                 String rootPath = String.Empty;
-                if (rootFolder.GetEnumeration().Directory is DirectoryInfo rootDirectory)
+                if (rootFolder.GetFolder() is DirectoryInfo rootDirectory)
                 { rootPath = rootDirectory.FullName; }
 
                 if (value.StartsWith(rootPath))
@@ -117,7 +103,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
             GetDirectory = () =>
             {
                 if (String.IsNullOrWhiteSpace(directoryValue)
-                && GetRootFolder().GetEnumeration().Directory is DirectoryInfo directory)
+                && GetRootFolder().GetFolder() is DirectoryInfo directory)
                 { return directory.FullName; }
                 else { return directoryValue; }
             };
