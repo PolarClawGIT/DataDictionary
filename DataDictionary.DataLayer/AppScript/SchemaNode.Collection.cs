@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.AppScript
     public class SchemaNodeCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
-        IRemoveItem<ITemplateKey>,IRemoveItem<ISchemaNodeKey>,
+        IRemoveItem<ITemplateKey>, IRemoveItem<ISchemaDefinitionKey>, IRemoveItem<ISchemaNodeKey>,
         IReadTemporal<IModelKey>, IReadTemporal<ITemplateKey>
         where TItem : BindingTableRow, ISchemaNodeItem, new()
     {
@@ -81,18 +81,27 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(ITemplateKey TemplateKey)
+        public virtual void Remove(ITemplateKey templateKey)
         {
-            TemplateKey key = new TemplateKey(TemplateKey);
+            TemplateKey key = new TemplateKey(templateKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(ISchemaNodeKey schemaNodeKey)
+        public void Remove(ISchemaDefinitionKey schemaKey)
         {
-            SchemaNodeKey key = new SchemaNodeKey(schemaNodeKey);
+            SchemaDefinitionKey key = new SchemaDefinitionKey(schemaKey);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(ISchemaNodeKey nodeKey)
+        {
+            SchemaNodeKey key = new SchemaNodeKey(nodeKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

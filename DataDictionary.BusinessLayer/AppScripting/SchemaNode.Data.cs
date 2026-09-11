@@ -14,9 +14,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface ISchemaNodeData :
         IBindingData<SchemaNodeValue>,
         IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
-        ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        IDeleteData<ISchemaNodeIndex>, IDeleteData
+        ILoadData, ILoadData<IModelIndex>, ILoadData<ITemplateIndex>,
+        ISaveData<IModelIndex>, ISaveData<ITemplateIndex>, 
+        IDeleteData, IRemoveData<ISchemaDefinitionIndex>, IRemoveData<ISchemaNodeIndex>
     { }
 
     class SchemaNodeData : SchemaNodeCollection<SchemaNodeValue>, ISchemaNodeData
@@ -94,14 +94,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Delete(ISchemaNodeIndex dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Remove Scripting SchemaNode", DoWork = () => { Remove(dataKey); } });
-            return work;
-        }
-
-        /// <inheritdoc/>
         /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete()
         {
@@ -120,6 +112,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public void Remove(ISchemaNodeIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        public void Remove(ISchemaDefinitionIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>
@@ -142,7 +138,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return new TemporalData<TemplateData, TemplateValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
         }
-
 
 
 

@@ -7,11 +7,12 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform Document
     /// </summary>
-    public interface ITransformDocumentItem : IDocumentItem, ITransformKey
+    public interface ITransformDocumentItem : IDocumentItem, ITemplateKey, ITransformKey, IDocumentKey
     {
         /// <summary>
         /// DocumentID of the Schema Document that is the Source of the Transform.
         /// </summary>
+        [Obsolete("Need to get rid of this. Use a file reference instead.")]
         Guid? SchemaDocumentId { get; }
     }
 
@@ -44,6 +45,7 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
+        [Obsolete("Need to get rid of this. Use a file reference instead.")]
         public Guid? SchemaDocumentId
         {
             get { return GetValue<Guid>(nameof(SchemaDocumentId)); }

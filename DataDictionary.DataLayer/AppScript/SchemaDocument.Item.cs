@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Schema Document
     /// </summary>
-    public interface ISchemaDocumentItem : IDocumentItem, ISchemaDefinitionKey, ITemplateObjectItem
+    public interface ISchemaDocumentItem : IDocumentItem, ITemplateKey, ISchemaDefinitionKey, IDocumentKey, ITemplateObjectItem
     { }
 
     /// <summary>
