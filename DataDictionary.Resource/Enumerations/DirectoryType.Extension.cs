@@ -56,17 +56,13 @@
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DirectoryInfo GetFolder(this DirectoryType value)
+        public static DirectoryInfo? GetFolder(this DirectoryType value)
         {
             if (DirectoryEnumeration.TryGetValue(value, out DirectoryEnumeration? enumeration)
                 && enumeration.Directory is DirectoryInfo)
             { return enumeration.Directory; }
-            else
-            {   // Only occurs if the Directory has not been defined, such as DirectoryType.Null.
-                Exception ex = new InvalidOperationException("Directory not defined");
-                ex.Data.Add(nameof(value), value);
-                throw ex;
-            }
+            else // Only occurs if the Directory has not been defined, such as DirectoryType.Null.
+            { return null; }
         }
     }
 }

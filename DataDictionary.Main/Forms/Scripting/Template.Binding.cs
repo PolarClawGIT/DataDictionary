@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean RemoveValue()
             {
-                if(TemplateData.TryGetValue(out TemplateValue? value))
+                if (TemplateData.TryGetValue(out TemplateValue? value))
                 {
                     TemplateIndex key = new TemplateIndex(value);
                     ITemplateData target = GetData();
@@ -76,6 +76,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
             { return GetData().Save(factory, key); }
+
+            public void Remove(SchemaDefinitionValue value)
+            { GetData().Remove(new SchemaDefinitionIndex(value)); }
         }
     }
 }

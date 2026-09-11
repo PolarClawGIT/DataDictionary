@@ -43,15 +43,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 ButtonType.SaveDatabase,
                 ButtonType.DeleteDatabase);
 
-            openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
-            openTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
-            addSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
-            addTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
+            schemaOpenCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
+            schemaNewCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
+            schemaDeleteCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Delete);
+            schemaBuildCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
 
-            executeSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
-            executeTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Export);
+            transformOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
+            transformNewCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
+            transformBuildCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Export);
 
-            openDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+            documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
 
         public Template(ITemplateIndex? template) : this()
@@ -168,7 +169,7 @@ namespace DataDictionary.Main.Forms.Scripting
             { IsLocked(formBinding.GetLocked()); }
         }
 
-        private void AddSchemaCommand_Click(object sender, EventArgs e)
+        private void SchemaAddCommand_Click(object sender, EventArgs e)
         {
             Activate(() => new Forms.Scripting.SchemaDefinition(
                 template: templateIndex,
@@ -176,7 +177,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 getData: formBinding.GetData));
         }
 
-        private void OpenSchemaCommand_Click(object sender, EventArgs e)
+        private void SchemaOpenCommand_Click(object sender, EventArgs e)
         {
             if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
             {
@@ -187,12 +188,18 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void ExecuteSchemaCommand_Click(object sender, EventArgs e)
+        private void SchemaDeleteCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            { formBinding.Remove(value); }           
+        }
+
+        private void SchemaBuildCommand_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void AddTransformCommand_Click(object sender, EventArgs e)
+        private void TransformNewCommand_Click(object sender, EventArgs e)
         {
             Activate(() => new Forms.Scripting.Transform(
                 template: templateIndex,
@@ -200,7 +207,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 getData: formBinding.GetData));
         }
 
-        private void OpenTransformCommand_Click(object sender, EventArgs e)
+        private void TransformOpenCommand_Click(object sender, EventArgs e)
         {
             if (formBinding.TransformData.TryGetValue(out TransformValue? value))
             {
@@ -211,15 +218,16 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void ExecuteTransformCommand_Click(object sender, EventArgs e)
+        private void TransformBuildCommand_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void OpenDocumentCommand_Click(object sender, EventArgs e)
+        private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Added data
-            Activate(static () => new Forms.Scripting.Document());
+            throw new NotImplementedException();
         }
+
+
     }
 }
