@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 throw ex;
             }
 
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? _))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 
@@ -159,7 +159,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ObjectNameData_SelectCommand(object sender, EventArgs e)
         {
             if (bindingDocument is not null
-                && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
+                && formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? fileValue))
             {
                 using (SelectionDialog dialog = new SelectionDialog(this))
                 {
@@ -196,14 +196,14 @@ namespace DataDictionary.Main.Forms.Scripting
 
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
 
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? schemaValue)
                 && !schemaValue.IsValid(out Exception? directoryEx))
             { errorProvider.SetError(localPathData.ErrorControl, directoryEx); result = false; }
 
             errorProvider.SetError(documentFileData.ErrorControl, String.Empty);
             errorProvider.SetError(documentContentData.ErrorControl, String.Empty);
 
-            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
+            if (formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? fileValue))
             {
                 if (!fileValue.IsValid(out Exception? fileEx))
                 { errorProvider.SetError(documentFileData.ErrorControl, fileEx); result = false; }

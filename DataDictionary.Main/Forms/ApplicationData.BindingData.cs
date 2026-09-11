@@ -127,7 +127,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="result"></param>
             /// <returns></returns>
-            public virtual Boolean TryGetValue([NotNullWhen(true)] out TRow? result)
+            public virtual Boolean TryGetCurrent([NotNullWhen(true)] out TRow? result)
             {
                 if (BindingData.Position >= 0
                     && BindingData.Current is TRow value)
@@ -140,7 +140,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="condition"></param>
             /// <returns></returns>
-            public virtual Boolean TrySetValue(Func<TRow, Boolean> condition)
+            public virtual Boolean TrySetCurrent(Func<TRow, Boolean> condition)
             {
                 //bindingValues.IndexOf()
                 IEnumerable<TRow> target = bindingValues.Where(condition);
@@ -164,7 +164,7 @@ namespace DataDictionary.Main.Forms
             /// <returns></returns>
             public virtual Boolean Remove()
             {
-                if (TryGetValue(out TRow? value))
+                if (TryGetCurrent(out TRow? value))
                 { return bindingValues.Remove(value); }
                 else { return false; }
             }
@@ -178,7 +178,7 @@ namespace DataDictionary.Main.Forms
             /// <remarks>Use with DataModel{TKey}.GetLocked</remarks>
             public virtual Boolean GetLocked()
             {
-                if (TryGetValue(out TRow? value) && value is IBindingRowState rowState)
+                if (TryGetCurrent(out TRow? value) && value is IBindingRowState rowState)
                 { return value.RowState() is DataRowState.Detached or DataRowState.Deleted; }
                 else { return true; }
             }
@@ -192,7 +192,7 @@ namespace DataDictionary.Main.Forms
             /// <remarks>Use with DataModel{TKey}.GetAuthorization</remarks>
             public virtual (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
             {
-                if (TryGetValue(out TRow? value) && value is IAuthorization authorization)
+                if (TryGetCurrent(out TRow? value) && value is IAuthorization authorization)
                 { return authorization.GetAuthorization(authorizations); }
                 else { return (false, false, false); }
             }

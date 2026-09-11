@@ -36,7 +36,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateIndex templateKey = new TemplateIndex();
 
                 TransformData.LoadBinding(w => key.Equals(w));
-                if (TransformData.TryGetValue(out TransformValue? transformValue))
+                if (TransformData.TryGetCurrent(out TransformValue? transformValue))
                 { templateKey = new TemplateIndex(transformValue); }
 
                 TemplateData.LoadBinding(w => templateKey.Equals(w));

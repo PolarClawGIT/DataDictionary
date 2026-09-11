@@ -80,7 +80,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public virtual Boolean RemoveValue()
             {
-                if(ManagerData.TryGetValue(out BindingValue? value))
+                if(ManagerData.TryGetCurrent(out BindingValue? value))
                 {
                     TemplateIndex key = new TemplateIndex(value);
                     modelData.Remove(key);
@@ -123,7 +123,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public virtual Boolean TryGetValue([NotNullWhen(true)] out BindingValue? result)
             {
-                if (ManagerData.TryGetValue(out BindingValue? value))
+                if (ManagerData.TryGetCurrent(out BindingValue? value))
                 { result = value; return true; }
                 else { result = null; return false; }
             }

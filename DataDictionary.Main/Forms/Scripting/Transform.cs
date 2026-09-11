@@ -73,7 +73,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            if (formBinding.TransformData.TryGetValue(out TransformValue? _))
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 

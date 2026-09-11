@@ -104,7 +104,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public void SaveDocuments()
             {
-                if(SchemaData.TryGetValue(out SchemaDefinitionValue? schema))
+                if(SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema))
                 {
                     foreach (var document in DocumentData)
                     {

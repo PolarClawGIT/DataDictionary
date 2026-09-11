@@ -81,7 +81,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 throw ex;
             }
 
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? _))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 
@@ -207,7 +207,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
+            if (formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? value))
             {
                 DocumentIndex key = new DocumentIndex(value);
                 Activate(() => new Forms.Scripting.SchemaDocument(key, formBinding.GetData), o => o.IsOpenItem(key));
@@ -225,7 +225,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingDocument_CurrentChanged(object sender, EventArgs e)
         {
-            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? value))
+            if (formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? value))
             {
                 documentOpenCommand.Enabled = true;
                 documentDeleteCommand.Enabled = true;
@@ -250,7 +250,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootFolderData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
             {
                 value.RelativePath = String.Empty;
                 localPathData.Text = value.InitialDirectory;
@@ -260,14 +260,14 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RelativePathData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
             { localPathData.Text = value.InitialDirectory; }
             else { localPathData.Text = String.Empty; }
         }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
         {
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? current))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? current))
             {
                 folderBrowserDialog.Reset();
                 folderBrowserDialog.RootFolder = current.RootFolder.GetSystemFolder();
@@ -295,7 +295,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void NodeNewCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.BuilderData.TryGetValue(out XmlBuilderNode? value)
+            if (formBinding.BuilderData.TryGetCurrent(out XmlBuilderNode? value)
                 && value.SchemaNode is null)
             {
                 SchemaNodeValue node = new SchemaNodeValue(templateIndex, schemaIndex);
@@ -306,7 +306,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void NodeDeleteCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.BuilderData.TryGetValue(out XmlBuilderNode? value)
+            if (formBinding.BuilderData.TryGetCurrent(out XmlBuilderNode? value)
                 && value.SchemaNode is not null)
             {
                 value.SchemaNode = null;
@@ -319,7 +319,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         void OnNodeChanged()
         {
-            if (formBinding.BuilderData.TryGetValue(out XmlBuilderNode? value))
+            if (formBinding.BuilderData.TryGetCurrent(out XmlBuilderNode? value))
             {
                 nodeNameData.Enabled = value.SchemaNode is not null;
                 nodeRenderGroup.Enabled = value.SchemaNode is not null;

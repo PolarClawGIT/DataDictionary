@@ -79,7 +79,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     SendMessage(new RefreshNavigation());
                 }
 
-                if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
+                if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
                 { DoBinding(); }
                 else { IsLocked(true); }
             }
@@ -94,7 +94,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     CommandButtons[ButtonType.Delete].Enabled = false;
                     CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
 
-                    if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
+                    if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
                     { DoBinding(); }
                     else { IsLocked(true); }
                 }
@@ -179,7 +179,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaOpenCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
             {
                 Activate(() => new Forms.Scripting.SchemaDefinition(
                     template: templateIndex,
@@ -190,7 +190,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaDeleteCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
             { formBinding.Remove(value); }           
         }
 
@@ -209,7 +209,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TransformOpenCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.TransformData.TryGetValue(out TransformValue? value))
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? value))
             {
                 Activate(() => new Forms.Scripting.Transform(
                     template: templateIndex,

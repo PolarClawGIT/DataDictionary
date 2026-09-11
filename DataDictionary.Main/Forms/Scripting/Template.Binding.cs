@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean RemoveValue()
             {
-                if (TemplateData.TryGetValue(out TemplateValue? value))
+                if (TemplateData.TryGetCurrent(out TemplateValue? value))
                 {
                     TemplateIndex key = new TemplateIndex(value);
                     ITemplateData target = GetData();

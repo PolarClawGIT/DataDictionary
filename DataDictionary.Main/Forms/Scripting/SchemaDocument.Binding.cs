@@ -84,15 +84,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 directory = null;
                 file = null;
 
-                if (SchemaData.TryGetValue(out SchemaDefinitionValue? schema)
-                    && DocumentData.TryGetValue(out SchemaDocumentValue? document))
+                if (SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema)
+                    && DocumentData.TryGetCurrent(out SchemaDocumentValue? document))
                 { directory = schema; file = document; return true; }
                 else { return false; }
             }
 
             public void BuildFileContent()
             {
-                if (DocumentData.TryGetValue(out SchemaDocumentValue? value))
+                if (DocumentData.TryGetCurrent(out SchemaDocumentValue? value))
                 {
                     SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(value);
                     XmlBuilderData nodeValues = new XmlBuilderData();
