@@ -87,7 +87,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
         {   
             exception = null;
-            return ((IDirectoryValue)this).IsValid(out exception);
+            return directory.IsValid(out exception);
         }
     }
 }
