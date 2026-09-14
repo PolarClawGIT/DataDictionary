@@ -13,18 +13,18 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectIndexPath : PathIndex, IHelpSubjectIndexPath,
+    public class HelpSubjectIndexPath : PathItem, IHelpSubjectIndexPath,
         IKeyEquality<IHelpSubjectIndexPath>, IKeyEquality<HelpSubjectIndexPath>
     {
-        /// <inheritdoc cref="PathIndex.PathIndex(IPathItem[])"/>
+        /// <inheritdoc cref="PathItem.PathItem(IPathItem[])"/>
         public HelpSubjectIndexPath(IHelpSubjectIndexPath source) : base(source)
         { }
 
         /// <inheritdoc cref="HelpSubjectKeyNameSpace(IHelpSubjectKeyNameSpace)"/>
-        public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(PathIndex.Parse(source.NameSpace).ToArray())
+        public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(PathItem.Parse(source.NameSpace).ToArray())
         { }
 
-        /// <inheritdoc cref="PathIndex(String?[])"/>
+        /// <inheritdoc cref="PathItem(String?[])"/>
         public HelpSubjectIndexPath(params String?[] source) : base(source)
         { }
 
@@ -32,16 +32,16 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// Constructor that build from the base PathIndex
         /// </summary>
         /// <param name="source"></param>
-        public HelpSubjectIndexPath(PathIndex source) : base(source)
+        public HelpSubjectIndexPath(PathItem source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(HelpSubjectIndexPath? other)
-        { return other is IPathItem value && Equals(new PathIndex(value)); }
+        { return other is IPathItem value && Equals(new PathItem(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(IHelpSubjectIndexPath? other)
-        { return other is IPathItem value && Equals(new PathIndex(value)); }
+        { return other is IPathItem value && Equals(new PathItem(value)); }
 
     }
 }

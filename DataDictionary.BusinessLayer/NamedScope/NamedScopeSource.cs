@@ -18,14 +18,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
     class NameSpaceSource : IPathValue, INamedScopeSourceValue
     {
         protected Guid SystemId;
-        protected PathIndex SystemPath;
+        protected PathItem SystemPath;
 
         public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public NameSpaceSource(PathIndex path)
+        public NameSpaceSource(PathItem path)
         {
             SystemId = Guid.NewGuid();
             SystemPath = path;
@@ -54,12 +54,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         {
             SystemId = Guid.NewGuid();
             Scope = scope;
-            SystemPath = new PathIndex(scope.GetName());
+            SystemPath = new PathItem(scope.GetName());
 
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DataIndex() { SystemId = SystemId },
-                GetPath = () => new PathIndex(scope),
+                GetPath = () => new PathItem(scope),
                 GetScope = () => Scope,
                 GetTitle = () => scope.GetEnumeration().DisplayName,
                 IsPathChanged = (e) => false,

@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Dialogs
         /// <summary>
         /// The currently selected Path
         /// </summary>
-        public PathIndex SelectedPath
+        public PathItem SelectedPath
         {
             get { return pathValue; }
             set
@@ -39,10 +39,10 @@ namespace DataDictionary.Main.Dialogs
                 this.OnPropertyChanged(PropertyChanged, nameof(SelectedPath));
             }
         }
-        public PathIndex PathNull { get { return pathNull; } }
-        private static PathIndex pathNull = new PathIndex();
-        private PathIndex pathValue = pathNull;
-        private BindingList<PathIndex> filterPaths;
+        public PathItem PathNull { get { return pathNull; } }
+        private static PathItem pathNull = new PathItem();
+        private PathItem pathValue = pathNull;
+        private BindingList<PathItem> filterPaths;
 
         /// <summary>
         /// Group By Scope is Selected
@@ -73,7 +73,7 @@ namespace DataDictionary.Main.Dialogs
         }
         private Boolean isGroupByScope = true;
 
-        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<PathIndex> paths)
+        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<PathItem> paths)
         {
             this.filterScopes = scopes;
             this.filterPaths = paths;
@@ -166,7 +166,7 @@ namespace DataDictionary.Main.Dialogs
 
             void Control_SelectionChangeCommitted(Object? sender, EventArgs e)
             {
-                if (control.SelectedValue is PathIndex value)
+                if (control.SelectedValue is PathItem value)
                 { SelectedPath = value; }
 
                 OnFilterChanged();
@@ -178,7 +178,7 @@ namespace DataDictionary.Main.Dialogs
             void BuildList()
             {
                 control.DataSource = null;
-                Dictionary<PathIndex, String> data = new Dictionary<PathIndex, String>();
+                Dictionary<PathItem, String> data = new Dictionary<PathItem, String>();
                 data.Add(pathNull, "(any)");
 
                 this.Where(w =>

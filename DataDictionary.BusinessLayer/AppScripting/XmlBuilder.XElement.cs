@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {   // Think this is the factory pattern.
 
             build = null;
-            PathIndex key = new PathIndex(PathIndex.Parse(targetObject.ObjectPath));
+            PathItem key = new PathItem(PathItem.Parse(targetObject.ObjectPath));
 
             // Search the Attributes and get the Paths associated with them
             var attributes = model.Attribute.Attributes.
@@ -43,7 +43,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (attributeSubject, subject) => new { Path = new PathIndex(subject.SubjectAreaPath, attributeSubject.Attribute.AttributePath), attributeSubject.Attribute }).
+                        (attributeSubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, attributeSubject.Attribute.AttributePath), attributeSubject.Attribute }).
                     Union(model.Attribute.Attributes.
                         Select(s => new { Path = s.AttributePath, Attribute = s })).
                     Where(w => key.Equals(w.Path) && w.Attribute.Scope == targetObject.ObjectScope).
@@ -58,7 +58,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (entitySubject, subject) => new { Path = new PathIndex(subject.SubjectAreaPath, entitySubject.Entity.EntityPath), entitySubject.Entity }).
+                        (entitySubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, entitySubject.Entity.EntityPath), entitySubject.Entity }).
                     Union(model.Entity.Entities.
                         Select(s => new { Path = s.EntityPath, Entity = s })).
                     Where(w => key.Equals(w.Path) && w.Entity.Scope == targetObject.ObjectScope).
@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (processSubject, subject) => new { Path = new PathIndex(subject.SubjectAreaPath, processSubject.Process.ProcessPath), processSubject.Process }).
+                        (processSubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, processSubject.Process.ProcessPath), processSubject.Process }).
                     Union(model.Process.Processes.
                         Select(s => new { Path = s.ProcessPath, Process = s })).
                     Where(w => key.Equals(w.Path) && w.Process.Scope == targetObject.ObjectScope).

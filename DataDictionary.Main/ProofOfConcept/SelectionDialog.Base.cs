@@ -39,13 +39,13 @@ namespace DataDictionary.Main.ProofOfConcept
         };
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Func<TValue, PathIndex> GetPath { get; init; } = (value) =>
+        public Func<TValue, PathItem> GetPath { get; init; } = (value) =>
         {
             switch (value)
             {
                 case INamedScopeValue: return ((INamedScopeValue)value).Path;
                 case INamedScopeSourceValue: return ((INamedScopeSourceValue)value).Path;
-                default: return new PathIndex();
+                default: return new PathItem();
             }
         };
 

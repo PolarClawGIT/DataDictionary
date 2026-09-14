@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Returns the Argument Name converted to a Path.
         /// </summary>
-        PathIndex ArgumentPath { get; }
+        PathItem ArgumentPath { get; }
     }
 
     /// <inheritdoc/>
@@ -59,12 +59,12 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public PathIndex ArgumentPath
+        public PathItem ArgumentPath
         {
             get
             {
-                return new PathIndex(
-                    new PathIndex(PathIndex.Parse(base.ArgumentName).ToArray()));
+                return new PathItem(
+                    new PathItem(PathItem.Parse(base.ArgumentName).ToArray()));
             }
             set
             {

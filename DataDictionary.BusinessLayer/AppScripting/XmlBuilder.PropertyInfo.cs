@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             ObjectValueType GetObjectType(PropertyInfo info)
             {
-                if (info.PropertyType == typeof(PathIndex))
+                if (info.PropertyType == typeof(PathItem))
                 { return ObjectValueType.NameSpace; }
                 else if (info.TryConvert(out ObjectValueType value))
                 { return value; }

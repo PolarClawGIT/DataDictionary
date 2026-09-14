@@ -177,7 +177,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 dialog.MultiSelect = true;
                 dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
-                dialog.BuildData(formBinding.DocumentData.Select(s => new PathIndex(s.ObjectPath)));
+                dialog.BuildData(formBinding.DocumentData.Select(s => new PathItem(s.ObjectPath)));
 
                 if (dialog.ShowDialog(this) is DialogResult.OK)
                 {
@@ -185,7 +185,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
                     {
                         if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue)
-                            && !formBinding.DocumentData.Any(w => item.Path.Equals(new PathIndex(w.ObjectPath)) && item.Scope == w.ObjectScope))
+                            && !formBinding.DocumentData.Any(w => item.Path.Equals(new PathItem(w.ObjectPath)) && item.Scope == w.ObjectScope))
                         {
                             var newDocument = new SchemaDocumentValue(templateIndex, schemaIndex);
                             newDocument.ObjectScope = item.Scope;

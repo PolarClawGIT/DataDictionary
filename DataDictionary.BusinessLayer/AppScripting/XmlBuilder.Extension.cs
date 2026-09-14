@@ -39,7 +39,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public static IEnumerable<INamedScopeSourceValue> GetData(this INamedScopeData namedScope, ITemplateObjectNameIndex templateObject)
         {
             TemplateObjectNameIndex key = new TemplateObjectNameIndex(templateObject);
-            PathIndex path = new PathIndex(key.ObjectPath);
+            PathItem path = new PathItem(key.ObjectPath);
 
             return namedScope.PathKeys(path).Select(s => namedScope.GetData(s));
         }

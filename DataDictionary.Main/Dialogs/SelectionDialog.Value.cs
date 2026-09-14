@@ -28,7 +28,7 @@ namespace DataDictionary.Main.Dialogs
         public String Title { get { return NamedScope.Title; } }
         public ScopeType Scope { get { return NamedScope.Scope; } }
         public String ScopeName { get { return Scope.GetEnumeration().DisplayName; } }
-        public PathIndex Path { get { return NamedScope.Path; } }
+        public PathItem Path { get { return NamedScope.Path; } }
         public String PathName { get { return Path.MemberFullPath; } }
 
         public Func<INamedScopeSourceValue, String> GetDescription { get; set; } = (value) => String.Empty;

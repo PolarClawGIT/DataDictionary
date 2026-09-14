@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     public partial class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue
     {
         /// <inheritdoc/>
-        public List<String> AliasParts { get { return PathIndex.Parse(base.AliasPath); } }
+        public List<String> AliasParts { get { return PathItem.Parse(base.AliasPath); } }
 
         /// <inheritdoc/>
         public AttributeAliasValue() : base() { }
@@ -47,14 +47,14 @@ namespace DataDictionary.BusinessLayer.AppModel
         internal AttributeAliasValue(IAttributeKey key) : base(key) { }
 
         /// <inheritdoc/>
-        public new PathIndex AliasPath
+        public new PathItem AliasPath
         {
             get
             {
                 // Changing the property in the base class is not always caught by the OnPropertyChanged.
                 // Extra code is needed to check if the data has changed and update the backing field.  
                 if (!aliasPathValue.MemberFullPath.Equals(base.AliasPath))
-                { aliasPathValue = new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
+                { aliasPathValue = new PathItem(PathItem.Parse(base.AliasPath).ToArray()); }
 
                 return aliasPathValue;
             }
@@ -65,6 +65,6 @@ namespace DataDictionary.BusinessLayer.AppModel
                 OnPropertyChanged(nameof(base.AliasPath));
             }
         }
-        PathIndex aliasPathValue = new PathIndex();
+        PathItem aliasPathValue = new PathItem();
     }
 }

@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -35,10 +35,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Path Index version of the ProcessName
         /// </summary>
-        public PathIndex ProcessPath
+        public PathItem ProcessPath
         {
             get
-            { return new PathIndex(new PathIndex(PathIndex.Parse(ProcessName).ToArray())); }
+            { return new PathItem(new PathItem(PathItem.Parse(ProcessName).ToArray())); }
             set
             {
                 ProcessName = value.MemberFullPath;
@@ -55,8 +55,8 @@ namespace DataDictionary.BusinessLayer.AppModel
                 GetPath = () =>
                 {
                     if (String.IsNullOrWhiteSpace(ProcessName))
-                    { return new PathIndex(ProcessTitle); }
-                    else { return new PathIndex(new PathIndex(PathIndex.Parse(ProcessName).ToArray())); }
+                    { return new PathItem(ProcessTitle); }
+                    else { return new PathItem(new PathItem(PathItem.Parse(ProcessName).ToArray())); }
                 },
                 GetScope = () => Scope,
                 GetTitle = () => ProcessTitle ?? Scope.GetEnumeration().Name,

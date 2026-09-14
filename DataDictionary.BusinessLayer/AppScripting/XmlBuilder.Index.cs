@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     public class XmlBuilderIndex : IXmlBuilderIndex, IPathItem,
         IKeyComparable<XmlBuilderIndex>, IKeyComparable<IXmlBuilderIndex>,
-        IKeyEquality<PathIndex>, IKeyEquality<ISchemaNodeObjectName>
+        IKeyEquality<PathItem>, IKeyEquality<ISchemaNodeObjectName>
     {
         /// <inheritdoc/>
         public ScopeType ObjectScope { get; init; } = ScopeType.Null;
@@ -29,16 +29,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public String? ObjectProperty { get; init; } = String.Empty;
 
         /// <inheritdoc/>
-        public String Member { get { return ((PathIndex)this).Member; } }
+        public String Member { get { return ((PathItem)this).Member; } }
 
         /// <inheritdoc/>
-        public String MemberPath { get { return ((PathIndex)this).MemberPath; } }
+        public String MemberPath { get { return ((PathItem)this).MemberPath; } }
 
         /// <inheritdoc/>
-        public String MemberFullPath { get { return ((PathIndex)this).MemberFullPath; } }
+        public String MemberFullPath { get { return ((PathItem)this).MemberFullPath; } }
 
         /// <inheritdoc/>
-        public PathIndex? ParentPath { get { return ((PathIndex)this).ParentPath; } }
+        public PathItem? ParentPath { get { return ((PathItem)this).ParentPath; } }
 
         /// <summary>
         /// Constructor for the Schema Node Key Name.
@@ -83,17 +83,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Converts a XmlBuilderIndex to PathIndex.
         /// </summary>
         /// <param name="index"></param>
-        public static implicit operator PathIndex(XmlBuilderIndex index)
+        public static implicit operator PathItem(XmlBuilderIndex index)
         {
             List<String> values = new List<String>();
-            values.AddRange(PathIndex.Parse(index.ObjectScope.GetName()));
+            values.AddRange(PathItem.Parse(index.ObjectScope.GetName()));
 
             if (String.IsNullOrWhiteSpace(index.ObjectProperty))
-            { return new PathIndex(values); }
+            { return new PathItem(values); }
             else
             {
-                values.AddRange(PathIndex.Parse(index.ObjectProperty));
-                return new PathIndex(values);
+                values.AddRange(PathItem.Parse(index.ObjectProperty));
+                return new PathItem(values);
             }
         }
 
@@ -120,8 +120,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { return other is ISchemaNodeObjectName value && Equals(new XmlBuilderIndex(value)); }
 
         /// <inheritdoc/>
-        public Boolean Equals(PathIndex? other)
-        { return ((PathIndex)this).Equals(other); }
+        public Boolean Equals(PathItem? other)
+        { return ((PathItem)this).Equals(other); }
 
         /// <inheritdoc/>
         public Int32 CompareTo(XmlBuilderIndex? other)

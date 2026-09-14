@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             foreach (SubjectAreaValue item in data)
             {
                 NamedScopeValue newItem = new NamedScopeValue(item)
-                { GetPath = () => new PathIndex(((IPathValue)item).Path) };
+                { GetPath = () => new PathItem(((IPathValue)item).Path) };
 
                 work.Add(new WorkItem()
                 { WorkName = workName, DoWork = () => addNamedScope(model, newItem) });

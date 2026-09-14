@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Returns the Attribute Name converted to a Path.
         /// </summary>
-        PathIndex AttributePath { get; set; }
+        PathItem AttributePath { get; set; }
 
         /// <summary>
         /// Returns the Attribute, if found.
@@ -82,12 +82,12 @@ namespace DataDictionary.BusinessLayer.AppModel
         { get { return Attribute is IAttributeValue value ? value.AttributeDescription : null; } }
 
         /// <inheritdoc/>
-        public PathIndex AttributePath
+        public PathItem AttributePath
         {
             get
             {
-                return new PathIndex(
-                    new PathIndex(PathIndex.Parse(base.AttributeName).ToArray()));
+                return new PathItem(
+                    new PathItem(PathItem.Parse(base.AttributeName).ToArray()));
             }
             set
             {

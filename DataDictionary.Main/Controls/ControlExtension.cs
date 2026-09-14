@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Controls
             Control? current = source;
 
             if (source is Form && source.GetType().FullName is String formType)
-            { parts.AddRange(PathIndex.Parse(formType)); current = null; }
+            { parts.AddRange(PathItem.Parse(formType)); current = null; }
             else { parts.Add(source.Name); }
 
             while (current is not null)
@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Controls
                     if (current is UserControl && current != source)
                     { parts.Insert(0, current.Name); }
                     else if (current is Form && current.GetType().FullName is String fullName)
-                    { parts.InsertRange(0, PathIndex.Parse(fullName)); }
+                    { parts.InsertRange(0, PathItem.Parse(fullName)); }
                 }
 
                 if (current is Form)

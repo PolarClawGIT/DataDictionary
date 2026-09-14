@@ -19,6 +19,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         ScopeType AliasScope { get; set; }
 
         /// <inheritdoc cref="IAliasKeyName.AliasPath"/>
-        PathIndex AliasPath { get; set; }
+        PathItem AliasPath { get; set; }
     }
 }

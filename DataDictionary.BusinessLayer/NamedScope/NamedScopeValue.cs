@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
-        public virtual PathIndex Path { get; protected set; } = new PathIndex();
+        public virtual PathItem Path { get; protected set; } = new PathItem();
 
         /// <inheritdoc/>
         public virtual String Title { get; protected set; } = String.Empty;
@@ -60,12 +60,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Allows for overriding how Path is created.
         /// Path is updated when GetPath is set or on TitleChanged is called.
         /// </remarks>
-        public Func<PathIndex> GetPath
+        public Func<PathItem> GetPath
         {
             get { return getPath; }
             init { getPath = value; Path = value(); }
         }
-        Func<PathIndex> getPath = () => new PathIndex();
+        Func<PathItem> getPath = () => new PathItem();
 
         /// <summary>
         /// Get the current Title of the Value

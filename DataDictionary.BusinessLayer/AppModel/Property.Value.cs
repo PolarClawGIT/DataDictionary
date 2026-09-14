@@ -80,7 +80,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -113,7 +113,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return new PathValue(this)
             {
                 GetIndex = () => new PropertyIndex(this),
-                GetPath = () => new PathIndex(PropertyTitle),
+                GetPath = () => new PathItem(PropertyTitle),
                 GetScope = () => Scope,
                 GetTitle = () => PropertyTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(PropertyTitle),

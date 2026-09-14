@@ -20,12 +20,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
     class PathValue : DataValue, IPathValue
     {
         /// <inheritdoc/>
-        public virtual PathIndex Path { get { return GetPath(); } }
+        public virtual PathItem Path { get { return GetPath(); } }
 
         /// <summary>
         /// Function that returns the Path of the source.
         /// </summary>
-        public required Func<PathIndex> GetPath { get; init; }
+        public required Func<PathItem> GetPath { get; init; }
 
         /// <summary>
         /// Function to indicate that the Path has changed.

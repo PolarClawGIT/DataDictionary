@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void MemberNameData_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
+            PathItem path = new PathItem(PathItem.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
         }
     }

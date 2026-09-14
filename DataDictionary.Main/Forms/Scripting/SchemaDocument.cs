@@ -170,7 +170,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     dialog.MultiSelect = false;
                     dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
 
-                    dialog.BuildData(new List<PathIndex>() { new PathIndex(fileValue.ObjectPath) });
+                    dialog.BuildData(new List<PathItem>() { new PathItem(fileValue.ObjectPath) });
 
                     if (dialog.ShowDialog(this) is DialogResult.OK
                         && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))

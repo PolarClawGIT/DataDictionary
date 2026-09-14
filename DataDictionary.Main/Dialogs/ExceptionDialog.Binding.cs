@@ -218,10 +218,10 @@ namespace DataDictionary.Main.Dialogs
                 baseException = ex;
                 eventDate = DateTime.Now;
 
-                PathIndex? helpPath = null;
+                PathItem? helpPath = null;
                 if (ex is SqlException sqlEx)
                 { // SQL Exception Help Subjects are formated with [Errors].[SqlException].[number]
-                    helpPath = new PathIndex("Errors", ex.GetType().Name, sqlEx.Number.ToString());
+                    helpPath = new PathItem("Errors", ex.GetType().Name, sqlEx.Number.ToString());
                 }
                 else { }
 

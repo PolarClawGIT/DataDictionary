@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathIndex(PathIndex.Parse(FileName).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(FileName).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),
@@ -96,7 +96,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathItem(Scope),
                 GetScope = () => Scope,
                 GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),

@@ -192,7 +192,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
-            PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
+            PathItem path = new PathItem(PathItem.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
         }
 
@@ -210,7 +210,7 @@ namespace DataDictionary.Main.Forms.Model
                 using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
-                    IEnumerable<PathIndex> selected = attributes.Select(s => s.AttributePath);
+                    IEnumerable<PathItem> selected = attributes.Select(s => s.AttributePath);
 
                     dialog.BuildData(selected, GetDescription);
 
@@ -238,7 +238,7 @@ namespace DataDictionary.Main.Forms.Model
         private void AttributeNameData_Validating(object sender, CancelEventArgs e)
         {
             if (formBinding.TryGetAttribute(out EntityAttributeValue? value))
-            { value.AttributePath = new PathIndex(PathIndex.Parse(attributeNameData.Text).ToArray()); }
+            { value.AttributePath = new PathItem(PathItem.Parse(attributeNameData.Text).ToArray()); }
         }
 
 

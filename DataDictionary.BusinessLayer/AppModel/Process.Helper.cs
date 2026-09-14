@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 {
                     NamedScopeValue newItem = new NamedScopeValue(item)
                     {
-                        GetPath = () => new PathIndex(
+                        GetPath = () => new PathItem(
                             ((IPathValue)subjectParent).Path,
                             ((IPathValue)item).Path)
                     };

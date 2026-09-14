@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 if (String.IsNullOrWhiteSpace(field))
                 {
-                    String value = String.Concat(((PathIndex)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
+                    String value = String.Concat(((PathItem)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
                     return value;
                 }
@@ -90,7 +90,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     value = XmlConvert.EncodeName(value);
 
                     // compare this to the ObjectPath
-                    String path = String.Concat(((PathIndex)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
+                    String path = String.Concat(((PathItem)BuilderPath).Member.Where(c => !Char.IsWhiteSpace(c)));
                     path = XmlConvert.EncodeName(value);
 
                     if (value == path) // Flag get to use the Member name.
