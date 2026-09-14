@@ -79,6 +79,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName);
                 formBinding.DocumentData.AddBinding(documentContentData, e => e.FileContent);
 
+                formBinding.DocumentData.AddBinding(objectIsExcluded, e => e.IsExcluded);
+                formBinding.DocumentData.AddBinding(objectKeepOrphaned, e => e.KeepOrphaned);
+                
+
                 ValidateFile();
             }
         }
