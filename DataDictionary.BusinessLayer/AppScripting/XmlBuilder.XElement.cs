@@ -83,7 +83,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             if (attributes.Count > 0)
             {
-                // TODO: Does not give results as expected when the function is actually called.
                 build = (builders) => Build(builders, attributes.Select(s => s.Attribute), model.Attribute.Properties);
                 return true;
             }
