@@ -34,7 +34,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Template));
             TableLayoutPanel transformLayout;
             TableLayoutPanel documentLayout;
-            ToolStripSeparator schemaToolStripSeparator;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateTabs = new TabControl();
@@ -44,7 +43,7 @@
             schemaToolStrip = new ToolStrip();
             schemaNewCommand = new ToolStripButton();
             schemaOpenCommand = new ToolStripButton();
-            schemaBuildCommand = new ToolStripButton();
+            schemaDeleteCommand = new ToolStripButton();
             transformTab = new TabPage();
             transformToolStrip = new ToolStrip();
             transformNewCommand = new ToolStripButton();
@@ -63,12 +62,10 @@
             bindingObject = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             contextTemplate = new ContextMenuStrip(components);
-            schemaDeleteCommand = new ToolStripButton();
             templateLayout = new TableLayoutPanel();
             schemaLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
-            schemaToolStripSeparator = new ToolStripSeparator();
             templateLayout.SuspendLayout();
             templateTabs.SuspendLayout();
             schemaTab.SuspendLayout();
@@ -194,7 +191,7 @@
             // 
             // schemaToolStrip
             // 
-            schemaToolStrip.Items.AddRange(new ToolStripItem[] { schemaNewCommand, schemaOpenCommand, schemaDeleteCommand, schemaToolStripSeparator, schemaBuildCommand });
+            schemaToolStrip.Items.AddRange(new ToolStripItem[] { schemaNewCommand, schemaOpenCommand, schemaDeleteCommand });
             schemaToolStrip.Location = new Point(0, 0);
             schemaToolStrip.Name = "schemaToolStrip";
             schemaToolStrip.Size = new Size(450, 25);
@@ -221,15 +218,15 @@
             schemaOpenCommand.Text = "Open Schema";
             schemaOpenCommand.Click += SchemaOpenCommand_Click;
             // 
-            // schemaBuildCommand
+            // schemaDeleteCommand
             // 
-            schemaBuildCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            schemaBuildCommand.Image = (Image)resources.GetObject("schemaBuildCommand.Image");
-            schemaBuildCommand.ImageTransparentColor = Color.Magenta;
-            schemaBuildCommand.Name = "schemaBuildCommand";
-            schemaBuildCommand.Size = new Size(23, 22);
-            schemaBuildCommand.Text = "build Schema Documents";
-            schemaBuildCommand.Click += SchemaBuildCommand_Click;
+            schemaDeleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            schemaDeleteCommand.Image = (Image)resources.GetObject("schemaDeleteCommand.Image");
+            schemaDeleteCommand.ImageTransparentColor = Color.Magenta;
+            schemaDeleteCommand.Name = "schemaDeleteCommand";
+            schemaDeleteCommand.Size = new Size(23, 22);
+            schemaDeleteCommand.Text = "Delete Schema";
+            schemaDeleteCommand.Click += SchemaDeleteCommand_Click;
             // 
             // transformTab
             // 
@@ -382,25 +379,15 @@
             FileNameColumn.Name = "FileNameColumn";
             FileNameColumn.ReadOnly = true;
             // 
+            // bindingSchema
+            // 
+            bindingSchema.CurrentChanged += BindingSchema_CurrentChanged;
+            bindingSchema.ListChanged += BindingSchema_ListChanged;
+            // 
             // contextTemplate
             // 
             contextTemplate.Name = "contextTemplate";
             contextTemplate.Size = new Size(61, 4);
-            // 
-            // schemaToolStripSeparator
-            // 
-            schemaToolStripSeparator.Name = "schemaToolStripSeparator";
-            schemaToolStripSeparator.Size = new Size(6, 25);
-            // 
-            // schemaDeleteCommand
-            // 
-            schemaDeleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            schemaDeleteCommand.Image = (Image)resources.GetObject("schemaDeleteCommand.Image");
-            schemaDeleteCommand.ImageTransparentColor = Color.Magenta;
-            schemaDeleteCommand.Name = "schemaDeleteCommand";
-            schemaDeleteCommand.Size = new Size(23, 22);
-            schemaDeleteCommand.Text = "Delete Schema";
-            schemaDeleteCommand.Click += SchemaDeleteCommand_Click;
             // 
             // Template
             // 
@@ -466,7 +453,6 @@
         private ToolStrip schemaToolStrip;
         private ToolStripButton schemaNewCommand;
         private ToolStripButton schemaOpenCommand;
-        private ToolStripButton schemaBuildCommand;
         private ToolStrip transformToolStrip;
         private ToolStripButton transformNewCommand;
         private ToolStripButton transformOpenCommand;

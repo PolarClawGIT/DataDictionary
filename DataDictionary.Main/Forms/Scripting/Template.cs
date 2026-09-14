@@ -46,7 +46,6 @@ namespace DataDictionary.Main.Forms.Scripting
             schemaOpenCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
             schemaNewCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
             schemaDeleteCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Delete);
-            schemaBuildCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
 
             transformOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
             transformNewCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
@@ -105,8 +104,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.TemplateData.AddBinding(templateDescriptionData, e => e.TemplateDescription);
 
+                // Schema Tab
                 schemaData.AutoGenerateColumns = false;
                 schemaData.DataSource = bindingSchema;
+                schemaOpenCommand.Enabled = false;
+                schemaDeleteCommand.Enabled = false;
 
                 transformsData.AutoGenerateColumns = false;
                 transformsData.DataSource = bindingTransform;
@@ -191,12 +193,35 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SchemaDeleteCommand_Click(object sender, EventArgs e)
         {
             if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
-            { formBinding.Remove(value); }           
+            { formBinding.Remove(value); }
         }
 
-        private void SchemaBuildCommand_Click(object sender, EventArgs e)
+
+        private void BindingSchema_CurrentChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
+            {
+                schemaOpenCommand.Enabled = true;
+                schemaDeleteCommand.Enabled = true;
+            }
+            else
+            {
+                schemaOpenCommand.Enabled = false;
+                schemaDeleteCommand.Enabled = false;
+            }
+        }
+
+        private void BindingSchema_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if (e.ListChangedType is ListChangedType.ItemAdded or ListChangedType.ItemDeleted or ListChangedType.Reset)
+            {
+                if (formBinding.SchemaData.Count == 0)
+                {
+                    // Things that must have at least one schema. Currently, nothing.
+                }
+                else
+                { }
+            }
         }
 
         private void TransformNewCommand_Click(object sender, EventArgs e)
@@ -227,7 +252,6 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             throw new NotImplementedException();
         }
-
 
     }
 }
