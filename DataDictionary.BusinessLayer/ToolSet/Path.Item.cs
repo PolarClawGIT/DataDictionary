@@ -432,11 +432,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
         }
 
         /// <summary>
-        /// Combines this Path with the parent Path provided.
+        /// Combines this Path with the parent Path to a new PathItem.
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public PathItem Merge(PathItem parent)
+        public PathItem Prepend(PathItem parent)
         {
             List<String> parts = new List<String>();
             Int32 childIndex = 0;
@@ -469,6 +469,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
             return new PathItem(parts.ToArray());
         }
+
+        /// <summary>
+        /// Combines this Path with the child Path to a new PathItem.
+        /// </summary>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        public PathItem Append(PathItem child)
+        { return child.Prepend(this); }
 
         /// <summary>
         /// True if the path of the Parent is contained in this path.

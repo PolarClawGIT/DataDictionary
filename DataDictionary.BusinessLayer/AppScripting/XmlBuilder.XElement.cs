@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {   // Think this is the factory pattern.
 
             build = null;
-            PathItem key = new PathItem(PathItem.Parse(targetObject.ObjectPath));
+            PathIndex key = new PathIndex(new TemplateObjectIndex(targetObject));
 
             // Search the Attributes and get the Paths associated with them
             List<AttributeValue> attributes = model.Attribute.Attributes.
@@ -43,14 +43,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (attributeSubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, attributeSubject.Attribute.AttributePath), attributeSubject.Attribute }).
-                    Union(model.Attribute.Attributes.Select(s => new { Path = s.AttributePath, Attribute = s })).
-                    Where(w => key.Equals(w.Path) && w.Attribute.Scope == targetObject.ObjectScope).
+                        (attributeSubject, subject) => new { Path = new PathIndex(subject, attributeSubject.Attribute), attributeSubject.Attribute }).
+                    Union(model.Attribute.Attributes.Select(s => new { Path = new PathIndex(s), Attribute = s })).
+                    Where(w => key.Equals(w.Path)).
                     Select(s => s.Attribute).
                     ToList();
 
             // Search the Entities and get the Paths associated with them
-            List<EntityValue> entities = model.Entity.Entities.
+            List <EntityValue> entities = model.Entity.Entities.
                     Join(model.Entity.SubjectArea,
                         entity => new EntityIndex(entity),
                         subject => new EntityIndex(subject),
@@ -58,9 +58,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (entitySubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, entitySubject.Entity.EntityPath), entitySubject.Entity }).
-                    Union(model.Entity.Entities.Select(s => new { Path = s.EntityPath, Entity = s })).
-                    Where(w => key.Equals(w.Path) && w.Entity.Scope == targetObject.ObjectScope).
+                        (entitySubject, subject) => new { Path = new PathIndex(subject, entitySubject.Entity), entitySubject.Entity }).
+                    Union(model.Entity.Entities.Select(s => new { Path = new PathIndex(s), Entity = s })).
+                    Where(w => key.Equals(w.Path)).
                     Select(s => s.Entity).
                     ToList();
 
@@ -73,9 +73,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (processSubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, processSubject.Process.ProcessPath), processSubject.Process }).
-                    Union(model.Process.Processes.Select(s => new { Path = s.ProcessPath, Process = s })).
-                    Where(w => key.Equals(w.Path) && w.Process.Scope == targetObject.ObjectScope).
+                        (processSubject, subject) => new { Path = new PathIndex(subject, processSubject.Process), processSubject.Process }).
+                    Union(model.Process.Processes.Select(s => new { Path = new PathIndex(s), Process = s })).
+                    Where(w => key.Equals(w.Path)).
                     Select(s => s.Process).
                     ToList();
 

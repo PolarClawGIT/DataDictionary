@@ -6,13 +6,13 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IAttributeValue : IAttributeItem, 
+    public interface IAttributeValue : IAttributeItem,
         IAttributeIndex, IAttributeIndexName,
         IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>
-    public partial class AttributeValue : AttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
+    public class AttributeValue : AttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -29,12 +29,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
         /// <summary>
-        /// Path Index version of the AttributeName
+        /// Path of the AttributeName
         /// </summary>
         public PathItem AttributePath
         {
-            get
-            { return new PathItem(new PathItem(PathItem.Parse(AttributeName).ToArray())); }
+            get { return pathValue.Path; }
             set
             {
                 AttributeName = value.MemberFullPath;
@@ -52,7 +51,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 {
                     if (String.IsNullOrWhiteSpace(AttributeName))
                     { return new PathItem(AttributeTitle); }
-                    else { return new PathItem(new PathItem(PathItem.Parse(AttributeName).ToArray())); }
+                    else { return new PathItem(PathItem.Parse(AttributeName)); }
                 },
                 GetScope = () => Scope,
                 GetTitle = () => AttributeTitle ?? Scope.GetEnumeration().Name,

@@ -242,7 +242,7 @@ namespace DataDictionary.Main.Forms.General
                         && subjectData.FirstOrDefault(
                             w => source.SubjectIndex.Equals(w))
                             is HelpSubjectValue value)
-                    { result.Path = new HelpSubjectIndexPath(value.Path.Merge(source.Path)); }
+                    { result.Path = new HelpSubjectIndexPath(value.Path.Prepend(source.Path)); }
                     else { result.Path = source.Path; }
 
                     source.SubjectIndex = new HelpSubjectIndex(result);

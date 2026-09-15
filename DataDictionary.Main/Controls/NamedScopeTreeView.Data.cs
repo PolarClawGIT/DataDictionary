@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Controls
             public NamedScopeNode(NamedScopeNode parent, INamedScopeValue value) : this(value)
             {
                 Parent = parent;
-                Path = value.Path.Merge(parent.Path);
+                Path = value.Path.Prepend(parent.Path);
             }
 
             public override String ToString()

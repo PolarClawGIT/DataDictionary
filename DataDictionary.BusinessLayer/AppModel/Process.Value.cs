@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public partial class ProcessValue : ProcessItem, IProcessValue, IPathValue, INamedScopeSourceValue
+    public class ProcessValue : ProcessItem, IProcessValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -37,8 +37,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// </summary>
         public PathItem ProcessPath
         {
-            get
-            { return new PathItem(new PathItem(PathItem.Parse(ProcessName).ToArray())); }
+            get { return pathValue.Path; }
             set
             {
                 ProcessName = value.MemberFullPath;
@@ -56,7 +55,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 {
                     if (String.IsNullOrWhiteSpace(ProcessName))
                     { return new PathItem(ProcessTitle); }
-                    else { return new PathItem(new PathItem(PathItem.Parse(ProcessName).ToArray())); }
+                    else { return new PathItem(PathItem.Parse(ProcessName)); }
                 },
                 GetScope = () => Scope,
                 GetTitle = () => ProcessTitle ?? Scope.GetEnumeration().Name,

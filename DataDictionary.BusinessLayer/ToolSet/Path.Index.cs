@@ -35,10 +35,16 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public virtual Boolean HasValue { get { return Path.HasValue && Scope != ScopeType.Null; } }
 
         /// <summary>
+        /// Blank internal constructor.
+        /// </summary>
+        protected PathIndex() : base()
+        { }
+
+        /// <summary>
         /// Constructor that clones an existing IPathIndex
         /// </summary>
         /// <param name="source"></param>
-        public PathIndex(IPathIndex source): base()
+        public PathIndex(IPathIndex source) : this()
         {
             Path = source.Path;
             Scope = source.Scope;
@@ -48,18 +54,47 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// Constructor used to build a PathIndex from objects that support IPathValue.
         /// </summary>
         /// <param name="source"></param>
-        public PathIndex(IPathValue source) : base()
+        public PathIndex(IPathValue source) : this()
         {
             Path = source.Path;
             Scope = source.Scope;
         }
 
         /// <summary>
+        /// Allows the construction of a PathIndex from a chain of PathValues.
+        /// </summary>
+        /// <param name="paths"></param>
+        /// <remarks>
+        /// This handles to nested value scenario such as Subject Areas.<br/>
+        /// The last item in the list determines the scope.</remarks>
+        public PathIndex(params IEnumerable<IPathValue> paths) : this()
+        {
+            PathItem? newPath = null;
+
+            foreach (var item in paths)
+            {
+                if (newPath is null)
+                { newPath = new PathItem(item.Path); }
+                else
+                { newPath = newPath.Append(item.Path); }
+
+                Scope = item.Scope;
+            }
+
+            if (newPath is not null)
+            { Path = newPath; }
+        }
+
+        /// <summary>
         /// Constructor that handles Model Aliases
         /// </summary>
         /// <param name="source"></param>
-        public PathIndex(AppModel.AliasIndex source): base()
-        {
+        /// <example>
+        /// var source = new AttributeAliasValue(); // or EntityAliasValue or ProcessAliasValue ...
+        /// var x = new PathIndex(new AliasIndex(source));
+        /// </example>
+        public PathIndex(AppModel.AliasIndex source) : this()
+        {   // This is needed to deal with situations where IAttributeAliasValue is a IAliasIndex and a IPathValue.
             Path = new PathItem(PathItem.Parse(source.AliasPath));
             Scope = source.AliasScope;
         }
@@ -68,8 +103,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// Constructor that handles Template Objects
         /// </summary>
         /// <param name="source"></param>
-        public PathIndex(AppScripting.TemplateObjectIndex source) : base()
-        {
+        /// <example>
+        /// var source = new SchemaDocumentValue(); // or TransformDocumentValue ...
+        /// var x = new PathIndex(new TemplateObjectIndex(source));
+        /// </example>
+        public PathIndex(AppScripting.TemplateObjectIndex source) : this()
+        {   // This is needed to deal with situations where ISchemaDocumentValue is a ITemplateObjectIndex and a IPathValue
             Path = new PathItem(PathItem.Parse(source.ObjectPath));
             Scope = source.ObjectScope;
         }
