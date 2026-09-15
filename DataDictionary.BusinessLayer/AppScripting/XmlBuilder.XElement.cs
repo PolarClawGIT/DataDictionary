@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             PathItem key = new PathItem(PathItem.Parse(targetObject.ObjectPath));
 
             // Search the Attributes and get the Paths associated with them
-            var attributes = model.Attribute.Attributes.
+            List<AttributeValue> attributes = model.Attribute.Attributes.
                     Join(model.Attribute.SubjectArea,
                         attribute => new AttributeIndex(attribute),
                         subject => new AttributeIndex(subject),
@@ -44,13 +44,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
                         (attributeSubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, attributeSubject.Attribute.AttributePath), attributeSubject.Attribute }).
-                    Union(model.Attribute.Attributes.
-                        Select(s => new { Path = s.AttributePath, Attribute = s })).
+                    Union(model.Attribute.Attributes.Select(s => new { Path = s.AttributePath, Attribute = s })).
                     Where(w => key.Equals(w.Path) && w.Attribute.Scope == targetObject.ObjectScope).
+                    Select(s => s.Attribute).
                     ToList();
 
             // Search the Entities and get the Paths associated with them
-            var entities = model.Entity.Entities.
+            List<EntityValue> entities = model.Entity.Entities.
                     Join(model.Entity.SubjectArea,
                         entity => new EntityIndex(entity),
                         subject => new EntityIndex(subject),
@@ -59,13 +59,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
                         (entitySubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, entitySubject.Entity.EntityPath), entitySubject.Entity }).
-                    Union(model.Entity.Entities.
-                        Select(s => new { Path = s.EntityPath, Entity = s })).
+                    Union(model.Entity.Entities.Select(s => new { Path = s.EntityPath, Entity = s })).
                     Where(w => key.Equals(w.Path) && w.Entity.Scope == targetObject.ObjectScope).
+                    Select(s => s.Entity).
                     ToList();
 
             // Search the Processes and get the Paths associated with them
-            var processes = model.Process.Processes.
+            List<ProcessValue> processes = model.Process.Processes.
                     Join(model.Process.SubjectArea,
                         process => new ProcessIndex(process),
                         subject => new ProcessIndex(subject),
@@ -74,16 +74,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
                         (processSubject, subject) => new { Path = new PathItem(subject.SubjectAreaPath, processSubject.Process.ProcessPath), processSubject.Process }).
-                    Union(model.Process.Processes.
-                        Select(s => new { Path = s.ProcessPath, Process = s })).
+                    Union(model.Process.Processes.Select(s => new { Path = s.ProcessPath, Process = s })).
                     Where(w => key.Equals(w.Path) && w.Process.Scope == targetObject.ObjectScope).
+                    Select(s => s.Process).
                     ToList();
 
-            // Wow, this Linq logic actually worked. Not certain how stable or east to debug it is. Consider breaking it up?
+            // Wow, this Linq logic actually worked. Not certain how stable or easy to debug it is. Consider breaking it up?
+            // TODO: Consider moving each to individual data objects?
 
             if (attributes.Count > 0)
             {
-                build = (builders) => Build(builders, attributes.Select(s => s.Attribute), model.Attribute.Properties);
+                build = (builders) => Build(builders, attributes, model.Attribute.Properties);
                 return true;
             }
             // TODO: Add results for Entity and Process
