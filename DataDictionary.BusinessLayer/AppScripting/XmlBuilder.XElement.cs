@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="targetObject"></param>
         /// <param name="build"></param>
         /// <returns></returns>
-        public static Boolean TryGetBuilder(this IModel model, ITemplateObjectNameIndex targetObject, [NotNullWhen(true)] out Func<IEnumerable<XmlBuilder>, XElement>? build)
+        public static Boolean TryGetBuilder(this IModel model, ITemplateObjectIndex targetObject, [NotNullWhen(true)] out Func<IEnumerable<XmlBuilder>, XElement>? build)
         {   // Think this is the factory pattern.
 
             build = null;
@@ -96,7 +96,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="model"></param>
         /// <param name="targetObject"></param>
         /// <returns></returns>
-        public static Func<IEnumerable<XmlBuilder>, XElement>? GetBuilder(this IModel model, ITemplateObjectNameIndex targetObject)
+        public static Func<IEnumerable<XmlBuilder>, XElement>? GetBuilder(this IModel model, ITemplateObjectIndex targetObject)
         {
             if(model.TryGetBuilder(targetObject, out Func<IEnumerable<XmlBuilder>, XElement>? builders))
             { return builders; }

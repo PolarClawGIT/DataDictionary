@@ -7,73 +7,97 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Interface for the Key used by Model Aliases
     /// </summary>
-    public interface IAliasKey : IAliasKeyName
+    public interface IAliasKey : IKey
     {
         /// <summary>
         /// Application Scope of the Alias.
         /// </summary>
         ScopeType AliasScope { get; }
+
+        /// <summary>
+        /// Name of the Alias.
+        /// </summary>
+        String? AliasPath { get; }
     }
 
     /// <summary>
     /// Implementation of the Key used by Model Aliases
     /// </summary>
-    public class AliasKey : AliasKeyName, IAliasKey,
+    public class AliasKey : IAliasKey,
         IKeyEquality<IAliasKey>, IKeyEquality<AliasKey>
     {
         /// <inheritdoc/>
         public ScopeType AliasScope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
-        public override Boolean HasValue { get { return base.HasValue && AliasScope != ScopeType.Null; } }
+        public String? AliasPath { get; init; } = string.Empty;
+
+        /// <inheritdoc/>
+        public Boolean HasValue { get { return !String.IsNullOrEmpty(AliasPath) && AliasScope != ScopeType.Null; } }
 
         /// <summary>
         /// Constructor for the Key used by Aliases
         /// </summary>
         /// <param name="source"></param>
-        public AliasKey(IAliasKey source) : base(source)
-        { AliasScope = source.AliasScope; }
+        public AliasKey(IAliasKey source) : base()
+        {
+            AliasScope = source.AliasScope;
+            AliasPath = source.AliasPath;
+        }
 
         /// <summary>
         /// Constructor for the Key used by Aliases given a TableColumn
         /// </summary>
         /// <param name="source"></param>
         /// <param name="scope"></param>
-        protected AliasKey(ITableColumnKeyName source, ScopeType scope) : base(source)
-        { AliasScope = scope; }
+        protected AliasKey(ITableColumnKeyName source, ScopeType scope) : base()
+        {
+            AliasScope = scope;
+            AliasPath = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName);
+        }
 
         /// <summary>
         /// Constructor for the Key used by Aliases given a Table
         /// </summary>
         /// <param name="source"></param>
         /// <param name="scope"></param>
-        protected AliasKey(ITableKeyName source, ScopeType scope) : base(source)
-        { AliasScope = scope; }
+        protected AliasKey(ITableKeyName source, ScopeType scope) : base()
+        {
+            AliasScope = scope;
+            AliasPath = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName);
+        }
 
         /// <summary>
         /// Constructor for the Domain Alias Name Key from Attribute Alias
         /// </summary>
         /// <param name="alias"></param>
-        public AliasKey(AppModel.IAttributeAliasItem alias) : base(alias)
-        { AliasScope = alias.AliasScope; }
+        public AliasKey(AppModel.IAttributeAliasItem alias) : base()
+        {
+            AliasScope = alias.AliasScope;
+            AliasPath = alias.AliasPath ?? String.Empty;
+        }
 
         /// <summary>
         /// Constructor for the Domain Alias Name Key from Entity Alias
         /// </summary>
         /// <param name="alias"></param>
-        public AliasKey(AppModel.IEntityAliasItem alias) : base(alias)
-        { AliasScope = alias.AliasScope; }
+        public AliasKey(AppModel.IEntityAliasItem alias) : base()
+        {
+            AliasScope = alias.AliasScope;
+            AliasPath = alias.AliasPath ?? String.Empty;
+        }
 
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(AliasKey? other)
         {
             return
-                other is AliasKey &&
-                new AliasKeyName(this).Equals(other) &&
-                AliasScope is not ScopeType.Null &&
-                other.AliasScope is not ScopeType.Null &&
-                AliasScope == other.AliasScope;
+                other is AliasKey key
+                && this.HasValue
+                && key.HasValue
+                && !String.IsNullOrEmpty(AliasPath)
+                && !String.IsNullOrEmpty(other.AliasPath)
+                && AliasPath.Equals(other.AliasPath, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>

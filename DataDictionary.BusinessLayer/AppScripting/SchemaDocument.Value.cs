@@ -9,7 +9,7 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateObjectNameIndex, ISchemaComposite,
+    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateObjectIndex, ISchemaComposite,
         IScopeType, ITemporal
     {
         /// <summary>
@@ -131,8 +131,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <param name="getBuilders"></param>
         /// <param name="nodeValues"></param>
-        /// <remarks>Use <see cref="XmlBuilderXElement.GetBuilder(AppModel.IModel, ITemplateObjectNameIndex)"/> to get the builders.</remarks>
-        public void BuildContent(Func<ITemplateObjectNameIndex, Func<IEnumerable<XmlBuilder>, XElement>?> getBuilders, IEnumerable<XmlBuilderNode> nodeValues)
+        /// <remarks>Use <see cref="XmlBuilderXElement.GetBuilder(AppModel.IModel, ITemplateObjectIndex)"/> to get the builders.</remarks>
+        public void BuildContent(Func<ITemplateObjectIndex, Func<IEnumerable<XmlBuilder>, XElement>?> getBuilders, IEnumerable<XmlBuilderNode> nodeValues)
         {
             var builder = getBuilders(this);
 

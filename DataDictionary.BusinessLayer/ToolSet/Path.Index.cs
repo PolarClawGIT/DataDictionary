@@ -6,7 +6,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Interface for a class that has a Path and a Scope.
     /// </summary>
-    public interface IPathIndex: IScopeType
+    public interface IPathIndex : IKey, IScopeType
     {
         // Todo: Need to setup Alias and Template Objects to be comparable to this.
         // In the end, the goal is to be able to compare any given IPathIndex to a target Path/Scope.
@@ -16,5 +16,94 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// The NamedPath for the Value
         /// </summary>
         PathItem Path { get; }
+    }
+
+    /// <summary>
+    /// PathIndex represents a naming of an object such that it can be searched for across different scopes.
+    /// </summary>
+    public class PathIndex : IPathIndex,
+        IKeyEquality<PathIndex>,
+        IKeyEquality<IPathIndex>
+    {
+        /// <inheritdoc/>
+        public PathItem Path { get; init; } = new PathItem();
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; init; } = ScopeType.Null;
+
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return Path.HasValue && Scope != ScopeType.Null; } }
+
+        /// <summary>
+        /// Constructor that clones an existing IPathIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public PathIndex(IPathIndex source): base()
+        {
+            Path = source.Path;
+            Scope = source.Scope;
+        }
+
+        /// <summary>
+        /// Constructor used to build a PathIndex from objects that support IPathValue.
+        /// </summary>
+        /// <param name="source"></param>
+        public PathIndex(IPathValue source) : base()
+        {
+            Path = source.Path;
+            Scope = source.Scope;
+        }
+
+        /// <summary>
+        /// Constructor that handles Model Aliases
+        /// </summary>
+        /// <param name="source"></param>
+        public PathIndex(AppModel.AliasIndex source): base()
+        {
+            Path = new PathItem(PathItem.Parse(source.AliasPath));
+            Scope = source.AliasScope;
+        }
+
+        /// <summary>
+        /// Constructor that handles Template Objects
+        /// </summary>
+        /// <param name="source"></param>
+        public PathIndex(AppScripting.TemplateObjectIndex source) : base()
+        {
+            Path = new PathItem(PathItem.Parse(source.ObjectPath));
+            Scope = source.ObjectScope;
+        }
+
+        #region IEquatable
+        /// <inheritdoc/>
+        public Boolean Equals(PathIndex? other)
+        {
+            return other is PathIndex key
+                && this.HasValue
+                && key.HasValue
+                && this.Scope == other.Scope
+                && this.Path.Equals(other.Path);
+        }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IPathIndex? other)
+        { return other is IPathIndex value && Equals(new PathIndex(value)); }
+
+        /// <inheritdoc/>
+        public override Boolean Equals(object? other)
+        { return other is IPathIndex value && Equals(new PathIndex(value)); }
+
+        /// <inheritdoc/>
+        public static Boolean operator ==(PathIndex left, PathIndex right)
+        { return left.Equals(right); }
+
+        /// <inheritdoc/>
+        public static Boolean operator !=(PathIndex left, PathIndex right)
+        { return !left.Equals(right); }
+
+        /// <inheritdoc/>
+        public override Int32 GetHashCode()
+        { return HashCode.Combine(Scope.GetHashCode(), Path.GetHashCode()); }
+        #endregion
     }
 }
