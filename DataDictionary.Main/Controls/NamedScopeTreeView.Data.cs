@@ -10,6 +10,11 @@ namespace DataDictionary.Main.Controls
     {
         TreeView treeControl;
 
+        // TODO: Delete of a source data item does not trigger the node to be removed.
+        // Currently this requires the entire tree to be rebuilt.
+        // Some screens make this call. Others do not.
+        // Reconsider storage/maintenance of the list. Rather then storing a hierarchy, only store the paths.
+
         class NamedScopeNode
         {
             public NamedScopeNode? Parent { get; init; } = null;
