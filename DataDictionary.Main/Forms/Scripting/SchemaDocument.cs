@@ -81,7 +81,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 formBinding.DocumentData.AddBinding(objectIsExcluded, e => e.IsExcluded);
                 formBinding.DocumentData.AddBinding(objectKeepOrphaned, e => e.KeepOrphaned);
-                
+
+                isInModelData.Checked = formBinding.IsInModel();
 
                 ValidateFile();
             }
@@ -194,6 +195,15 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DocumentFileData_Validated(object sender, EventArgs e)
         { ValidateFile(); }
 
+        private void DocumentContentData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
+
+        private void ObjectScopeData_Validated(object sender, EventArgs e)
+        { isInModelData.Checked = formBinding.IsInModel(); }
+
+        private void ObjectPathData_Validated(object sender, EventArgs e)
+        { isInModelData.Checked = formBinding.IsInModel(); }
+
         private Boolean ValidateFile()
         {
             Boolean result = true;
@@ -217,10 +227,10 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             CommandButtons[ButtonType.Save].Enabled = result;
+
             return result;
         }
 
-        private void DocumentContentData_Validated(object sender, EventArgs e)
-        { ValidateFile(); }
+
     }
 }

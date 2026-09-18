@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
-        public String FileName
+        public virtual String FileName
         {
             get { return GetValue(nameof(FileName)) ?? String.Empty; }
             set { SetValue(nameof(FileName), value); }
@@ -50,7 +50,7 @@ namespace DataDictionary.DataLayer.AppScript
         public ITemporal Temporal { get; }
 
         /// <inheritdoc/>
-        public ScopeType ObjectScope
+        public virtual ScopeType ObjectScope
         {
             get
             {
@@ -64,7 +64,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? ObjectPath
+        public virtual String? ObjectPath
         {
             get { return GetValue(nameof(ObjectPath)); }
             set { SetValue(nameof(ObjectPath), value); }

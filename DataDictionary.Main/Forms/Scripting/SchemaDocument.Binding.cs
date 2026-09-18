@@ -101,6 +101,9 @@ namespace DataDictionary.Main.Forms.Scripting
                     value.BuildContent(BusinessData.Model.GetBuilder, nodeValues);
                 }
             }
+
+            public Boolean IsInModel()
+            { return DocumentData.TryGetCurrent(out SchemaDocumentValue? value) && BusinessData.Model.IsInModel(value); }
         }
     }
 }

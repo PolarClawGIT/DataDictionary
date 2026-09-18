@@ -207,6 +207,7 @@
             objectScopeData.ReadOnly = false;
             objectScopeData.Size = new Size(490, 46);
             objectScopeData.TabIndex = 2;
+            objectScopeData.Validated += ObjectScopeData_Validated;
             // 
             // objectPathData
             // 
@@ -220,6 +221,7 @@
             objectPathData.SelectIcon = (Image)resources.GetObject("objectPathData.SelectIcon");
             objectPathData.Size = new Size(490, 44);
             objectPathData.TabIndex = 3;
+            objectPathData.Validated += ObjectPathData_Validated;
             objectPathData.SelectCommand += ObjectNameData_SelectCommand;
             // 
             // schemaTitleData

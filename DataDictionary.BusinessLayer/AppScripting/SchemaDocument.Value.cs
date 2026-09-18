@@ -68,6 +68,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IEnumerable<FileFormatType> FileFormats { get { return SchemaFile.FileFormats; } }
 
         /// <inheritdoc/>
+        public override String? ObjectPath 
+        {
+            get { return base.ObjectPath; }
+            set
+            {
+                PathItem path = new PathItem(PathItem.Parse(value));
+                base.ObjectPath = path.MemberFullPath;
+            }
+        }
+
+        /// <inheritdoc/>
         public SchemaDocumentValue() : base()
         {
             pathValue = new PathValue(this)
