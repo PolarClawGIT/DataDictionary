@@ -48,7 +48,7 @@
             transformToolStrip = new ToolStrip();
             transformNewCommand = new ToolStripButton();
             transformOpenCommand = new ToolStripButton();
-            transformBuildCommand = new ToolStripButton();
+            transformDeleteCommand = new ToolStripButton();
             transformsData = new DataGridView();
             transformTitleColumn = new DataGridViewTextBoxColumn();
             documentTab = new TabPage();
@@ -256,7 +256,7 @@
             // 
             // transformToolStrip
             // 
-            transformToolStrip.Items.AddRange(new ToolStripItem[] { transformNewCommand, transformOpenCommand, transformBuildCommand });
+            transformToolStrip.Items.AddRange(new ToolStripItem[] { transformNewCommand, transformOpenCommand, transformDeleteCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
             transformToolStrip.Size = new Size(450, 25);
@@ -283,15 +283,15 @@
             transformOpenCommand.Text = "open Transform";
             transformOpenCommand.Click += TransformOpenCommand_Click;
             // 
-            // transformBuildCommand
+            // transformDeleteCommand
             // 
-            transformBuildCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            transformBuildCommand.Image = (Image)resources.GetObject("transformBuildCommand.Image");
-            transformBuildCommand.ImageTransparentColor = Color.Magenta;
-            transformBuildCommand.Name = "transformBuildCommand";
-            transformBuildCommand.Size = new Size(23, 22);
-            transformBuildCommand.Text = "build Transform Documents";
-            transformBuildCommand.Click += TransformBuildCommand_Click;
+            transformDeleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            transformDeleteCommand.Image = (Image)resources.GetObject("transformDeleteCommand.Image");
+            transformDeleteCommand.ImageTransparentColor = Color.Magenta;
+            transformDeleteCommand.Name = "transformDeleteCommand";
+            transformDeleteCommand.Size = new Size(23, 22);
+            transformDeleteCommand.Text = "toolStripButton1";
+            transformDeleteCommand.Click += TransformDeleteCommand_Click;
             // 
             // transformsData
             // 
@@ -384,6 +384,10 @@
             bindingSchema.CurrentChanged += BindingSchema_CurrentChanged;
             bindingSchema.ListChanged += BindingSchema_ListChanged;
             // 
+            // bindingTransform
+            // 
+            bindingTransform.CurrentChanged += BindingTransform_CurrentChanged;
+            // 
             // contextTemplate
             // 
             contextTemplate.Name = "contextTemplate";
@@ -456,10 +460,10 @@
         private ToolStrip transformToolStrip;
         private ToolStripButton transformNewCommand;
         private ToolStripButton transformOpenCommand;
-        private ToolStripButton transformBuildCommand;
         private TableLayoutPanel tableLayoutPanel1;
         private ToolStrip documentToolStrip;
         private ToolStripButton documentOpenCommand;
         private ToolStripButton schemaDeleteCommand;
+        private ToolStripButton transformDeleteCommand;
     }
 }

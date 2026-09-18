@@ -1,8 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using System.ComponentModel;
-using System.Data;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -79,6 +77,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public void Remove(SchemaDefinitionValue value)
             { GetData().Remove(new SchemaDefinitionIndex(value)); }
+
+            public void Remove(TransformValue value)
+            { GetData().Remove(new TransformIndex(value)); }
         }
     }
 }

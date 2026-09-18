@@ -49,7 +49,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             transformOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
             transformNewCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
-            transformBuildCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Export);
+            transformDeleteCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Delete);
 
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
@@ -110,11 +110,18 @@ namespace DataDictionary.Main.Forms.Scripting
                 schemaOpenCommand.Enabled = false;
                 schemaDeleteCommand.Enabled = false;
 
+                // Transform Tab
                 transformsData.AutoGenerateColumns = false;
                 transformsData.DataSource = bindingTransform;
+                transformOpenCommand.Enabled = false;
+                transformDeleteCommand.Enabled = false;
+
+                // Document Tab
 
                 documentData.AutoGenerateColumns = false;
                 documentData.DataSource = bindingTransform;
+
+
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -243,15 +250,32 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void TransformBuildCommand_Click(object sender, EventArgs e)
+        private void TransformDeleteCommand_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? value))
+            { formBinding.Remove(value); }
+        }
+
+
+        private void BindingTransform_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? value))
+            {
+                transformOpenCommand.Enabled = true;
+                transformDeleteCommand.Enabled = true;
+            }
+            else
+            {
+                transformOpenCommand.Enabled = false;
+                transformDeleteCommand.Enabled = false;
+            }
         }
 
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
+
 
     }
 }
