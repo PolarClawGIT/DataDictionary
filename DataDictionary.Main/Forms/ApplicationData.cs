@@ -259,8 +259,11 @@ namespace DataDictionary.Main.Forms
             { UpdateTitle(); }
 
             void UpdateTitle()
-            {   // Could not get binding to work on form.Text. Do it manually.
-                // This fires for every field change, not just the Title field.
+            {   // Because IDataValue.Title is normally explicitly implemented, data binding does not see it.
+                // As such, the title on the form never gets updated.
+                // This gets around it by updating title every time the item (row) is changed.
+                //
+                // TODO: Switch to Data Binding using AddBinding on the specific property?
                 if (data.Position >= 0)
                 {
                     if (data.Current is IDataValue dataValue)

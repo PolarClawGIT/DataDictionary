@@ -491,6 +491,12 @@ namespace DataDictionary.Main.Forms
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
+                Form formControl,
+                Expression<Func<TRow, TProperty>> expression)
+            { formControl.DataBindings.Add(CreateBinding(nameof(Form.Text), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding<TProperty>(
                 TextBox formControl,
                 Expression<Func<TRow, TProperty>> expression)
             { formControl.DataBindings.Add(CreateBinding(nameof(TextBox.Text), expression)); }
