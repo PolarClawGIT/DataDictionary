@@ -17,8 +17,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetIcon(ScopeType.Scripting);
 
-            SetTitle("Scripting Manager");
-
             SetCommand(
                 ButtonType.Add,
                 ButtonType.Open,

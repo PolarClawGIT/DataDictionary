@@ -147,7 +147,7 @@
             ClientSize = new Size(458, 450);
             Controls.Add(templateLayout);
             Name = "ScriptingManager";
-            Text = "TemplateManager";
+            Text = "Scripting Manager";
             Load += TemplateManager_Load;
             Controls.SetChildIndex(templateLayout, 0);
             templateLayout.ResumeLayout(false);

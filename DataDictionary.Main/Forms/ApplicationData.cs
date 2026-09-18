@@ -220,12 +220,6 @@ namespace DataDictionary.Main.Forms
                 { return Resources.Icon_Row.MergeImage(Resources.StatusInvalid, default, System.Drawing.Drawing2D.CompositingMode.SourceOver); }
                 else { return result.GetImage(); }
             }
-
-
-
-
-
-
         }
 
         /// <summary>
@@ -243,6 +237,7 @@ namespace DataDictionary.Main.Forms
             data.CurrentChanged += Data_CurrentChanged;
             data.Disposed += Data_Disposed;
             data.DataSourceChanged += Data_DataSourceChanged;
+            data.CurrentItemChanged += Data_CurrentItemChanged;
 
             SetTitle(defaultTitle ?? String.Empty);
 
@@ -250,7 +245,22 @@ namespace DataDictionary.Main.Forms
             { Data_CurrentChanged(data, EventArgs.Empty); }
 
             void Data_CurrentChanged(Object? sender, EventArgs e)
+            { UpdateTitle(); }
+
+            void Data_Disposed(Object? sender, EventArgs e)
             {
+                data.CurrentChanged -= Data_CurrentChanged;
+                data.Disposed -= Data_Disposed;
+                data.DataSourceChanged -= Data_DataSourceChanged;
+                data.CurrentItemChanged -= Data_CurrentItemChanged;
+            }
+
+            void Data_CurrentItemChanged(Object? sender, EventArgs e)
+            { UpdateTitle(); }
+
+            void UpdateTitle()
+            {   // Could not get binding to work on form.Text. Do it manually.
+                // This fires for every field change, not just the Title field.
                 if (data.Position >= 0)
                 {
                     if (data.Current is IDataValue dataValue)
@@ -261,12 +271,6 @@ namespace DataDictionary.Main.Forms
                     { SetTitle(objectValue); }
                     else { SetTitle(defaultTitle ?? String.Empty); }
                 }
-            }
-
-            void Data_Disposed(Object? sender, EventArgs e)
-            {
-                data.CurrentChanged -= Data_CurrentChanged;
-                data.Disposed -= Data_Disposed;
             }
         }
 
