@@ -22,35 +22,46 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { public ScopeType Scope { get; init; } }
 
         /// <summary>
-        /// Try/Get the correct XElement Build method for a given object.
+        /// Searches the Model for Attributes that match the path.
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="targetObject"></param>
-        /// <param name="build"></param>
+        /// <param name="path"></param>
+        /// <param name="values"></param>
         /// <returns></returns>
-        public static Boolean TryGetBuilder(this IModel model, ITemplateObjectIndex targetObject, [NotNullWhen(true)] out Func<IEnumerable<XmlBuilder>, XElement>? build)
-        {   // Think this is the factory pattern.
+        static Boolean TryGetValues(this IModel model, IPathIndex path, out IReadOnlyList<AttributeValue> values)
+        {
+            PathIndex key = new PathIndex(path);
 
-            build = null;
-            PathIndex key = new PathIndex(new TemplateObjectIndex(targetObject));
-
-            // Search the Attributes and get the Paths associated with them
             List<AttributeValue> attributes = model.Attribute.Attributes.
-                    Join(model.Attribute.SubjectArea,
-                        attribute => new AttributeIndex(attribute),
-                        subject => new AttributeIndex(subject),
-                        (Attribute, Subject) => new { Attribute, Subject }).
-                    Join(model.SubjectAreas,
-                        subjectKey => new SubjectAreaIndex(subjectKey.Subject),
-                        subject => new SubjectAreaIndex(subject),
-                        (attributeSubject, subject) => new { Path = new PathIndex(subject, attributeSubject.Attribute), attributeSubject.Attribute }).
-                    Union(model.Attribute.Attributes.Select(s => new { Path = new PathIndex(s), Attribute = s })).
-                    Where(w => key.Equals(w.Path)).
-                    Select(s => s.Attribute).
-                    ToList();
+                Join(model.Attribute.SubjectArea,
+                    attribute => new AttributeIndex(attribute),
+                    subject => new AttributeIndex(subject),
+                    (Attribute, Subject) => new { Attribute, Subject }).
+                Join(model.SubjectAreas,
+                    subjectKey => new SubjectAreaIndex(subjectKey.Subject),
+                    subject => new SubjectAreaIndex(subject),
+                    (attributeSubject, subject) => new { Path = new PathIndex(subject, attributeSubject.Attribute), attributeSubject.Attribute }).
+                Union(model.Attribute.Attributes.Select(s => new { Path = new PathIndex(s), Attribute = s })).
+                Where(w => key.Equals(w.Path)).
+                Select(s => s.Attribute).
+                ToList();
 
-            // Search the Entities and get the Paths associated with them
-            List <EntityValue> entities = model.Entity.Entities.
+            values = attributes.AsReadOnly();
+            return values.Count > 0;
+        }
+
+        /// <summary>
+        /// Searches the Model for Entities that match the path.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="path"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        static Boolean TryGetValues(this IModel model, IPathIndex path, out IReadOnlyList<EntityValue> values)
+        {
+            PathIndex key = new PathIndex(path);
+
+            List<EntityValue> entities = model.Entity.Entities.
                     Join(model.Entity.SubjectArea,
                         entity => new EntityIndex(entity),
                         subject => new EntityIndex(subject),
@@ -64,7 +75,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Select(s => s.Entity).
                     ToList();
 
-            // Search the Processes and get the Paths associated with them
+            values = entities.AsReadOnly();
+            return values.Count > 0;
+        }
+
+        /// <summary>
+        /// Searches the Model for Processes that match the path.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="path"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        static Boolean TryGetValues(this IModel model, IPathIndex path, out IReadOnlyList<ProcessValue> values)
+        {
+            PathIndex key = new PathIndex(path);
+
             List<ProcessValue> processes = model.Process.Processes.
                     Join(model.Process.SubjectArea,
                         process => new ProcessIndex(process),
@@ -79,16 +104,59 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Select(s => s.Process).
                     ToList();
 
-            // Wow, this Linq logic actually worked. Not certain how stable or easy to debug it is. Consider breaking it up?
-            // TODO: Consider moving each to individual data objects?
+            values = processes.AsReadOnly();
+            return values.Count > 0;
+        }
 
-            if (attributes.Count > 0)
+        /// <summary>
+        /// Test to see if the given Template Object is within the Model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="targetObject"></param>
+        /// <returns></returns>
+        public static Boolean IsInModel (this IModel model, ITemplateObjectIndex targetObject)
+        {
+            PathIndex key = new PathIndex(new TemplateObjectIndex(targetObject));
+
+            return model.TryGetValues(key, out IReadOnlyList<AttributeValue> _)
+                || model.TryGetValues(key, out IReadOnlyList<EntityValue> _)
+                || model.TryGetValues(key, out IReadOnlyList<ProcessValue> _);
+        }
+
+        /// <summary>
+        /// Try/Get the correct XElement Build method for a given object.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="targetObject"></param>
+        /// <param name="build"></param>
+        /// <returns></returns>
+        public static Boolean TryGetBuilder(this IModel model, ITemplateObjectIndex targetObject, [NotNullWhen(true)] out Func<IEnumerable<XmlBuilder>, XElement>? build)
+        {   // Think this is the factory pattern.
+
+            build = null;
+            PathIndex key = new PathIndex(new TemplateObjectIndex(targetObject));
+
+            if (model.TryGetValues(key,out IReadOnlyList<AttributeValue> attributes))
             {
                 build = (builders) => Build(builders, attributes, model.Attribute.Properties);
                 return true;
             }
-            // TODO: Add results for Entity and Process
-            else { return false; }
+
+            if (model.TryGetValues(key, out IReadOnlyList<EntityValue> entities))
+            {
+                throw new NotImplementedException();
+                //build = (builders) => Build(builders, entities, model.Entity.Properties);
+                //return true;
+            }
+
+            if (model.TryGetValues(key, out IReadOnlyList<ProcessValue> processes))
+            {
+                throw new NotImplementedException();
+                //build = (builders) => Build(builders, processes, model.Process.Properties);
+                //return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -240,9 +308,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 attributes,
                 (parent) => properties.Where(w => new AttributeIndex(parent).Equals(w))
                 );
-
-
-
             return result;
         }
     }
