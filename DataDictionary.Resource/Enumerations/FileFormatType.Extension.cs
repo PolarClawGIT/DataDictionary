@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.Resource.Enumerations
+﻿using System.Text.RegularExpressions;
+
+namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
     /// Extensions on FileFormat Enum. 
@@ -24,6 +26,28 @@
             if (FileFormatEnumeration.TryParse(value, null, out FileFormatEnumeration? enumeration))
             { result = enumeration.Value; return true; }
             else { result = FileFormatType.Other; return false; }
+        }
+
+        /// <summary>
+        /// Test is a given file name (as string) matches the file extension list of the given FileFormatType.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static Boolean IsFileFormat (this FileFormatType value, String? fileName)
+        {
+            FileFormatEnumeration formats = FileFormatEnumeration.GetValue(value);
+            Boolean result = false;
+
+            foreach (var pattern in formats.Extensions)
+            {   // Google AI result. Changes common file patterns into a Regular expression and test for match.
+                String regexPattern = "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
+
+                if(fileName is String && Regex.IsMatch(fileName, regexPattern, RegexOptions.IgnoreCase))
+                { result = true; }
+            }
+
+            return result;
         }
 
         /// <summary>
