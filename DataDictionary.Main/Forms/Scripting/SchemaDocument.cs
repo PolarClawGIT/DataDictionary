@@ -76,7 +76,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
-                formBinding.DocumentData.AddBinding(documentFileData, e => e.FileName);
+                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.SchemaFileName);
                 formBinding.DocumentData.AddBinding(documentContentData, e => e.FileContent);
 
                 formBinding.DocumentData.AddBinding(objectIsExcluded, e => e.IsExcluded);
@@ -181,7 +181,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
                         {
-                            fileValue.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+                            fileValue.SchemaFileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
                             ValidateFile();
                         }
                     }
@@ -214,13 +214,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 && !schemaValue.IsValid(out Exception? directoryEx))
             { errorProvider.SetError(localPathData.ErrorControl, directoryEx); result = false; }
 
-            errorProvider.SetError(documentFileData.ErrorControl, String.Empty);
+            errorProvider.SetError(schemaFileNameData.ErrorControl, String.Empty);
             errorProvider.SetError(documentContentData.ErrorControl, String.Empty);
 
             if (formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? fileValue))
             {
                 if (!fileValue.IsValid(out Exception? fileEx))
-                { errorProvider.SetError(documentFileData.ErrorControl, fileEx); result = false; }
+                { errorProvider.SetError(schemaFileNameData.ErrorControl, fileEx); result = false; }
 
                 if (fileValue.ContentException is not null)
                 { errorProvider.SetError(documentContentData.ErrorControl, fileValue.ContentException); result = false; }

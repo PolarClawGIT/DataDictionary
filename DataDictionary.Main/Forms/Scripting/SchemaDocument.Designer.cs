@@ -43,7 +43,7 @@
             objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            documentFileData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            schemaFileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingDocument = new BindingSource(components);
@@ -74,7 +74,7 @@
             schemaDocumentLayout.Controls.Add(objectGroupBox, 0, 2);
             schemaDocumentLayout.Controls.Add(schemaTitleData, 0, 1);
             schemaDocumentLayout.Controls.Add(templateTitleData, 0, 0);
-            schemaDocumentLayout.Controls.Add(documentFileData, 0, 4);
+            schemaDocumentLayout.Controls.Add(schemaFileNameData, 0, 4);
             schemaDocumentLayout.Dock = DockStyle.Fill;
             schemaDocumentLayout.Location = new Point(0, 25);
             schemaDocumentLayout.Name = "schemaDocumentLayout";
@@ -252,17 +252,17 @@
             // 
             // documentFileData
             // 
-            documentFileData.AutoSize = true;
-            documentFileData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            documentFileData.Dock = DockStyle.Fill;
-            documentFileData.HeaderText = "Document";
-            documentFileData.Location = new Point(3, 314);
-            documentFileData.Name = "documentFileData";
-            documentFileData.ReadOnly = false;
-            documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
-            documentFileData.Size = new Size(502, 44);
-            documentFileData.TabIndex = 9;
-            documentFileData.SelectCommand += DocumentFileData_SelectCommand;
+            schemaFileNameData.AutoSize = true;
+            schemaFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            schemaFileNameData.Dock = DockStyle.Fill;
+            schemaFileNameData.HeaderText = "Document";
+            schemaFileNameData.Location = new Point(3, 314);
+            schemaFileNameData.Name = "documentFileData";
+            schemaFileNameData.ReadOnly = false;
+            schemaFileNameData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
+            schemaFileNameData.Size = new Size(502, 44);
+            schemaFileNameData.TabIndex = 9;
+            schemaFileNameData.SelectCommand += DocumentFileData_SelectCommand;
             // 
             // openFileDialog
             // 
@@ -325,6 +325,6 @@
         private ErrorProvider errorProvider;
         private ContextMenuStrip documentMenu;
         private SaveFileDialog saveFileDialog;
-        private Controls.SelectTextBoxData documentFileData;
+        private Controls.SelectTextBoxData schemaFileNameData;
     }
 }

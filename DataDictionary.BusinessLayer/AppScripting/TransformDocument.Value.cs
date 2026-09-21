@@ -33,11 +33,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathItem(PathItem.Parse(FileName).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(ScriptedFileName).ToArray()),
                 GetScope = () => Scope,
-                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(FileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+                GetTitle = () => this.ScriptedFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(ScriptedFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ScriptedFileName)
             };
         }
 
@@ -47,11 +47,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathItem(PathItem.Parse(FileName).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(ScriptedFileName).ToArray()),
                 GetScope = () => Scope,
-                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(FileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+                GetTitle = () => this.ScriptedFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(ScriptedFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ScriptedFileName)
             };
         }
     }

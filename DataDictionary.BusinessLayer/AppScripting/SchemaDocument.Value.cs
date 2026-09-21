@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateObjectIndex, ISchemaComposite,
-        IScopeType, ITemporal
+        IScopeType, ITemporal, IFileValue
     {
         /// <summary>
         /// File information to be used with the File Save/Open Dialog.
@@ -19,9 +19,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
     }
 
     /// <inheritdoc/>
-    public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue, IFileValue
+    public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
+        FileValue schemaFile; // Backing field for IFileValue
 
         /// <inheritdoc/>
         PathItem IPathIndex.Path { get { return pathValue.Path; } }
@@ -35,7 +36,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
-        FileValue SchemaFile { get; }
+
+        /// <inheritdoc/>
+        public String FileName
+        {
+            get { return schemaFile.FileName; }
+            set { schemaFile.FileName = value; }
+        }
 
         /// <inheritdoc/>
         public String FileContent
@@ -57,7 +64,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public Exception? ContentException
         {
             get
-            {
+            {   // It is possible that FileContent Set was by-passed.
+                // As such, the content needs to be parsed independently.
                 if (FileContent.TryParse(out XDocument? _, out Exception? exception))
                 { return null; }
                 else { return exception; }
@@ -65,10 +73,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileFormatType> FileFormats { get { return SchemaFile.FileFormats; } }
+        public IEnumerable<FileFormatType> FileFormats { get { return schemaFile.FileFormats; } }
 
         /// <inheritdoc/>
-        public override String? ObjectPath 
+        public override String? ObjectPath
         {
             get { return base.ObjectPath; }
             set
@@ -78,23 +86,24 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
+
         /// <inheritdoc/>
         public SchemaDocumentValue() : base()
         {
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathItem(PathItem.Parse(FileName).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(SchemaFileName).ToArray()),
                 GetScope = () => Scope,
-                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(FileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+                GetTitle = () => this.SchemaFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(SchemaFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(SchemaFileName)
             };
 
-            SchemaFile = new FileValue()
+            schemaFile = new FileValue()
             {
-                GetFileName = () => FileName ?? String.Empty,
-                SetFileName = (value) => FileName = value,
+                GetFileName = () => SchemaFileName ?? String.Empty,
+                SetFileName = (value) => SchemaFileName = value,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
@@ -109,15 +118,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetIndex = () => new DocumentIndex(this),
                 GetPath = () => new PathItem(Scope),
                 GetScope = () => Scope,
-                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(FileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+                GetTitle = () => this.SchemaFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(SchemaFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(SchemaFileName)
             };
 
-            SchemaFile = new FileValue()
+            schemaFile = new FileValue()
             {
-                GetFileName = () => FileName ?? String.Empty,
-                SetFileName = (value) => FileName = value,
+                GetFileName = () => SchemaFileName ?? String.Empty,
+                SetFileName = (value) => SchemaFileName = value,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
@@ -127,15 +136,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Open(FileInfo file)
-        { return SchemaFile.Open(file); }
+        { return schemaFile.Open(file); }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save(FileInfo file)
-        { return SchemaFile.Save(file); }
+        { return schemaFile.Save(file); }
 
         /// <inheritdoc/>
         public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
-        { return SchemaFile.IsValid(out exception); }
+        { return schemaFile.IsValid(out exception); }
 
         /// <summary>
         /// Builds the XDocument and sets the FileContent to the value.

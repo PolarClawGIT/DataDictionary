@@ -7,8 +7,14 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform Document
     /// </summary>
-    public interface ITransformDocumentItem : IDocumentItem, ITemplateKey, ITransformKey, IDocumentKey
+    public interface ITransformDocumentItem : ITemplateKey, ITransformKey, IDocumentKey
     {
+
+        /// <summary>
+        /// Name of the Scripted File. This is the Output of the Transform process.
+        /// </summary>
+        String ScriptedFileName { get; }
+
         /// <summary>
         /// DocumentID of the Schema Document that is the Source of the Transform.
         /// </summary>
@@ -54,10 +60,10 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
-        public String? FileName
+        public String ScriptedFileName
         {
-            get { return GetValue(nameof(FileName)); }
-            set { SetValue(nameof(FileName), value); }
+            get { return GetValue(nameof(ScriptedFileName)) ?? String.Empty; }
+            set { SetValue(nameof(ScriptedFileName), value); }
         }
 
         /// <inheritdoc/>
@@ -70,7 +76,7 @@ namespace DataDictionary.DataLayer.AppScript
         protected TransformDocumentItem() : base()
         {
             if (DocumentId is null) { DocumentId = Guid.NewGuid(); }
-            if (String.IsNullOrWhiteSpace(FileName)) { FileName = "newDocument"; }
+            if (String.IsNullOrWhiteSpace(ScriptedFileName)) { ScriptedFileName = "newDocument"; }
 
             Temporal = new TemporalItem()
             {
@@ -95,7 +101,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(SchemaDocumentId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(FileName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ScriptedFileName), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 
@@ -122,7 +128,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override string ToString()
-        { return FileName ?? String.Empty; }
+        { return ScriptedFileName ?? String.Empty; }
 
     }
 }
