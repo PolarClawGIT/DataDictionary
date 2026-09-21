@@ -27,7 +27,7 @@ Begin Try
 		[TemplateId]		UniqueIdentifier Not Null,
 		[TransformId]		UniqueIdentifier Not Null,
 		[SchemaDocumentId]	UniqueIdentifier Not Null,
-		[FileName]			[AppGeneral].[uddtFileName] Null,
+		[ScriptedFileName]	[AppGeneral].[uddtFileName] Null,
 		Primary Key([DocumentId]))
 
 	Insert Into @Values
@@ -35,7 +35,7 @@ Begin Try
 			D.[TemplateId],
 			D.[TransformId],
 			D.[SchemaDocumentId],
-			NullIf(Trim(D.[FileName]),'') As [FileName]
+			NullIf(Trim(D.[ScriptedFileName]),'') As [ScriptedFileName]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
 			On	D.[TemplateId] = M.[TemplateId] And
@@ -69,14 +69,14 @@ Begin Try
 				[TemplateId],
 				[TransformId],
 				[SchemaDocumentId],
-				[FileName]
+				[ScriptedFileName]
 		From	@Values
 		Except
 		Select	[DocumentId],
 				[TemplateId],
 				[TransformId],
 				[SchemaDocumentId],
-				[FileName]
+				[ScriptedFileName]
 		From	[AppScript].[TransformDocument])
 	Update [AppScript].[TransformDocument]
 	Set		--[TemplateId] = S.[TemplateId],
@@ -93,12 +93,12 @@ Begin Try
 			[TemplateId],
 			[TransformId],
 			[SchemaDocumentId],
-			[FileName])
+			[ScriptedFileName])
 	Select	S.[DocumentId],
 			S.[TemplateId],
 			S.[TransformId],
 			S.[SchemaDocumentId],
-			S.[FileName]
+			S.[ScriptedFileName]
 	From	@Values S
 			Left Join [AppScript].[TransformDocument] T
 			On	S.[DocumentId] = T.[DocumentId]

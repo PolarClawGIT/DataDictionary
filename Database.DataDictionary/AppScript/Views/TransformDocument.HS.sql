@@ -18,12 +18,12 @@ Select	D.[DocumentId], -- PK
 		-- Useful Data
 		A.[RootFolder], -- AK
 		A.[RelativePath], -- Ak
-		D.[FileName], -- AK
+		D.[ScriptedFileName], -- AK
 		O.[ObjectScope],
 		O.[ObjectMember],
 		F.[RootFolder] As [SchemaRootFolder],
 		F.[RelativePath] As [SchemaRelativePath],
-		S.[FileName] As [SchemaFileName],
+		S.[SchemaFileName] As [SchemaFileName],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

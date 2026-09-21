@@ -10,7 +10,7 @@ Select	[DocumentId],
 		[TemplateId],
 		[TransformId],
 		[SchemaDocumentId],
-		[FileName],
+		[ScriptedFileName],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

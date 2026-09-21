@@ -27,7 +27,7 @@ With [Dates] As (
 	Select	D.[DocumentId],
 			S.[RootFolder],
 			S.[RelativePath],
-			D.[FileName],
+			D.[SchemaFileName],
 			D.[SysStart],
 			D.[SysEnd]
 	From	[AppScript].[SchemaDocument] D
@@ -37,7 +37,7 @@ With [Dates] As (
 	Select	D.[DocumentId],
 			S.[RootFolder],
 			S.[RelativePath],
-			D.[FileName],
+			D.[ScriptedFileName],
 			D.[SysStart],
 			D.[SysEnd]
 	From	[AppScript].[TransformDocument] D
@@ -46,7 +46,7 @@ With [Dates] As (
 Select	D.[DocumentId], -- PK
 		D.[RootFolder],
 		D.[RelativePath],
-		D.[FileName],
+		D.[SchemaFileName],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

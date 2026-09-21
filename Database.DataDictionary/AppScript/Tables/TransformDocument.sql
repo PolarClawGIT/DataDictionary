@@ -5,7 +5,7 @@
 	[TemplateId]		UniqueIdentifier Not Null,
 	[TransformId]		UniqueIdentifier Not Null, 
 	[SchemaDocumentId]	UniqueIdentifier Not Null, -- Source Document
-	[FileName]			[AppGeneral].[uddtFileName] Not Null,
+	[ScriptedFileName]	[AppGeneral].[uddtFileName] Not Null,
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_TransformDocument_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_TransformDocument_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
