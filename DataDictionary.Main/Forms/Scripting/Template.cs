@@ -105,21 +105,19 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateDescriptionData, e => e.TemplateDescription);
 
                 // Schema Tab
-                schemaData.AutoGenerateColumns = false;
-                schemaData.DataSource = bindingSchema;
+                formBinding.SchemaData.AddBinding(schemaData);
                 schemaOpenCommand.Enabled = false;
                 schemaDeleteCommand.Enabled = false;
 
                 // Transform Tab
-                transformsData.AutoGenerateColumns = false;
-                transformsData.DataSource = bindingTransform;
+                formBinding.TransformData.AddBinding(transformsData);
                 transformOpenCommand.Enabled = false;
                 transformDeleteCommand.Enabled = false;
 
                 // Document Tab
 
-                documentData.AutoGenerateColumns = false;
-                documentData.DataSource = bindingTransform;
+                //documentData.AutoGenerateColumns = false;
+                //documentData.DataSource = bindingTransform;
 
 
 

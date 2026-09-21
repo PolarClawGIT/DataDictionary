@@ -2,7 +2,6 @@
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -12,18 +11,29 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Interface for Single File.
     /// </summary>
+    /// <remarks>
+    /// The expected implementation of this is using a backing field of type FileValue.
+    /// The class then implicitly or explicitly implements the properties depending on visibility.<br/>
+    /// Only implicitly implemented properties are available in DataBinding.
+    /// </remarks>
     public interface IFileValue : IBindingPropertyChanged
-    {
+    {   
         /// <summary>
         /// File Name for the File within the File Path.
-        /// dialog.FileName = IFileValue.FileName
         /// </summary>
+        /// <example>dialog.FileName = IFileValue.FileName</example>
         String FileName { get; set; }
 
         /// <summary>
-        /// List of FileFormats supported. Normally only one.
+        /// List of FileFormats supported. Normally only one.<br/>
+        /// dialog.Filter = String.Join('|', IFileValue.FileFormats.Select(s => s.DialogFilter()));
         /// </summary>
         IEnumerable<FileFormatType> FileFormats { get; }
+
+        /// <summary>
+        /// Contents of the File.
+        /// </summary>
+        String FileContent { get; set; }
 
         /// <summary>
         /// Generate the WorkItems for Opens the File and loads it to the FileContent property
@@ -55,16 +65,18 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public class FileValue : IFileValue
     {
-
         /// <inheritdoc/>
         public String FileName
         {
             get { return GetFileName(); }
-            set
-            {
-                SetFileName(value);
-                OnPropertyChanged(nameof(FileName));
-            }
+            set { SetFileName(value); OnPropertyChanged(nameof(FileName)); }
+        }
+
+        /// <inheritdoc/>
+        public String FileContent
+        {
+            get { return GetContent(); }
+            set { SetContent(value); OnPropertyChanged(nameof(FileContent)); }
         }
 
         internal Func<String> GetContent { private get; init; }
@@ -141,7 +153,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 if (file.Exists)
                 {
                     try
-                    {   SetContent(File.ReadAllText(file.FullName)); }
+                    { SetContent(File.ReadAllText(file.FullName)); }
                     catch (Exception ex)
                     {
                         cancel = true;
@@ -196,7 +208,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
             }
         }
 
-         /// <inheritdoc/>
+        /// <inheritdoc/>
         public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
         {
             exception = null;

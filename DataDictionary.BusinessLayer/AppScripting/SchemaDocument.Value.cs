@@ -36,9 +36,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
-
         /// <inheritdoc/>
-        public String FileName
+        String IFileValue.FileName
         {
             get { return schemaFile.FileName; }
             set { schemaFile.FileName = value; }
@@ -73,7 +72,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileFormatType> FileFormats { get { return schemaFile.FileFormats; } }
+        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return schemaFile.FileFormats; } }
 
         /// <inheritdoc/>
         public override String? ObjectPath

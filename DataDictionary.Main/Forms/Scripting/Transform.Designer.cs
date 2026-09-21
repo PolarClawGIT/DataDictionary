@@ -46,6 +46,7 @@
             fileExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
             transformScriptTab = new TabPage();
+            textBoxData1 = new DataDictionary.Main.Controls.TextBoxData();
             scriptToolStrip = new ToolStrip();
             scriptOpenCommand = new ToolStripButton();
             scriptSaveCommand = new ToolStripButton();
@@ -56,14 +57,13 @@
             sourceDocumentData = new DataDictionary.Main.Controls.ComboBoxData();
             fileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             documentData = new DataGridView();
-            FileNameColumn = new DataGridViewTextBoxColumn();
             documentToolStrip = new ToolStrip();
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             transformTitleData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingTransform = new BindingSource(components);
-            textBoxData1 = new DataDictionary.Main.Controls.TextBoxData();
+            FileNameColumn = new DataGridViewTextBoxColumn();
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -290,7 +290,7 @@
             transformScriptTab.Location = new Point(4, 24);
             transformScriptTab.Name = "transformScriptTab";
             transformScriptTab.Padding = new Padding(3);
-            transformScriptTab.Size = new Size(503, 444);
+            transformScriptTab.Size = new Size(192, 72);
             transformScriptTab.TabIndex = 2;
             transformScriptTab.Text = "Script";
             // 
@@ -310,15 +310,28 @@
             scriptFileLayout.RowStyles.Add(new RowStyle());
             scriptFileLayout.RowStyles.Add(new RowStyle());
             scriptFileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            scriptFileLayout.Size = new Size(497, 438);
+            scriptFileLayout.Size = new Size(186, 66);
             scriptFileLayout.TabIndex = 6;
+            // 
+            // textBoxData1
+            // 
+            textBoxData1.AutoSize = true;
+            textBoxData1.Dock = DockStyle.Fill;
+            textBoxData1.HeaderText = "Local Path";
+            textBoxData1.Location = new Point(3, 28);
+            textBoxData1.Multiline = false;
+            textBoxData1.Name = "textBoxData1";
+            textBoxData1.ReadOnly = true;
+            textBoxData1.Size = new Size(180, 44);
+            textBoxData1.TabIndex = 9;
+            textBoxData1.WordWrap = false;
             // 
             // scriptToolStrip
             // 
             scriptToolStrip.Items.AddRange(new ToolStripItem[] { scriptOpenCommand, scriptSaveCommand });
             scriptToolStrip.Location = new Point(0, 0);
             scriptToolStrip.Name = "scriptToolStrip";
-            scriptToolStrip.Size = new Size(497, 25);
+            scriptToolStrip.Size = new Size(186, 25);
             scriptToolStrip.TabIndex = 0;
             scriptToolStrip.Text = "toolStrip1";
             // 
@@ -352,7 +365,7 @@
             scriptFileNameData.Name = "scriptFileNameData";
             scriptFileNameData.ReadOnly = false;
             scriptFileNameData.SelectIcon = (Image)resources.GetObject("scriptFileNameData.SelectIcon");
-            scriptFileNameData.Size = new Size(491, 44);
+            scriptFileNameData.Size = new Size(180, 44);
             scriptFileNameData.TabIndex = 1;
             // 
             // scriptData
@@ -364,7 +377,7 @@
             scriptData.Multiline = true;
             scriptData.Name = "scriptData";
             scriptData.ReadOnly = false;
-            scriptData.Size = new Size(491, 307);
+            scriptData.Size = new Size(180, 1);
             scriptData.TabIndex = 2;
             scriptData.WordWrap = false;
             // 
@@ -437,14 +450,6 @@
             documentData.Size = new Size(491, 305);
             documentData.TabIndex = 9;
             // 
-            // FileNameColumn
-            // 
-            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            FileNameColumn.DataPropertyName = "FileName";
-            FileNameColumn.HeaderText = "File Name";
-            FileNameColumn.Name = "FileNameColumn";
-            FileNameColumn.ReadOnly = true;
-            // 
             // documentToolStrip
             // 
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
@@ -487,18 +492,13 @@
             transformTitleData.TabIndex = 1;
             transformTitleData.WordWrap = true;
             // 
-            // textBoxData1
+            // FileNameColumn
             // 
-            textBoxData1.AutoSize = true;
-            textBoxData1.Dock = DockStyle.Fill;
-            textBoxData1.HeaderText = "Local Path";
-            textBoxData1.Location = new Point(3, 28);
-            textBoxData1.Multiline = false;
-            textBoxData1.Name = "textBoxData1";
-            textBoxData1.ReadOnly = true;
-            textBoxData1.Size = new Size(491, 44);
-            textBoxData1.TabIndex = 9;
-            textBoxData1.WordWrap = false;
+            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            FileNameColumn.DataPropertyName = "ScriptedFileName";
+            FileNameColumn.HeaderText = "File Name";
+            FileNameColumn.Name = "FileNameColumn";
+            FileNameColumn.ReadOnly = true;
             // 
             // Transform
             // 
@@ -553,7 +553,6 @@
         private Controls.ComboBoxData sourceDocumentData;
         private Controls.SelectTextBoxData fileNameData;
         private DataGridView documentData;
-        private DataGridViewTextBoxColumn FileNameColumn;
         private ToolStrip documentToolStrip;
         private Controls.TextBoxData transformTitleData;
         private TabPage transformScriptTab;
@@ -568,5 +567,6 @@
         private BindingSource bindingTemplate;
         private BindingSource bindingTransform;
         private Controls.TextBoxData textBoxData1;
+        private DataGridViewTextBoxColumn FileNameColumn;
     }
 }

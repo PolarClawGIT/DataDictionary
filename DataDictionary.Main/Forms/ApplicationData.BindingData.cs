@@ -478,6 +478,7 @@ namespace DataDictionary.Main.Forms
             /// dataBinding.AddBinding(control, e => e.PropertyName);
             /// dataBinding.AddBinding(control, e => e.parentName.childName);
             /// ]]></example>
+            /// <remarks>This checks the values before calling DataBindings. Many binding errors are caught.</remarks>
             public virtual void AddBinding<TProperty>(
                 Control formControl,
                 Expression<Func<TRow, TProperty>> expression)
@@ -570,15 +571,12 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            /// <summary>
-            /// Helper method to Add DataSource to a DataGridView
-            /// </summary>
-            /// <param name="documentData"></param>
-            public virtual void AddBinding(DataGridView documentData)
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding(DataGridView formControl)
             {
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
 
-                foreach (DataGridViewColumn item in documentData.Columns)
+                foreach (DataGridViewColumn item in formControl.Columns)
                 {
                     if (!String.IsNullOrWhiteSpace(item.DataPropertyName))
                     {
@@ -596,8 +594,8 @@ namespace DataDictionary.Main.Forms
                     }
                 }
 
-                documentData.AutoGenerateColumns = false;
-                documentData.DataSource = BindingData;
+                formControl.AutoGenerateColumns = false;
+                formControl.DataSource = BindingData;
             }
 
 

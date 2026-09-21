@@ -2,28 +2,23 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ITransformValue : ITransformItem, ITransformComposite,
-        IScopeType, ITemporal
-    {
-        /// <summary>
-        /// Directory information to be used with the Directory Dialog.
-        /// </summary>
-        IDirectoryValue TransformDirectory { get; }
-
-        /// <summary>
-        /// File information to be used with the File Save/Open Dialog.
-        /// </summary>
-        IFileValue TransformFile { get; }
-    }
+        IScopeType, ITemporal, IDirectoryValue, IFileValue
+    { }
 
     /// <inheritdoc/>
     public class TransformValue : TransformItem, ITransformValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
+        IDirectoryValue directory; // Backing field for IDirectoryValue
+        FileValue scriptingFile; // Backing field for IFileValue
 
         /// <inheritdoc/>
         PathItem IPathIndex.Path { get { return pathValue.Path; } }
@@ -38,10 +33,49 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingTransform; } }
 
         /// <inheritdoc/>
-        public IDirectoryValue TransformDirectory { get; }
+        String IFileValue.FileName
+        {
+            get { return scriptingFile.FileName; }
+            set { scriptingFile.FileName = value; }
+        }
 
         /// <inheritdoc/>
-        public IFileValue TransformFile { get; }
+        public String FileContent
+        {
+            get;
+            set
+            {
+                field = value;
+
+                if (value.TryParse(out XDocument? document, out Exception? exception))
+                { field = document.Format(); }
+
+                OnPropertyChanged(nameof(FileContent));
+                OnPropertyChanged(nameof(ContentException));
+            }
+        } = String.Empty;
+
+        /// <inheritdoc/>
+        public Exception? ContentException
+        {
+            get
+            {   // It is possible that FileContent Set was by-passed.
+                // As such, the content needs to be parsed independently.
+                if (FileContent.TryParse(out XDocument? _, out Exception? exception))
+                { return null; }
+                else { return exception; }
+            }
+        }
+
+        /// <inheritdoc/>
+        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return scriptingFile.FileFormats; } }
+
+        /// <inheritdoc/>
+        public String InitialDirectory
+        {
+            get { return directory.InitialDirectory; }
+            set { directory.InitialDirectory = value; }
+        }
 
         /// <inheritdoc/>
         public TransformValue() : base()
@@ -56,18 +90,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(TransformTitle)
             };
 
-            TransformDirectory = new DirectoryValue()
+            directory = new DirectoryValue()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => RelativePath ?? String.Empty,
                 SetDirectory = (value) => RelativePath = value
             };
-            
-            TransformFile = new FileValue()
+
+            scriptingFile = new FileValue()
             {
                 GetFileName = () => TransformFileName ?? String.Empty,
                 SetFileName = (value) => TransformFileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform }
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform },
+                GetContent = () => FileContent ?? String.Empty,
+                SetContent = (value) => FileContent = value
             };
         }
 
@@ -84,20 +120,34 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(TransformTitle)
             };
 
-            TransformDirectory = new DirectoryValue()
+            directory = new DirectoryValue()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => RelativePath ?? String.Empty,
                 SetDirectory = (value) => RelativePath = value
             };
 
-            TransformFile = new FileValue()
+            scriptingFile = new FileValue()
             {
                 GetFileName = () => TransformFileName ?? String.Empty,
                 SetFileName = (value) => TransformFileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform }
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform },
+                GetContent = () => FileContent ?? String.Empty,
+                SetContent = (value) => FileContent = value
             };
         }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Open(FileInfo file)
+        { return scriptingFile.Open(file); }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Save(FileInfo file)
+        { return scriptingFile.Save(file); }
+
+        /// <inheritdoc/>
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
+        { return directory.IsValid(out exception) && scriptingFile.IsValid(out exception); }
 
     }
 }
