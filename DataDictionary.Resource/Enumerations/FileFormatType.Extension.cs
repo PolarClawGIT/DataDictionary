@@ -29,6 +29,18 @@ namespace DataDictionary.Resource.Enumerations
         }
 
         /// <summary>
+        /// Gets the Name of the FileFormatType Enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static String GetName(this FileFormatType value)
+        {
+            if (FileFormatEnumeration.TryGetValue(value, out FileFormatEnumeration? enumeration))
+            { return enumeration.Name; }
+            else { return String.Empty; }
+        }
+
+        /// <summary>
         /// Test is a given file name (as string) matches the file extension list of the given FileFormatType.
         /// </summary>
         /// <param name="value"></param>
@@ -48,18 +60,6 @@ namespace DataDictionary.Resource.Enumerations
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Returns the String used to set the FileDialog Filter.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static String DialogFilter(this FileFormatType value)
-        {
-            if (FileFormatEnumeration.TryGetValue(value, out FileFormatEnumeration? fileFormat))
-            { return String.Format("{0}|{1}", fileFormat.DisplayName, String.Join(';', fileFormat.Extensions)); }
-            else { return String.Empty; }
         }
     }
 }

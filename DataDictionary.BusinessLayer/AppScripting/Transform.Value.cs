@@ -67,8 +67,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
+        /// <inheritdoc cref="IFileValue.FileFormats"/>
+        static public IEnumerable<FileFormatType> FileFormats
+        { get; } = new List<FileFormatType>() { FileFormatType.XSLTransform };
+
         /// <inheritdoc/>
-        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return scriptingFile.FileFormats; } }
+        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return FileFormats; } }
 
         /// <inheritdoc/>
         public String InitialDirectory
@@ -101,7 +105,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => TransformFileName ?? String.Empty,
                 SetFileName = (value) => TransformFileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform },
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };
@@ -131,7 +134,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => TransformFileName ?? String.Empty,
                 SetFileName = (value) => TransformFileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform },
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };

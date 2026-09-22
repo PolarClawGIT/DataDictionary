@@ -70,8 +70,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
+        /// <inheritdoc cref="IFileValue.FileFormats"/>
+        public static IEnumerable<FileFormatType> FileFormats
+        { get; } = Enum.GetValues<FileFormatType>();
+
         /// <inheritdoc/>
-        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return scriptedFile.FileFormats; } }
+        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return FileFormats; } }
 
         /// <inheritdoc/>
         public TransformDocumentValue() : base()
@@ -90,7 +94,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => ScriptedFileName ?? String.Empty,
                 SetFileName = (value) => ScriptedFileName = value,
-                GetFileFormats = () => Enum.GetValues<FileFormatType>().ToList(),
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };
@@ -113,7 +116,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => ScriptedFileName ?? String.Empty,
                 SetFileName = (value) => ScriptedFileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };

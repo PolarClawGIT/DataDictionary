@@ -23,7 +23,16 @@ namespace DataDictionary.Main.Controls
             // Reset then restore settings.
             dialog.Reset();
             dialog.InitialDirectory = Path.Combine(directory.InitialDirectory, filePath);
-            dialog.Filter = String.Join('|', file.FileFormats.Select(s => s.DialogFilter()));
+            dialog.Filter = String.Join('|',
+                file.FileFormats.
+                Select(s => s.GetEnumeration()).
+                SelectMany(s => s.Extensions, (p, c) =>
+                {
+                    if (String.IsNullOrWhiteSpace(c))
+                    { return String.Format("{0}|*.*", p.DisplayName); }
+                    else
+                    { return String.Format("{0} ({1})|*.{1}", p.DisplayName, c); }
+                }));
             dialog.FileName = fileName;
             dialog.Title = title;
             dialog.CheckFileExists = checkFile;
@@ -33,7 +42,7 @@ namespace DataDictionary.Main.Controls
             if (result is DialogResult.OK)
             {
                 String relativePath = String.Empty;
-                String fileDirectory = Path.GetDirectoryName(dialog.FileName)??String.Empty;
+                String fileDirectory = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
 
                 if (!directory.IsValid(out _) || String.IsNullOrWhiteSpace(directory.InitialDirectory))
                 { relativePath = fileDirectory ?? String.Empty; }

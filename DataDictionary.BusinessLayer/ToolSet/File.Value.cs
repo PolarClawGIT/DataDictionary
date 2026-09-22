@@ -25,10 +25,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
         String FileName { get; set; }
 
         /// <summary>
-        /// List of FileFormats supported. Normally only one.<br/>
-        /// dialog.Filter = String.Join('|', IFileValue.FileFormats.Select(s => s.DialogFilter()));
+        /// List of FileFormats supported. Normally only one.
         /// </summary>
         IEnumerable<FileFormatType> FileFormats { get; }
+        //static abstract IEnumerable<FileFormatType> FileFormats();
+        //static abstract IEnumerable<FileFormatType> FileFormats { get; }
 
         /// <summary>
         /// Contents of the File.
@@ -65,6 +66,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public class FileValue : IFileValue
     {
+        static IEnumerable<FileFormatType> fileFormats = Enum.GetValues<FileFormatType>(); // List of supported FileFormats
+
         /// <inheritdoc/>
         public String FileName
         {
@@ -83,8 +86,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         internal Action<String> SetContent { private get; init; }
 
         /// <inheritdoc/>
-        public IEnumerable<FileFormatType> FileFormats
-        { get { return GetFileFormats(); } }
+        public IEnumerable<FileFormatType> FileFormats { get; } = Enum.GetValues<FileFormatType>();
+        //public static IEnumerable<FileFormatType> FileFormats() { return fileFormats; }
+
 
         /// <summary>
         /// Function representing Get function for the FileName.
@@ -96,12 +100,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         protected internal Action<String> SetFileName { protected get; init; }
         String fileNameValue = String.Empty;
-
-        /// <summary>
-        /// Function representing Get function for the FileFormatTypes.
-        /// </summary>
-        protected internal Func<IEnumerable<FileFormatType>> GetFileFormats { protected get; init; }
-        List<FileFormatType> fileFormatValues = new List<FileFormatType>() { FileFormatType.PlainText };
 
         /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
         public virtual event PropertyChangedEventHandler? PropertyChanged;
@@ -123,8 +121,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
             GetFileName = () => fileNameValue;
             SetFileName = (v) => fileNameValue = v;
-
-            GetFileFormats = () => fileFormatValues;
 
             GetContent = () => contentValue;
             SetContent = (v) => contentValue = v;

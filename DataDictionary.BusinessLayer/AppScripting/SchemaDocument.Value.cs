@@ -11,12 +11,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateObjectIndex, ISchemaComposite,
         IScopeType, ITemporal, IFileValue
-    {
-        /// <summary>
-        /// File information to be used with the File Save/Open Dialog.
-        /// </summary>
-        //IFileValue SchemaFile { get; }
-    }
+    { }
 
     /// <inheritdoc/>
     public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue
@@ -71,8 +66,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
+        /// <inheritdoc cref="IFileValue.FileFormats"/>
+        static public IEnumerable<FileFormatType> FileFormats
+        { get; } = new List<FileFormatType>() { FileFormatType.XMLData };
+
         /// <inheritdoc/>
-        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return schemaFile.FileFormats; } }
+        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return FileFormats; } }
 
         /// <inheritdoc/>
         public override String? ObjectPath
@@ -103,7 +102,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => SchemaFileName ?? String.Empty,
                 SetFileName = (value) => SchemaFileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };
@@ -126,7 +124,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetFileName = () => SchemaFileName ?? String.Empty,
                 SetFileName = (value) => SchemaFileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };
