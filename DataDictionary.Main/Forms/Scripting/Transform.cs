@@ -88,7 +88,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TransformData.AddBinding(relativePathData, e => e.RelativePath);
                 formBinding.TransformData.AddBinding(filePrefixData, e => e.FilePrefix);
                 formBinding.TransformData.AddBinding(fileSuffixData, e => e.FileSuffix);
-                formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension);
+
+                FileFormatList.Load(fileExtensionData, TransformValue.FileFormats);
+                formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());

@@ -108,6 +108,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };
+
+            FileExtension = FileFormatType.XSLTransform.GetEnumeration().Extensions.First();
         }
 
         /// <inheritdoc cref="TransformItem.TransformItem(ITemplateKey)"/>
@@ -137,6 +139,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };
+
+            FileExtension = FileFormatType.XSLTransform.GetEnumeration().Extensions.First();
         }
 
         /// <inheritdoc/>

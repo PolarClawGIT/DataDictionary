@@ -56,6 +56,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetDirectory = () => RelativePath ?? String.Empty,
                 SetDirectory = (value) => RelativePath = value
             };
+
+            FileExtension = FileFormatType.XMLData.GetEnumeration().Extensions.First();
         }
 
         /// <inheritdoc cref="SchemaDefinitionItem(ITemplateKey)"/>
@@ -77,6 +79,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetDirectory = () => RelativePath ?? String.Empty,
                 SetDirectory = (value) => RelativePath = value
             };
+
+            FileExtension = FileFormatType.XMLData.GetEnumeration().Extensions.First();
         }
 
         /// <summary>

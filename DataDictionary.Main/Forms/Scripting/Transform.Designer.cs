@@ -43,8 +43,8 @@
             relativePathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             filePrefixData = new DataDictionary.Main.Controls.TextBoxData();
             fileSuffixData = new DataDictionary.Main.Controls.TextBoxData();
-            fileExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
+            fileExtensionData = new DataDictionary.Main.Controls.ComboBoxData();
             transformScriptTab = new TabPage();
             textBoxData1 = new DataDictionary.Main.Controls.TextBoxData();
             scriptToolStrip = new ToolStrip();
@@ -57,13 +57,13 @@
             sourceDocumentData = new DataDictionary.Main.Controls.ComboBoxData();
             fileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             documentData = new DataGridView();
+            FileNameColumn = new DataGridViewTextBoxColumn();
             documentToolStrip = new ToolStrip();
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             transformTitleData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingTransform = new BindingSource(components);
-            FileNameColumn = new DataGridViewTextBoxColumn();
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -162,7 +162,7 @@
             filePatternGroup.Dock = DockStyle.Fill;
             filePatternGroup.Location = new Point(3, 3);
             filePatternGroup.Name = "filePatternGroup";
-            filePatternGroup.Size = new Size(491, 174);
+            filePatternGroup.Size = new Size(491, 176);
             filePatternGroup.TabIndex = 5;
             filePatternGroup.TabStop = false;
             filePatternGroup.Text = "File Pattern";
@@ -180,8 +180,8 @@
             filePatternLayout.Controls.Add(filePrefixData, 0, 2);
             filePatternLayout.Controls.Add(fileBaseName, 1, 2);
             filePatternLayout.Controls.Add(fileSuffixData, 2, 2);
-            filePatternLayout.Controls.Add(fileExtensionData, 3, 2);
             filePatternLayout.Controls.Add(localPathData, 0, 1);
+            filePatternLayout.Controls.Add(fileExtensionData, 3, 2);
             filePatternLayout.Dock = DockStyle.Fill;
             filePatternLayout.Location = new Point(3, 19);
             filePatternLayout.Name = "filePatternLayout";
@@ -189,7 +189,7 @@
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
-            filePatternLayout.Size = new Size(485, 152);
+            filePatternLayout.Size = new Size(485, 154);
             filePatternLayout.TabIndex = 0;
             // 
             // rootFolderData
@@ -217,7 +217,7 @@
             relativePathData.Name = "relativePathData";
             relativePathData.ReadOnly = false;
             relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
-            relativePathData.Size = new Size(254, 46);
+            relativePathData.Size = new Size(255, 46);
             relativePathData.TabIndex = 1;
             // 
             // filePrefixData
@@ -229,7 +229,7 @@
             filePrefixData.Multiline = false;
             filePrefixData.Name = "filePrefixData";
             filePrefixData.ReadOnly = false;
-            filePrefixData.Size = new Size(120, 44);
+            filePrefixData.Size = new Size(120, 46);
             filePrefixData.TabIndex = 2;
             filePrefixData.WordWrap = true;
             // 
@@ -237,7 +237,7 @@
             // 
             fileBaseName.Anchor = AnchorStyles.None;
             fileBaseName.AutoSize = true;
-            fileBaseName.Location = new Point(129, 119);
+            fileBaseName.Location = new Point(129, 120);
             fileBaseName.Name = "fileBaseName";
             fileBaseName.Size = new Size(93, 15);
             fileBaseName.TabIndex = 5;
@@ -252,22 +252,9 @@
             fileSuffixData.Multiline = false;
             fileSuffixData.Name = "fileSuffixData";
             fileSuffixData.ReadOnly = false;
-            fileSuffixData.Size = new Size(120, 44);
+            fileSuffixData.Size = new Size(120, 46);
             fileSuffixData.TabIndex = 3;
             fileSuffixData.WordWrap = true;
-            // 
-            // fileExtensionData
-            // 
-            fileExtensionData.AutoSize = true;
-            fileExtensionData.Dock = DockStyle.Fill;
-            fileExtensionData.HeaderText = "File Extension";
-            fileExtensionData.Location = new Point(354, 105);
-            fileExtensionData.Multiline = false;
-            fileExtensionData.Name = "fileExtensionData";
-            fileExtensionData.ReadOnly = false;
-            fileExtensionData.Size = new Size(128, 44);
-            fileExtensionData.TabIndex = 6;
-            fileExtensionData.WordWrap = true;
             // 
             // localPathData
             // 
@@ -279,9 +266,22 @@
             localPathData.Multiline = false;
             localPathData.Name = "localPathData";
             localPathData.ReadOnly = true;
-            localPathData.Size = new Size(479, 44);
+            localPathData.Size = new Size(480, 44);
             localPathData.TabIndex = 7;
             localPathData.WordWrap = false;
+            // 
+            // fileExtensionData
+            // 
+            fileExtensionData.AutoSize = true;
+            fileExtensionData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            fileExtensionData.Dock = DockStyle.Fill;
+            fileExtensionData.DropDownStyle = ComboBoxStyle.DropDown;
+            fileExtensionData.HeaderText = "File Extension";
+            fileExtensionData.Location = new Point(354, 105);
+            fileExtensionData.Name = "fileExtensionData";
+            fileExtensionData.ReadOnly = false;
+            fileExtensionData.Size = new Size(129, 46);
+            fileExtensionData.TabIndex = 8;
             // 
             // transformScriptTab
             // 
@@ -388,7 +388,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(503, 444);
+            documentTab.Size = new Size(192, 72);
             documentTab.TabIndex = 1;
             documentTab.Text = "Documents";
             // 
@@ -408,7 +408,7 @@
             fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle());
-            fileLayout.Size = new Size(497, 438);
+            fileLayout.Size = new Size(186, 66);
             fileLayout.TabIndex = 5;
             // 
             // sourceDocumentData
@@ -418,10 +418,10 @@
             sourceDocumentData.Dock = DockStyle.Fill;
             sourceDocumentData.DropDownStyle = ComboBoxStyle.DropDown;
             sourceDocumentData.HeaderText = "Source Document (schema)";
-            sourceDocumentData.Location = new Point(3, 389);
+            sourceDocumentData.Location = new Point(3, 17);
             sourceDocumentData.Name = "sourceDocumentData";
             sourceDocumentData.ReadOnly = false;
-            sourceDocumentData.Size = new Size(491, 46);
+            sourceDocumentData.Size = new Size(180, 46);
             sourceDocumentData.TabIndex = 12;
             // 
             // fileNameData
@@ -430,11 +430,11 @@
             fileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             fileNameData.Dock = DockStyle.Fill;
             fileNameData.HeaderText = "File Name";
-            fileNameData.Location = new Point(3, 339);
+            fileNameData.Location = new Point(3, -33);
             fileNameData.Name = "fileNameData";
             fileNameData.ReadOnly = false;
             fileNameData.SelectIcon = (Image)resources.GetObject("fileNameData.SelectIcon");
-            fileNameData.Size = new Size(491, 44);
+            fileNameData.Size = new Size(180, 44);
             fileNameData.TabIndex = 13;
             // 
             // documentData
@@ -447,15 +447,23 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(491, 305);
+            documentData.Size = new Size(180, 1);
             documentData.TabIndex = 9;
+            // 
+            // FileNameColumn
+            // 
+            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            FileNameColumn.DataPropertyName = "ScriptedFileName";
+            FileNameColumn.HeaderText = "File Name";
+            FileNameColumn.Name = "FileNameColumn";
+            FileNameColumn.ReadOnly = true;
             // 
             // documentToolStrip
             // 
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(497, 25);
+            documentToolStrip.Size = new Size(186, 25);
             documentToolStrip.TabIndex = 14;
             documentToolStrip.Text = "Document Tools";
             // 
@@ -491,14 +499,6 @@
             transformTitleData.Size = new Size(511, 44);
             transformTitleData.TabIndex = 1;
             transformTitleData.WordWrap = true;
-            // 
-            // FileNameColumn
-            // 
-            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            FileNameColumn.DataPropertyName = "ScriptedFileName";
-            FileNameColumn.HeaderText = "File Name";
-            FileNameColumn.Name = "FileNameColumn";
-            FileNameColumn.ReadOnly = true;
             // 
             // Transform
             // 
@@ -546,7 +546,6 @@
         private Controls.SelectTextBoxData relativePathData;
         private Controls.TextBoxData filePrefixData;
         private Controls.TextBoxData fileSuffixData;
-        private Controls.TextBoxData fileExtensionData;
         private Controls.TextBoxData localPathData;
         private TabPage documentTab;
         private TableLayoutPanel fileLayout;
@@ -568,5 +567,6 @@
         private BindingSource bindingTransform;
         private Controls.TextBoxData textBoxData1;
         private DataGridViewTextBoxColumn FileNameColumn;
+        private Controls.ComboBoxData fileExtensionData;
     }
 }
