@@ -20,12 +20,11 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <param name="scopes"></param>
         public static void Load(ComboBox control, params IEnumerable<ScopeType> scopes)
         {
-            ScopeNameList scopeNameItem = new ScopeNameList();
             BindingList<ScopeNameList> list = BuildList(scopes);
 
             control.DataSource = list;
-            control.ValueMember = nameof(scopeNameItem.ScopeType);
-            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+            control.ValueMember = nameof(ScopeType);
+            control.DisplayMember = nameof(ScopeName);
         }
 
         /// <inheritdoc cref="Load(ComboBox, IEnumerable{ScopeType})"/>
@@ -35,23 +34,21 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <inheritdoc cref="Load(ComboBox, IEnumerable{ScopeType})"/>
         public static void Load(ComboBoxData control, params IEnumerable<ScopeType> scopes)
         {
-            ScopeNameList scopeNameItem = new ScopeNameList();
             BindingList<ScopeNameList> list = BuildList(scopes);
 
             control.DataSource = list;
-            control.ValueMember = nameof(scopeNameItem.ScopeType);
-            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+            control.ValueMember = nameof(ScopeType);
+            control.DisplayMember = nameof(ScopeName);
         }
 
         /// <inheritdoc cref="Load(ComboBox, IEnumerable{ScopeType})"/>
         public static void Load(DataGridViewComboBoxColumn control, params IEnumerable<ScopeType> scopes)
         {
-            ScopeNameList scopeNameItem = new ScopeNameList();
             BindingList<ScopeNameList> list = BuildList(scopes);
 
             control.DataSource = list;
-            control.ValueMember = nameof(scopeNameItem.ScopeType);
-            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+            control.ValueMember = nameof(ScopeType);
+            control.DisplayMember = nameof(ScopeName);
         }
 
         static BindingList<ScopeNameList> BuildList(params IEnumerable<ScopeType> scopes)
