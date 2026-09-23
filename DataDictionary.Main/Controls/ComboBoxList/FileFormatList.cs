@@ -50,8 +50,26 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
             if (list.Count == 1)
             { control.SelectedIndex = 0; }
-        }
 
+            if (control.DropDownStyle is not ComboBoxStyle.DropDownList)
+            { control.TextUpdated += Control_TextUpdated; }
+
+            void Control_TextUpdated(Object? sender, EventArgs e)
+            {
+                if (control.SelectedItem is null && !String.IsNullOrWhiteSpace(control.Text))
+                {
+                    FileFormatList newItem = new FileFormatList()
+                    {
+                        FileFormat = FileFormatType.Other,
+                        FileExtension = control.Text,
+                        FileTypeName = String.Format("{0} ({1})", FileFormatType.Other.GetName(), control.Text)
+                    };
+
+                    list.Add(newItem);
+                    control.SelectedItem = newItem;
+                }
+            }
+        }
 
         static BindingList<FileFormatList> BuildList(IEnumerable<FileFormatType> fileTypes, IEnumerable<IFileValue>? fileValues = null)
         {

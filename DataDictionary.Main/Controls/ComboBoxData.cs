@@ -122,21 +122,50 @@ namespace DataDictionary.Main.Controls
 
         public void Undo() { }
 
+        /// <inheritdoc cref="ComboBox.SelectionChangeCommitted"/>
+        public event EventHandler? SelectionChangeCommitted
+        {
+            add { comboBox.SelectionChangeCommitted += value; }
+            remove { comboBox.SelectionChangeCommitted -= value; }
+        }
+
         /// <inheritdoc cref="ComboBox.SelectedIndexChanged"/>
         /// <remarks>Triggered by Binding</remarks>
-        public event EventHandler? SelectedIndexChanged;
-        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
-        { if (SelectedIndexChanged is EventHandler handler) { handler(sender, e); } }
+        public event EventHandler? SelectedIndexChanged
+        {
+            add { comboBox.SelectedIndexChanged += value; }
+            remove { comboBox.SelectedIndexChanged -= value; }
+        }
 
-        /// <inheritdoc cref="Control.Validated"/>
-        public new event EventHandler? Validated;
-        private void comboBox_Validated(object sender, EventArgs e)
-        { if (Validated is EventHandler handler) { handler(sender, e); } }
+        /// <summary>
+        /// Event that fires as part of the control Validating event.
+        /// If the Selected Item is null and text exists in the control this event fires.
+        /// Upon completion, the Validating event is fired.
+        /// </summary>
+        /// <remarks>
+        /// The real purpose of this event is to handle the scenario when the user is trying to add something to the list.
+        /// This gives a chance to add something and select it before the control is validated.
+        /// </remarks>
+        public event EventHandler? TextUpdated;
 
         /// <inheritdoc cref="Control.Validating"/>
         public new event CancelEventHandler? Validating;
         private void comboBox_Validating(object sender, CancelEventArgs e)
-        { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
+        {
+            if (comboBox.SelectedItem is null
+                && !String.IsNullOrWhiteSpace(comboBox.Text)
+                && TextUpdated is EventHandler textEvent)
+            { textEvent(sender, new EventArgs()); }
+
+            if (Validating is CancelEventHandler handler) { handler(sender, e); }
+        }
+
+        /// <inheritdoc cref="Control.Validated"/>
+        public new event EventHandler? Validated
+        {
+            add { comboBox.Validated += value; }
+            remove { comboBox.Validated -= value; }
+        }
 
         private void comboBoxLayout_EnabledChanged(object sender, EventArgs e)
         {
@@ -144,10 +173,5 @@ namespace DataDictionary.Main.Controls
             { controlLayout.BackColor = SystemColors.ControlDarkDark; }
             else { controlLayout.BackColor = SystemColors.Control; }
         }
-
-        /// <inheritdoc cref="ComboBox.SelectionChangeCommitted"/>
-        public event EventHandler? SelectionChangeCommitted;
-        private void comboBox_SelectionChangeCommitted(object sender, EventArgs e)
-        { if (SelectionChangeCommitted is EventHandler handler) { handler(sender, e); } }
     }
 }
