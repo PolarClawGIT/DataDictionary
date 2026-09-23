@@ -98,7 +98,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(filePrefixData, e => e.FilePrefix);
                 formBinding.SchemaData.AddBinding(fileSuffixData, e => e.FileSuffix);
 
-                FileFormatList.Load(fileExtensionData, SchemaDocumentValue.FileFormats);
+                var x = formBinding.SchemaData.Select(s => s.FileExtension);
+
+                FileFormatList.Load(fileExtensionData, SchemaDocumentValue.FileFormats, formBinding.SchemaData.Select(s => s.FileExtension));
                 formBinding.SchemaData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
                 // Node Tab

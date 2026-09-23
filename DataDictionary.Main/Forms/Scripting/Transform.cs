@@ -89,7 +89,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TransformData.AddBinding(filePrefixData, e => e.FilePrefix);
                 formBinding.TransformData.AddBinding(fileSuffixData, e => e.FileSuffix);
 
-                FileFormatList.Load(fileExtensionData, TransformValue.FileFormats);
+                FileFormatList.Load(fileExtensionData, TransformValue.FileFormats, formBinding.TransformData.Select(s => s.FileExtension));
                 formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
                 // Security

@@ -101,7 +101,7 @@
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            transformLayout.Size = new Size(517, 578);
+            transformLayout.Size = new Size(565, 578);
             transformLayout.TabIndex = 5;
             // 
             // templateTitleData
@@ -113,7 +113,7 @@
             templateTitleData.Multiline = false;
             templateTitleData.Name = "templateTitleData";
             templateTitleData.ReadOnly = true;
-            templateTitleData.Size = new Size(511, 44);
+            templateTitleData.Size = new Size(559, 44);
             templateTitleData.TabIndex = 0;
             templateTitleData.WordWrap = true;
             // 
@@ -126,7 +126,7 @@
             transformTabs.Location = new Point(3, 103);
             transformTabs.Name = "transformTabs";
             transformTabs.SelectedIndex = 0;
-            transformTabs.Size = new Size(511, 472);
+            transformTabs.Size = new Size(559, 472);
             transformTabs.TabIndex = 6;
             // 
             // transformTab
@@ -136,7 +136,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(503, 444);
+            transformTab.Size = new Size(551, 444);
             transformTab.TabIndex = 0;
             transformTab.Text = "Transform";
             // 
@@ -152,7 +152,7 @@
             detailLayout.RowStyles.Add(new RowStyle());
             detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             detailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            detailLayout.Size = new Size(497, 438);
+            detailLayout.Size = new Size(545, 438);
             detailLayout.TabIndex = 7;
             // 
             // filePatternGroup
@@ -162,7 +162,7 @@
             filePatternGroup.Dock = DockStyle.Fill;
             filePatternGroup.Location = new Point(3, 3);
             filePatternGroup.Name = "filePatternGroup";
-            filePatternGroup.Size = new Size(491, 176);
+            filePatternGroup.Size = new Size(539, 176);
             filePatternGroup.TabIndex = 5;
             filePatternGroup.TabStop = false;
             filePatternGroup.Text = "File Pattern";
@@ -189,7 +189,7 @@
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
-            filePatternLayout.Size = new Size(485, 154);
+            filePatternLayout.Size = new Size(533, 154);
             filePatternLayout.TabIndex = 0;
             // 
             // rootFolderData
@@ -217,7 +217,7 @@
             relativePathData.Name = "relativePathData";
             relativePathData.ReadOnly = false;
             relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
-            relativePathData.Size = new Size(255, 46);
+            relativePathData.Size = new Size(302, 46);
             relativePathData.TabIndex = 1;
             // 
             // filePrefixData
@@ -266,7 +266,7 @@
             localPathData.Multiline = false;
             localPathData.Name = "localPathData";
             localPathData.ReadOnly = true;
-            localPathData.Size = new Size(480, 44);
+            localPathData.Size = new Size(527, 44);
             localPathData.TabIndex = 7;
             localPathData.WordWrap = false;
             // 
@@ -280,7 +280,7 @@
             fileExtensionData.Location = new Point(354, 105);
             fileExtensionData.Name = "fileExtensionData";
             fileExtensionData.ReadOnly = false;
-            fileExtensionData.Size = new Size(129, 46);
+            fileExtensionData.Size = new Size(176, 46);
             fileExtensionData.TabIndex = 8;
             // 
             // transformScriptTab
@@ -496,7 +496,7 @@
             transformTitleData.Multiline = false;
             transformTitleData.Name = "transformTitleData";
             transformTitleData.ReadOnly = false;
-            transformTitleData.Size = new Size(511, 44);
+            transformTitleData.Size = new Size(559, 44);
             transformTitleData.TabIndex = 1;
             transformTitleData.WordWrap = true;
             // 
@@ -504,7 +504,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(517, 603);
+            ClientSize = new Size(565, 603);
             Controls.Add(transformLayout);
             Name = "Transform";
             Text = "Transform";

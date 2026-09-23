@@ -28,6 +28,19 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             }
         }
 
+        FileFormatList(String extension) : this()
+        {
+            FileFormat = FileFormatType.Other;
+            FileExtension = extension;
+            FileTypeName = String.Format("{0} ({1})", FileFormatType.Other.GetName(), extension);
+        }
+
+
+        /// <summary>
+        /// Loads the ComboBox with a list of FileFormatTypes.
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="fileFormats"></param>
         public static void Load(ComboBox control, params IEnumerable<FileFormatType> fileFormats)
         {
             BindingList<FileFormatList> list = BuildList(fileFormats);
@@ -40,8 +53,17 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             { control.SelectedIndex = 0; }
         }
 
-        public static void Load(ComboBoxData control, params IEnumerable<FileFormatType> fileFormats)
+        /// <summary>
+        /// Loads the ComboBox with a list of FileFormatTypes. Allows existing
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="fileFormats"></param>
+        /// <param name="otherExtensions"></param>
+        public static void Load(ComboBoxData control, IEnumerable<FileFormatType>? fileFormats = null, IEnumerable<String?>? otherExtensions = null)
         {
+            if (fileFormats is null)
+            { fileFormats = Enum.GetValues<FileFormatType>(); }
+
             BindingList<FileFormatList> list = BuildList(fileFormats);
 
             control.DataSource = list;
@@ -54,19 +76,34 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             if (control.DropDownStyle is not ComboBoxStyle.DropDownList)
             { control.TextUpdated += Control_TextUpdated; }
 
+            if (otherExtensions is not null)
+            {
+                foreach (String item in otherExtensions.
+                    Select(s => s ?? String.Empty).
+                    Where(w => !list.Any(a => a.FileExtension.Equals(w, StringComparison.InvariantCultureIgnoreCase))).
+                    Where(w => !String.IsNullOrWhiteSpace(w)).
+                    Distinct())
+                { list.Add(new FileFormatList(item)); }
+            }
+
             void Control_TextUpdated(Object? sender, EventArgs e)
             {
                 if (control.SelectedItem is null && !String.IsNullOrWhiteSpace(control.Text))
                 {
-                    FileFormatList newItem = new FileFormatList()
-                    {
-                        FileFormat = FileFormatType.Other,
-                        FileExtension = control.Text,
-                        FileTypeName = String.Format("{0} ({1})", FileFormatType.Other.GetName(), control.Text)
-                    };
+                    FileFormatList? matched = list.
+                        FirstOrDefault(w => 
+                            w.FileFormat is not FileFormatType.Other
+                            && w.FileExtension.Equals(control.Text, StringComparison.InvariantCultureIgnoreCase));
 
-                    list.Add(newItem);
-                    control.SelectedItem = newItem;
+                    if (matched is null)
+                    {
+                        FileFormatList newItem = new FileFormatList(control.Text);
+
+                        list.Add(new FileFormatList(control.Text));
+                        control.SelectedItem = newItem;
+                    }
+                    else
+                    { control.SelectedItem = matched; }
                 }
             }
         }
