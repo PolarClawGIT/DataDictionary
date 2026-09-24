@@ -253,7 +253,6 @@
             relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
             relativePathData.Size = new Size(299, 46);
             relativePathData.TabIndex = 1;
-            relativePathData.Validated += RelativePathData_Validated;
             relativePathData.SelectCommand += RelativePathData_SelectCommand;
             // 
             // filePrefixData

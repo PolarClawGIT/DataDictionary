@@ -64,6 +64,7 @@
             transformTitleData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingTransform = new BindingSource(components);
+            folderBrowserDialog = new FolderBrowserDialog();
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -219,6 +220,7 @@
             relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
             relativePathData.Size = new Size(302, 46);
             relativePathData.TabIndex = 1;
+            relativePathData.SelectCommand += RelativePathData_SelectCommand;
             // 
             // filePrefixData
             // 
@@ -568,5 +570,6 @@
         private Controls.TextBoxData textBoxData1;
         private DataGridViewTextBoxColumn FileNameColumn;
         private Controls.ComboBoxData fileExtensionData;
+        private FolderBrowserDialog folderBrowserDialog;
     }
 }

@@ -98,10 +98,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(filePrefixData, e => e.FilePrefix);
                 formBinding.SchemaData.AddBinding(fileSuffixData, e => e.FileSuffix);
 
-                var x = formBinding.SchemaData.Select(s => s.FileExtension);
-
                 FileFormatList.Load(fileExtensionData, SchemaDocumentValue.FileFormats, formBinding.SchemaData.Select(s => s.FileExtension));
                 formBinding.SchemaData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
+
+                formBinding.SchemaData.AddBinding(localPathData, e => e.InitialDirectory);
 
                 // Node Tab
                 nodesTree.LoadTree(formBinding.BuilderData);
@@ -262,13 +262,6 @@ namespace DataDictionary.Main.Forms.Scripting
             else { localPathData.Text = String.Empty; }
         }
 
-        private void RelativePathData_Validated(object sender, EventArgs e)
-        {
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
-            { localPathData.Text = value.InitialDirectory; }
-            else { localPathData.Text = String.Empty; }
-        }
-
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
         {
             if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? current))
@@ -278,10 +271,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 folderBrowserDialog.InitialDirectory = current.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
-                {
-                    current.InitialDirectory = folderBrowserDialog.SelectedPath;
-                    localPathData.Text = current.InitialDirectory;
-                }
+                { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
             }
         }
 

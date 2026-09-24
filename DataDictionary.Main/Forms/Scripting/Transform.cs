@@ -92,6 +92,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 FileFormatList.Load(fileExtensionData, TransformValue.FileFormats, formBinding.TransformData.Select(s => s.FileExtension));
                 formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
+                formBinding.TransformData.AddBinding(localPathData, e => e.InitialDirectory);
+
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
@@ -134,6 +136,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 formBinding.LoadValue(transformIndex);
                 SendMessage(new RefreshRow<TransformIndex>(transformIndex));
+            }
+        }
+
+        private void RelativePathData_SelectCommand(object sender, EventArgs e)
+        {
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? current))
+            {
+                folderBrowserDialog.Reset();
+                folderBrowserDialog.RootFolder = current.RootFolder.GetSystemFolder();
+                folderBrowserDialog.InitialDirectory = current.InitialDirectory;
+
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+                { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
             }
         }
     }
