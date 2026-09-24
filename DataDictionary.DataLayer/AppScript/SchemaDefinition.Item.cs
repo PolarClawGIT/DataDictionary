@@ -62,28 +62,28 @@ namespace DataDictionary.DataLayer.AppScript
     public class SchemaDefinitionItem : BindingTableRow, ISchemaDefinitionItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? SchemaId
+        public virtual Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
             protected set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
-        public String? SchemaTitle
+        public virtual String? SchemaTitle
         {
             get { return GetValue(nameof(SchemaTitle)); }
             set { SetValue(nameof(SchemaTitle), value); }
         }
 
         /// <inheritdoc/>
-        public ScopeType ForEachScope
+        public virtual ScopeType ForEachScope
         {
             get
             {
@@ -97,7 +97,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? RootNodeName
+        public virtual String? RootNodeName
         {
             get { return GetValue(nameof(RootNodeName)); }
             set { SetValue(nameof(RootNodeName), value); }
@@ -125,21 +125,21 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? FilePrefix
+        public virtual String? FilePrefix
         {
             get { return GetValue(nameof(FilePrefix)); }
             set { SetValue(nameof(FilePrefix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileSuffix
+        public virtual String? FileSuffix
         {
             get { return GetValue(nameof(FileSuffix)); }
             set { SetValue(nameof(FileSuffix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileExtension
+        public virtual String? FileExtension
         {
             get { return GetValue(nameof(FileExtension)); }
             set { SetValue(nameof(FileExtension), value); }

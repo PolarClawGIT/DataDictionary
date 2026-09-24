@@ -65,35 +65,35 @@ namespace DataDictionary.DataLayer.AppScript
     public class TransformItem : BindingTableRow, ITransformItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? TransformId
+        public virtual Guid? TransformId
         {
             get { return GetValue<Guid>(nameof(TransformId)); }
             protected set { SetValue(nameof(TransformId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformTitle
+        public virtual String? TransformTitle
         {
             get { return GetValue(nameof(TransformTitle)); }
             set { SetValue(nameof(TransformTitle), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformScript
+        public virtual String? TransformScript
         {
             get { return GetValue(nameof(TransformScript)); }
             set { SetValue(nameof(TransformScript), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformFileName
+        public virtual String? TransformFileName
         {
             get { return GetValue(nameof(TransformFileName)); }
             set { SetValue(nameof(TransformFileName), value); }
@@ -121,21 +121,21 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? FilePrefix
+        public virtual String? FilePrefix
         {
             get { return GetValue(nameof(FilePrefix)); }
             set { SetValue(nameof(FilePrefix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileSuffix
+        public virtual String? FileSuffix
         {
             get { return GetValue(nameof(FileSuffix)); }
             set { SetValue(nameof(FileSuffix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileExtension
+        public virtual String? FileExtension
         {
             get { return GetValue(nameof(FileExtension)); }
             set { SetValue(nameof(FileExtension), value); }

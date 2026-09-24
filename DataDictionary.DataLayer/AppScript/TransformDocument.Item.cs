@@ -29,21 +29,21 @@ namespace DataDictionary.DataLayer.AppScript
     public class TransformDocumentItem : BindingTableRow, ITransformDocumentItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? DocumentId
+        public virtual Guid? DocumentId
         {
             get { return GetValue<Guid>(nameof(DocumentId)); }
             protected set { SetValue(nameof(DocumentId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TransformId
+        public virtual Guid? TransformId
         {
             get { return GetValue<Guid>(nameof(TransformId)); }
             set { SetValue(nameof(TransformId), value); }
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         [Obsolete("Need to get rid of this. Use a file reference instead.")]
-        public Guid? SchemaDocumentId
+        public virtual Guid? SchemaDocumentId
         {
             get { return GetValue<Guid>(nameof(SchemaDocumentId)); }
             set { SetValue(nameof(SchemaDocumentId), value); }
@@ -60,7 +60,7 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
-        public String ScriptedFileName
+        public virtual String ScriptedFileName
         {
             get { return GetValue(nameof(ScriptedFileName)) ?? String.Empty; }
             set { SetValue(nameof(ScriptedFileName), value); }

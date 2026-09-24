@@ -23,21 +23,21 @@ namespace DataDictionary.DataLayer.AppScript
     public class SchemaDocumentItem : BindingTableRow, ISchemaDocumentItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? DocumentId
+        public virtual Guid? DocumentId
         {
             get { return GetValue<Guid>(nameof(DocumentId)); }
             protected set { SetValue(nameof(DocumentId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? SchemaId
+        public virtual Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
             protected set { SetValue(nameof(SchemaId), value); }
@@ -45,14 +45,11 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
-        public String SchemaFileName
+        public virtual String SchemaFileName
         {
             get { return GetValue(nameof(SchemaFileName)) ?? String.Empty; }
             set { SetValue(nameof(SchemaFileName), value); }
         }
-
-        /// <inheritdoc/>
-        public ITemporal Temporal { get; }
 
         /// <inheritdoc/>
         public virtual ScopeType ObjectScope
@@ -76,7 +73,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public Boolean IsExcluded
+        public virtual Boolean IsExcluded
         {
             get
             {
@@ -87,7 +84,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public Boolean KeepOrphaned
+        public virtual Boolean KeepOrphaned
         {
             get
             {
@@ -96,6 +93,9 @@ namespace DataDictionary.DataLayer.AppScript
             }
             set { SetValue<Boolean>(nameof(KeepOrphaned), value); }
         }
+
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Constructor for Scripting Schema Document
