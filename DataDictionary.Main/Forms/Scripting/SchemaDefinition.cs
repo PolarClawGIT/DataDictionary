@@ -256,8 +256,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
             {
-                value.RelativePath = String.Empty;
-                localPathData.Text = value.InitialDirectory;
+                
             }
             else { localPathData.Text = String.Empty; }
         }

@@ -82,6 +82,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
+        public override DirectoryType RootFolder
+        {
+            get { return base.RootFolder; }
+            set
+            {
+                base.RootFolder = value;
+                // Causes InitialDirectory and RootPath to be adjusted based on change in RootFolder
+                InitialDirectory = directory.InitialDirectory; 
+            }
+        }
+
+        /// <inheritdoc/>
         public TransformValue() : base()
         {
             pathValue = new PathValue(this)

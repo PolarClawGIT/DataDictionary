@@ -100,7 +100,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public DirectoryType RootFolder
+        public virtual DirectoryType RootFolder
         {
             get
             {
@@ -114,7 +114,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? RelativePath
+        public virtual String? RelativePath
         {
             get { return GetValue(nameof(RelativePath)); }
             set { SetValue(nameof(RelativePath), value); }

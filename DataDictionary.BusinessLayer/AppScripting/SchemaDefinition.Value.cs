@@ -37,6 +37,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
             set { directory.InitialDirectory = value; }
         }
 
+        /// <inheritdoc/>
+        public override DirectoryType RootFolder
+        {
+            get { return base.RootFolder; }
+            set
+            {
+                base.RootFolder = value;
+                // Causes InitialDirectory and RootPath to be adjusted based on change in RootFolder
+                InitialDirectory = directory.InitialDirectory;
+            }
+        }
+
         /// <inheritdoc />
         public SchemaDefinitionValue() : base()
         {
@@ -89,7 +101,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="exception"></param>
         /// <returns></returns>
         public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
-        {   
+        {
             exception = null;
             return directory.IsValid(out exception);
         }
