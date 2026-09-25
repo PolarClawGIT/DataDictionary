@@ -72,7 +72,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc cref="IFileValue.FileFormats"/>
         public static IEnumerable<FileFormatType> FileFormats
-        { get; } = Enum.GetValues<FileFormatType>();
+        { get; } = Enum.GetValues<FileFormatType>().
+            Except(new List<FileFormatType>() { FileFormatType.Other, FileFormatType.XSLTransform });
 
         /// <inheritdoc/>
         IEnumerable<FileFormatType> IFileValue.FileFormats { get { return FileFormats; } }

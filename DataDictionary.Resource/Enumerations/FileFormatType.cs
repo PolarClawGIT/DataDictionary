@@ -26,6 +26,21 @@
         XSLTransform,
 
         /// <summary>
+        /// T4 Template: *.TT; *.TTInclude
+        /// </summary>
+        T4Template,
+
+        /// <summary>
+        /// JavaScript Object Notation: *.JSON
+        /// </summary>
+        JavaScript,
+
+        /// <summary>
+        /// Extensible Application Markup Language: XAML
+        /// </summary>
+        XAML,
+
+        /// <summary>
         /// SQL Script: *.SQL
         /// </summary>
         SQLScript,
@@ -41,13 +56,13 @@
         VisualBasic,
 
         /// <summary>
-        /// Mark Down: *.MD
-        /// </summary>
-        Markdown,
-
-        /// <summary>
         /// Mermaid Mark Down: *.mmd, *.mermaid
         /// </summary>
         Mermaid,
+
+        /// <summary>
+        /// Mark Down: *.MD
+        /// </summary>
+        Markdown,
     }
 }
