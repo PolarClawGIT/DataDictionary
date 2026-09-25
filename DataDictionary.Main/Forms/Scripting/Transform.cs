@@ -29,10 +29,8 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle(bindingTransform);
             SetIcon(bindingTransform);
 
-            SetCommand(ButtonType.Delete);
+            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Delete);
 
-            scriptOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
-            scriptSaveCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Save);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
@@ -119,14 +117,10 @@ namespace DataDictionary.Main.Forms.Scripting
             Activate(static () => new Forms.Scripting.TransformDocument());
         }
 
-        private void DocumentOpenCommand_Click(object sender, EventArgs e)
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
-        }
+            base.OpenCommand_Click(sender, e);
 
-        private void ScriptOpenCommand_Click(object sender, EventArgs e)
-        {
             base.OpenCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
@@ -149,8 +143,10 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void ScriptSaveCommand_Click(object sender, EventArgs e)
+        protected override void SaveCommand_Click(Object? sender, EventArgs e)
         {
+            base.SaveCommand_Click(sender, e);
+
             base.SaveCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
@@ -172,6 +168,11 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void DocumentOpenCommand_Click(object sender, EventArgs e)
+        {
+            // TODO: Add Data
+            Activate(static () => new Forms.Scripting.TransformDocument());
+        }
 
         private void RootFolderData_Validated(object sender, EventArgs e)
         {

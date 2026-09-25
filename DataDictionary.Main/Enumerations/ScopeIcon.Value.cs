@@ -86,7 +86,7 @@ namespace DataDictionary.Main.Enumerations
             { ScopeType.ScriptingTemplate,          Resources.Icon_Template},
             { ScopeType.ScriptingNode,              Resources.Icon_XMLElement},
             { ScopeType.ScriptingSchema,            Resources.Icon_XMLSchema},
-            { ScopeType.ScriptingTransform,         Resources.Icon_XMLTransformation},
+            { ScopeType.ScriptingTransform,         Resources.Icon_XSLTransform},
             { ScopeType.ScriptingDocument,          Resources.Icon_XMLFile},
             { ScopeType.ScriptingBuilder,           Resources.Icon_BuildDefinition},
 
