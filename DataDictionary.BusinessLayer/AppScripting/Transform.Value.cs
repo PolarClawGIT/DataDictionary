@@ -121,7 +121,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 SetContent = (value) => FileContent = value
             };
 
-            FileExtension = FileFormatType.XSLTransform.GetEnumeration().Extensions.First();
+            FileExtension = FileFormatType.PlainText.GetEnumeration().Extensions.First();
         }
 
         /// <inheritdoc cref="TransformItem.TransformItem(ITemplateKey)"/>

@@ -65,6 +65,9 @@
             bindingTemplate = new BindingSource(components);
             bindingTransform = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
+            openFileDialog = new OpenFileDialog();
+            errorProvider = new ErrorProvider(components);
+            saveFileDialog = new SaveFileDialog();
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -86,6 +89,7 @@
             documentToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // transformLayout
@@ -206,6 +210,7 @@
             rootFolderData.ReadOnly = false;
             rootFolderData.Size = new Size(219, 46);
             rootFolderData.TabIndex = 0;
+            rootFolderData.Validated += RootFolderData_Validated;
             // 
             // relativePathData
             // 
@@ -292,7 +297,7 @@
             transformScriptTab.Location = new Point(4, 24);
             transformScriptTab.Name = "transformScriptTab";
             transformScriptTab.Padding = new Padding(3);
-            transformScriptTab.Size = new Size(192, 72);
+            transformScriptTab.Size = new Size(551, 444);
             transformScriptTab.TabIndex = 2;
             transformScriptTab.Text = "Script";
             // 
@@ -312,7 +317,7 @@
             scriptFileLayout.RowStyles.Add(new RowStyle());
             scriptFileLayout.RowStyles.Add(new RowStyle());
             scriptFileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            scriptFileLayout.Size = new Size(186, 66);
+            scriptFileLayout.Size = new Size(545, 438);
             scriptFileLayout.TabIndex = 6;
             // 
             // textBoxData1
@@ -324,7 +329,7 @@
             textBoxData1.Multiline = false;
             textBoxData1.Name = "textBoxData1";
             textBoxData1.ReadOnly = true;
-            textBoxData1.Size = new Size(180, 44);
+            textBoxData1.Size = new Size(539, 44);
             textBoxData1.TabIndex = 9;
             textBoxData1.WordWrap = false;
             // 
@@ -333,7 +338,7 @@
             scriptToolStrip.Items.AddRange(new ToolStripItem[] { scriptOpenCommand, scriptSaveCommand });
             scriptToolStrip.Location = new Point(0, 0);
             scriptToolStrip.Name = "scriptToolStrip";
-            scriptToolStrip.Size = new Size(186, 25);
+            scriptToolStrip.Size = new Size(545, 25);
             scriptToolStrip.TabIndex = 0;
             scriptToolStrip.Text = "toolStrip1";
             // 
@@ -367,8 +372,9 @@
             scriptFileNameData.Name = "scriptFileNameData";
             scriptFileNameData.ReadOnly = false;
             scriptFileNameData.SelectIcon = (Image)resources.GetObject("scriptFileNameData.SelectIcon");
-            scriptFileNameData.Size = new Size(180, 44);
+            scriptFileNameData.Size = new Size(539, 44);
             scriptFileNameData.TabIndex = 1;
+            scriptFileNameData.SelectCommand += ScriptFileNameData_SelectCommand;
             // 
             // scriptData
             // 
@@ -379,7 +385,7 @@
             scriptData.Multiline = true;
             scriptData.Name = "scriptData";
             scriptData.ReadOnly = false;
-            scriptData.Size = new Size(180, 1);
+            scriptData.Size = new Size(539, 307);
             scriptData.TabIndex = 2;
             scriptData.WordWrap = false;
             // 
@@ -502,6 +508,14 @@
             transformTitleData.TabIndex = 1;
             transformTitleData.WordWrap = true;
             // 
+            // openFileDialog
+            // 
+            openFileDialog.FileName = "openFileDialog1";
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
+            // 
             // Transform
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -535,6 +549,7 @@
             documentToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -571,5 +586,8 @@
         private DataGridViewTextBoxColumn FileNameColumn;
         private Controls.ComboBoxData fileExtensionData;
         private FolderBrowserDialog folderBrowserDialog;
+        private OpenFileDialog openFileDialog;
+        private ErrorProvider errorProvider;
+        private SaveFileDialog saveFileDialog;
     }
 }

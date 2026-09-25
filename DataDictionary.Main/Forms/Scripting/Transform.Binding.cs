@@ -1,12 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Text;
-using Toolbox.BindingTable;
-using Toolbox.Threading;
+using DataDictionary.BusinessLayer.ToolSet;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -40,6 +34,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 { templateKey = new TemplateIndex(transformValue); }
 
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
+            }
+
+            public Boolean TryGetFile([NotNullWhen(true)] out IDirectoryValue? directory, [NotNullWhen(true)] out IFileValue? file)
+            {
+                directory = null;
+                file = null;
+
+                if (TransformData.TryGetCurrent(out TransformValue? transform))
+                { directory = transform; file = transform; return true; }
+                else { return false; }
             }
         }
     }

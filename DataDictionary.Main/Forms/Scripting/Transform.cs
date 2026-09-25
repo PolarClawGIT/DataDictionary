@@ -1,8 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -89,10 +92,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TransformData.AddBinding(filePrefixData, e => e.FilePrefix);
                 formBinding.TransformData.AddBinding(fileSuffixData, e => e.FileSuffix);
 
-                FileFormatList.Load(fileExtensionData, TransformValue.FileFormats, formBinding.TransformData.Select(s => s.FileExtension));
+                FileFormatList.Load(fileExtensionData, TransformDocumentValue.FileFormats, formBinding.TransformData.Select(s => s.FileExtension));
                 formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
                 formBinding.TransformData.AddBinding(localPathData, e => e.InitialDirectory);
+
+                formBinding.TransformData.AddBinding(scriptFileNameData, e => e.TransformFileName);
+                formBinding.TransformData.AddBinding(scriptData, e => e.FileContent);
+
+                ValidateFile();
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -119,24 +127,55 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ScriptOpenCommand_Click(object sender, EventArgs e)
         {
+            base.OpenCommand_Click(sender, e);
 
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
+                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            {
+                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                { file.FileName = openFileDialog.FileName; }
+                else
+                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName); }
+
+                DoWork(file.Open(new FileInfo(openFileDialog.FileName)), onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                ValidateFile();
+
+                if (args.Error is not null)
+                { throw args.Error; }
+            }
         }
 
         private void ScriptSaveCommand_Click(object sender, EventArgs e)
         {
+            base.SaveCommand_Click(sender, e);
 
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
+                && ValidateFile()
+                && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            {
+                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                { file.FileName = openFileDialog.FileName; }
+                else
+                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, saveFileDialog.FileName); }
+
+                DoWork(file.Save(new FileInfo(saveFileDialog.FileName)), onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is not null)
+                { throw args.Error; }
+            }
         }
 
-        protected override void HandleMessage(RefreshRow message)
-        {
-            base.HandleMessage(message);
 
-            if (message is RefreshRow<TemplateIndex> rowMessage
-                && rowMessage.Key.Equals(templateIndex))
-            {
-                formBinding.LoadValue(transformIndex);
-                SendMessage(new RefreshRow<TransformIndex>(transformIndex));
-            }
+        private void RootFolderData_Validated(object sender, EventArgs e)
+        {
+            ValidateFile();
         }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
@@ -148,8 +187,51 @@ namespace DataDictionary.Main.Forms.Scripting
                 folderBrowserDialog.InitialDirectory = current.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
-                { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
+                {
+                    current.InitialDirectory = folderBrowserDialog.SelectedPath;
+                    ValidateFile();
+                }
             }
         }
+
+        private void ScriptFileNameData_SelectCommand(object sender, EventArgs e)
+        {
+            openFileDialog.Title = "Select file (does not OPEN)";
+            openFileDialog.CheckFileExists = false;
+
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
+                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            {
+                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
+                { file.FileName = openFileDialog.FileName; }
+                else
+                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName); }
+
+                ValidateFile();
+            }
+        }
+
+        private Boolean ValidateFile()
+        {
+            Boolean result = true;
+
+            errorProvider.SetError(scriptFileNameData.ErrorControl, String.Empty);
+            errorProvider.SetError(scriptData.ErrorControl, String.Empty);
+
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? fileValue))
+            {
+                if (!fileValue.IsValid(out Exception? fileEx))
+                { errorProvider.SetError(scriptFileNameData.ErrorControl, fileEx); result = false; }
+
+                if (fileValue.ContentException is not null)
+                { errorProvider.SetError(scriptData.ErrorControl, fileValue.ContentException); result = false; }
+            }
+
+            CommandButtons[ButtonType.Save].Enabled = result;
+
+            return result;
+        }
+
+
     }
 }
