@@ -6,20 +6,9 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// 
-    /// </summary>
-    public interface IDocumentItem
-    {
-        /// <summary>
-        /// The name of the Schema File (XML).
-        /// </summary>
-        String DataFileName { get; }
-    }
-
-    /// <summary>
     /// Interface for the Scripting Schema Document
     /// </summary>
-    public interface ISchemaDocumentItem : ITemplateKey, ISchemaDefinitionKey, IDocumentKey, IDocumentItem, ITemplateObjectItem
+    public interface ISchemaDocumentItem : ITemplateKey, ISchemaDefinitionKey, ISchemaDocumentKeyName, ITemplateObjectItem
     { }
 
     /// <summary>

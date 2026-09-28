@@ -7,7 +7,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform Document
     /// </summary>
-    public interface ITransformDocumentItem : ITemplateKey, ITransformKey, IDocumentKey, IDocumentItem
+    public interface ITransformDocumentItem : ITemplateKey, ITransformKey, IDocumentKey, IDocumentNameKey
     {
         /// <summary>
         /// Name of the Scripted File. This is the Output of the Transform process.
