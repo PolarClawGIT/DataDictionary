@@ -9,7 +9,7 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[DocumentId],
 		[TemplateId],
 		[TransformId],
-		[SchemaDocumentId],
+		[DataFileName],
 		[ScriptedFileName],
 		-- Temporal Data
 		[CreatedOn],

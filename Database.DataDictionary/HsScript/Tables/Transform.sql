@@ -2,6 +2,7 @@
 (	[TransformId]			UniqueIdentifier Not Null,
 	[TransformTitle]		[AppGeneral].[uddtTitle] Not Null,
 	[TemplateId]            UniqueIdentifier Not Null,
+	[SchemaId]				UniqueIdentifier Not Null,
 	[TransformScript]		XML Null,
 	[TransformFileName]		[AppGeneral].[uddtFileName] Null,
 	[RootFolder]			[AppGeneral].[uddtFileRoot] Null,

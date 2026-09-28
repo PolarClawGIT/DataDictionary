@@ -14,7 +14,7 @@ Select	[DocumentId],
 		[AppScript].[funcObjectPath] ([ObjectId]) As [ObjectPath],
 		[IsExcluded],
 		[KeepOrphaned],
-		[SchemaFileName],
+		[DataFileName],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

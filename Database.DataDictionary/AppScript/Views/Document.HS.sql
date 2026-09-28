@@ -27,7 +27,7 @@ With [Dates] As (
 	Select	D.[DocumentId],
 			S.[RootFolder],
 			S.[RelativePath],
-			D.[SchemaFileName],
+			D.[DataFileName],
 			D.[SysStart],
 			D.[SysEnd]
 	From	[AppScript].[SchemaDocument] D
@@ -46,7 +46,7 @@ With [Dates] As (
 Select	D.[DocumentId], -- PK
 		D.[RootFolder],
 		D.[RelativePath],
-		D.[SchemaFileName],
+		D.[DataFileName],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

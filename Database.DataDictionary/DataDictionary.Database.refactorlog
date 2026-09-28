@@ -5655,4 +5655,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[SchemaFileName]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="0b837111-4e28-4e2a-a4fa-620806467cc3" ChangeDateTime="09/28/2026 14:04:43">
+    <Property Name="ElementName" Value="[AppScript].[SchemaDocument].[SchemaFileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[SchemaDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a6b7beb5-ed0c-4600-8065-9146b5d851c5" ChangeDateTime="09/28/2026 14:05:17">
+    <Property Name="ElementName" Value="[HsScript].[SchemaDocument].[SchemaFileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[SchemaDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataFileName]" />
+  </Operation>
 </Operations>

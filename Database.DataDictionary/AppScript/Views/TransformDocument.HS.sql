@@ -14,16 +14,8 @@ With [Dates] As (
 Select	D.[DocumentId], -- PK
 		D.[TemplateId], -- AK
 		D.[TransformId],
-		D.[SchemaDocumentId],
-		-- Useful Data
-		A.[RootFolder], -- AK
-		A.[RelativePath], -- Ak
+		D.[DataFileName],
 		D.[ScriptedFileName], -- AK
-		O.[ObjectScope],
-		O.[ObjectMember],
-		F.[RootFolder] As [SchemaRootFolder],
-		F.[RelativePath] As [SchemaRelativePath],
-		S.[SchemaFileName] As [SchemaFileName],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -36,14 +28,6 @@ Select	D.[DocumentId], -- PK
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppScript].[TransformDocument] D
-		Inner Join [AppScript].[Transform] A
-		On	D.[TransformId] = A.[TransformId]
-		Inner Join [AppScript].[SchemaDocument] S
-		On	D.[SchemaDocumentId] = S.[DocumentId]
-		Inner Join [AppScript].[SchemaDefinition] F
-		On	S.[SchemaId] = F.[SchemaId]
-		Left Join [AppScript].[TemplateObject] O
-		On	S.[ObjectId] = O.[ObjectId]
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
