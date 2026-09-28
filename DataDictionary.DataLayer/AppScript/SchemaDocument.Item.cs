@@ -6,15 +6,21 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Interface for the Scripting Schema Document
+    /// 
     /// </summary>
-    public interface ISchemaDocumentItem : ITemplateKey, ISchemaDefinitionKey, IDocumentKey, ITemplateObjectItem
+    public interface IDocumentItem
     {
         /// <summary>
         /// The name of the Schema File (XML).
         /// </summary>
-        String SchemaFileName { get; }
+        String DataFileName { get; }
     }
+
+    /// <summary>
+    /// Interface for the Scripting Schema Document
+    /// </summary>
+    public interface ISchemaDocumentItem : ITemplateKey, ISchemaDefinitionKey, IDocumentKey, IDocumentItem, ITemplateObjectItem
+    { }
 
     /// <summary>
     /// Implementation for the Scripting Schema Document.
@@ -43,12 +49,11 @@ namespace DataDictionary.DataLayer.AppScript
             protected set { SetValue(nameof(SchemaId), value); }
         }
 
-
         /// <inheritdoc/>
-        public virtual String SchemaFileName
+        public virtual String DataFileName
         {
-            get { return GetValue(nameof(SchemaFileName)) ?? String.Empty; }
-            set { SetValue(nameof(SchemaFileName), value); }
+            get { return GetValue(nameof(DataFileName)) ?? String.Empty; }
+            set { SetValue(nameof(DataFileName), value); }
         }
 
         /// <inheritdoc/>
@@ -104,7 +109,7 @@ namespace DataDictionary.DataLayer.AppScript
         protected SchemaDocumentItem() : base()
         {
             if (DocumentId is null) { DocumentId = Guid.NewGuid(); }
-            if (String.IsNullOrWhiteSpace(SchemaFileName)) { SchemaFileName = "newDocument"; }
+            if (String.IsNullOrWhiteSpace(DataFileName)) { DataFileName = "newDocument"; }
 
             Temporal = new TemporalItem()
             {
@@ -132,7 +137,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(ObjectPath), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsExcluded), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(KeepOrphaned), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(SchemaFileName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DataFileName), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 
@@ -159,7 +164,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override string ToString()
-        { return SchemaFileName ?? String.Empty; }
+        { return DataFileName ?? String.Empty; }
 
     }
 }

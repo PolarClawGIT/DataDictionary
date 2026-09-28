@@ -91,17 +91,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathItem(PathItem.Parse(SchemaFileName).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(DataFileName).ToArray()),
                 GetScope = () => Scope,
-                GetTitle = () => this.SchemaFileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(SchemaFileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(SchemaFileName)
+                GetTitle = () => this.DataFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DataFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(DataFileName)
             };
 
             schemaFile = new FileValue()
             {
-                GetFileName = () => SchemaFileName ?? String.Empty,
-                SetFileName = (value) => SchemaFileName = value,
+                GetFileName = () => DataFileName ?? String.Empty,
+                SetFileName = (value) => DataFileName = value,
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };
@@ -115,15 +115,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetIndex = () => new DocumentIndex(this),
                 GetPath = () => new PathItem(Scope),
                 GetScope = () => Scope,
-                GetTitle = () => this.SchemaFileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(SchemaFileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(SchemaFileName)
+                GetTitle = () => this.DataFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DataFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(DataFileName)
             };
 
             schemaFile = new FileValue()
             {
-                GetFileName = () => SchemaFileName ?? String.Empty,
-                SetFileName = (value) => SchemaFileName = value,
+                GetFileName = () => DataFileName ?? String.Empty,
+                SetFileName = (value) => DataFileName = value,
                 GetContent = () => FileContent ?? String.Empty,
                 SetContent = (value) => FileContent = value
             };

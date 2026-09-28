@@ -108,7 +108,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     foreach (var document in DocumentData)
                     {
-                        FileInfo file = new FileInfo(Path.Combine(schema.InitialDirectory, document.SchemaFileName));
+                        FileInfo file = new FileInfo(Path.Combine(schema.InitialDirectory, document.DataFileName));
                         if (!document.IsExcluded)
                         { document.Save(file); }
                     }

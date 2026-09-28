@@ -76,7 +76,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
-                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.SchemaFileName);
+                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFileName);
                 formBinding.DocumentData.AddBinding(documentContentData, e => e.FileContent);
 
                 formBinding.DocumentData.AddBinding(objectIsExcluded, e => e.IsExcluded);
@@ -181,7 +181,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
                         {
-                            fileValue.SchemaFileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+                            fileValue.DataFileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
                             ValidateFile();
                         }
                     }

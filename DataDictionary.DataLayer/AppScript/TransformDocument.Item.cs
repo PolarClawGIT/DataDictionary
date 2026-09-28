@@ -7,19 +7,12 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform Document
     /// </summary>
-    public interface ITransformDocumentItem : ITemplateKey, ITransformKey, IDocumentKey
+    public interface ITransformDocumentItem : ITemplateKey, ITransformKey, IDocumentKey, IDocumentItem
     {
-
         /// <summary>
         /// Name of the Scripted File. This is the Output of the Transform process.
         /// </summary>
         String ScriptedFileName { get; }
-
-        /// <summary>
-        /// DocumentID of the Schema Document that is the Source of the Transform.
-        /// </summary>
-        [Obsolete("Need to get rid of this. Use a file reference instead.")]
-        Guid? SchemaDocumentId { get; }
     }
 
     /// <summary>
@@ -49,15 +42,12 @@ namespace DataDictionary.DataLayer.AppScript
             set { SetValue(nameof(TransformId), value); }
         }
 
-
         /// <inheritdoc/>
-        [Obsolete("Need to get rid of this. Use a file reference instead.")]
-        public virtual Guid? SchemaDocumentId
+        public virtual String DataFileName
         {
-            get { return GetValue<Guid>(nameof(SchemaDocumentId)); }
-            set { SetValue(nameof(SchemaDocumentId), value); }
+            get { return GetValue(nameof(DataFileName)) ?? String.Empty; }
+            set { SetValue(nameof(DataFileName), value); }
         }
-
 
         /// <inheritdoc/>
         public virtual String ScriptedFileName
@@ -100,7 +90,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(DocumentId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(SchemaDocumentId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(DataFileName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ScriptedFileName), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];

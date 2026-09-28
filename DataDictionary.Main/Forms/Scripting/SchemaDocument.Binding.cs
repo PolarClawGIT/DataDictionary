@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     TemplateIndex templateIndex = new TemplateIndex(definition);
                     SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex(definition);
                     SchemaDocumentValue document = new SchemaDocumentValue(templateIndex, schemaIndex);
-                    document.SchemaFileName = Path.ChangeExtension(document.SchemaFileName, definition.FileExtension);
+                    document.DataFileName = Path.ChangeExtension(document.DataFileName, definition.FileExtension);
                     DocumentIndex documentIndex = new DocumentIndex(document);
 
                     GetData().SchemaDocuments.Add(document);

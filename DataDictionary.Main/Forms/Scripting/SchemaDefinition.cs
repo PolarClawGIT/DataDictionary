@@ -194,7 +194,7 @@ namespace DataDictionary.Main.Forms.Scripting
                             var newDocument = new SchemaDocumentValue(templateIndex, schemaIndex);
                             newDocument.ObjectScope = item.Scope;
                             newDocument.ObjectPath = item.Path.MemberFullPath;
-                            newDocument.SchemaFileName = String.Concat(schemaValue.FilePrefix, item.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+                            newDocument.DataFileName = String.Concat(schemaValue.FilePrefix, item.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
 
                             formBinding.DocumentData.Add(newDocument);
                         }

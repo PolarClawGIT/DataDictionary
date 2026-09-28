@@ -75,14 +75,14 @@
             documentBuildCommand = new ToolStripButton();
             documentSaveCommand = new ToolStripButton();
             documentData = new DataGridView();
-            fileNameColumn = new DataGridViewTextBoxColumn();
-            objectPathColumn = new DataGridViewTextBoxColumn();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             bindingSchema = new BindingSource(components);
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
             bindingNode = new BindingSource(components);
             bindingDocument = new BindingSource(components);
+            fileNameColumn = new DataGridViewTextBoxColumn();
+            objectPathColumn = new DataGridViewTextBoxColumn();
             schemaLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -606,7 +606,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(192, 72);
+            documentTab.Size = new Size(568, 495);
             documentTab.TabIndex = 1;
             documentTab.Text = "Documents";
             // 
@@ -622,7 +622,7 @@
             fileLayout.RowCount = 2;
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            fileLayout.Size = new Size(186, 66);
+            fileLayout.Size = new Size(562, 489);
             fileLayout.TabIndex = 5;
             // 
             // documentToolStrip
@@ -630,7 +630,7 @@
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand, documentDeleteCommand, toolStripSeparator, documentBuildCommand, documentSaveCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(186, 25);
+            documentToolStrip.Size = new Size(562, 25);
             documentToolStrip.TabIndex = 15;
             documentToolStrip.Text = "Document Tools";
             // 
@@ -699,24 +699,8 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(180, 35);
+            documentData.Size = new Size(556, 458);
             documentData.TabIndex = 9;
-            // 
-            // fileNameColumn
-            // 
-            fileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            fileNameColumn.DataPropertyName = "SchemaFileName";
-            fileNameColumn.HeaderText = "File Name";
-            fileNameColumn.Name = "fileNameColumn";
-            fileNameColumn.ReadOnly = true;
-            // 
-            // objectPathColumn
-            // 
-            objectPathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            objectPathColumn.DataPropertyName = "ObjectPath";
-            objectPathColumn.HeaderText = "Object";
-            objectPathColumn.Name = "objectPathColumn";
-            objectPathColumn.ReadOnly = true;
             // 
             // schemaTitleData
             // 
@@ -739,6 +723,22 @@
             // 
             bindingDocument.CurrentChanged += BindingDocument_CurrentChanged;
             bindingDocument.ListChanged += BindingDocument_ListChanged;
+            // 
+            // fileNameColumn
+            // 
+            fileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            fileNameColumn.DataPropertyName = "DataFileName";
+            fileNameColumn.HeaderText = "File Name";
+            fileNameColumn.Name = "fileNameColumn";
+            fileNameColumn.ReadOnly = true;
+            // 
+            // objectPathColumn
+            // 
+            objectPathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            objectPathColumn.DataPropertyName = "ObjectPath";
+            objectPathColumn.HeaderText = "Object";
+            objectPathColumn.Name = "objectPathColumn";
+            objectPathColumn.ReadOnly = true;
             // 
             // SchemaDefinition
             // 
@@ -836,8 +836,8 @@
         private ToolStripButton documentDeleteCommand;
         private ToolStripSeparator toolStripSeparator;
         private ToolStripButton documentSaveCommand;
+        private Controls.ComboBoxData fileExtensionData;
         private DataGridViewTextBoxColumn fileNameColumn;
         private DataGridViewTextBoxColumn objectPathColumn;
-        private Controls.ComboBoxData fileExtensionData;
     }
 }
