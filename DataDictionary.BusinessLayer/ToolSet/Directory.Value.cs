@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.DataLayer.AppScript;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
@@ -10,6 +11,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public interface IDirectoryValue : IBindingPropertyChanged
     {
+        /// <inheritdoc cref="IDocumentDirectory.RootFolder"/>
+        DirectoryType RootFolder { get; }
+
         /// <summary>
         /// Full Directory Path (includes root).
         /// </summary>
@@ -33,6 +37,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public class DirectoryValue : IDirectoryValue
     {
+        /// <inheritdoc/>
+        public DirectoryType RootFolder { get { return GetRootFolder(); } }
+
         /// <summary>
         /// Function that returns the Current root Directory Type.
         /// </summary>
@@ -90,6 +97,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 OnPropertyChanged(nameof(InitialDirectory));
             }
         }
+
+
 
         /// <summary>
         /// Create an Instance of a DirectoryValue.

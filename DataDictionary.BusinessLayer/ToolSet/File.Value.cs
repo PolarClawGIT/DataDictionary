@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// Only implicitly implemented properties are available in DataBinding.
     /// </remarks>
     public interface IFileValue : IBindingPropertyChanged
-    {   
+    {
         /// <summary>
         /// File Name for the File within the File Path.
         /// </summary>
@@ -66,8 +66,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public class FileValue : IFileValue
     {
-        static IEnumerable<FileFormatType> fileFormats = Enum.GetValues<FileFormatType>(); // List of supported FileFormats
-
         /// <inheritdoc/>
         public String FileName
         {
@@ -87,8 +85,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
         /// <inheritdoc/>
         public IEnumerable<FileFormatType> FileFormats { get; } = Enum.GetValues<FileFormatType>();
-        //public static IEnumerable<FileFormatType> FileFormats() { return fileFormats; }
-
 
         /// <summary>
         /// Function representing Get function for the FileName.

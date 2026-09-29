@@ -78,7 +78,33 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public String InitialDirectory
         {
             get { return directory.InitialDirectory; }
-            set { directory.InitialDirectory = value; }
+            set
+            {
+                directory.InitialDirectory = value;
+                String relativeTo = directory.InitialDirectory;
+
+                if (!String.IsNullOrWhiteSpace(relativeTo)
+                    && !String.IsNullOrWhiteSpace(TransformFileName)
+                    && TransformFileName.StartsWith(relativeTo))
+                { TransformFileName = Path.GetRelativePath(relativeTo, TransformFileName); }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override String? RelativePath
+        {
+            get { return base.RelativePath; }
+
+            set
+            {
+                base.RelativePath = value;
+                String relativeTo = directory.InitialDirectory;
+
+                if (!String.IsNullOrWhiteSpace(relativeTo)
+                    && !String.IsNullOrWhiteSpace(TransformFileName)
+                    && TransformFileName.StartsWith(relativeTo))
+                { TransformFileName = Path.GetRelativePath(relativeTo, TransformFileName); }
+            }
         }
 
         /// <inheritdoc/>
@@ -89,7 +115,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 base.RootFolder = value;
                 // Causes InitialDirectory and RootPath to be adjusted based on change in RootFolder
-                InitialDirectory = directory.InitialDirectory; 
+                InitialDirectory = directory.InitialDirectory;
             }
         }
 
@@ -125,7 +151,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc cref="TransformItem.TransformItem(ITemplateKey)"/>
-        public TransformValue(ITemplateIndex template): base(template)
+        public TransformValue(ITemplateIndex template) : base(template)
         {
             pathValue = new PathValue(this)
             {
@@ -166,6 +192,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
         { return directory.IsValid(out exception) && scriptingFile.IsValid(out exception); }
+
+        /// <inheritdoc/>
+        Boolean IDirectoryValue.IsValid([NotNullWhen(false)] out Exception? exception)
+        { return directory.IsValid(out exception); }
+
+        /// <inheritdoc/>
+        Boolean IFileValue.IsValid([NotNullWhen(false)] out Exception? exception)
+        { return scriptingFile.IsValid(out exception); }
 
     }
 }
