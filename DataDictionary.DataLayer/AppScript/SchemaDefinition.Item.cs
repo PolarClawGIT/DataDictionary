@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting SchemaDefinition
     /// </summary>
-    public interface ISchemaDefinitionItem : ISchemaDefinitionKey, ITemplateKey
+    public interface ISchemaDefinitionItem : ISchemaDefinitionKey, ITemplateKey, IDocumentDirectory, IDocumentFilePattern
     {
         /// <summary>
         /// Title of the Scripting Schema (aka Name of the Schema)
@@ -25,34 +25,6 @@ namespace DataDictionary.DataLayer.AppScript
         /// Name of the Root Node. This will default to the name of the Object if not specified.
         /// </summary>
         String? RootNodeName { get; }
-
-        /// <summary>
-        /// Name of the Special Folder used as the Root Directory.
-        /// </summary>
-        /// <remarks>
-        /// This uses an Enum that represents locations in: Environment.SpecialFolder.UserProfile
-        /// </remarks>
-        DirectoryType RootFolder { get; }
-
-        /// <summary>
-        /// Relative Directory off of the Root Directory where the XML Input file is located.
-        /// </summary>
-        String? RelativePath { get; }
-
-        /// <summary>
-        /// Prefix to add to the front of the file name.
-        /// </summary>
-        String? FilePrefix { get; }
-
-        /// <summary>
-        /// Prefix to add to the end of the file name.
-        /// </summary>
-        String? FileSuffix { get; }
-
-        /// <summary>
-        /// File Extension to add to the end of the file name.
-        /// </summary>
-        String? FileExtension { get; }
     }
 
     /// <summary>

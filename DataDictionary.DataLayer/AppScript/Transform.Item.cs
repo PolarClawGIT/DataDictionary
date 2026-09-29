@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform
     /// </summary>
-    public interface ITransformItem : ITransformKey, ITemplateKey
+    public interface ITransformItem : ITransformKey, ITemplateKey, IDocumentDirectory, IDocumentFilePattern
     {
         /// <summary>
         /// Title of the Scripting Transform (aka Name of the Transform)
@@ -28,34 +28,6 @@ namespace DataDictionary.DataLayer.AppScript
         /// The name of the file when TransformScript is stored as a File.
         /// </summary>
         String? TransformFileName { get; }
-
-        /// <summary>
-        /// Name of the Special Folder used as the Root Directory.
-        /// </summary>
-        /// <remarks>
-        /// This uses an Enum that represents locations in: Environment.SpecialFolder.UserProfile
-        /// </remarks>
-        DirectoryType RootFolder { get; }
-
-        /// <summary>
-        /// Relative Directory off of the Root Directory where the XML Input file is located.
-        /// </summary>
-        String? RelativePath { get; }
-
-        /// <summary>
-        /// Prefix to add to the front of the file name.
-        /// </summary>
-        String? FilePrefix { get; }
-
-        /// <summary>
-        /// Prefix to add to the end of the file name.
-        /// </summary>
-        String? FileSuffix { get; }
-
-        /// <summary>
-        /// File Extension to add to the end of the file name.
-        /// </summary>
-        String? FileExtension { get; }
     }
 
     /// <summary>
