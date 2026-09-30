@@ -6,7 +6,6 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
@@ -89,38 +88,12 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
-            {
-                if (directory.IsValid(out _) && file.IsValid(out _))
-                {
-                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
-
-                    if (fileInfo.Exists) 
-                    { DoWork(file.Open(fileInfo), onCompleting); }
-                    else if(openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
-                    {
-                        file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName);
-
-                        fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
-                        DoWork(file.Open(fileInfo), onCompleting);
-                    }
-                    
-                }
-                else if (directory.IsValid(out _) && !file.IsValid(out _)
-                    && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
-                {
-                    file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName);
-
-                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
-                    DoWork(file.Open(fileInfo), onCompleting);
-                }
-                else { throw new InvalidOperationException(); } // Should not get here. Button should be disabled.
-            }
+            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); } 
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -136,22 +109,7 @@ namespace DataDictionary.Main.Forms.Scripting
             base.SaveCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
-            {
-                if (directory.IsValid(out _) && file.IsValid(out _))
-                {
-                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
-                    DoWork(file.Save(fileInfo), onCompleting);
-                }
-                else if (directory.IsValid(out _) && !file.IsValid(out _)
-                    && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
-                {
-                    file.FileName = Path.GetRelativePath(directory.InitialDirectory, saveFileDialog.FileName);
-
-                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
-                    DoWork(file.Save(fileInfo), onCompleting);
-                }
-                else { throw new InvalidOperationException(); } // Should not get here. Button should be disabled.
-            }
+            { DoWork(saveFileDialog.SaveDialog(directory, file), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -162,17 +120,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentFileData_SelectCommand(object sender, EventArgs e)
         {
-            openFileDialog.Title = "Select file (does not OPEN)";
-            openFileDialog.CheckFileExists = false;
-
-            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
             {
-                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
-                { file.FileName = openFileDialog.FileName; }
-                else
-                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName); }
-
+                openFileDialog.SelectDialog(directory, file);
                 ValidateFile();
             }
         }
