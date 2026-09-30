@@ -6,6 +6,7 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
@@ -93,15 +94,32 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.OpenCommand_Click(sender, e);
 
-            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
             {
-                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
-                { file.FileName = openFileDialog.FileName; }
-                else
-                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName); }
+                if (directory.IsValid(out _) && file.IsValid(out _))
+                {
+                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
 
-                DoWork(file.Open(new FileInfo(openFileDialog.FileName)), onCompleting);
+                    if (fileInfo.Exists) 
+                    { DoWork(file.Open(fileInfo), onCompleting); }
+                    else if(openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+                    {
+                        file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName);
+
+                        fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
+                        DoWork(file.Open(fileInfo), onCompleting);
+                    }
+                    
+                }
+                else if (directory.IsValid(out _) && !file.IsValid(out _)
+                    && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+                {
+                    file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName);
+
+                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
+                    DoWork(file.Open(fileInfo), onCompleting);
+                }
+                else { throw new InvalidOperationException(); } // Should not get here. Button should be disabled.
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
@@ -117,16 +135,22 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.SaveCommand_Click(sender, e);
 
-            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && ValidateFile()
-                && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
             {
-                if (String.IsNullOrWhiteSpace(directory.InitialDirectory))
-                { file.FileName = openFileDialog.FileName; }
-                else
-                { file.FileName = Path.GetRelativePath(directory.InitialDirectory, saveFileDialog.FileName); }
+                if (directory.IsValid(out _) && file.IsValid(out _))
+                {
+                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
+                    DoWork(file.Save(fileInfo), onCompleting);
+                }
+                else if (directory.IsValid(out _) && !file.IsValid(out _)
+                    && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+                {
+                    file.FileName = Path.GetRelativePath(directory.InitialDirectory, saveFileDialog.FileName);
 
-                DoWork(file.Save(new FileInfo(saveFileDialog.FileName)), onCompleting);
+                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
+                    DoWork(file.Save(fileInfo), onCompleting);
+                }
+                else { throw new InvalidOperationException(); } // Should not get here. Button should be disabled.
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
@@ -206,27 +230,42 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private Boolean ValidateFile()
         {
+            CommandButtons[ButtonType.Open].Enabled = true;
+            CommandButtons[ButtonType.Save].Enabled = true;
             Boolean result = true;
 
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
-
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? schemaValue)
-                && !schemaValue.IsValid(out Exception? directoryEx))
-            { errorProvider.SetError(localPathData.ErrorControl, directoryEx); result = false; }
-
             errorProvider.SetError(schemaFileNameData.ErrorControl, String.Empty);
             errorProvider.SetError(documentContentData.ErrorControl, String.Empty);
 
-            if (formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? fileValue))
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
             {
-                if (!fileValue.IsValid(out Exception? fileEx))
-                { errorProvider.SetError(schemaFileNameData.ErrorControl, fileEx); result = false; }
+                if(!directory.IsValid(out Exception? dirException))
+                {
+                    errorProvider.SetError(localPathData.ErrorControl, dirException);
+                    CommandButtons[ButtonType.Open].Enabled = false;
+                    CommandButtons[ButtonType.Save].Enabled = false;
+                    result = false;
+                }
 
-                if (fileValue.ContentException is not null)
-                { errorProvider.SetError(documentContentData.ErrorControl, fileValue.ContentException); result = false; }
+                if (!file.IsValid(out Exception? fileException))
+                {
+                    errorProvider.SetError(schemaFileNameData.ErrorControl, fileException);
+                    CommandButtons[ButtonType.Save].Enabled = false;
+                    result = false;
+                }
+
+                if (formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? document))
+                {
+                    if (document.ContentException is not null)
+                    {
+                        errorProvider.SetError(documentContentData.ErrorControl, document.ContentException);
+                        CommandButtons[ButtonType.Save].Enabled = false;
+                        result = false;
+                    }
+                }
             }
-
-            CommandButtons[ButtonType.Save].Enabled = result;
+            else { throw new InvalidOperationException(); } // Should not get here.
 
             return result;
         }

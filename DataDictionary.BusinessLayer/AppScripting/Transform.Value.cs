@@ -104,6 +104,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     && !String.IsNullOrWhiteSpace(TransformFileName)
                     && TransformFileName.StartsWith(relativeTo))
                 { TransformFileName = Path.GetRelativePath(relativeTo, TransformFileName); }
+                else if (!String.IsNullOrWhiteSpace(TransformFileName)
+                    && !String.IsNullOrWhiteSpace(value))
+                { TransformFileName = Path.GetRelativePath(value, TransformFileName); }
             }
         }
 

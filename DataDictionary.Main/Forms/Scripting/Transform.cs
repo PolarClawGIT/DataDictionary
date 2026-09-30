@@ -126,13 +126,21 @@ namespace DataDictionary.Main.Forms.Scripting
                 if(directory.IsValid(out _) && file.IsValid(out _))
                 {
                     FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
-                    DoWork(file.Open(fileInfo), onCompleting);
+
+                    if (fileInfo.Exists)
+                    { DoWork(file.Open(fileInfo), onCompleting); }
+                    else if (openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
+                    {
+                        file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName);
+
+                        fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
+                        DoWork(file.Open(fileInfo), onCompleting);
+                    }
                 }
                 else if(directory.IsValid(out _) && !file.IsValid(out _)
                     && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
                 {
                     file.FileName = Path.GetRelativePath(directory.InitialDirectory, openFileDialog.FileName);
-                    file.File
 
                     FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
                     DoWork(file.Open(fileInfo), onCompleting);
@@ -259,6 +267,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                 }
             }
+            else { throw new InvalidOperationException(); } // Should not get here.
 
             return result;
         }
