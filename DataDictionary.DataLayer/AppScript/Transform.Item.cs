@@ -8,7 +8,9 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform
     /// </summary>
-    public interface ITransformItem : ITransformKey, ITemplateKey, IDocumentDirectory, IDocumentFilePattern
+    public interface ITransformItem : ITransformKey, ITemplateKey,
+        ISchemaDefinitionKey,
+        IDocumentDirectory, IDocumentFilePattern
     {
         /// <summary>
         /// Title of the Scripting Transform (aka Name of the Transform)
@@ -48,6 +50,13 @@ namespace DataDictionary.DataLayer.AppScript
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
+        }
+
+        /// <inheritdoc/>
+        public virtual Guid? SchemaId
+        {
+            get { return GetValue<Guid>(nameof(SchemaId)); }
+            protected set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
@@ -116,6 +125,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
 
+
         /// <summary>
         /// Constructor for Scripting Schema Definition
         /// </summary>
@@ -144,6 +154,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TransformTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(TransformFileName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RootFolder), typeof(String)){ AllowDBNull = true},

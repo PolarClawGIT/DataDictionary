@@ -93,7 +93,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 FileFormatList.Load(fileExtensionData, TransformDocumentValue.FileFormats, formBinding.TransformData.Select(s => s.FileExtension));
                 formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
-                formBinding.TransformData.AddBinding(localPathData, e => e.InitialDirectory);
+                formBinding.TransformData.AddBinding(documentLocalPathData, e => e.InitialDirectory);
+                formBinding.TransformData.AddBinding(transformLocalPath, e => e.InitialDirectory);
 
                 formBinding.TransformData.AddBinding(scriptFileNameData, e => e.TransformFileName);
                 formBinding.TransformData.AddBinding(scriptData, e => e.FileContent);

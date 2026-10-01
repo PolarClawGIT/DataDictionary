@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
@@ -133,6 +134,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 documentSaveCommand.Enabled = false;
                 formBinding.DocumentData.AddBinding(documentData);
 
+                ValidateFile();
+
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
@@ -253,13 +256,7 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)
-        {
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
-            {
-                
-            }
-            else { localPathData.Text = String.Empty; }
-        }
+        { ValidateFile(); }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
         {
@@ -273,6 +270,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
             }
         }
+
+
+        private void RelativePathData_Validated(object sender, EventArgs e)
+        { }
 
         protected override void HandleMessage(RefreshRow message)
         {
@@ -328,5 +329,14 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void ValidateFile()
+        {
+            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
+
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema)
+                 && schema is IDirectoryValue directory
+                 && !directory.IsValid(out Exception? exception))
+            { errorProvider.SetError(rootFolderData.ErrorControl, exception); }
+        }
     }
 }
