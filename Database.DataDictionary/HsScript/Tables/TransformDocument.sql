@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [HsScript].[TransformDocument]
 (	
 	[DocumentId]		UniqueIdentifier Not Null,
-	[TemplateId]		UniqueIdentifier Not Null,
 	[TransformId]		UniqueIdentifier Not Null,
 	[DataFileName]		[AppGeneral].[uddtFileName] Not Null, -- Input
 	[ScriptedFileName]	[AppGeneral].[uddtFileName] Not Null,

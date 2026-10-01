@@ -32,7 +32,7 @@ Begin Try
 
 	Insert Into @Values
 	Select	X.[DocumentId],
-			D.[TemplateId],
+			T.[TemplateId],
 			D.[TransformId],
 			NullIf(Trim(D.[DataFileName]),'') As [DataFileName],
 			NullIf(Trim(D.[ScriptedFileName]),'') As [ScriptedFileName]
@@ -42,6 +42,8 @@ Begin Try
 				@ModelId = M.[ModelId]
 			Cross Apply (
 				Select	Coalesce(D.[DocumentId], NewId()) As [DocumentId]) X
+			Left Join [AppScript].[Transform] T
+			On	D.[TransformId] = T.[TransformId]
 	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -52,13 +54,15 @@ Begin Try
 	-- Apply Changes
 	Delete From [AppScript].[TransformDocument]
 	From	[AppScript].[TransformDocument] T
+			Inner Join [AppScript].[Transform] P
+				On	T.[TransformId] = P.[TransformId] 
 			Left Join @Values S
 			On	T.[DocumentId] = S.[DocumentId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](P.[TemplateId], 1)
 	Where	S.[DocumentId] is Null And
 			(@TemplateId is Not Null Or @ModelId is Not Null) And
-			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
-			(@ModelId is Null Or T.[TemplateId] In (
+			(@TemplateId is Null Or @TemplateId = P.[TemplateId])  And
+			(@ModelId is Null Or P.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[TemplateModel]
 				Where	[ModelId] = @ModelId))
@@ -74,10 +78,12 @@ Begin Try
 		Except
 		Select	[DocumentId],
 				[TemplateId],
-				[TransformId],
+				P.[TransformId],
 				[DataFileName],
 				[ScriptedFileName]
-		From	[AppScript].[TransformDocument])
+		From	[AppScript].[TransformDocument] D
+				Inner Join [AppScript].[Transform] P
+				On	D.[TransformId] = P.[TransformId])
 	Update [AppScript].[TransformDocument]
 	Set		--[TemplateId] = S.[TemplateId],
 			[TransformId] = S.[TransformId],
@@ -85,17 +91,15 @@ Begin Try
 	From	[AppScript].[TransformDocument] T
 			Inner Join [Delta] S
 			On	T.[DocumentId] = S.[DocumentId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Print FormatMessage ('Update [AppScript].[TransformDocument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[TransformDocument] (
 			[DocumentId],
-			[TemplateId],
 			[TransformId],
 			[DataFileName],
 			[ScriptedFileName])
 	Select	S.[DocumentId],
-			S.[TemplateId],
 			S.[TransformId],
 			S.[DataFileName],
 			S.[ScriptedFileName]

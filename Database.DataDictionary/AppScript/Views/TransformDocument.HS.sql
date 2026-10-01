@@ -12,9 +12,13 @@ With [Dates] As (
 	From	[HsScript].[TransformDocument]
 	Where	[SysStart] != [SysEnd])
 Select	D.[DocumentId], -- PK
-		D.[TemplateId], -- AK
+		FT.[TemplateId], -- AK
+		FT.[SchemaId],
 		D.[TransformId],
 		D.[DataFileName],
+		FO.[ObjectId],
+		FO.[ObjectScope],
+		FO.[ObjectMember],
 		D.[ScriptedFileName], -- AK
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
@@ -42,5 +46,28 @@ From	[AppScript].[TransformDocument] D
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
+		-- Not specifying a For System_Time returns the current value
+		-- For System_Time <some date> returns the value for that date
+		-- Otherwise the last value is returned
+		Outer Apply (
+			Select	Top 1
+					[TemplateId],
+					[SchemaId]
+			From	[AppScript].[Transform]
+			Where	[TransformId] = D.[TransformId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FT
+		Outer Apply (
+			Select	Top 1
+					O.[ObjectId],
+					O.[ObjectScope],
+					O.[ObjectMember]
+			From	[AppScript].[SchemaDocument] S
+					Inner Join [AppScript].[TemplateObject] O
+					On	S.[ObjectId] = O.[ObjectId]
+			Where	[SchemaId] = FT.[SchemaId] And
+					[DataFileName] = D.[DataFileName] And
+					O.[SysStart] <= D.[SysEnd]
+			Order By O.[SysStart] Desc) FO
 GO
 
