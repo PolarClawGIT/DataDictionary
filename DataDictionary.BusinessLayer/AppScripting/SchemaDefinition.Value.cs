@@ -2,26 +2,24 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ISchemaDefinitionValue : ISchemaDefinitionItem, ISchemaComposite,
-        IScopeType, ITemporal
-    {
-        /// <summary>
-        /// Directory information to be used with the Directory Dialog.
-        /// </summary>
-        IDirectoryValue SchemaDirectory { get; }
-    }
+        IScopeType, ITemporal, IDirectoryValue
+    { }
 
     /// <inheritdoc/>
-    public class SchemaDefinitionValue : SchemaDefinitionItem, ISchemaDefinitionValue, IPathValue, INamedScopeSourceValue
+    public class SchemaDefinitionValue : SchemaDefinitionItem, ISchemaDefinitionValue,
+        IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
+        IDirectoryValue directory; // Backing field for IDirectoryValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -33,7 +31,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingSchema; } }
 
         /// <inheritdoc/>
-        public IDirectoryValue SchemaDirectory { get; }
+        public String InitialDirectory
+        {
+            get { return directory.InitialDirectory; }
+            set { directory.InitialDirectory = value; }
+        }
+
+        /// <inheritdoc/>
+        public override DirectoryType RootFolder
+        {
+            get { return base.RootFolder; }
+            set
+            {
+                base.RootFolder = value;
+                // Causes InitialDirectory and RootPath to be adjusted based on change in RootFolder
+                InitialDirectory = directory.InitialDirectory;
+            }
+        }
 
         /// <inheritdoc />
         public SchemaDefinitionValue() : base()
@@ -41,19 +55,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new SchemaDefinitionIndex(this),
-                GetPath = () => new PathIndex(PathIndex.Parse(SchemaTitle).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(SchemaTitle).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => SchemaTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(SchemaTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(SchemaTitle)
             };
 
-            SchemaDirectory = new DirectoryValue()
+            directory = new DirectoryValue()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => RelativePath ?? String.Empty,
                 SetDirectory = (value) => RelativePath = value
             };
+
+            FileExtension = FileFormatType.XMLData.GetEnumeration().Extensions.First();
         }
 
         /// <inheritdoc cref="SchemaDefinitionItem(ITemplateKey)"/>
@@ -62,19 +78,32 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new SchemaDefinitionIndex(this),
-                GetPath = () => new PathIndex(PathIndex.Parse(SchemaTitle).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(SchemaTitle).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => SchemaTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(SchemaTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(SchemaTitle)
             };
 
-            SchemaDirectory = new DirectoryValue()
+            directory = new DirectoryValue()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => RelativePath ?? String.Empty,
                 SetDirectory = (value) => RelativePath = value
             };
+
+            FileExtension = FileFormatType.XMLData.GetEnumeration().Extensions.First();
+        }
+
+        /// <summary>
+        /// Validates the SchemaDefinitionValue and returns exceptions if there is an issue.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
+        {
+            exception = null;
+            return directory.IsValid(out exception);
         }
     }
 }

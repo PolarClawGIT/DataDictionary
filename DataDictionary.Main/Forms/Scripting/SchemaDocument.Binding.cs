@@ -1,11 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -66,6 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     TemplateIndex templateIndex = new TemplateIndex(definition);
                     SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex(definition);
                     SchemaDocumentValue document = new SchemaDocumentValue(templateIndex, schemaIndex);
+                    document.DataFileName = Path.ChangeExtension(document.DataFileName, definition.FileExtension);
                     DocumentIndex documentIndex = new DocumentIndex(document);
 
                     GetData().SchemaDocuments.Add(document);
@@ -87,30 +84,26 @@ namespace DataDictionary.Main.Forms.Scripting
                 directory = null;
                 file = null;
 
-                if (SchemaData.TryGetValue(out SchemaDefinitionValue? schema)
-                    && DocumentData.TryGetValue(out SchemaDocumentValue? document))
-                { directory = schema.SchemaDirectory; file = document.SchemaFile; return true; }
+                if (SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema)
+                    && DocumentData.TryGetCurrent(out SchemaDocumentValue? document))
+                { directory = schema; file = document; return true; }
                 else { return false; }
             }
 
             public void BuildFileContent()
             {
-
-
-                if (DocumentData.TryGetValue(out SchemaDocumentValue? value))
+                if (DocumentData.TryGetCurrent(out SchemaDocumentValue? value))
                 {
                     SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(value);
                     XmlBuilderData nodeValues = new XmlBuilderData();
                     nodeValues.Load(schemaKey, GetData().SchemataNodes);
 
-                    if (BusinessData.Model.TryGetBuilder(value, out Func<IEnumerable<XmlBuilder>, XElement>? builder))
-                    { value.Content = new XDocument(builder(nodeValues)); }
-
-                    
+                    value.BuildContent(BusinessData.Model.GetBuilder, nodeValues);
                 }
-
-
             }
+
+            public Boolean IsInModel()
+            { return DocumentData.TryGetCurrent(out SchemaDocumentValue? value) && BusinessData.Model.IsInModel(value); }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using System.ComponentModel;
 using System.Data;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -29,9 +30,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 DocumentData = new DataBinding<SchemaDocumentValue>(documentBinding, () => GetData().SchemaDocuments);
-                schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes,w => 1==2);
+                schemaNodes = new BindingView<SchemaNodeValue>(GetData().SchemataNodes, w => 1 == 2);
                 BuilderData = new DataBinding<XmlBuilderNode>(nodeBinding, () => nodeValues);
-                
 
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
@@ -94,6 +94,25 @@ namespace DataDictionary.Main.Forms.Scripting
                 GetData().SchemataNodes.Remove(key);
                 GetData().SchemaDocuments.Remove(key);
                 throw new NotImplementedException();
+            }
+
+            public void BuildDocuments()
+            {
+                foreach (SchemaDocumentValue value in DocumentData.ToList())
+                { value.BuildContent(BusinessData.Model.GetBuilder, nodeValues); }
+            }
+
+            public void SaveDocuments()
+            {
+                if(SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema))
+                {
+                    foreach (var document in DocumentData)
+                    {
+                        FileInfo file = new FileInfo(Path.Combine(schema.InitialDirectory, document.DataFileName));
+                        if (!document.IsExcluded)
+                        { document.Save(file); }
+                    }
+                }
             }
 
         }

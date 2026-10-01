@@ -9,4 +9,4 @@ namespace DataDictionary.BusinessLayer.AppModel;
 /// </summary>
 /// <param name="path"></param>
 /// <returns></returns>
-delegate IEnumerable<IAttributeValue> FindAttributes(PathIndex path);
+delegate IEnumerable<IAttributeValue> FindAttributes(PathItem path);

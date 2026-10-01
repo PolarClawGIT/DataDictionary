@@ -68,7 +68,7 @@ namespace DataDictionary.Main.Forms.General
                 if (formBinding.TryGetValue(out HelpSubjectValue? helpValue)
                     && helpValue.NameSpace is not null)
                 {
-                    PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
+                    PathItem helpPath = new PathItem(PathItem.Parse(helpValue.NameSpace).ToArray());
 
                     if (helpPath.Equals(item.Path))
                     { newItem.Checked = true; }

@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.DataLayer.AppScript;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
@@ -10,16 +11,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public interface IDirectoryValue : IBindingPropertyChanged
     {
-        /// <summary>
-        /// Returns the RootFolder used as a base.
-        /// </summary>
-        /// <remarks>
-        /// Use to set FolderBrowserDialog RootFolder.
-        /// </remarks>
-        /// <example>
-        /// dialog.RootFolder = IDirectoryValue.RootFolder;
-        /// </example>
-        Environment.SpecialFolder RootFolder { get; }
+        /// <inheritdoc cref="IDocumentDirectory.RootFolder"/>
+        DirectoryType RootFolder { get; }
 
         /// <summary>
         /// Full Directory Path (includes root).
@@ -34,7 +27,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// Validates the Directory info and returns an Exception if there is an issue.
         /// </summary>
         /// <returns></returns>
-        Boolean IsInvalid([NotNullWhen(true)] out Exception? exception);
+        Boolean IsValid([NotNullWhen(false)] out Exception? exception);
     }
 
     /// <summary>
@@ -45,7 +38,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     public class DirectoryValue : IDirectoryValue
     {
         /// <inheritdoc/>
-        public virtual Environment.SpecialFolder RootFolder { get { return GetRootFolder().GetEnumeration().SpecialFolder; } }
+        public DirectoryType RootFolder { get { return GetRootFolder(); } }
 
         /// <summary>
         /// Function that returns the Current root Directory Type.
@@ -71,7 +64,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 String relativeDirectory = GetDirectory();
                 DirectoryType rootFolder = GetRootFolder();
                 String rootPath = String.Empty;
-                if (rootFolder.GetEnumeration().Directory is DirectoryInfo rootDirectory)
+                if (rootFolder.GetFolder() is DirectoryInfo rootDirectory)
                 { rootPath = rootDirectory.FullName; }
 
                 if (rootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(relativeDirectory))
@@ -84,7 +77,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
             {
                 DirectoryType rootFolder = GetRootFolder();
                 String rootPath = String.Empty;
-                if (rootFolder.GetEnumeration().Directory is DirectoryInfo rootDirectory)
+                if (rootFolder.GetFolder() is DirectoryInfo rootDirectory)
                 { rootPath = rootDirectory.FullName; }
 
                 if (value.StartsWith(rootPath))
@@ -105,6 +98,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
             }
         }
 
+
+
         /// <summary>
         /// Create an Instance of a DirectoryValue.
         /// </summary>
@@ -117,7 +112,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
             GetDirectory = () =>
             {
                 if (String.IsNullOrWhiteSpace(directoryValue)
-                && GetRootFolder().GetEnumeration().Directory is DirectoryInfo directory)
+                && GetRootFolder().GetFolder() is DirectoryInfo directory)
                 { return directory.FullName; }
                 else { return directoryValue; }
             };
@@ -132,7 +127,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
 
         /// <inheritdoc/>
-        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
         {
             exception = null;
             String directory = InitialDirectory;
@@ -169,7 +164,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 exception.Data.Add(nameof(directories), String.Join("//", directories));
             }
 
-            return exception is not null;
+            return exception is null;
         }
     }
 }

@@ -15,13 +15,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        IDeleteData
+        IDeleteData, IRemoveData<ISchemaDefinitionIndex>
     { }
 
     class SchemaDefinitionData : SchemaDefinitionCollection<SchemaDefinitionValue>, ISchemaDefinitionData
     {
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -30,7 +29,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -39,7 +37,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -48,7 +45,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -57,7 +53,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -66,7 +61,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -75,7 +69,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -84,7 +77,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -93,7 +85,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -102,22 +93,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public void Remove(ITemplateIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
+        public void Remove(ISchemaDefinitionIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDataSource</remarks>
         public ITemporalData GetTemporal(IModelIndex model)
         {
             return new TemporalData<TemplateData, TemplateValue>()
@@ -131,5 +122,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return new TemporalData<TemplateData, TemplateValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
         }
+
+
     }
 }

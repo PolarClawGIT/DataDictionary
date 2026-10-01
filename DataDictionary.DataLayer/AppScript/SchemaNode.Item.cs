@@ -62,21 +62,21 @@ namespace DataDictionary.DataLayer.AppScript
     public class SchemaNodeItem : BindingTableRow, ISchemaNodeItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? SchemaId
+        public virtual Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
             protected set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? NodeId
+        public virtual Guid? NodeId
         {
             get { return GetValue<Guid>(nameof(NodeId)); }
             protected set { SetValue(nameof(NodeId), value); }
@@ -97,7 +97,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public XmlNodeType RenderNodeType
+        public virtual XmlNodeType RenderNodeType
         {
             get
             {
@@ -115,7 +115,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public XmlTypeCode RenderTypeCode 
+        public virtual XmlTypeCode RenderTypeCode 
         {
             get
             {

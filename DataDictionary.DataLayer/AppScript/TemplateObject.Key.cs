@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting TemplateObject Name Key
     /// </summary>
-    public interface ITemplateObjectKeyName: IKey
+    public interface ITemplateObjectKey: IKey
     {
         /// <summary>
         ///  Scope of the Object being referenced.
@@ -22,8 +22,8 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting TemplateObject Name Key
     /// </summary>
-    public class TemplateObjectKeyName : ITemplateObjectKeyName,
-            IKeyComparable<ITemplateObjectKeyName>, IKeyComparable<TemplateObjectKeyName>
+    public class TemplateObjectKey : ITemplateObjectKey,
+            IKeyComparable<ITemplateObjectKey>, IKeyComparable<TemplateObjectKey>
     {
         /// <inheritdoc/>
         public ScopeType ObjectScope { get; init; } = ScopeType.Null;
@@ -37,12 +37,12 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting TemplateObject Name Key
         /// </summary>
-        protected TemplateObjectKeyName() : base() { }
+        protected TemplateObjectKey() : base() { }
 
         /// <summary>
         /// Constructor for Scripting TemplateObject Name Key
         /// </summary>
-        public TemplateObjectKeyName(ITemplateObjectKeyName source) : this()
+        public TemplateObjectKey(ITemplateObjectKey source) : this()
         {
             ObjectScope = source.ObjectScope;
             ObjectPath = source.ObjectPath??String.Empty;
@@ -50,10 +50,10 @@ namespace DataDictionary.DataLayer.AppScript
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(TemplateObjectKeyName? other)
+        public Boolean Equals(TemplateObjectKey? other)
         {
             return
-                other is TemplateObjectKeyName &&
+                other is TemplateObjectKey &&
                 !String.IsNullOrEmpty(ObjectPath) &&
                 !String.IsNullOrEmpty(other.ObjectPath) &&
                 ObjectScope.Equals(other.ObjectScope) &&
@@ -61,50 +61,50 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public Boolean Equals(ITemplateObjectKeyName? other)
-        { return other is ITemplateObjectKeyName value && Equals(new TemplateObjectKeyName(value)); }
+        public Boolean Equals(ITemplateObjectKey? other)
+        { return other is ITemplateObjectKey value && Equals(new TemplateObjectKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is ITemplateObjectKeyName value && Equals(new TemplateObjectKeyName(value)); }
+        { return obj is ITemplateObjectKey value && Equals(new TemplateObjectKey(value)); }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(TemplateObjectKeyName? other)
+        public Int32 CompareTo(TemplateObjectKey? other)
         {
             if (other is null) { return 1; }
             else { return String.Compare(ObjectPath, other.ObjectPath, true); }
         }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(ITemplateObjectKeyName? other)
-        { if (other is ITemplateObjectKeyName value) { return CompareTo(new TemplateObjectKeyName(value)); } else { return 1; } }
+        public Int32 CompareTo(ITemplateObjectKey? other)
+        { if (other is ITemplateObjectKey value) { return CompareTo(new TemplateObjectKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public Int32 CompareTo(object? obj)
-        { if (obj is ITemplateObjectKeyName value) { return CompareTo(new TemplateObjectKeyName(value)); } else { return 1; } }
+        { if (obj is ITemplateObjectKey value) { return CompareTo(new TemplateObjectKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(TemplateObjectKeyName left, TemplateObjectKeyName right)
+        public static Boolean operator ==(TemplateObjectKey left, TemplateObjectKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(TemplateObjectKeyName left, TemplateObjectKeyName right)
+        public static Boolean operator !=(TemplateObjectKey left, TemplateObjectKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(TemplateObjectKeyName left, TemplateObjectKeyName right)
+        public static Boolean operator <(TemplateObjectKey left, TemplateObjectKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(TemplateObjectKeyName left, TemplateObjectKeyName right)
+        public static bool operator <=(TemplateObjectKey left, TemplateObjectKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >(TemplateObjectKeyName left, TemplateObjectKeyName right)
+        public static Boolean operator >(TemplateObjectKey left, TemplateObjectKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >=(TemplateObjectKeyName left, TemplateObjectKeyName right)
+        public static Boolean operator >=(TemplateObjectKey left, TemplateObjectKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

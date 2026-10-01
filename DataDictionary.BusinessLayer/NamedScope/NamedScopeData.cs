@@ -176,7 +176,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public virtual IReadOnlyList<NamedScopeIndex> PathKeys(IPathItem key)
         {
-            PathIndex pathKey = new PathIndex(key);
+            PathItem pathKey = new PathItem(key);
             return data.Where(w => pathKey.Equals(w.Value.Path)).Select(s => s.Key).ToList();
         }
 
@@ -224,14 +224,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
             // The existing node may be something other then a NameSpace node.
             // Try putting it in the build of the tree instead of here.
 
-            List<PathIndex> nameSpaces = newValue.Source.Path.
+            List<PathItem> nameSpaces = newValue.Source.Path.
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
                 Where(w => 1 == 2). // This is disabling NameSpace handling
                 OrderBy(o => o.MemberFullPath.Length).
                 ToList();
 
-            foreach (PathIndex item in nameSpaces)
+            foreach (PathItem item in nameSpaces)
             {
                 INamedScopeSourceValue? newItem = null;
 

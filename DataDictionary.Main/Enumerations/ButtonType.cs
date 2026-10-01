@@ -42,6 +42,11 @@ namespace DataDictionary.Main.Enumerations
         Save,
 
         /// <summary>
+        /// Save All: Saves all the documents
+        /// </summary>
+        SaveAll,
+
+        /// <summary>
         /// Open: Open the a Document
         /// </summary>
         Open,

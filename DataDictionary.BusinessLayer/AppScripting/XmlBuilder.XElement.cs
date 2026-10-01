@@ -1,12 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Xml.Linq;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -19,37 +15,53 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public static class XmlBuilderXElement
     {   // TODO: Probably move to the specific data classes
 
+        /// <summary>
+        /// Place holder class used for the Root Value.
+        /// </summary>
+        class RootValue : IScopeType
+        { public ScopeType Scope { get; init; } }
 
         /// <summary>
-        /// Used to find the correct XElement Build method.
+        /// Searches the Model for Attributes that match the path.
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="targetObject"></param>
-        /// <param name="build"></param>
+        /// <param name="path"></param>
+        /// <param name="values"></param>
         /// <returns></returns>
-        public static Boolean TryGetBuilder(this IModel model, ITemplateObjectNameIndex targetObject, [NotNullWhen(true)] out Func<IEnumerable<XmlBuilder>, XElement>? build)
-        {   // Think this is the factory pattern.
+        static Boolean TryGetValues(this IModel model, IPathIndex path, out IReadOnlyList<AttributeValue> values)
+        {
+            PathIndex key = new PathIndex(path);
 
-            build = null;
-            PathIndex key = new PathIndex(PathIndex.Parse(targetObject.ObjectPath));
+            List<AttributeValue> attributes = model.Attribute.Attributes.
+                Join(model.Attribute.SubjectArea,
+                    attribute => new AttributeIndex(attribute),
+                    subject => new AttributeIndex(subject),
+                    (Attribute, Subject) => new { Attribute, Subject }).
+                Join(model.SubjectAreas,
+                    subjectKey => new SubjectAreaIndex(subjectKey.Subject),
+                    subject => new SubjectAreaIndex(subject),
+                    (attributeSubject, subject) => new { Path = new PathIndex(subject, attributeSubject.Attribute), attributeSubject.Attribute }).
+                Union(model.Attribute.Attributes.Select(s => new { Path = new PathIndex(s), Attribute = s })).
+                Where(w => key.Equals(w.Path)).
+                Select(s => s.Attribute).
+                ToList();
 
-            // Search the Attributes and get the Paths associated with them
-            var attributes = model.Attribute.Attributes.
-                    Join(model.Attribute.SubjectArea,
-                        attribute => new AttributeIndex(attribute),
-                        subject => new AttributeIndex(subject),
-                        (Attribute, Subject) => new { Attribute, Subject }).
-                    Join(model.SubjectAreas,
-                        subjectKey => new SubjectAreaIndex(subjectKey.Subject),
-                        subject => new SubjectAreaIndex(subject),
-                        (attributeSubject, subject) => new { Path = new PathIndex(subject.SubjectAreaPath, attributeSubject.Attribute.AttributePath), attributeSubject.Attribute }).
-                    Union(model.Attribute.Attributes.
-                        Select(s => new { Path = s.AttributePath, Attribute = s })).
-                    Where(w => key.Equals(w.Path) && w.Attribute.Scope == targetObject.ObjectScope).
-                    ToList();
+            values = attributes.AsReadOnly();
+            return values.Count > 0;
+        }
 
-            // Search the Entities and get the Paths associated with them
-            var entities = model.Entity.Entities.
+        /// <summary>
+        /// Searches the Model for Entities that match the path.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="path"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        static Boolean TryGetValues(this IModel model, IPathIndex path, out IReadOnlyList<EntityValue> values)
+        {
+            PathIndex key = new PathIndex(path);
+
+            List<EntityValue> entities = model.Entity.Entities.
                     Join(model.Entity.SubjectArea,
                         entity => new EntityIndex(entity),
                         subject => new EntityIndex(subject),
@@ -57,14 +69,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (entitySubject, subject) => new { Path = new PathIndex(subject.SubjectAreaPath, entitySubject.Entity.EntityPath), entitySubject.Entity }).
-                    Union(model.Entity.Entities.
-                        Select(s => new { Path = s.EntityPath, Entity = s })).
-                    Where(w => key.Equals(w.Path) && w.Entity.Scope == targetObject.ObjectScope).
+                        (entitySubject, subject) => new { Path = new PathIndex(subject, entitySubject.Entity), entitySubject.Entity }).
+                    Union(model.Entity.Entities.Select(s => new { Path = new PathIndex(s), Entity = s })).
+                    Where(w => key.Equals(w.Path)).
+                    Select(s => s.Entity).
                     ToList();
 
-            // Search the Processes and get the Paths associated with them
-            var processes = model.Process.Processes.
+            values = entities.AsReadOnly();
+            return values.Count > 0;
+        }
+
+        /// <summary>
+        /// Searches the Model for Processes that match the path.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="path"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        static Boolean TryGetValues(this IModel model, IPathIndex path, out IReadOnlyList<ProcessValue> values)
+        {
+            PathIndex key = new PathIndex(path);
+
+            List<ProcessValue> processes = model.Process.Processes.
                     Join(model.Process.SubjectArea,
                         process => new ProcessIndex(process),
                         subject => new ProcessIndex(subject),
@@ -72,174 +98,85 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     Join(model.SubjectAreas,
                         subjectKey => new SubjectAreaIndex(subjectKey.Subject),
                         subject => new SubjectAreaIndex(subject),
-                        (processSubject, subject) => new { Path = new PathIndex(subject.SubjectAreaPath, processSubject.Process.ProcessPath), processSubject.Process }).
-                    Union(model.Process.Processes.
-                        Select(s => new { Path = s.ProcessPath, Process = s })).
-                    Where(w => key.Equals(w.Path) && w.Process.Scope == targetObject.ObjectScope).
+                        (processSubject, subject) => new { Path = new PathIndex(subject, processSubject.Process), processSubject.Process }).
+                    Union(model.Process.Processes.Select(s => new { Path = new PathIndex(s), Process = s })).
+                    Where(w => key.Equals(w.Path)).
+                    Select(s => s.Process).
                     ToList();
 
-            // Wow, this Linq logic actually worked. Not certain how stable or east to debug it is. Consider breaking it up?
-
-            if (attributes.Count > 0)
-            {
-                // TODO: Does not give results as expected when the function is actually called.
-                build = (builders) => Build(builders, attributes.Select(s => s.Attribute), model.Attribute.Properties);
-                return true;
-            }
-            // TODO: Add results for Entity and Process
-            else { return false; }
+            values = processes.AsReadOnly();
+            return values.Count > 0;
         }
-
-        [Obsolete("POC, Does not work", true)]
-        public static XElement? Build<TItem>(
-                this IEnumerable<XmlBuilder> builders,
-                IEnumerable<TItem> items,
-                params IEnumerable<Func<TItem, XElement?>> forEachItem)
-        where TItem : class, IScopeType
-        {
-            // TODO: Working on revised logic of Build. Not dependent on Scope of the root.
-            // Pass to the child node function the parent?
-
-            XElement? root = null;
-            List<TItem> itemList = items.ToList(); // To Protect against add/delete in the middle of the process.
-
-            foreach (TItem item in items)
-            {
-                XmlBuilderIndex key = new XmlBuilderIndex(item.Scope);
-                if (builders.TryGetXmlBuilder(key, out XmlBuilder? builder))
-                {
-                    XObject? node = builder.Build(item);
-
-                    if (root is null)
-                    {
-                        root = new XElement(item.Scope.GetName());
-                        root.Add(node);
-                    }
-
-                    foreach (XmlBuilder child in builders.
-                        Where(w => key.ObjectScope.Equals(w.ObjectScope) && !String.IsNullOrWhiteSpace(w.ObjectProperty)))
-                    {
-                        if (node is XElement parentNode)
-                        { parentNode.Add(child.Build(item)); }
-                    }
-
-                    foreach (var childNode in forEachItem)
-                    {
-                        XElement? childValue = childNode(item);
-                        if (childValue is not null && node is XElement parentNode)
-                        { parentNode.Add(childValue); }
-                    }
-                }
-            }
-
-            return root;
-        }
-
 
         /// <summary>
-        /// Generic XElement that the specific builder are based on.
+        /// Test to see if the given Template Object is within the Model.
         /// </summary>
-        /// <typeparam name="TRoot"></typeparam>
-        /// <typeparam name="TChild"></typeparam>
-        /// <param name="builders"></param>
-        /// <param name="scope"></param>
-        /// <param name="roots"></param>
-        /// <param name="children"></param>
+        /// <param name="model"></param>
+        /// <param name="targetObject"></param>
         /// <returns></returns>
-        [Obsolete("The structure of the builder list has changed. Does not work.",true)]
-        public static XElement? Build<TRoot, TChild>(this IEnumerable<XmlBuilder> builders, ScopeType scope, IEnumerable<TRoot> roots,
-                params IEnumerable<(ScopeType scope, IEnumerable<TChild> values, Func<TRoot, TChild, Boolean> filter)> children)
-                where TRoot : class, IScopeType
-                where TChild : class
+        public static Boolean IsInModel (this IModel model, ITemplateObjectIndex targetObject)
         {
-            XmlBuilderIndex rootKey = new XmlBuilderIndex(scope);
-            Int32 rootCount = roots.Count(w => w.Scope == scope);
-            XElement root = new XElement(scope.GetName());
+            PathIndex key = new PathIndex(new TemplateObjectIndex(targetObject));
 
-            // TODO: it calls the root but none of the child builders. Need to switch to path based?
-
-            if (builders.TryGetXmlBuilder(rootKey, out XmlBuilder? builder))
-            {
-                if (rootCount == 0)
-                { root = new XElement(builder.NodeName); }
-                else
-                {
-                    if (rootCount == 1)
-                    {
-                        TRoot rootItem = roots.First();
-                        XObject? node = builder.Build(rootItem);
-
-                        if (node is XElement rootNode)
-                        {
-                            foreach (var child in builders.Where(w => w.ObjectScope.Equals(scope) && !rootKey.Equals(w)))
-                            { rootNode.Add(child.Build(rootItem)); }
-
-                            root = rootNode;
-                        }
-                        else
-                        {
-                            root = new XElement(builder.NodeName);
-                            root.Add(node);
-                        }
-
-                        foreach (var child in children)
-                        {
-                            XmlBuilderIndex childKey = new XmlBuilderIndex(child.scope);
-
-                            if (builders.TryGetXmlBuilder(childKey, out XmlBuilder? childBuilder))
-                            {
-                                XElement childRoot = new XElement(childBuilder.NodeName);
-
-                                foreach (TChild item in child.values.Where(w => w is IScopeType s && child.scope == s.Scope && child.filter(rootItem, w)))
-                                { childRoot.Add(childBuilder.Build(item)); }
-
-                                root.Add(childRoot);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        root = new XElement("Root");
-
-                        foreach (TRoot currentItem in roots.Where(w => scope == w.Scope))
-                        {
-                            XObject? currentNode = builder.Build(currentItem);
-                            root.Add(currentNode);
-
-                            if (currentNode is XElement currentRoot)
-                            {
-                                foreach (var child in children)
-                                {
-                                    XmlBuilderIndex childKey = new XmlBuilderIndex(child.scope);
-                                    if (builders.TryGetXmlBuilder(childKey, out XmlBuilder? childBuilder))
-                                    {
-                                        XElement childRoot = new XElement(childBuilder.NodeName);
-
-                                        foreach (TChild item in child.values.Where(w => w is IScopeType s && child.scope == s.Scope && child.filter(currentItem, w)))
-                                        { childRoot.Add(childBuilder.Build(item)); }
-
-                                        currentRoot.Add(childRoot);
-                                    }
-
-                                }
-                            }
-
-                        }
-
-                    }
-                }
-
-            }
-
-            return root;
+            return model.TryGetValues(key, out IReadOnlyList<AttributeValue> _)
+                || model.TryGetValues(key, out IReadOnlyList<EntityValue> _)
+                || model.TryGetValues(key, out IReadOnlyList<ProcessValue> _);
         }
 
-        static XElement Build<TRoot, TChild>(
+        /// <summary>
+        /// Try/Get the correct XElement Build method for a given object.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="targetObject"></param>
+        /// <param name="build"></param>
+        /// <returns></returns>
+        public static Boolean TryGetBuilder(this IModel model, ITemplateObjectIndex targetObject, [NotNullWhen(true)] out Func<IEnumerable<XmlBuilder>, XElement>? build)
+        {   // Think this is the factory pattern.
+
+            build = null;
+            PathIndex key = new PathIndex(new TemplateObjectIndex(targetObject));
+
+            if (model.TryGetValues(key,out IReadOnlyList<AttributeValue> attributes))
+            {
+                build = (builders) => Build(builders, attributes, model.Attribute.Properties);
+                return true;
+            }
+
+            if (model.TryGetValues(key, out IReadOnlyList<EntityValue> entities))
+            {
+                throw new NotImplementedException();
+                //build = (builders) => Build(builders, entities, model.Entity.Properties);
+                //return true;
+            }
+
+            if (model.TryGetValues(key, out IReadOnlyList<ProcessValue> processes))
+            {
+                throw new NotImplementedException();
+                //build = (builders) => Build(builders, processes, model.Process.Properties);
+                //return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Used to find the correct XElement Build method for a given object.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="targetObject"></param>
+        /// <returns></returns>
+        public static Func<IEnumerable<XmlBuilder>, XElement>? GetBuilder(this IModel model, ITemplateObjectIndex targetObject)
+        {
+            if(model.TryGetBuilder(targetObject, out Func<IEnumerable<XmlBuilder>, XElement>? builders))
+            { return builders; }
+            else { return null; }
+        }
+
+        static XElement Build<TRoot>(
                 IEnumerable<XmlBuilder> builders,
                 IEnumerable<TRoot> rootMembers,
-                params IEnumerable<(IEnumerable<TChild> values, Func<TRoot, TChild, Boolean> filter)> childMembers)
-                where TRoot : class, IScopeType
-                where TChild : class, IScopeType
+                params IEnumerable<Func<TRoot, IEnumerable<IScopeType>>> getChildren)
+            where TRoot : class, IScopeType
         {
             XElement? rootNode = null;
 
@@ -270,6 +207,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     {
                         XObject? elementNode = builder.Build(rootItem);
 
+                        // The first builder is expected to be the root.
                         if (elementRoot is null && elementNode is XElement rootElement)
                         { elementRoot = new XElement(rootElement); }
                         else if (elementRoot is null)
@@ -277,16 +215,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
                             elementRoot = new XElement(builder.BuilderPath.Member);
                             elementRoot.Add(elementNode);
                         }
-                        else
+                        else // All the child builders.
                         { elementRoot.Add(elementNode); }
                     }
 
-                    foreach (var childMember in childMembers)
+                    foreach (var getChild in getChildren)
                     {
-                        XElement? elementChild = null;
-
-                        var childValues = childMember.values.
-                            Where(w => childMember.filter(rootItem, w)).
+                        var childValues = getChild(rootItem).
                             ToList();
 
                         var childKeys = childValues.
@@ -297,37 +232,48 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                         foreach (var childKey in childKeys)
                         {
-                            var childItems = childValues.Where(w => childKey.Equals(new XmlBuilderIndex(w.Scope)));
+                            XElement? childRoot = null;
 
-                            foreach (var childItem in childItems)
+                            var childItems = childValues.
+                                Where(w => childKey.Equals(new XmlBuilderIndex(w.Scope))).
+                                ToList();
+
+                            var childBuilders = builders.
+                                 Where(w => w.ObjectScope.Equals(childKey.ObjectScope)).
+                                 OrderBy(o => o.BuilderPath.ParentPath).
+                                 ThenBy(o => o.RenderOrder).
+                                 ThenBy(o => o.NodeName).
+                                 ToList();
+
+                            foreach (var childBuilder in childBuilders)
                             {
-                                var childBuilders = builders.
-                                     Where(w => childItem.Scope == w.ObjectScope).
-                                     OrderBy(o => o.BuilderPath.ParentPath).
-                                     ThenBy(o => o.RenderOrder).
-                                     ThenBy(o => o.NodeName).
-                                     ToList();
+                                if (childRoot is null)
+                                {   // The first builder is expected to be the root.
+                                    XObject? childNode = childBuilder.Build(new RootValue() { Scope = childKey.ObjectScope });
 
-                                foreach (var childBuilder in childBuilders)
-                                {
-                                    XObject? childNode = childBuilder.Build(childItem);
-
-                                    if (elementChild is null && childNode is XElement rootElement)
-                                    { elementChild = new XElement(rootElement); }
-                                    else if (elementChild is null && childNode is not null)
+                                    if (childNode is XElement childElement)
+                                    { childRoot = childElement; }
+                                    else
                                     {
-                                        elementChild = new XElement(childBuilder.BuilderPath.Member);
-                                        elementChild.Add(childNode);
+                                        childRoot = new XElement(childKey.Member);
+                                        childRoot.Add(childNode);
                                     }
-                                    else if (elementChild is not null)
-                                    { elementChild.Add(childNode); }
+                                }
+                                else
+                                {
+                                    foreach (var childItem in childItems)
+                                    {
+                                        XObject? childNode = childBuilder.Build(childItem);
+                                        if (childNode is not null)
+                                        { childRoot.Add(childNode); }
+                                    }
                                 }
                             }
-                        }
 
-                        if (elementRoot is not null)
-                        { elementRoot.Add(elementChild); }
-                        else { throw new InvalidOperationException(); } // Should never occur.
+
+                            if (elementRoot is not null)
+                            { elementRoot.Add(childRoot); }
+                        }
                     }
 
                     if (rootNode is null && rootItems.Count == 1)
@@ -357,12 +303,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IEnumerable<AttributeValue> attributes,
                 IEnumerable<AttributePropertyValue> properties)
         {
-            XElement result = Build<AttributeValue, AttributePropertyValue>(
+            XElement result = Build<AttributeValue>(
                 builders,
                 attributes,
-                (properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c))
-                ));
-
+                (parent) => properties.Where(w => new AttributeIndex(parent).Equals(w))
+                );
             return result;
         }
     }

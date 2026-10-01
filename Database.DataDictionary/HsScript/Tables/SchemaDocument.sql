@@ -4,7 +4,7 @@
 	[TemplateId]		UniqueIdentifier Not Null,
 	[SchemaId]			UniqueIdentifier Not Null, 
 	[ObjectId]			UniqueIdentifier Null, -- Null = Fixed content
-	[FileName]			[AppGeneral].[uddtFileName] Not Null,
+	[DataFileName]		[AppGeneral].[uddtFileName] Not Null,
 	-- Temporal History Support
 	[SysStart]			DateTime2 (7) Not Null,
 	[SysEnd]			DateTime2 (7) Not Null,

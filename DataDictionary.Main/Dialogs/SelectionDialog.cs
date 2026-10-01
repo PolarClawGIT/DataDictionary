@@ -19,8 +19,8 @@ namespace DataDictionary.Main.Dialogs
         /// <summary>
         /// Filters the List by Paths
         /// </summary>
-        public BindingList<PathIndex> FilterPaths { get; } =
-            new BindingList<PathIndex>()
+        public BindingList<PathItem> FilterPaths { get; } =
+            new BindingList<PathItem>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace DataDictionary.Main.Dialogs
             formData.BuildList(getDescription);
         }
 
-        public void BuildData(IEnumerable<PathIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
+        public void BuildData(IEnumerable<PathItem> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
         {
             BuildData(getDescription);
 
@@ -117,7 +117,7 @@ namespace DataDictionary.Main.Dialogs
         public void BuildData<TValue>(IEnumerable<TValue> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
             where TValue : INamedScopeSourceValue
         {
-            IEnumerable<PathIndex> indexes = selected.Select(s => s.Path);
+            IEnumerable<PathItem> indexes = selected.Select(s => s.Path);
             BuildData(indexes, getDescription);
         }
 

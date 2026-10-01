@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform
     /// </summary>
-    public interface ITransformItem : ITransformKey, ITemplateKey
+    public interface ITransformItem : ITransformKey, ITemplateKey, IDocumentDirectory, IDocumentFilePattern
     {
         /// <summary>
         /// Title of the Scripting Transform (aka Name of the Transform)
@@ -28,34 +28,6 @@ namespace DataDictionary.DataLayer.AppScript
         /// The name of the file when TransformScript is stored as a File.
         /// </summary>
         String? TransformFileName { get; }
-
-        /// <summary>
-        /// Name of the Special Folder used as the Root Directory.
-        /// </summary>
-        /// <remarks>
-        /// This uses an Enum that represents locations in: Environment.SpecialFolder.UserProfile
-        /// </remarks>
-        DirectoryType RootFolder { get; }
-
-        /// <summary>
-        /// Relative Directory off of the Root Directory where the XML Input file is located.
-        /// </summary>
-        String? RelativePath { get; }
-
-        /// <summary>
-        /// Prefix to add to the front of the file name.
-        /// </summary>
-        String? FilePrefix { get; }
-
-        /// <summary>
-        /// Prefix to add to the end of the file name.
-        /// </summary>
-        String? FileSuffix { get; }
-
-        /// <summary>
-        /// File Extension to add to the end of the file name.
-        /// </summary>
-        String? FileExtension { get; }
     }
 
     /// <summary>
@@ -65,42 +37,42 @@ namespace DataDictionary.DataLayer.AppScript
     public class TransformItem : BindingTableRow, ITransformItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? TransformId
+        public virtual Guid? TransformId
         {
             get { return GetValue<Guid>(nameof(TransformId)); }
             protected set { SetValue(nameof(TransformId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformTitle
+        public virtual String? TransformTitle
         {
             get { return GetValue(nameof(TransformTitle)); }
             set { SetValue(nameof(TransformTitle), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformScript
+        public virtual String? TransformScript
         {
             get { return GetValue(nameof(TransformScript)); }
             set { SetValue(nameof(TransformScript), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformFileName
+        public virtual String? TransformFileName
         {
             get { return GetValue(nameof(TransformFileName)); }
             set { SetValue(nameof(TransformFileName), value); }
         }
 
         /// <inheritdoc/>
-        public DirectoryType RootFolder
+        public virtual DirectoryType RootFolder
         {
             get
             {
@@ -114,28 +86,28 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? RelativePath
+        public virtual String? RelativePath
         {
             get { return GetValue(nameof(RelativePath)); }
             set { SetValue(nameof(RelativePath), value); }
         }
 
         /// <inheritdoc/>
-        public String? FilePrefix
+        public virtual String? FilePrefix
         {
             get { return GetValue(nameof(FilePrefix)); }
             set { SetValue(nameof(FilePrefix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileSuffix
+        public virtual String? FileSuffix
         {
             get { return GetValue(nameof(FileSuffix)); }
             set { SetValue(nameof(FileSuffix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileExtension
+        public virtual String? FileExtension
         {
             get { return GetValue(nameof(FileExtension)); }
             set { SetValue(nameof(FileExtension), value); }

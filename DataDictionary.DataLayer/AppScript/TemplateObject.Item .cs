@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for the Scripting TemplateObject
     /// </summary>
-    public interface ITemplateObjectItem : ITemplateKey, ITemplateObjectKeyName
+    public interface ITemplateObjectItem : ITemplateKey, ITemplateObjectKey
     {
         /// <summary>
         /// Do not include the matching Object in the results.

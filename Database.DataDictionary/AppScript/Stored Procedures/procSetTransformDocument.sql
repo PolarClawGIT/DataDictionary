@@ -26,16 +26,16 @@ Begin Try
 		[DocumentId]		UniqueIdentifier Not Null,
 		[TemplateId]		UniqueIdentifier Not Null,
 		[TransformId]		UniqueIdentifier Not Null,
-		[SchemaDocumentId]	UniqueIdentifier Not Null,
-		[FileName]			[AppGeneral].[uddtFileName] Null,
+		[DataFileName]		[AppGeneral].[uddtFileName] Null,
+		[ScriptedFileName]	[AppGeneral].[uddtFileName] Null,
 		Primary Key([DocumentId]))
 
 	Insert Into @Values
 	Select	X.[DocumentId],
 			D.[TemplateId],
 			D.[TransformId],
-			D.[SchemaDocumentId],
-			NullIf(Trim(D.[FileName]),'') As [FileName]
+			NullIf(Trim(D.[DataFileName]),'') As [DataFileName],
+			NullIf(Trim(D.[ScriptedFileName]),'') As [ScriptedFileName]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
 			On	D.[TemplateId] = M.[TemplateId] And
@@ -68,20 +68,20 @@ Begin Try
 		Select	[DocumentId],
 				[TemplateId],
 				[TransformId],
-				[SchemaDocumentId],
-				[FileName]
+				[DataFileName],
+				[ScriptedFileName]
 		From	@Values
 		Except
 		Select	[DocumentId],
 				[TemplateId],
 				[TransformId],
-				[SchemaDocumentId],
-				[FileName]
+				[DataFileName],
+				[ScriptedFileName]
 		From	[AppScript].[TransformDocument])
 	Update [AppScript].[TransformDocument]
 	Set		--[TemplateId] = S.[TemplateId],
 			[TransformId] = S.[TransformId],
-			[SchemaDocumentId] = S.[SchemaDocumentId]
+			[DataFileName] = S.[DataFileName]
 	From	[AppScript].[TransformDocument] T
 			Inner Join [Delta] S
 			On	T.[DocumentId] = S.[DocumentId]
@@ -92,13 +92,13 @@ Begin Try
 			[DocumentId],
 			[TemplateId],
 			[TransformId],
-			[SchemaDocumentId],
-			[FileName])
+			[DataFileName],
+			[ScriptedFileName])
 	Select	S.[DocumentId],
 			S.[TemplateId],
 			S.[TransformId],
-			S.[SchemaDocumentId],
-			S.[FileName]
+			S.[DataFileName],
+			S.[ScriptedFileName]
 	From	@Values S
 			Left Join [AppScript].[TransformDocument] T
 			On	S.[DocumentId] = T.[DocumentId]

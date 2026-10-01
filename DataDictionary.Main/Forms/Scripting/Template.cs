@@ -43,15 +43,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 ButtonType.SaveDatabase,
                 ButtonType.DeleteDatabase);
 
-            openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
-            openTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
-            addSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
-            addTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
+            schemaOpenCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
+            schemaNewCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
+            schemaDeleteCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Delete);
 
-            executeSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
-            executeTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Export);
+            transformOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
+            transformNewCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
+            transformDeleteCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Delete);
 
-            openDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+            documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
 
         public Template(ITemplateIndex? template) : this()
@@ -78,7 +78,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     SendMessage(new RefreshNavigation());
                 }
 
-                if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
+                if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
                 { DoBinding(); }
                 else { IsLocked(true); }
             }
@@ -93,7 +93,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     CommandButtons[ButtonType.Delete].Enabled = false;
                     CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
 
-                    if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
+                    if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
                     { DoBinding(); }
                     else { IsLocked(true); }
                 }
@@ -104,14 +104,22 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.TemplateData.AddBinding(templateDescriptionData, e => e.TemplateDescription);
 
-                schemaData.AutoGenerateColumns = false;
-                schemaData.DataSource = bindingSchema;
+                // Schema Tab
+                formBinding.SchemaData.AddBinding(schemaData);
+                schemaOpenCommand.Enabled = false;
+                schemaDeleteCommand.Enabled = false;
 
-                transformsData.AutoGenerateColumns = false;
-                transformsData.DataSource = bindingTransform;
+                // Transform Tab
+                formBinding.TransformData.AddBinding(transformsData);
+                transformOpenCommand.Enabled = false;
+                transformDeleteCommand.Enabled = false;
 
-                documentData.AutoGenerateColumns = false;
-                documentData.DataSource = bindingTransform;
+                // Document Tab
+
+                //documentData.AutoGenerateColumns = false;
+                //documentData.DataSource = bindingTransform;
+
+
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -168,7 +176,7 @@ namespace DataDictionary.Main.Forms.Scripting
             { IsLocked(formBinding.GetLocked()); }
         }
 
-        private void AddSchemaCommand_Click(object sender, EventArgs e)
+        private void SchemaAddCommand_Click(object sender, EventArgs e)
         {
             Activate(() => new Forms.Scripting.SchemaDefinition(
                 template: templateIndex,
@@ -176,9 +184,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 getData: formBinding.GetData));
         }
 
-        private void OpenSchemaCommand_Click(object sender, EventArgs e)
+        private void SchemaOpenCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
             {
                 Activate(() => new Forms.Scripting.SchemaDefinition(
                     template: templateIndex,
@@ -187,12 +195,41 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void ExecuteSchemaCommand_Click(object sender, EventArgs e)
+        private void SchemaDeleteCommand_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
+            { formBinding.Remove(value); }
         }
 
-        private void AddTransformCommand_Click(object sender, EventArgs e)
+
+        private void BindingSchema_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
+            {
+                schemaOpenCommand.Enabled = true;
+                schemaDeleteCommand.Enabled = true;
+            }
+            else
+            {
+                schemaOpenCommand.Enabled = false;
+                schemaDeleteCommand.Enabled = false;
+            }
+        }
+
+        private void BindingSchema_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if (e.ListChangedType is ListChangedType.ItemAdded or ListChangedType.ItemDeleted or ListChangedType.Reset)
+            {
+                if (formBinding.SchemaData.Count == 0)
+                {
+                    // Things that must have at least one schema. Currently, nothing.
+                }
+                else
+                { }
+            }
+        }
+
+        private void TransformNewCommand_Click(object sender, EventArgs e)
         {
             Activate(() => new Forms.Scripting.Transform(
                 template: templateIndex,
@@ -200,9 +237,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 getData: formBinding.GetData));
         }
 
-        private void OpenTransformCommand_Click(object sender, EventArgs e)
+        private void TransformOpenCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.TransformData.TryGetValue(out TransformValue? value))
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? value))
             {
                 Activate(() => new Forms.Scripting.Transform(
                     template: templateIndex,
@@ -211,15 +248,32 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void ExecuteTransformCommand_Click(object sender, EventArgs e)
+        private void TransformDeleteCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? value))
+            { formBinding.Remove(value); }
+        }
+
+
+        private void BindingTransform_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? value))
+            {
+                transformOpenCommand.Enabled = true;
+                transformDeleteCommand.Enabled = true;
+            }
+            else
+            {
+                transformOpenCommand.Enabled = false;
+                transformDeleteCommand.Enabled = false;
+            }
+        }
+
+        private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void OpenDocumentCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Added data
-            Activate(static () => new Forms.Scripting.Document());
-        }
+
     }
 }

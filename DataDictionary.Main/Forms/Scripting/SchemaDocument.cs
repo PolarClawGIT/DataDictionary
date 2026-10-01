@@ -6,10 +6,7 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
-using System.Collections;
 using System.ComponentModel;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -65,7 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 throw ex;
             }
 
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? _))
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 
@@ -74,29 +71,34 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
 
-                formBinding.SchemaData.AddBinding(localPathData, e => e.SchemaDirectory.InitialDirectory);
+                formBinding.SchemaData.AddBinding(localPathData, e => e.InitialDirectory);
 
                 ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
-                formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope);
+                formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
-                formBinding.DocumentData.AddBinding(documentFileData, e => e.SchemaFile.FileName);
-                formBinding.DocumentData.AddBinding(documentContentData, e => e.Content);
+                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFileName);
+                formBinding.DocumentData.AddBinding(documentContentData, e => e.FileContent);
+
+                formBinding.DocumentData.AddBinding(objectIsExcluded, e => e.IsExcluded);
+                formBinding.DocumentData.AddBinding(objectKeepOrphaned, e => e.KeepOrphaned);
+
+                isInModelData.Checked = formBinding.IsInModel();
 
                 ValidateFile();
             }
         }
 
-
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenCommand_Click(sender, e);
 
-            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && openFileDialog.ShowDialog(directory, file) is DialogResult.OK)
-            { DoWork(file.Open(directory), onCompleting); }
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
+            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); } 
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
+                ValidateFile();
+
                 if (args.Error is not null)
                 { throw args.Error; }
             }
@@ -106,9 +108,8 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.SaveCommand_Click(sender, e);
 
-            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file)
-                && saveFileDialog.ShowDialog(directory, file) is DialogResult.OK)
-            { DoWork(file.Save(directory), onCompleting); }
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
+            { DoWork(saveFileDialog.SaveDialog(directory, file), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -117,36 +118,44 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void DocumentFileData_SelectCommand(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
+            {
+                openFileDialog.SelectDialog(directory, file);
+                ValidateFile();
+            }
+        }
+
         protected override void ExportCommand_Click(Object? sender, EventArgs e)
         {
             base.ExportCommand_Click(sender, e);
 
             formBinding.BuildFileContent();
-            //throw new NotImplementedException();
+            ValidateFile();
         }
 
         private void ObjectNameData_SelectCommand(object sender, EventArgs e)
         {
             if (bindingDocument is not null
-                && ParentForm is not null
-                && formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue))
+                && formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? fileValue))
             {
-                using (SelectionDialog dialog = new SelectionDialog(ParentForm))
+                using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.MultiSelect = false;
                     dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
 
-                    dialog.BuildData(new List<PathIndex>() { new PathIndex(fileValue.ObjectPath) });
+                    dialog.BuildData(new List<PathItem>() { new PathItem(fileValue.ObjectPath) });
 
-                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    if (dialog.ShowDialog(this) is DialogResult.OK
+                        && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))
                     {
-                        INamedScopeValue selected = dialog.SelectedByNamedScope().Single();
                         fileValue.ObjectPath = selected.Path.MemberFullPath;
                         fileValue.ObjectScope = selected.Scope;
 
-                        if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
+                        if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
                         {
-                            fileValue.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+                            fileValue.DataFileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
                             ValidateFile();
                         }
                     }
@@ -160,19 +169,57 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DocumentFileData_Validated(object sender, EventArgs e)
         { ValidateFile(); }
 
-        private void ValidateFile()
+        private void DocumentContentData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
+
+        private void ObjectScopeData_Validated(object sender, EventArgs e)
+        { isInModelData.Checked = formBinding.IsInModel(); }
+
+        private void ObjectPathData_Validated(object sender, EventArgs e)
+        { isInModelData.Checked = formBinding.IsInModel(); }
+
+        private Boolean ValidateFile()
         {
+            CommandButtons[ButtonType.Open].Enabled = true;
+            CommandButtons[ButtonType.Save].Enabled = true;
+            Boolean result = true;
+
             errorProvider.SetError(localPathData.ErrorControl, String.Empty);
+            errorProvider.SetError(schemaFileNameData.ErrorControl, String.Empty);
+            errorProvider.SetError(documentContentData.ErrorControl, String.Empty);
 
-            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue)
-                && schemaValue.SchemaDirectory.IsInvalid(out Exception? directoryEx))
-            { errorProvider.SetError(localPathData.ErrorControl, directoryEx); }
+            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
+            {
+                if(!directory.IsValid(out Exception? dirException))
+                {
+                    errorProvider.SetError(localPathData.ErrorControl, dirException);
+                    CommandButtons[ButtonType.Open].Enabled = false;
+                    CommandButtons[ButtonType.Save].Enabled = false;
+                    result = false;
+                }
 
-            errorProvider.SetError(documentFileData.ErrorControl, String.Empty);
+                if (!file.IsValid(out Exception? fileException))
+                {
+                    errorProvider.SetError(schemaFileNameData.ErrorControl, fileException);
+                    CommandButtons[ButtonType.Save].Enabled = false;
+                    result = false;
+                }
 
-            if (formBinding.DocumentData.TryGetValue(out SchemaDocumentValue? fileValue)
-                && fileValue.SchemaFile.IsInvalid(out Exception? fileEx))
-            { errorProvider.SetError(documentFileData.ErrorControl, fileEx); }
+                if (formBinding.DocumentData.TryGetCurrent(out SchemaDocumentValue? document))
+                {
+                    if (document.ContentException is not null)
+                    {
+                        errorProvider.SetError(documentContentData.ErrorControl, document.ContentException);
+                        CommandButtons[ButtonType.Save].Enabled = false;
+                        result = false;
+                    }
+                }
+            }
+            else { throw new InvalidOperationException(); } // Should not get here.
+
+            return result;
         }
+
+
     }
 }

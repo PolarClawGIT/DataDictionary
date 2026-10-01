@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.AppScript
     public class TransformDocumentCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
-        IRemoveItem<ITemplateKey>,
+        IRemoveItem<ITemplateKey>, IRemoveItem<ITransformKey>, IRemoveItem<IDocumentKey>,
         IReadTemporal<IModelKey>, IReadTemporal<ITemplateKey>
         where TItem : BindingTableRow, ITransformDocumentItem, new()
     {
@@ -81,9 +81,27 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(ITemplateKey TemplateKey)
+        public virtual void Remove(ITemplateKey templateKey)
         {
-            TemplateKey key = new TemplateKey(TemplateKey);
+            TemplateKey key = new TemplateKey(templateKey);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(ITransformKey transformKey)
+        {
+            TransformKey key = new TransformKey(transformKey);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDocumentKey documentKey)
+        {
+            DocumentKey key = new DocumentKey(documentKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

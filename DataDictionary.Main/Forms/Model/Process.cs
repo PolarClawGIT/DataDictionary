@@ -206,7 +206,7 @@ namespace DataDictionary.Main.Forms.Model
                     dialog.FilterScopes.Add(ScopeType.ModelEntity);
                     dialog.FilterScopes.Add(ScopeType.ModelEntityAttribute);
                     dialog.FilterScopes.Add(ScopeType.ModelProcess);
-                    IEnumerable<PathIndex> selected = arguments.Select(s => s.ArgumentPath);
+                    IEnumerable<PathItem> selected = arguments.Select(s => s.ArgumentPath);
 
                     dialog.BuildData(selected, GetDescription);
 
@@ -243,7 +243,7 @@ namespace DataDictionary.Main.Forms.Model
         private void ArgumentNameData_Validating(object sender, CancelEventArgs e)
         {
             if (formBinding.TryGetArgument(out ProcessArgumentValue? value))
-            { value.ArgumentName = new PathIndex(PathIndex.Parse(argumentNameData.Text).ToArray()).MemberFullPath; }
+            { value.ArgumentName = new PathItem(PathItem.Parse(argumentNameData.Text).ToArray()).MemberFullPath; }
         }
 
         private void BindingArgument_AddingNew(object sender, AddingNewEventArgs e)
@@ -261,7 +261,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
-            PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
+            PathItem path = new PathItem(PathItem.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
         }
     }

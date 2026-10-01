@@ -12,12 +12,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public partial class EntityValue : EntityItem, IEntityValue, IPathValue, INamedScopeSourceValue
+    public class EntityValue : EntityItem, IEntityValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -29,12 +29,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         public ScopeType Scope { get { return ScopeType.ModelEntity; } }
 
         /// <summary>
-        /// Path Index version of the EntityName
+        /// Path of the EntityName
         /// </summary>
-        public PathIndex EntityPath
+        public PathItem EntityPath
         {
-            get
-            { return new PathIndex(new PathIndex(PathIndex.Parse(EntityName).ToArray())); }
+            get { return pathValue.Path; }
             set
             {
                 EntityName = value.MemberFullPath;
@@ -51,8 +50,8 @@ namespace DataDictionary.BusinessLayer.AppModel
                 GetPath = () =>
                 {
                     if (String.IsNullOrWhiteSpace(EntityName))
-                    { return new PathIndex(EntityTitle); }
-                    else { return new PathIndex(new PathIndex(PathIndex.Parse(EntityName).ToArray())); }
+                    { return new PathItem(EntityTitle); }
+                    else { return new PathItem(PathItem.Parse(EntityName)); }
                 },
                 GetScope = () => Scope,
                 GetTitle = () => EntityTitle ?? Scope.GetEnumeration().Name,

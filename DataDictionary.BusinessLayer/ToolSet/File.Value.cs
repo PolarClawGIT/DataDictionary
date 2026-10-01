@@ -2,7 +2,6 @@
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -12,43 +11,52 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Interface for Single File.
     /// </summary>
+    /// <remarks>
+    /// The expected implementation of this is using a backing field of type FileValue.
+    /// The class then implicitly or explicitly implements the properties depending on visibility.<br/>
+    /// Only implicitly implemented properties are available in DataBinding.
+    /// </remarks>
     public interface IFileValue : IBindingPropertyChanged
     {
         /// <summary>
         /// File Name for the File within the File Path.
-        /// dialog.FileName = IFileValue.FileName
         /// </summary>
+        /// <example>dialog.FileName = IFileValue.FileName</example>
         String FileName { get; set; }
-
-        /// <summary>
-        /// The File Content
-        /// </summary>
-        String FileContent { get; }
 
         /// <summary>
         /// List of FileFormats supported. Normally only one.
         /// </summary>
         IEnumerable<FileFormatType> FileFormats { get; }
+        //static abstract IEnumerable<FileFormatType> FileFormats();
+        //static abstract IEnumerable<FileFormatType> FileFormats { get; }
+
+        /// <summary>
+        /// Contents of the File.
+        /// </summary>
+        String FileContent { get; set; }
 
         /// <summary>
         /// Generate the WorkItems for Opens the File and loads it to the FileContent property
         /// </summary>
-        /// <param name="directory"></param>
+        /// <param name="file"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Open(IDirectoryValue directory);
+        /// <remarks>Does not update the FileName property.</remarks>
+        IReadOnlyList<WorkItem> Open(FileInfo file);
 
         /// <summary>
         /// Generate the WorkItems for Saves the FileContent property to the file
         /// </summary>
-        /// <param name="directory"></param>
+        /// <param name="file"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Save(IDirectoryValue directory);
+        /// <remarks>Does not update the FileName property.</remarks>
+        IReadOnlyList<WorkItem> Save(FileInfo file);
 
         /// <summary>
         /// Validates the File info and returns an Exception if there is an issue.
         /// </summary>
         /// <returns></returns>
-        Boolean IsInvalid([NotNullWhen(true)] out Exception? exception);
+        Boolean IsValid([NotNullWhen(false)] out Exception? exception);
     }
 
     /// <summary>
@@ -58,36 +66,25 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public class FileValue : IFileValue
     {
-
         /// <inheritdoc/>
         public String FileName
         {
             get { return GetFileName(); }
-            set
-            {
-                SetFileName(value);
-                OnPropertyChanged(nameof(FileName));
-            }
+            set { SetFileName(value); OnPropertyChanged(nameof(FileName)); }
         }
 
         /// <inheritdoc/>
         public String FileContent
         {
             get { return GetContent(); }
-            set
-            {
-                SetContent(value);
-                OnPropertyChanged(nameof(FileContent));
-            }
+            set { SetContent(value); OnPropertyChanged(nameof(FileContent)); }
         }
+
         internal Func<String> GetContent { private get; init; }
         internal Action<String> SetContent { private get; init; }
 
-        String contentValue = String.Empty;
-
         /// <inheritdoc/>
-        public IEnumerable<FileFormatType> FileFormats
-        { get { return GetFileFormats(); } }
+        public IEnumerable<FileFormatType> FileFormats { get; } = Enum.GetValues<FileFormatType>();
 
         /// <summary>
         /// Function representing Get function for the FileName.
@@ -99,12 +96,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         protected internal Action<String> SetFileName { protected get; init; }
         String fileNameValue = String.Empty;
-
-        /// <summary>
-        /// Function representing Get function for the FileFormatTypes.
-        /// </summary>
-        protected internal Func<IEnumerable<FileFormatType>> GetFileFormats { protected get; init; }
-        List<FileFormatType> fileFormatValues = new List<FileFormatType>() { FileFormatType.PlainText };
 
         /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
         public virtual event PropertyChangedEventHandler? PropertyChanged;
@@ -122,17 +113,17 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </remarks>
         public FileValue() : base()
         {
+            String contentValue = String.Empty; // Internal holder of the content during initialization
+
             GetFileName = () => fileNameValue;
             SetFileName = (v) => fileNameValue = v;
-
-            GetFileFormats = () => fileFormatValues;
 
             GetContent = () => contentValue;
             SetContent = (v) => contentValue = v;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Open(IDirectoryValue directory)
+        public IReadOnlyList<WorkItem> Open(FileInfo file)
         {
             List<WorkItem> work = new List<WorkItem>();
             Boolean cancel = false;
@@ -151,15 +142,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
             void OnWork()
             {
-                FileInfo file = new FileInfo(Path.Combine(directory.InitialDirectory, FileName));
-
                 if (file.Exists)
                 {
                     try
-                    {
-                        SetContent(File.ReadAllText(file.FullName));
-                        OnPropertyChanged(nameof(FileContent));
-                    }
+                    { SetContent(File.ReadAllText(file.FullName)); }
                     catch (Exception ex)
                     {
                         cancel = true;
@@ -178,7 +164,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(IDirectoryValue directory)
+        public IReadOnlyList<WorkItem> Save(FileInfo file)
         {
             List<WorkItem> work = new List<WorkItem>();
             Boolean cancel = false;
@@ -194,17 +180,16 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
             void OnWork()
             {
-                FileInfo file = new FileInfo(Path.Combine(directory.InitialDirectory, FileName));
-
                 try
                 {
+                    String content = GetContent();
                     // Detect if the data is XML and use XML save instead of normal text.
                     // TODO: This is still adding the Byte Order Mark (BOM) to the file.
                     // This is not necessary an in some cases, may cause issues with other tools.
-                    if (FileContent.TryParse(out XDocument? document, out Exception? _))
+                    if (content.TryParse(out XDocument? document, out Exception? _))
                     { document.Save(file.FullName); }
                     else // Save the file as Text. This is expected to have a BOM.
-                    { File.WriteAllText(file.FullName, GetContent()); }
+                    { File.WriteAllText(file.FullName, content); }
                 }
                 catch (Exception ex)
                 {
@@ -215,68 +200,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
             }
         }
 
-        /// <summary>
-        /// Try/Parse the Content into an XDocument.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="exception"></param>
-        /// <param name="option"></param>
-        /// <returns></returns>
-        [Obsolete("Not being used", true)]
-        public Boolean TryParse([NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
-        {
-            try
-            {
-                document = XDocument.Parse(FileContent, option);
-                exception = null;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                document = null;
-                ex.Data.Add(nameof(FileName), FileName);
-                exception = ex;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Try/Parse the Context into a Formatted XML String.
-        /// </summary>
-        /// <param name="document"></param>
-        /// <param name="exception"></param>
-        /// <param name="option"></param>
-        /// <returns></returns>
-        [Obsolete("Not being used",true)]
-        public Boolean TryParse([NotNullWhen(true)] out String? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
-        {
-            //Note: Online Sources use StringWriter to convert an XDocument to String.
-            //This alters the Declaration of the XDocument and forces it to UTF-16, which is the format of Windows Strings.
-            //Other solutions run the XDocument thru several more steps that also alter the Declaration or require
-            //that the correct Declaration to be known and that is be compatible with a String Encoding.
-            //This approach is to add the Declaration using the StringBuilder as a simple string.
-
-            if (FileContent.TryParse(out XDocument? value, out Exception? xmlException, option))
-            {
-                StringBuilder result = new StringBuilder();
-
-                // XDocument.ToString() does not contain the Header, put that back in.
-                if (value.Declaration is XDeclaration declaration)
-                { result.Append(declaration.ToString()); }
-                //else { result.AppendLine(new XDeclaration(null, null, null).ToString()); }
-
-                result.AppendLine(value.ToString());
-
-                exception = null;
-                document = result.ToString();
-                return true;
-            }
-            else
-            { document = null; exception = xmlException; return false; }
-        }
-
         /// <inheritdoc/>
-        public Boolean IsInvalid([NotNullWhen(true)] out Exception? exception)
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
         {
             exception = null;
             String fileName = Path.GetFileName(FileName);
@@ -318,7 +243,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 exception.Data.Add(nameof(directories), String.Join("//", directories));
             }
 
-            return exception is not null;
+            return exception is null;
         }
     }
 }

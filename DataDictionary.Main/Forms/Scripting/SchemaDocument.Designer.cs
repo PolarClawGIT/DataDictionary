@@ -43,7 +43,7 @@
             objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            documentFileData = new DataDictionary.Main.Controls.TextBoxData();
+            schemaFileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingDocument = new BindingSource(components);
@@ -74,7 +74,7 @@
             schemaDocumentLayout.Controls.Add(objectGroupBox, 0, 2);
             schemaDocumentLayout.Controls.Add(schemaTitleData, 0, 1);
             schemaDocumentLayout.Controls.Add(templateTitleData, 0, 0);
-            schemaDocumentLayout.Controls.Add(documentFileData, 0, 4);
+            schemaDocumentLayout.Controls.Add(schemaFileNameData, 0, 4);
             schemaDocumentLayout.Dock = DockStyle.Fill;
             schemaDocumentLayout.Location = new Point(0, 25);
             schemaDocumentLayout.Name = "schemaDocumentLayout";
@@ -114,6 +114,7 @@
             documentContentData.Size = new Size(502, 243);
             documentContentData.TabIndex = 6;
             documentContentData.WordWrap = false;
+            documentContentData.Validated += DocumentContentData_Validated;
             // 
             // objectGroupBox
             // 
@@ -206,6 +207,7 @@
             objectScopeData.ReadOnly = false;
             objectScopeData.Size = new Size(490, 46);
             objectScopeData.TabIndex = 2;
+            objectScopeData.Validated += ObjectScopeData_Validated;
             // 
             // objectPathData
             // 
@@ -219,6 +221,7 @@
             objectPathData.SelectIcon = (Image)resources.GetObject("objectPathData.SelectIcon");
             objectPathData.Size = new Size(490, 44);
             objectPathData.TabIndex = 3;
+            objectPathData.Validated += ObjectPathData_Validated;
             objectPathData.SelectCommand += ObjectNameData_SelectCommand;
             // 
             // schemaTitleData
@@ -249,17 +252,17 @@
             // 
             // documentFileData
             // 
-            documentFileData.AutoSize = true;
-            documentFileData.Dock = DockStyle.Fill;
-            documentFileData.HeaderText = "Document";
-            documentFileData.Location = new Point(3, 314);
-            documentFileData.Multiline = false;
-            documentFileData.Name = "documentFileData";
-            documentFileData.ReadOnly = false;
-            documentFileData.Size = new Size(502, 44);
-            documentFileData.TabIndex = 9;
-            documentFileData.WordWrap = true;
-            documentFileData.Validated += DocumentFileData_Validated;
+            schemaFileNameData.AutoSize = true;
+            schemaFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            schemaFileNameData.Dock = DockStyle.Fill;
+            schemaFileNameData.HeaderText = "Document";
+            schemaFileNameData.Location = new Point(3, 314);
+            schemaFileNameData.Name = "documentFileData";
+            schemaFileNameData.ReadOnly = false;
+            schemaFileNameData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
+            schemaFileNameData.Size = new Size(502, 44);
+            schemaFileNameData.TabIndex = 9;
+            schemaFileNameData.SelectCommand += DocumentFileData_SelectCommand;
             // 
             // openFileDialog
             // 
@@ -272,7 +275,7 @@
             // documentMenu
             // 
             documentMenu.Name = "documentMenu";
-            documentMenu.Size = new Size(181, 26);
+            documentMenu.Size = new Size(61, 4);
             // 
             // SchemaDocument
             // 
@@ -320,8 +323,8 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private Controls.TextBoxData localPathData;
         private ErrorProvider errorProvider;
-        private Controls.TextBoxData documentFileData;
         private ContextMenuStrip documentMenu;
         private SaveFileDialog saveFileDialog;
+        private Controls.SelectTextBoxData schemaFileNameData;
     }
 }

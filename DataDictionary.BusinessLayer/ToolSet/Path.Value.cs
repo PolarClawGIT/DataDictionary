@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.ToolSet
@@ -15,17 +10,18 @@ namespace DataDictionary.BusinessLayer.ToolSet
     { }
 
     /// <summary>
-    /// Implementation for an Item can be cast as a Path Value
+    /// Implementation for an Item can be cast as a Path Value.
+    /// A path value contains both a PathIndex and a reference to the base object that generated the path.
     /// </summary>
     class PathValue : DataValue, IPathValue
     {
         /// <inheritdoc/>
-        public virtual PathIndex Path { get { return GetPath(); } }
+        public virtual PathItem Path { get { return GetPath(); } }
 
         /// <summary>
         /// Function that returns the Path of the source.
         /// </summary>
-        public required Func<PathIndex> GetPath { get; init; }
+        public required Func<PathItem> GetPath { get; init; }
 
         /// <summary>
         /// Function to indicate that the Path has changed.

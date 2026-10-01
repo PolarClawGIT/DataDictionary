@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static PathIndex CreatePath(this ITableColumnIndexName value)
-        { return new PathIndex(PathIndex.Parse(new TableColumnIndexName(value).ToString()).ToArray()); }
+        public static PathItem CreatePath(this ITableColumnIndexName value)
+        { return new PathItem(PathItem.Parse(new TableColumnIndexName(value).ToString()).ToArray()); }
     }
 }

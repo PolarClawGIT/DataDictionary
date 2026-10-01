@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.PropertyTitle));
                 },
                 orderBy: (o) => o.PropertyTitle,
-                areEquel: (a, b) => new PropertyIndex(a).Equals(b),
+                areEqual: (a, b) => new PropertyIndex(a).Equals(b),
                 emptyValue: () => new PropertyNameList(emptyText));
 
             return comboList;

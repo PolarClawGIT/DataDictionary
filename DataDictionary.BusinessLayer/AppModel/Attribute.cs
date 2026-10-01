@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// </summary>
         /// <param name="aliasIndex"></param>
         /// <returns></returns>
-        IEnumerable<IAttributeValue> FindAttribute(IAliasIndexName aliasIndex);
+        IEnumerable<IAttributeValue> FindAttribute(IAliasIndex aliasIndex);
 
         /// <summary>
         /// Imports a TableColumnAttribute into the list of Attributes
@@ -270,9 +270,9 @@ namespace DataDictionary.BusinessLayer.AppModel
         #endregion
 
         /// <inheritdoc/>
-        public IEnumerable<IAttributeValue> FindAttribute(IAliasIndexName aliasIndex)
+        public IEnumerable<IAttributeValue> FindAttribute(IAliasIndex aliasIndex)
         {
-            AliasIndexName key = new AliasIndexName(aliasIndex);
+            AliasIndex key = new AliasIndex(aliasIndex);
             return
                 Attributes.Join(
                     Aliases.Where(w => key.Equals(w)),
@@ -287,7 +287,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             // Find the Attribute by Alias
             IAttributeValue attribute = source.Aliases.
-                SelectMany(s => FindAttribute(new AliasIndexName(s))).
+                SelectMany(s => FindAttribute(new AliasIndex(s))).
                 FirstOrDefault() ??
                 source.Attribute; // Use the Source Attribute.
 

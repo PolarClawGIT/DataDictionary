@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Schema Document
     /// </summary>
-    public interface ISchemaDocumentItem : IDocumentItem, ISchemaDefinitionKey, ITemplateObjectItem
+    public interface ISchemaDocumentItem : ITemplateKey, ISchemaDefinitionKey, ISchemaDocumentKeyName, ITemplateObjectItem
     { }
 
     /// <summary>
@@ -18,39 +18,35 @@ namespace DataDictionary.DataLayer.AppScript
     public class SchemaDocumentItem : BindingTableRow, ISchemaDocumentItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? DocumentId
+        public virtual Guid? DocumentId
         {
             get { return GetValue<Guid>(nameof(DocumentId)); }
             protected set { SetValue(nameof(DocumentId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? SchemaId
+        public virtual Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
             protected set { SetValue(nameof(SchemaId), value); }
         }
 
-
         /// <inheritdoc/>
-        public String? FileName
+        public virtual String DataFileName
         {
-            get { return GetValue(nameof(FileName)); }
-            set { SetValue(nameof(FileName), value); }
+            get { return GetValue(nameof(DataFileName)) ?? String.Empty; }
+            set { SetValue(nameof(DataFileName), value); }
         }
 
         /// <inheritdoc/>
-        public ITemporal Temporal { get; }
-
-        /// <inheritdoc/>
-        public ScopeType ObjectScope
+        public virtual ScopeType ObjectScope
         {
             get
             {
@@ -64,14 +60,14 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? ObjectPath
+        public virtual String? ObjectPath
         {
             get { return GetValue(nameof(ObjectPath)); }
             set { SetValue(nameof(ObjectPath), value); }
         }
 
         /// <inheritdoc/>
-        public Boolean IsExcluded
+        public virtual Boolean IsExcluded
         {
             get
             {
@@ -82,7 +78,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public Boolean KeepOrphaned
+        public virtual Boolean KeepOrphaned
         {
             get
             {
@@ -92,6 +88,9 @@ namespace DataDictionary.DataLayer.AppScript
             set { SetValue<Boolean>(nameof(KeepOrphaned), value); }
         }
 
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
+
         /// <summary>
         /// Constructor for Scripting Schema Document
         /// </summary>
@@ -99,7 +98,7 @@ namespace DataDictionary.DataLayer.AppScript
         protected SchemaDocumentItem() : base()
         {
             if (DocumentId is null) { DocumentId = Guid.NewGuid(); }
-            if (String.IsNullOrWhiteSpace(FileName)) { FileName = "newDocument"; }
+            if (String.IsNullOrWhiteSpace(DataFileName)) { DataFileName = "newDocument"; }
 
             Temporal = new TemporalItem()
             {
@@ -127,7 +126,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(ObjectPath), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsExcluded), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(KeepOrphaned), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(FileName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DataFileName), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 
@@ -154,7 +153,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override string ToString()
-        { return FileName ?? String.Empty; }
+        { return DataFileName ?? String.Empty; }
 
     }
 }

@@ -6,18 +6,18 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IAttributeValue : IAttributeItem, 
+    public interface IAttributeValue : IAttributeItem,
         IAttributeIndex, IAttributeIndexName,
         IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>
-    public partial class AttributeValue : AttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
+    public class AttributeValue : AttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -29,12 +29,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
         /// <summary>
-        /// Path Index version of the AttributeName
+        /// Path of the AttributeName
         /// </summary>
-        public PathIndex AttributePath
+        public PathItem AttributePath
         {
-            get
-            { return new PathIndex(new PathIndex(PathIndex.Parse(AttributeName).ToArray())); }
+            get { return pathValue.Path; }
             set
             {
                 AttributeName = value.MemberFullPath;
@@ -51,8 +50,8 @@ namespace DataDictionary.BusinessLayer.AppModel
                 GetPath = () =>
                 {
                     if (String.IsNullOrWhiteSpace(AttributeName))
-                    { return new PathIndex(AttributeTitle); }
-                    else { return new PathIndex(new PathIndex(PathIndex.Parse(AttributeName).ToArray())); }
+                    { return new PathItem(AttributeTitle); }
+                    else { return new PathItem(PathItem.Parse(AttributeName)); }
                 },
                 GetScope = () => Scope,
                 GetTitle = () => AttributeTitle ?? Scope.GetEnumeration().Name,

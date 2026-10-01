@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IGetTemporal, IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        IDeleteData
+        IDeleteData, IRemoveData<ISchemaDefinitionIndex>, IRemoveData<ITransformIndex>
     {
         /// <summary>
         /// SchemaDefinition for the Templates (XSD)
@@ -240,6 +240,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
             transformDocumentValues.Clear();
         }
 
+
+        /// <inheritdoc/>
+        public void Remove(ISchemaDefinitionIndex dataKey)
+        {
+            schemaDefinitionValues.Remove(dataKey);
+            schemaNodeValues.Remove(dataKey);
+            schemaDocumentValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(ITransformIndex dataKey)
+        {
+            transformValues.Remove(dataKey);
+            transformDocumentValues.Remove(dataKey);
+        }
+
         /// <inheritdoc/>
         public ITemporalData GetTemporal(IModelIndex model)
         {
@@ -320,5 +336,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return work;
 
         }
+
+
     }
 }

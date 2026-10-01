@@ -4,8 +4,8 @@
 	[DocumentId]		UniqueIdentifier Not Null,
 	[TemplateId]		UniqueIdentifier Not Null,
 	[TransformId]		UniqueIdentifier Not Null, 
-	[SchemaDocumentId]	UniqueIdentifier Not Null, -- Source Document
-	[FileName]			[AppGeneral].[uddtFileName] Not Null,
+	[DataFileName]		[AppGeneral].[uddtFileName] Not Null, -- Input
+	[ScriptedFileName]	[AppGeneral].[uddtFileName] Not Null, -- Output
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_TransformDocument_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_TransformDocument_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
@@ -13,6 +13,6 @@
 	-- Keys
 	CONSTRAINT [PK_TransformDocument] PRIMARY KEY CLUSTERED ([DocumentId] ASC),
 	CONSTRAINT [AK_TransformDocument] UNIQUE ([TemplateId] ASC, [DocumentId] ASC), -- Used by FK's
+	CONSTRAINT [AK_TransformFileName] UNIQUE ([TransformId] ASC, [ScriptedFileName] ASC),
 	CONSTRAINT [FK_TransformDocumentTransform] FOREIGN KEY ([TemplateId], [TransformId]) REFERENCES [AppScript].[Transform] ([TemplateId], [TransformId]),
-	CONSTRAINT [FK_TransformDocumentSchema] FOREIGN KEY ([TemplateId], [SchemaDocumentId]) REFERENCES [AppScript].[SchemaDocument] ([TemplateId], [DocumentId]),
 )	WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsScript].[TransformDocument]))

@@ -27,7 +27,7 @@ Begin Try
 		[TemplateId]		UniqueIdentifier Not NULL,
 		[SchemaId]			UniqueIdentifier NULL,
 		[ObjectId]			UniqueIdentifier NULL,
-		[FileName]			[AppGeneral].[uddtFileName] Null,
+		[DataFileName]		[AppGeneral].[uddtFileName] Null,
 		Primary Key([DocumentId]))
 
 	-- Handles Objects
@@ -104,7 +104,7 @@ Begin Try
 			IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
 			D.[SchemaId],
 			O.[ObjectId],
-			NullIf(Trim(D.[FileName]),'') As [FileName]
+			NullIf(Trim(D.[DataFileName]),'') As [DataFileName]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
 			On	D.[TemplateId] = M.[TemplateId] And
@@ -146,20 +146,20 @@ Begin Try
 				--[TemplateId],
 				[SchemaId],
 				[ObjectId],
-				[FileName]
+				[DataFileName]
 		From	@Values
 		Except
 		Select	[DocumentId],
 				--[TemplateId],
 				[SchemaId],
 				[ObjectId],
-				[FileName]
+				[DataFileName]
 		From	[AppScript].[SchemaDocument])
 	Update [AppScript].[SchemaDocument]
 	Set		--[TemplateId] = S.[TemplateId],
 			[SchemaId] = S.[SchemaId],
 			[ObjectId] = S.[ObjectId],
-			[FileName] = S.[FileName]
+			[DataFileName] = S.[DataFileName]
 	From	[AppScript].[SchemaDocument] T
 			Inner Join [Delta] S
 			On	T.[DocumentId] = S.[DocumentId]
@@ -171,12 +171,12 @@ Begin Try
 			[TemplateId],
 			[SchemaId],
 			[ObjectId],
-			[FileName])
+			[DataFileName])
 	Select	S.[DocumentId],
 			S.[TemplateId],
 			S.[SchemaId],
 			S.[ObjectId],
-			S.[FileName]
+			S.[DataFileName]
 	From	@Values S
 			Left Join [AppScript].[SchemaDocument] T
 			On	S.[DocumentId] = T.[DocumentId]

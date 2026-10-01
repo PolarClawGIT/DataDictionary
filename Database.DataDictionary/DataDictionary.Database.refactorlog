@@ -5620,4 +5620,53 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[RenderOrder]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="35568c20-3208-4f9e-9ece-15401fc4c154" ChangeDateTime="09/21/2026 16:22:55">
+    <Property Name="ElementName" Value="[AppScript].[SchemaDocument].[FileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[SchemaDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[SchemaFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7e9db2a1-abff-4143-bd6b-123637056cfa" ChangeDateTime="09/21/2026 16:23:49">
+    <Property Name="ElementName" Value="[AppScript].[TransformDocument].[FileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[TransformDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ScriptedFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="05cb6298-8ca8-4980-96ca-f686d1cc63ee" ChangeDateTime="09/21/2026 16:25:36">
+    <Property Name="ElementName" Value="[HsScript].[SchemaDocument].[FileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[SchemaDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ScemaFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c66244d3-6683-4190-a53e-8f6716eb7977" ChangeDateTime="09/21/2026 16:25:58">
+    <Property Name="ElementName" Value="[HsScript].[TransformDocument].[FileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[TransformDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ScriptedFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="afb2cf62-f327-42a3-bd0f-1613b0f1a483" ChangeDateTime="09/21/2026 16:26:56">
+    <Property Name="ElementName" Value="[HsScript].[SchemaDocument].[ScemaFileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[SchemaDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[SchemaFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0b837111-4e28-4e2a-a4fa-620806467cc3" ChangeDateTime="09/28/2026 14:04:43">
+    <Property Name="ElementName" Value="[AppScript].[SchemaDocument].[SchemaFileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[SchemaDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a6b7beb5-ed0c-4600-8065-9146b5d851c5" ChangeDateTime="09/28/2026 14:05:17">
+    <Property Name="ElementName" Value="[HsScript].[SchemaDocument].[SchemaFileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[SchemaDocument]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataFileName]" />
+  </Operation>
 </Operations>

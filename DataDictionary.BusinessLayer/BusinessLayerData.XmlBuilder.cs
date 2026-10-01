@@ -17,21 +17,12 @@ namespace DataDictionary.BusinessLayer
 
             if (Model.Properties.Count > 0)
             {   // This could be called before Model.Properties has been loaded.
-                var attributeValue = new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute);
-                builders.Add(attributeValue);
-                builders.AddRange(attributeValue.Children.Select(s => s.Value));
+                builders.AddRange(XmlBuilder.Create(ScopeType.ModelAttribute, typeof(AttributeValue)));
+                builders.AddRange(XmlBuilder.Create(ScopeType.ModelAttributeProperty, Model.Properties));
 
-                var attributeProperty = new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties);
-                builders.Add(attributeProperty);
-                builders.AddRange(attributeProperty.Children.Select(s => s.Value));
-
-                var entityValue = new XmlBuilder.ValueType(typeof(EntityValue), ScopeType.ModelEntity);
-                builders.Add(entityValue);
-                builders.AddRange(entityValue.Children.Select(s => s.Value));
+                builders.AddRange(XmlBuilder.Create(ScopeType.ModelEntity, typeof(EntityValue)));
+                builders.AddRange(XmlBuilder.Create(ScopeType.ModelEntityProperty, Model.Properties));
                 
-                var entityProperty = new XmlBuilder.PropertyType(ScopeType.ModelEntityProperty, Model.Properties);
-                builders.Add(entityProperty);
-                builders.AddRange(entityProperty.Children.Select(s => s.Value));
             }
 
             return builders;

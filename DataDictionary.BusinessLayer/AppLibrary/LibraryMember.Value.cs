@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new LibraryMemberIndex(this),
-                GetPath = () => new PathIndex(PathIndex.Parse(MemberNameSpace).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(MemberNameSpace).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => MemberName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(MemberName) or nameof(MemberNameSpace),

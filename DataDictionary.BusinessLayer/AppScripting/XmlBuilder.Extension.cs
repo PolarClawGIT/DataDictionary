@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -35,14 +36,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="namedScope"></param>
         /// <param name="templateObject"></param>
         /// <returns></returns>
-        public static IEnumerable<INamedScopeSourceValue> GetData(this INamedScopeData namedScope, ITemplateObjectNameIndex templateObject)
+        public static IEnumerable<INamedScopeSourceValue> GetData(this INamedScopeData namedScope, ITemplateObjectIndex templateObject)
         {
-            TemplateObjectNameIndex key = new TemplateObjectNameIndex(templateObject);
-            PathIndex path = new PathIndex(key.ObjectPath);
+            TemplateObjectIndex key = new TemplateObjectIndex(templateObject);
+            PathItem path = new PathItem(key.ObjectPath);
 
             return namedScope.PathKeys(path).Select(s => namedScope.GetData(s));
         }
-
 
         /// <summary>
         /// Try to Parse a String into an XDocument.
@@ -52,6 +52,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="exception"></param>
         /// <param name="option"></param>
         /// <returns></returns>
+        /// <remarks>Do not use XDocument.ToString. Use <see cref="Format(XDocument)"/></remarks>
         public static Boolean TryParse(this String source, [NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
         {
             document = null;
@@ -65,18 +66,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
             catch (Exception ex)
             {
                 exception = ex;
-                throw;
+                return false;
             }
         }
 
-
         /// <summary>
-        /// Try to Parse an XDocument into a String.
+        /// Format an XDocument into a String that is easy to read.
         /// </summary>
         /// <param name="source"></param>
-        /// <param name="document"></param>
         /// <returns></returns>
-        public static Boolean TryParse(this XDocument source, [NotNullWhen(true)] out String? document)
+        /// <remarks>
+        /// This uses default formatting of XML where the attributes are indented tree like. 
+        /// This works like XDocument.ToString() but retains the declaration (if any).
+        /// The results approximates what the file is expected to look like.<br/>
+        /// NOTE: XDocument.ToString removes the xml declaration.
+        /// The original XML Declaration is displayed but the data is actually Windows String UTF16.</remarks>
+        public static String Format(this XDocument source)
         {
             //Note: Online Sources use StringWriter to convert an XDocument to String.
             //This alters the Declaration of the XDocument and forces it to UTF-16, which is the format of Windows Strings.
@@ -84,19 +89,24 @@ namespace DataDictionary.BusinessLayer.AppScripting
             //that the correct Declaration to be known and that is be compatible with a String Encoding.
             //This approach is to add the Declaration using the StringBuilder as a simple string.
 
-            document = null;
             StringBuilder result = new StringBuilder();
 
-            // XDocument.ToString() does not contain the Header, put that back in.
+            //This is the Online solution but forces the UTF-16 encoding using a StringWriter or XmlWriter or both.
+            //  using (StringWriter writer = new StringWriter(result))
+            //  using (XmlWriter xml = XmlWriter.Create(writer, new XmlWriterSettings() { Indent = true, OmitXmlDeclaration = false }))
+            //  { source.WriteTo(xml); }
+
+            // My solution, build the value in pieces using the string builder.
+            // TODO: This can miss pieces. What is important?
             if (source.Declaration is XDeclaration declaration)
-            { result.Append(declaration.ToString()); }
-            //else { result.AppendLine(new XDeclaration(null, null, null).ToString()); }
+            { result.AppendLine(declaration.ToString()); }
 
-            result.AppendLine(source.ToString());
+            if (source.Root is XElement)
+            { result.AppendLine(source.Root.ToString(SaveOptions.None)); }
 
-            document = result.ToString();
-            return true;
+            return result.ToString();
         }
+
     }
 }
 

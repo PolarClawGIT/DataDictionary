@@ -231,7 +231,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 && e.Node.TreeView is not null
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && nodesTree.TryGetValue(e.Node, out XmlBuilderIndex? value))
-            { formBinding.BuilderData.TrySetValue(w => value.Equals(w)); }
+            { formBinding.BuilderData.TrySetCurrent(w => value.Equals(w)); }
         }
         #endregion
     }

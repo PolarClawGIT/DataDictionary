@@ -3,8 +3,8 @@
 	[DocumentId]			UniqueIdentifier Null,
 	[TemplateId]			UniqueIdentifier Null,
 	[TransformId]			UniqueIdentifier Null,
-	[SchemaDocumentId]		UniqueIdentifier Null,
-	[FileName]				[AppGeneral].[uddtFileName] Null,
+	[DataFileName]			[AppGeneral].[uddtFileName] Null, -- Input
+	[ScriptedFileName]		[AppGeneral].[uddtFileName] Null, -- Output
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

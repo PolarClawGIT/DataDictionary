@@ -10,11 +10,16 @@ namespace DataDictionary.Main.Controls
     {
         TreeView treeControl;
 
+        // TODO: Delete of a source data item does not trigger the node to be removed.
+        // Currently this requires the entire tree to be rebuilt.
+        // Some screens make this call. Others do not.
+        // Reconsider storage/maintenance of the list. Rather then storing a hierarchy, only store the paths.
+
         class NamedScopeNode
         {
             public NamedScopeNode? Parent { get; init; } = null;
             public INamedScopeValue NamedScope { get; init; }
-            public PathIndex Path { get; init; }
+            public PathItem Path { get; init; }
             public DataIndex DataIndex { get { return NamedScope.Source.Index; } }
             public NamedScopeIndex ScopeIndex { get { return NamedScope.Index; } }
             public ScopeType Scope { get { return NamedScope.Scope; } }
@@ -40,7 +45,7 @@ namespace DataDictionary.Main.Controls
             public NamedScopeNode(NamedScopeNode parent, INamedScopeValue value) : this(value)
             {
                 Parent = parent;
-                Path = value.Path.Merge(parent.Path);
+                Path = value.Path.Prepend(parent.Path);
             }
 
             public override String ToString()
@@ -178,7 +183,7 @@ namespace DataDictionary.Main.Controls
             NamedScopeNode rootNode = new NamedScopeNode(treeData.GetValue(rootIndex));
             List<NamedScopeNode> values = BuildPath(rootNode, treeData).ToList();
 
-            Dictionary<PathIndex, List<NamedScopeNode>> pathGroup = values.
+            Dictionary<PathItem, List<NamedScopeNode>> pathGroup = values.
                 SelectMany(s => s.Path.Group()).
                 Distinct().
                 GroupJoin(values,
@@ -195,7 +200,7 @@ namespace DataDictionary.Main.Controls
 
             BuildChildren(treeControl.Nodes, null);
 
-            void BuildChildren(TreeNodeCollection treeNodes, PathIndex? path, ScopeType? scope = null)
+            void BuildChildren(TreeNodeCollection treeNodes, PathItem? path, ScopeType? scope = null)
             {
                 foreach (var item in pathGroup.
                     Where(w =>
@@ -294,7 +299,7 @@ namespace DataDictionary.Main.Controls
             return result;
         }
 
-        TreeNode CreateNode(PathIndex path)
+        TreeNode CreateNode(PathItem path)
         {
             TreeNode result = new TreeNode(path.Member);
 

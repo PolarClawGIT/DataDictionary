@@ -2,33 +2,25 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
-using System.Xml;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateObjectNameIndex, ISchemaComposite,
-        IScopeType, ITemporal
-    {
-        /// <summary>
-        /// File information to be used with the File Save/Open Dialog.
-        /// </summary>
-        IFileValue SchemaFile { get; }
-
-        /// <summary>
-        /// XML version of the File Contents.
-        /// </summary>
-        XDocument Content { get; }
-    }
+    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateObjectIndex, ISchemaComposite,
+        IScopeType, ITemporal, IFileValue
+    { }
 
     /// <inheritdoc/>
     public class SchemaDocumentValue : SchemaDocumentItem, ISchemaDocumentValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
+        FileValue schemaFile; // Backing field for IFileValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        PathItem IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
@@ -40,21 +32,58 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
         /// <inheritdoc/>
-        public IFileValue SchemaFile { get; }
+        String IFileValue.FileName
+        {
+            get { return schemaFile.FileName; }
+            set { schemaFile.FileName = value; }
+        }
 
         /// <inheritdoc/>
-        public XDocument Content
+        public String FileContent
         {
             get;
-            set { field = value; OnPropertyChanged(nameof(Content)); }
-        } = new XDocument();
+            set
+            {
+                field = value;
+
+                if (value.TryParse(out XDocument? document, out Exception? exception))
+                { field = document.Format(); }
+
+                OnPropertyChanged(nameof(FileContent));
+                OnPropertyChanged(nameof(ContentException));
+            }
+        } = String.Empty;
 
         /// <inheritdoc/>
         public Exception? ContentException
         {
-            get;
-            set { field = value; OnPropertyChanged(nameof(ContentException)); }
+            get
+            {   // It is possible that FileContent Set was by-passed.
+                // As such, the content needs to be parsed independently.
+                if (FileContent.TryParse(out XDocument? _, out Exception? exception))
+                { return null; }
+                else { return exception; }
+            }
         }
+
+        /// <inheritdoc cref="IFileValue.FileFormats"/>
+        static public IEnumerable<FileFormatType> FileFormats
+        { get; } = new List<FileFormatType>() { FileFormatType.XMLData };
+
+        /// <inheritdoc/>
+        IEnumerable<FileFormatType> IFileValue.FileFormats { get { return FileFormats; } }
+
+        /// <inheritdoc/>
+        public override String? ObjectPath
+        {
+            get { return base.ObjectPath; }
+            set
+            {
+                PathItem path = new PathItem(PathItem.Parse(value));
+                base.ObjectPath = path.MemberFullPath;
+            }
+        }
+
 
         /// <inheritdoc/>
         public SchemaDocumentValue() : base()
@@ -62,33 +91,19 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathIndex(PathIndex.Parse(FileName).ToArray()),
+                GetPath = () => new PathItem(PathItem.Parse(DataFileName).ToArray()),
                 GetScope = () => Scope,
-                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(FileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+                GetTitle = () => this.DataFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DataFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(DataFileName)
             };
 
-            SchemaFile = new FileValue()
+            schemaFile = new FileValue()
             {
-                GetFileName = () => FileName ?? String.Empty,
-                SetFileName = (value) => FileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData },
-                GetContent = () =>
-                {
-                    if (Content.TryParse(out String? document))
-                    { return document; }
-                    else { return String.Empty; }
-                },
-                SetContent = (value) =>
-                {
-                    if (value.TryParse(out XDocument? document, out Exception? exception))
-                    {
-                        Content = document;
-                        ContentException = null;
-                    }
-                    else { Content = new XDocument(); ContentException = exception; }
-                }
+                GetFileName = () => DataFileName ?? String.Empty,
+                SetFileName = (value) => DataFileName = value,
+                GetContent = () => FileContent ?? String.Empty,
+                SetContent = (value) => FileContent = value
             };
         }
 
@@ -98,21 +113,48 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathItem(Scope),
                 GetScope = () => Scope,
-                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(FileName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+                GetTitle = () => this.DataFileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DataFileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(DataFileName)
             };
 
-            SchemaFile = new FileValue()
+            schemaFile = new FileValue()
             {
-                GetFileName = () => FileName ?? String.Empty,
-                SetFileName = (value) => FileName = value,
-                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
+                GetFileName = () => DataFileName ?? String.Empty,
+                SetFileName = (value) => DataFileName = value,
+                GetContent = () => FileContent ?? String.Empty,
+                SetContent = (value) => FileContent = value
             };
+
         }
 
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Open(FileInfo file)
+        { return schemaFile.Open(file); }
 
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Save(FileInfo file)
+        { return schemaFile.Save(file); }
+
+        /// <inheritdoc/>
+        public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
+        { return schemaFile.IsValid(out exception); }
+
+        /// <summary>
+        /// Builds the XDocument and sets the FileContent to the value.
+        /// </summary>
+        /// <param name="getBuilders"></param>
+        /// <param name="nodeValues"></param>
+        /// <remarks>Use <see cref="XmlBuilderXElement.GetBuilder(AppModel.IModel, ITemplateObjectIndex)"/> to get the builders.</remarks>
+        public void BuildContent(Func<ITemplateObjectIndex, Func<IEnumerable<XmlBuilder>, XElement>?> getBuilders, IEnumerable<XmlBuilderNode> nodeValues)
+        {
+            var builder = getBuilders(this);
+
+            if (builder is not null)
+            { FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
+
+        }
     }
 }

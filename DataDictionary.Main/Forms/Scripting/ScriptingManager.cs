@@ -17,8 +17,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetIcon(ScopeType.Scripting);
 
-            SetTitle("Scripting Manager");
-
             SetCommand(
                 ButtonType.Add,
                 ButtonType.Open,
@@ -154,8 +152,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandButtons[ButtonType.SaveDatabase].Enabled = false;
                 CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
             }
-
-            SetAuthorization(formBinding.Authorize);
         }
     }
 }

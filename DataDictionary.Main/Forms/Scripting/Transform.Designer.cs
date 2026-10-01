@@ -35,6 +35,7 @@
             TableLayoutPanel filePatternLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Transform));
             Label fileBaseName;
+            GroupBox scriptGroupBox;
             TableLayoutPanel scriptFileLayout;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             transformTabs = new TabControl();
@@ -43,12 +44,8 @@
             relativePathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             filePrefixData = new DataDictionary.Main.Controls.TextBoxData();
             fileSuffixData = new DataDictionary.Main.Controls.TextBoxData();
-            fileExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
-            transformScriptTab = new TabPage();
-            scriptToolStrip = new ToolStrip();
-            scriptOpenCommand = new ToolStripButton();
-            scriptSaveCommand = new ToolStripButton();
+            fileExtensionData = new DataDictionary.Main.Controls.ComboBoxData();
             scriptFileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             scriptData = new DataDictionary.Main.Controls.TextBoxData();
             documentTab = new TabPage();
@@ -63,11 +60,16 @@
             transformTitleData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingTransform = new BindingSource(components);
+            folderBrowserDialog = new FolderBrowserDialog();
+            openFileDialog = new OpenFileDialog();
+            errorProvider = new ErrorProvider(components);
+            saveFileDialog = new SaveFileDialog();
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
             filePatternLayout = new TableLayoutPanel();
             fileBaseName = new Label();
+            scriptGroupBox = new GroupBox();
             scriptFileLayout = new TableLayoutPanel();
             transformLayout.SuspendLayout();
             transformTabs.SuspendLayout();
@@ -75,15 +77,15 @@
             detailLayout.SuspendLayout();
             filePatternGroup.SuspendLayout();
             filePatternLayout.SuspendLayout();
-            transformScriptTab.SuspendLayout();
+            scriptGroupBox.SuspendLayout();
             scriptFileLayout.SuspendLayout();
-            scriptToolStrip.SuspendLayout();
             documentTab.SuspendLayout();
             fileLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             documentToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // transformLayout
@@ -100,7 +102,7 @@
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            transformLayout.Size = new Size(517, 578);
+            transformLayout.Size = new Size(565, 640);
             transformLayout.TabIndex = 5;
             // 
             // templateTitleData
@@ -112,20 +114,19 @@
             templateTitleData.Multiline = false;
             templateTitleData.Name = "templateTitleData";
             templateTitleData.ReadOnly = true;
-            templateTitleData.Size = new Size(511, 44);
+            templateTitleData.Size = new Size(559, 44);
             templateTitleData.TabIndex = 0;
             templateTitleData.WordWrap = true;
             // 
             // transformTabs
             // 
             transformTabs.Controls.Add(transformTab);
-            transformTabs.Controls.Add(transformScriptTab);
             transformTabs.Controls.Add(documentTab);
             transformTabs.Dock = DockStyle.Fill;
             transformTabs.Location = new Point(3, 103);
             transformTabs.Name = "transformTabs";
             transformTabs.SelectedIndex = 0;
-            transformTabs.Size = new Size(511, 472);
+            transformTabs.Size = new Size(559, 534);
             transformTabs.TabIndex = 6;
             // 
             // transformTab
@@ -135,7 +136,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(503, 444);
+            transformTab.Size = new Size(551, 506);
             transformTab.TabIndex = 0;
             transformTab.Text = "Transform";
             // 
@@ -144,6 +145,7 @@
             detailLayout.ColumnCount = 1;
             detailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             detailLayout.Controls.Add(filePatternGroup, 0, 0);
+            detailLayout.Controls.Add(scriptGroupBox, 0, 1);
             detailLayout.Dock = DockStyle.Fill;
             detailLayout.Location = new Point(3, 3);
             detailLayout.Name = "detailLayout";
@@ -151,7 +153,7 @@
             detailLayout.RowStyles.Add(new RowStyle());
             detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             detailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            detailLayout.Size = new Size(497, 438);
+            detailLayout.Size = new Size(545, 500);
             detailLayout.TabIndex = 7;
             // 
             // filePatternGroup
@@ -161,7 +163,7 @@
             filePatternGroup.Dock = DockStyle.Fill;
             filePatternGroup.Location = new Point(3, 3);
             filePatternGroup.Name = "filePatternGroup";
-            filePatternGroup.Size = new Size(491, 174);
+            filePatternGroup.Size = new Size(539, 176);
             filePatternGroup.TabIndex = 5;
             filePatternGroup.TabStop = false;
             filePatternGroup.Text = "File Pattern";
@@ -179,8 +181,8 @@
             filePatternLayout.Controls.Add(filePrefixData, 0, 2);
             filePatternLayout.Controls.Add(fileBaseName, 1, 2);
             filePatternLayout.Controls.Add(fileSuffixData, 2, 2);
-            filePatternLayout.Controls.Add(fileExtensionData, 3, 2);
             filePatternLayout.Controls.Add(localPathData, 0, 1);
+            filePatternLayout.Controls.Add(fileExtensionData, 3, 2);
             filePatternLayout.Dock = DockStyle.Fill;
             filePatternLayout.Location = new Point(3, 19);
             filePatternLayout.Name = "filePatternLayout";
@@ -188,7 +190,7 @@
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
-            filePatternLayout.Size = new Size(485, 152);
+            filePatternLayout.Size = new Size(533, 154);
             filePatternLayout.TabIndex = 0;
             // 
             // rootFolderData
@@ -204,6 +206,7 @@
             rootFolderData.ReadOnly = false;
             rootFolderData.Size = new Size(219, 46);
             rootFolderData.TabIndex = 0;
+            rootFolderData.Validated += RootFolderData_Validated;
             // 
             // relativePathData
             // 
@@ -216,8 +219,9 @@
             relativePathData.Name = "relativePathData";
             relativePathData.ReadOnly = false;
             relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
-            relativePathData.Size = new Size(254, 46);
+            relativePathData.Size = new Size(302, 46);
             relativePathData.TabIndex = 1;
+            relativePathData.SelectCommand += RelativePathData_SelectCommand;
             // 
             // filePrefixData
             // 
@@ -228,7 +232,7 @@
             filePrefixData.Multiline = false;
             filePrefixData.Name = "filePrefixData";
             filePrefixData.ReadOnly = false;
-            filePrefixData.Size = new Size(120, 44);
+            filePrefixData.Size = new Size(120, 46);
             filePrefixData.TabIndex = 2;
             filePrefixData.WordWrap = true;
             // 
@@ -236,7 +240,7 @@
             // 
             fileBaseName.Anchor = AnchorStyles.None;
             fileBaseName.AutoSize = true;
-            fileBaseName.Location = new Point(129, 119);
+            fileBaseName.Location = new Point(129, 120);
             fileBaseName.Name = "fileBaseName";
             fileBaseName.Size = new Size(93, 15);
             fileBaseName.TabIndex = 5;
@@ -251,22 +255,9 @@
             fileSuffixData.Multiline = false;
             fileSuffixData.Name = "fileSuffixData";
             fileSuffixData.ReadOnly = false;
-            fileSuffixData.Size = new Size(120, 44);
+            fileSuffixData.Size = new Size(120, 46);
             fileSuffixData.TabIndex = 3;
             fileSuffixData.WordWrap = true;
-            // 
-            // fileExtensionData
-            // 
-            fileExtensionData.AutoSize = true;
-            fileExtensionData.Dock = DockStyle.Fill;
-            fileExtensionData.HeaderText = "File Extension";
-            fileExtensionData.Location = new Point(354, 105);
-            fileExtensionData.Multiline = false;
-            fileExtensionData.Name = "fileExtensionData";
-            fileExtensionData.ReadOnly = false;
-            fileExtensionData.Size = new Size(128, 44);
-            fileExtensionData.TabIndex = 6;
-            fileExtensionData.WordWrap = true;
             // 
             // localPathData
             // 
@@ -278,66 +269,50 @@
             localPathData.Multiline = false;
             localPathData.Name = "localPathData";
             localPathData.ReadOnly = true;
-            localPathData.Size = new Size(479, 44);
+            localPathData.Size = new Size(527, 44);
             localPathData.TabIndex = 7;
             localPathData.WordWrap = false;
             // 
-            // transformScriptTab
+            // fileExtensionData
             // 
-            transformScriptTab.BackColor = SystemColors.Control;
-            transformScriptTab.Controls.Add(scriptFileLayout);
-            transformScriptTab.Location = new Point(4, 24);
-            transformScriptTab.Name = "transformScriptTab";
-            transformScriptTab.Padding = new Padding(3);
-            transformScriptTab.Size = new Size(192, 72);
-            transformScriptTab.TabIndex = 2;
-            transformScriptTab.Text = "Script";
+            fileExtensionData.AutoSize = true;
+            fileExtensionData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            fileExtensionData.Dock = DockStyle.Fill;
+            fileExtensionData.DropDownStyle = ComboBoxStyle.DropDown;
+            fileExtensionData.HeaderText = "File Extension";
+            fileExtensionData.Location = new Point(354, 105);
+            fileExtensionData.Name = "fileExtensionData";
+            fileExtensionData.ReadOnly = false;
+            fileExtensionData.Size = new Size(176, 46);
+            fileExtensionData.TabIndex = 8;
+            // 
+            // scriptGroupBox
+            // 
+            scriptGroupBox.Controls.Add(scriptFileLayout);
+            scriptGroupBox.Dock = DockStyle.Fill;
+            scriptGroupBox.Location = new Point(3, 185);
+            scriptGroupBox.Name = "scriptGroupBox";
+            scriptGroupBox.Size = new Size(539, 312);
+            scriptGroupBox.TabIndex = 6;
+            scriptGroupBox.TabStop = false;
+            scriptGroupBox.Text = "Script";
             // 
             // scriptFileLayout
             // 
             scriptFileLayout.ColumnCount = 1;
             scriptFileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            scriptFileLayout.Controls.Add(scriptToolStrip, 0, 0);
-            scriptFileLayout.Controls.Add(scriptFileNameData, 0, 1);
-            scriptFileLayout.Controls.Add(scriptData, 0, 2);
+            scriptFileLayout.Controls.Add(scriptFileNameData, 0, 0);
+            scriptFileLayout.Controls.Add(scriptData, 0, 1);
             scriptFileLayout.Dock = DockStyle.Fill;
-            scriptFileLayout.Location = new Point(3, 3);
+            scriptFileLayout.Location = new Point(3, 19);
             scriptFileLayout.Name = "scriptFileLayout";
-            scriptFileLayout.RowCount = 3;
-            scriptFileLayout.RowStyles.Add(new RowStyle());
+            scriptFileLayout.RowCount = 2;
             scriptFileLayout.RowStyles.Add(new RowStyle());
             scriptFileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            scriptFileLayout.Size = new Size(186, 66);
-            scriptFileLayout.TabIndex = 6;
-            // 
-            // scriptToolStrip
-            // 
-            scriptToolStrip.Items.AddRange(new ToolStripItem[] { scriptOpenCommand, scriptSaveCommand });
-            scriptToolStrip.Location = new Point(0, 0);
-            scriptToolStrip.Name = "scriptToolStrip";
-            scriptToolStrip.Size = new Size(186, 25);
-            scriptToolStrip.TabIndex = 0;
-            scriptToolStrip.Text = "toolStrip1";
-            // 
-            // scriptOpenCommand
-            // 
-            scriptOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            scriptOpenCommand.Image = (Image)resources.GetObject("scriptOpenCommand.Image");
-            scriptOpenCommand.ImageTransparentColor = Color.Magenta;
-            scriptOpenCommand.Name = "scriptOpenCommand";
-            scriptOpenCommand.Size = new Size(23, 22);
-            scriptOpenCommand.Text = "Open";
-            scriptOpenCommand.Click += ScriptOpenCommand_Click;
-            // 
-            // scriptSaveCommand
-            // 
-            scriptSaveCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            scriptSaveCommand.Image = (Image)resources.GetObject("scriptSaveCommand.Image");
-            scriptSaveCommand.ImageTransparentColor = Color.Magenta;
-            scriptSaveCommand.Name = "scriptSaveCommand";
-            scriptSaveCommand.Size = new Size(23, 22);
-            scriptSaveCommand.Text = "Save";
-            scriptSaveCommand.Click += ScriptSaveCommand_Click;
+            scriptFileLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            scriptFileLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            scriptFileLayout.Size = new Size(533, 290);
+            scriptFileLayout.TabIndex = 7;
             // 
             // scriptFileNameData
             // 
@@ -345,23 +320,24 @@
             scriptFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             scriptFileNameData.Dock = DockStyle.Fill;
             scriptFileNameData.HeaderText = "Script File";
-            scriptFileNameData.Location = new Point(3, 28);
+            scriptFileNameData.Location = new Point(3, 3);
             scriptFileNameData.Name = "scriptFileNameData";
             scriptFileNameData.ReadOnly = false;
             scriptFileNameData.SelectIcon = (Image)resources.GetObject("scriptFileNameData.SelectIcon");
-            scriptFileNameData.Size = new Size(180, 44);
+            scriptFileNameData.Size = new Size(527, 44);
             scriptFileNameData.TabIndex = 1;
+            scriptFileNameData.SelectCommand += ScriptFileNameData_SelectCommand;
             // 
             // scriptData
             // 
             scriptData.AutoSize = true;
             scriptData.Dock = DockStyle.Fill;
             scriptData.HeaderText = "Script";
-            scriptData.Location = new Point(3, 78);
+            scriptData.Location = new Point(3, 53);
             scriptData.Multiline = true;
             scriptData.Name = "scriptData";
             scriptData.ReadOnly = false;
-            scriptData.Size = new Size(180, 1);
+            scriptData.Size = new Size(527, 234);
             scriptData.TabIndex = 2;
             scriptData.WordWrap = false;
             // 
@@ -372,7 +348,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(192, 72);
+            documentTab.Size = new Size(551, 506);
             documentTab.TabIndex = 1;
             documentTab.Text = "Documents";
             // 
@@ -392,7 +368,7 @@
             fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle());
-            fileLayout.Size = new Size(186, 66);
+            fileLayout.Size = new Size(545, 500);
             fileLayout.TabIndex = 5;
             // 
             // sourceDocumentData
@@ -402,10 +378,10 @@
             sourceDocumentData.Dock = DockStyle.Fill;
             sourceDocumentData.DropDownStyle = ComboBoxStyle.DropDown;
             sourceDocumentData.HeaderText = "Source Document (schema)";
-            sourceDocumentData.Location = new Point(3, 17);
+            sourceDocumentData.Location = new Point(3, 451);
             sourceDocumentData.Name = "sourceDocumentData";
             sourceDocumentData.ReadOnly = false;
-            sourceDocumentData.Size = new Size(180, 46);
+            sourceDocumentData.Size = new Size(539, 46);
             sourceDocumentData.TabIndex = 12;
             // 
             // fileNameData
@@ -414,11 +390,11 @@
             fileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             fileNameData.Dock = DockStyle.Fill;
             fileNameData.HeaderText = "File Name";
-            fileNameData.Location = new Point(3, -33);
+            fileNameData.Location = new Point(3, 401);
             fileNameData.Name = "fileNameData";
             fileNameData.ReadOnly = false;
             fileNameData.SelectIcon = (Image)resources.GetObject("fileNameData.SelectIcon");
-            fileNameData.Size = new Size(180, 44);
+            fileNameData.Size = new Size(539, 44);
             fileNameData.TabIndex = 13;
             // 
             // documentData
@@ -431,13 +407,13 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(180, 1);
+            documentData.Size = new Size(539, 367);
             documentData.TabIndex = 9;
             // 
             // FileNameColumn
             // 
             FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            FileNameColumn.DataPropertyName = "FileName";
+            FileNameColumn.DataPropertyName = "ScriptedFileName";
             FileNameColumn.HeaderText = "File Name";
             FileNameColumn.Name = "FileNameColumn";
             FileNameColumn.ReadOnly = true;
@@ -447,7 +423,7 @@
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(186, 25);
+            documentToolStrip.Size = new Size(545, 25);
             documentToolStrip.TabIndex = 14;
             documentToolStrip.Text = "Document Tools";
             // 
@@ -480,15 +456,23 @@
             transformTitleData.Multiline = false;
             transformTitleData.Name = "transformTitleData";
             transformTitleData.ReadOnly = false;
-            transformTitleData.Size = new Size(511, 44);
+            transformTitleData.Size = new Size(559, 44);
             transformTitleData.TabIndex = 1;
             transformTitleData.WordWrap = true;
+            // 
+            // openFileDialog
+            // 
+            openFileDialog.FileName = "openFileDialog1";
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // Transform
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(517, 603);
+            ClientSize = new Size(565, 665);
             Controls.Add(transformLayout);
             Name = "Transform";
             Text = "Transform";
@@ -504,11 +488,9 @@
             filePatternGroup.PerformLayout();
             filePatternLayout.ResumeLayout(false);
             filePatternLayout.PerformLayout();
-            transformScriptTab.ResumeLayout(false);
+            scriptGroupBox.ResumeLayout(false);
             scriptFileLayout.ResumeLayout(false);
             scriptFileLayout.PerformLayout();
-            scriptToolStrip.ResumeLayout(false);
-            scriptToolStrip.PerformLayout();
             documentTab.ResumeLayout(false);
             fileLayout.ResumeLayout(false);
             fileLayout.PerformLayout();
@@ -517,6 +499,7 @@
             documentToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -530,26 +513,26 @@
         private Controls.SelectTextBoxData relativePathData;
         private Controls.TextBoxData filePrefixData;
         private Controls.TextBoxData fileSuffixData;
-        private Controls.TextBoxData fileExtensionData;
         private Controls.TextBoxData localPathData;
         private TabPage documentTab;
         private TableLayoutPanel fileLayout;
         private Controls.ComboBoxData sourceDocumentData;
         private Controls.SelectTextBoxData fileNameData;
         private DataGridView documentData;
-        private DataGridViewTextBoxColumn FileNameColumn;
         private ToolStrip documentToolStrip;
         private Controls.TextBoxData transformTitleData;
-        private TabPage transformScriptTab;
         private TableLayoutPanel tableLayoutPanel1;
-        private ToolStrip scriptToolStrip;
-        private Controls.SelectTextBoxData scriptFileNameData;
-        private Controls.TextBoxData scriptData;
         private ToolStripButton documentNewCommand;
-        private ToolStripButton scriptOpenCommand;
-        private ToolStripButton scriptSaveCommand;
         private ToolStripButton documentOpenCommand;
         private BindingSource bindingTemplate;
         private BindingSource bindingTransform;
+        private DataGridViewTextBoxColumn FileNameColumn;
+        private Controls.ComboBoxData fileExtensionData;
+        private FolderBrowserDialog folderBrowserDialog;
+        private OpenFileDialog openFileDialog;
+        private ErrorProvider errorProvider;
+        private SaveFileDialog saveFileDialog;
+        private Controls.SelectTextBoxData scriptFileNameData;
+        private Controls.TextBoxData scriptData;
     }
 }

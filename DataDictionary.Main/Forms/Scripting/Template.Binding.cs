@@ -1,8 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using System.ComponentModel;
-using System.Data;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -40,7 +38,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean RemoveValue()
             {
-                if(TemplateData.TryGetValue(out TemplateValue? value))
+                if (TemplateData.TryGetCurrent(out TemplateValue? value))
                 {
                     TemplateIndex key = new TemplateIndex(value);
                     ITemplateData target = GetData();
@@ -76,6 +74,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
             { return GetData().Save(factory, key); }
+
+            public void Remove(SchemaDefinitionValue value)
+            { GetData().Remove(new SchemaDefinitionIndex(value)); }
+
+            public void Remove(TransformValue value)
+            { GetData().Remove(new TransformIndex(value)); }
         }
     }
 }

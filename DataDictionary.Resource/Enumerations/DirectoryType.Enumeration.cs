@@ -58,11 +58,11 @@ class DirectoryEnumeration : Enumeration<DirectoryType, DirectoryEnumeration>,
     {
         List<DirectoryEnumeration> data = new List<DirectoryEnumeration>()
         {
-            new DirectoryEnumeration(DirectoryType.Null,        String.Empty)   { DisplayName = "not defined" },
-            new DirectoryEnumeration(DirectoryType.MyDocuments, "My Documents") {SpecialFolder = Environment.SpecialFolder.MyDocuments},
-            new DirectoryEnumeration(DirectoryType.MyDownloads, "My Downloads") {SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = "Downloads" },
-            new DirectoryEnumeration(DirectoryType.Projects,    "VS Projects")  {SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = Path.Combine("source","repos") },
-            new DirectoryEnumeration(DirectoryType.Dictionary,  "Dictionary")    {SpecialFolder = Environment.SpecialFolder.MyDocuments, RelativeFolder = "DataDictionary" },
+            new DirectoryEnumeration(DirectoryType.Null,        String.Empty)         { DisplayName = "not defined" },
+            new DirectoryEnumeration(DirectoryType.MyDocuments, "My Documents")       { SpecialFolder = Environment.SpecialFolder.MyDocuments},
+            new DirectoryEnumeration(DirectoryType.MyDownloads, "My Downloads")       { SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = "Downloads" },
+            new DirectoryEnumeration(DirectoryType.Projects,    "VS Projects")        { SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = Path.Combine("source","repos") },
+            new DirectoryEnumeration(DirectoryType.Dictionary,  "My Data Dictionary") { SpecialFolder = Environment.SpecialFolder.MyDocuments, RelativeFolder = "DataDictionary" },
         };
 
         BuildDictionary(data);

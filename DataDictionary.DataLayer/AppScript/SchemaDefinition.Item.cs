@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting SchemaDefinition
     /// </summary>
-    public interface ISchemaDefinitionItem : ISchemaDefinitionKey, ITemplateKey
+    public interface ISchemaDefinitionItem : ISchemaDefinitionKey, ITemplateKey, IDocumentDirectory, IDocumentFilePattern
     {
         /// <summary>
         /// Title of the Scripting Schema (aka Name of the Schema)
@@ -25,34 +25,6 @@ namespace DataDictionary.DataLayer.AppScript
         /// Name of the Root Node. This will default to the name of the Object if not specified.
         /// </summary>
         String? RootNodeName { get; }
-
-        /// <summary>
-        /// Name of the Special Folder used as the Root Directory.
-        /// </summary>
-        /// <remarks>
-        /// This uses an Enum that represents locations in: Environment.SpecialFolder.UserProfile
-        /// </remarks>
-        DirectoryType RootFolder { get; }
-
-        /// <summary>
-        /// Relative Directory off of the Root Directory where the XML Input file is located.
-        /// </summary>
-        String? RelativePath { get; }
-
-        /// <summary>
-        /// Prefix to add to the front of the file name.
-        /// </summary>
-        String? FilePrefix { get; }
-
-        /// <summary>
-        /// Prefix to add to the end of the file name.
-        /// </summary>
-        String? FileSuffix { get; }
-
-        /// <summary>
-        /// File Extension to add to the end of the file name.
-        /// </summary>
-        String? FileExtension { get; }
     }
 
     /// <summary>
@@ -62,28 +34,28 @@ namespace DataDictionary.DataLayer.AppScript
     public class SchemaDefinitionItem : BindingTableRow, ISchemaDefinitionItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? SchemaId
+        public virtual Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
             protected set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
-        public String? SchemaTitle
+        public virtual String? SchemaTitle
         {
             get { return GetValue(nameof(SchemaTitle)); }
             set { SetValue(nameof(SchemaTitle), value); }
         }
 
         /// <inheritdoc/>
-        public ScopeType ForEachScope
+        public virtual ScopeType ForEachScope
         {
             get
             {
@@ -97,14 +69,14 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? RootNodeName
+        public virtual String? RootNodeName
         {
             get { return GetValue(nameof(RootNodeName)); }
             set { SetValue(nameof(RootNodeName), value); }
         }
 
         /// <inheritdoc/>
-        public DirectoryType RootFolder
+        public virtual DirectoryType RootFolder
         {
             get
             {
@@ -118,28 +90,28 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? RelativePath
+        public virtual String? RelativePath
         {
             get { return GetValue(nameof(RelativePath)); }
             set { SetValue(nameof(RelativePath), value); }
         }
 
         /// <inheritdoc/>
-        public String? FilePrefix
+        public virtual String? FilePrefix
         {
             get { return GetValue(nameof(FilePrefix)); }
             set { SetValue(nameof(FilePrefix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileSuffix
+        public virtual String? FileSuffix
         {
             get { return GetValue(nameof(FileSuffix)); }
             set { SetValue(nameof(FileSuffix), value); }
         }
 
         /// <inheritdoc/>
-        public String? FileExtension
+        public virtual String? FileExtension
         {
             get { return GetValue(nameof(FileExtension)); }
             set { SetValue(nameof(FileExtension), value); }

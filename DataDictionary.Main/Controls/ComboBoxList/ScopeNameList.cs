@@ -14,64 +14,49 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         protected ScopeNameList() : base() { }
 
         /// <summary>
-        /// Loads the Combo Box with the ScopeType values.
+        /// Loads the ComboBox with the ScopeType values.
         /// </summary>
         /// <param name="control"></param>
-        public static void Load(ComboBox control)
-        { Load(control, Enum.GetValues<ScopeType>()); }
-
-        /// <inheritdoc cref="Load(ComboBox)"/>
+        /// <param name="scopes"></param>
         public static void Load(ComboBox control, params IEnumerable<ScopeType> scopes)
         {
-            ScopeNameList scopeNameItem = new ScopeNameList();
             BindingList<ScopeNameList> list = BuildList(scopes);
 
             control.DataSource = list;
-            control.ValueMember = nameof(scopeNameItem.ScopeType);
-            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+            control.ValueMember = nameof(ScopeType);
+            control.DisplayMember = nameof(ScopeName);
         }
 
-        /// <inheritdoc cref="Load(ComboBox)"/>
-        public static void Load(ToolStripComboBox control)
-        { Load(control, Enum.GetValues<ScopeType>()); }
-
-        /// <inheritdoc cref="Load(ComboBox)"/>
+        /// <inheritdoc cref="Load(ComboBox, IEnumerable{ScopeType})"/>
         public static void Load(ToolStripComboBox control, params IEnumerable<ScopeType> scopes)
         { Load(control.ComboBox, scopes); }
 
-        /// <inheritdoc cref="Load(ComboBox)"/>
-        public static void Load(ComboBoxData control)
-        { Load(control, Enum.GetValues<ScopeType>()); }
-
-        /// <inheritdoc cref="Load(ComboBox)"/>
+        /// <inheritdoc cref="Load(ComboBox, IEnumerable{ScopeType})"/>
         public static void Load(ComboBoxData control, params IEnumerable<ScopeType> scopes)
         {
-            ScopeNameList scopeNameItem = new ScopeNameList();
             BindingList<ScopeNameList> list = BuildList(scopes);
 
             control.DataSource = list;
-            control.ValueMember = nameof(scopeNameItem.ScopeType);
-            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+            control.ValueMember = nameof(ScopeType);
+            control.DisplayMember = nameof(ScopeName);
         }
 
-        /// <inheritdoc cref="Load(ComboBox)"/>
-        public static void Load(DataGridViewComboBoxColumn control)
-        { Load(control, Enum.GetValues<ScopeType>()); }
-
-        /// <inheritdoc cref="Load(ComboBox)"/>
+        /// <inheritdoc cref="Load(ComboBox, IEnumerable{ScopeType})"/>
         public static void Load(DataGridViewComboBoxColumn control, params IEnumerable<ScopeType> scopes)
         {
-            ScopeNameList scopeNameItem = new ScopeNameList();
             BindingList<ScopeNameList> list = BuildList(scopes);
 
             control.DataSource = list;
-            control.ValueMember = nameof(scopeNameItem.ScopeType);
-            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+            control.ValueMember = nameof(ScopeType);
+            control.DisplayMember = nameof(ScopeName);
         }
 
         static BindingList<ScopeNameList> BuildList(params IEnumerable<ScopeType> scopes)
         {
             BindingList<ScopeNameList> list = new BindingList<ScopeNameList>();
+
+            if (scopes.Count() == 0)
+            { scopes = Enum.GetValues<ScopeType>(); }
 
             foreach (ScopeType item in scopes)
             {

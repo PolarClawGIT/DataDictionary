@@ -33,7 +33,7 @@ namespace DataDictionary.Main.Forms.General
             };
 
             Dictionary<TreeNode, BindingSubject> subjectNodes = new Dictionary<TreeNode, BindingSubject>();
-            Dictionary<TreeNode, PathIndex> pathNodes = new Dictionary<TreeNode, PathIndex>();
+            Dictionary<TreeNode, PathItem> pathNodes = new Dictionary<TreeNode, PathItem>();
 
             public ContentTree(TreeView target)
             { treeControl = target; }
@@ -57,14 +57,14 @@ namespace DataDictionary.Main.Forms.General
                 { selectedNode = value; }
 
                 List<BindingSubject> expandedSubjects = new List<BindingSubject>();
-                List<PathIndex> expandedPaths = new List<PathIndex>();
+                List<PathItem> expandedPaths = new List<PathItem>();
                 foreach (TreeNode item in treeControl.Nodes.GetNodes(w => w.IsExpanded))
                 {
                     if (subjectNodes.TryGetValue(item, out BindingSubject? subject)
                         && !expandedSubjects.Contains(subject))
                     { expandedSubjects.Add(subject); }
 
-                    if (pathNodes.TryGetValue(item, out PathIndex? path)
+                    if (pathNodes.TryGetValue(item, out PathItem? path)
                         && !expandedPaths.Contains(path))
                     { expandedPaths.Add(path); }
                 }
@@ -84,7 +84,7 @@ namespace DataDictionary.Main.Forms.General
 
                 TreeNodeCollection rootNodes = treeControl.Nodes;
 
-                foreach (PathIndex root in paths.
+                foreach (PathItem root in paths.
                         Where(w =>
                             w.ParentPath is null
                             || (w.ParentPath is not null
@@ -105,7 +105,7 @@ namespace DataDictionary.Main.Forms.General
                     { if (!node.IsExpanded) { node.ExpandParent(); } }
                 }
 
-                foreach (PathIndex item in expandedPaths)
+                foreach (PathItem item in expandedPaths)
                 {   // Normally only one but multiples are possible
                     foreach (TreeNode node in pathNodes.Where(w => item.Equals(w.Value)).Select(s => s.Key))
                     { if (!node.IsExpanded) { node.ExpandParent(); } }
@@ -114,7 +114,7 @@ namespace DataDictionary.Main.Forms.General
                 // Done
                 treeControl.EndUpdate();
 
-                void BuildNodes(TreeNodeCollection treeNodes, PathIndex path)
+                void BuildNodes(TreeNodeCollection treeNodes, PathItem path)
                 {
                     var subjects = source.Where(w => path.Equals(w.Path)).ToList();
                     var childPaths = paths.Where(w => path.Equals(w.ParentPath)).ToList();

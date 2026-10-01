@@ -52,9 +52,9 @@ namespace DataDictionary.Main.Controls
                 new Binding(nameof(TextBox.Text),
                 dataBinding, 
                 nameof(IAliasSubType.AliasPath))
-                    .WithParse<PathIndex, String>(
+                    .WithParse<PathItem, String>(
                         (p) => p.MemberFullPath,
-                        (s) => new PathIndex(PathIndex.Parse(s))));
+                        (s) => new PathItem(PathItem.Parse(s))));
 
             foreach (ScopeType item in scopes)
             { filterScope.Add(item); }

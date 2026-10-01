@@ -16,8 +16,8 @@ Select	D.[DocumentId], -- PK
 		D.[SchemaId],
 		-- Useful Data
 		F.[RootFolder], -- AK
-		F.[RelativePath], -- Ak
-		D.[FileName], -- AK
+		F.[RelativePath], -- AK
+		D.[DataFileName], -- AK
 		O.[ObjectId],
 		O.[ObjectScope],
 		O.[ObjectMember],

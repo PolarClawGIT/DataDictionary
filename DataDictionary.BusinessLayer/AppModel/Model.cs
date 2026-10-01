@@ -195,10 +195,10 @@ namespace DataDictionary.BusinessLayer.AppModel
             return work;
         }
 
-        IEnumerable<IAttributeValue> FindAttributes(PathIndex path)
+        IEnumerable<IAttributeValue> FindAttributes(PathItem path)
         {
             List<IAttributeValue> result = new List<IAttributeValue>();
-            PathIndex key = new PathIndex(path);
+            PathItem key = new PathItem(path);
 
             result.AddRange(attributeValues.Attributes.Where(w => key.Equals(w.AttributePath)));
 
@@ -285,7 +285,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 DoWork = () =>
                 {
                     NamedScopeValue newItem = new NamedScopeValue(CurrentModel)
-                    { GetPath = () => new PathIndex(((IPathValue)CurrentModel).Path) };
+                    { GetPath = () => new PathItem(((IPathValue)CurrentModel).Path) };
 
                     addNamedScope(null, newItem);
                 }

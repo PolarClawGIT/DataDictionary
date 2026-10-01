@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Reflection;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
@@ -82,6 +83,14 @@ namespace DataDictionary.Main.Forms
 
                         ex.Data.Add(nameof(source.Count), source.Count);
                         ex.Data.Add(nameof(source.Position), source.Position);
+
+                        if (source.Current is not null)
+                        {
+                            List<PropertyInfo> properties = source.Current.GetType().GetProperties().ToList();
+
+                            foreach (var item in properties)
+                            { ex.Data.Add(item.Name, item.GetValue(source.Current)); }
+                        }
                     }
 
                     throw ex;
@@ -118,7 +127,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="result"></param>
             /// <returns></returns>
-            public virtual Boolean TryGetValue([NotNullWhen(true)] out TRow? result)
+            public virtual Boolean TryGetCurrent([NotNullWhen(true)] out TRow? result)
             {
                 if (BindingData.Position >= 0
                     && BindingData.Current is TRow value)
@@ -131,7 +140,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="condition"></param>
             /// <returns></returns>
-            public virtual Boolean TrySetValue(Func<TRow, Boolean> condition)
+            public virtual Boolean TrySetCurrent(Func<TRow, Boolean> condition)
             {
                 //bindingValues.IndexOf()
                 IEnumerable<TRow> target = bindingValues.Where(condition);
@@ -145,34 +154,6 @@ namespace DataDictionary.Main.Forms
                 else { return false; }
             }
 
-            /// <summary>
-            /// Try/Get to locate a single item in the values.
-            /// </summary>
-            /// <param name="result"></param>
-            /// <returns></returns>
-            public virtual Boolean TryGetSingle([NotNullWhen(true)] out TRow? result)
-            {
-                if (bindingValues.Count() == 1 && bindingValues.Single() is TRow value)
-                { result = value; return true; }
-                else
-                { result = default; return false; }
-            }
-
-            /// <summary>
-            /// Try/Get to locate a single item in the values.
-            /// </summary>
-            /// <param name="predicate"></param>
-            /// <param name="result"></param>
-            /// <returns></returns>
-            /// <see cref="System.Linq.Enumerable.SingleOrDefault{TSource}(IEnumerable{TSource})"/>
-            public virtual Boolean TryGetSingle(Func<TRow, Boolean> predicate, [NotNullWhen(true)] out TRow? result)
-            {
-                if (bindingValues.Count(predicate) == 1 && bindingValues.Single(predicate) is TRow value)
-                { result = value; return true; }
-                else
-                { result = default; return false; }
-            }
-
             /// <inheritdoc cref="BindingSource.ResetCurrentItem"/>
             public void ResetCurrent()
             { BindingData.ResetCurrentItem(); }
@@ -183,7 +164,7 @@ namespace DataDictionary.Main.Forms
             /// <returns></returns>
             public virtual Boolean Remove()
             {
-                if (TryGetValue(out TRow? value))
+                if (TryGetCurrent(out TRow? value))
                 { return bindingValues.Remove(value); }
                 else { return false; }
             }
@@ -197,7 +178,7 @@ namespace DataDictionary.Main.Forms
             /// <remarks>Use with DataModel{TKey}.GetLocked</remarks>
             public virtual Boolean GetLocked()
             {
-                if (TryGetValue(out TRow? value) && value is IBindingRowState rowState)
+                if (TryGetCurrent(out TRow? value) && value is IBindingRowState rowState)
                 { return value.RowState() is DataRowState.Detached or DataRowState.Deleted; }
                 else { return true; }
             }
@@ -211,7 +192,7 @@ namespace DataDictionary.Main.Forms
             /// <remarks>Use with DataModel{TKey}.GetAuthorization</remarks>
             public virtual (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
             {
-                if (TryGetValue(out TRow? value) && value is IAuthorization authorization)
+                if (TryGetCurrent(out TRow? value) && value is IAuthorization authorization)
                 { return authorization.GetAuthorization(authorizations); }
                 else { return (false, false, false); }
             }
@@ -497,6 +478,7 @@ namespace DataDictionary.Main.Forms
             /// dataBinding.AddBinding(control, e => e.PropertyName);
             /// dataBinding.AddBinding(control, e => e.parentName.childName);
             /// ]]></example>
+            /// <remarks>This checks the values before calling DataBindings. Many binding errors are caught.</remarks>
             public virtual void AddBinding<TProperty>(
                 Control formControl,
                 Expression<Func<TRow, TProperty>> expression)
@@ -507,6 +489,12 @@ namespace DataDictionary.Main.Forms
                 ex.Data.Add(nameof(GetType), formControl.GetType().Name);
                 throw ex;
             }
+
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding<TProperty>(
+                Form formControl,
+                Expression<Func<TRow, TProperty>> expression)
+            { formControl.DataBindings.Add(CreateBinding(nameof(Form.Text), expression)); }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
@@ -529,20 +517,16 @@ namespace DataDictionary.Main.Forms
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 ComboBox formControl,
-                Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression)); }
+                Expression<Func<TRow, TProperty>> expression,
+                TProperty nullValue)
+            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression, nullValue)); }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 ToolStripComboBox formControl,
-                Expression<Func<TRow, TProperty>> expression)
-            { AddBinding(formControl.ComboBox, expression); }
-
-            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
-            public virtual void AddBinding<TProperty>(
-                ComboBoxData formControl,
-                Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression)); }
+                Expression<Func<TRow, TProperty>> expression,
+                TProperty nullValue)
+            { AddBinding(formControl.ComboBox, expression, nullValue); }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
@@ -587,15 +571,12 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            /// <summary>
-            /// Helper method to Add DataSource to a DataGridView
-            /// </summary>
-            /// <param name="documentData"></param>
-            public virtual void AddBinding(DataGridView documentData)
+            /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
+            public virtual void AddBinding(DataGridView formControl)
             {
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
 
-                foreach (DataGridViewColumn item in documentData.Columns)
+                foreach (DataGridViewColumn item in formControl.Columns)
                 {
                     if (!String.IsNullOrWhiteSpace(item.DataPropertyName))
                     {
@@ -613,8 +594,8 @@ namespace DataDictionary.Main.Forms
                     }
                 }
 
-                documentData.AutoGenerateColumns = false;
-                documentData.DataSource = BindingData;
+                formControl.AutoGenerateColumns = false;
+                formControl.DataSource = BindingData;
             }
 
 

@@ -60,7 +60,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
             control.EndUpdate();
 
-            void BuildChildren(TreeNode parentNode, PathIndex key)
+            void BuildChildren(TreeNode parentNode, PathItem key)
             {
                 foreach (XmlBuilder item in builders.
                     Where(w => key.Equals(w.BuilderPath.ParentPath)).

@@ -7,7 +7,7 @@
 	[ObjectPath]			[AppGeneral].[uddtPath] Null, -- Full Name including Member Name
 	[IsExcluded]			Bit Null,
 	[KeepOrphaned]			Bit Null,
-	[FileName]				[AppGeneral].[uddtFileName] Null,
+	[DataFileName]			[AppGeneral].[uddtFileName] Null,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

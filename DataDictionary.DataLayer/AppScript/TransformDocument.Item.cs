@@ -7,12 +7,12 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform Document
     /// </summary>
-    public interface ITransformDocumentItem : IDocumentItem, ITransformKey
+    public interface ITransformDocumentItem : ITemplateKey, ITransformKey, IDocumentKey, IDocumentNameKey
     {
         /// <summary>
-        /// DocumentID of the Schema Document that is the Source of the Transform.
+        /// Name of the Scripted File. This is the Output of the Transform process.
         /// </summary>
-        Guid? SchemaDocumentId { get; }
+        String ScriptedFileName { get; }
     }
 
     /// <summary>
@@ -22,40 +22,38 @@ namespace DataDictionary.DataLayer.AppScript
     public class TransformDocumentItem : BindingTableRow, ITransformDocumentItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? DocumentId
+        public virtual Guid? DocumentId
         {
             get { return GetValue<Guid>(nameof(DocumentId)); }
             protected set { SetValue(nameof(DocumentId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? TransformId
+        public virtual Guid? TransformId
         {
             get { return GetValue<Guid>(nameof(TransformId)); }
             set { SetValue(nameof(TransformId), value); }
         }
 
-
         /// <inheritdoc/>
-        public Guid? SchemaDocumentId
+        public virtual String DataFileName
         {
-            get { return GetValue<Guid>(nameof(SchemaDocumentId)); }
-            set { SetValue(nameof(SchemaDocumentId), value); }
+            get { return GetValue(nameof(DataFileName)) ?? String.Empty; }
+            set { SetValue(nameof(DataFileName), value); }
         }
 
-
         /// <inheritdoc/>
-        public String? FileName
+        public virtual String ScriptedFileName
         {
-            get { return GetValue(nameof(FileName)); }
-            set { SetValue(nameof(FileName), value); }
+            get { return GetValue(nameof(ScriptedFileName)) ?? String.Empty; }
+            set { SetValue(nameof(ScriptedFileName), value); }
         }
 
         /// <inheritdoc/>
@@ -68,7 +66,7 @@ namespace DataDictionary.DataLayer.AppScript
         protected TransformDocumentItem() : base()
         {
             if (DocumentId is null) { DocumentId = Guid.NewGuid(); }
-            if (String.IsNullOrWhiteSpace(FileName)) { FileName = "newDocument"; }
+            if (String.IsNullOrWhiteSpace(ScriptedFileName)) { ScriptedFileName = "newDocument"; }
 
             Temporal = new TemporalItem()
             {
@@ -92,8 +90,8 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(DocumentId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(SchemaDocumentId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(FileName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DataFileName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ScriptedFileName), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 
@@ -120,7 +118,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override string ToString()
-        { return FileName ?? String.Empty; }
+        { return ScriptedFileName ?? String.Empty; }
 
     }
 }

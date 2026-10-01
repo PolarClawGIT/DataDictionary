@@ -41,19 +41,19 @@
             schemaData = new DataGridView();
             schemaTitleColumn = new DataGridViewTextBoxColumn();
             schemaToolStrip = new ToolStrip();
-            addSchemaCommand = new ToolStripButton();
-            openSchemaCommand = new ToolStripButton();
-            executeSchemaCommand = new ToolStripButton();
+            schemaNewCommand = new ToolStripButton();
+            schemaOpenCommand = new ToolStripButton();
+            schemaDeleteCommand = new ToolStripButton();
             transformTab = new TabPage();
             transformToolStrip = new ToolStrip();
-            addTransformCommand = new ToolStripButton();
-            openTransformCommand = new ToolStripButton();
-            executeTransformCommand = new ToolStripButton();
+            transformNewCommand = new ToolStripButton();
+            transformOpenCommand = new ToolStripButton();
+            transformDeleteCommand = new ToolStripButton();
             transformsData = new DataGridView();
             transformTitleColumn = new DataGridViewTextBoxColumn();
             documentTab = new TabPage();
             documentToolStrip = new ToolStrip();
-            openDocumentCommand = new ToolStripButton();
+            documentOpenCommand = new ToolStripButton();
             documentData = new DataGridView();
             FileNameColumn = new DataGridViewTextBoxColumn();
             bindingTemplate = new BindingSource(components);
@@ -191,42 +191,42 @@
             // 
             // schemaToolStrip
             // 
-            schemaToolStrip.Items.AddRange(new ToolStripItem[] { addSchemaCommand, openSchemaCommand, executeSchemaCommand });
+            schemaToolStrip.Items.AddRange(new ToolStripItem[] { schemaNewCommand, schemaOpenCommand, schemaDeleteCommand });
             schemaToolStrip.Location = new Point(0, 0);
             schemaToolStrip.Name = "schemaToolStrip";
             schemaToolStrip.Size = new Size(450, 25);
             schemaToolStrip.TabIndex = 7;
             schemaToolStrip.Text = "toolStrip1";
             // 
-            // addSchemaCommand
+            // schemaNewCommand
             // 
-            addSchemaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            addSchemaCommand.Image = (Image)resources.GetObject("addSchemaCommand.Image");
-            addSchemaCommand.ImageTransparentColor = Color.Magenta;
-            addSchemaCommand.Name = "addSchemaCommand";
-            addSchemaCommand.Size = new Size(23, 22);
-            addSchemaCommand.Text = "add Schema";
-            addSchemaCommand.Click += AddSchemaCommand_Click;
+            schemaNewCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            schemaNewCommand.Image = (Image)resources.GetObject("schemaNewCommand.Image");
+            schemaNewCommand.ImageTransparentColor = Color.Magenta;
+            schemaNewCommand.Name = "schemaNewCommand";
+            schemaNewCommand.Size = new Size(23, 22);
+            schemaNewCommand.Text = "add New Schema";
+            schemaNewCommand.Click += SchemaAddCommand_Click;
             // 
-            // openSchemaCommand
+            // schemaOpenCommand
             // 
-            openSchemaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openSchemaCommand.Image = (Image)resources.GetObject("openSchemaCommand.Image");
-            openSchemaCommand.ImageTransparentColor = Color.Magenta;
-            openSchemaCommand.Name = "openSchemaCommand";
-            openSchemaCommand.Size = new Size(23, 22);
-            openSchemaCommand.Text = "open Schema";
-            openSchemaCommand.Click += OpenSchemaCommand_Click;
+            schemaOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            schemaOpenCommand.Image = (Image)resources.GetObject("schemaOpenCommand.Image");
+            schemaOpenCommand.ImageTransparentColor = Color.Magenta;
+            schemaOpenCommand.Name = "schemaOpenCommand";
+            schemaOpenCommand.Size = new Size(23, 22);
+            schemaOpenCommand.Text = "Open Schema";
+            schemaOpenCommand.Click += SchemaOpenCommand_Click;
             // 
-            // executeSchemaCommand
+            // schemaDeleteCommand
             // 
-            executeSchemaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            executeSchemaCommand.Image = (Image)resources.GetObject("executeSchemaCommand.Image");
-            executeSchemaCommand.ImageTransparentColor = Color.Magenta;
-            executeSchemaCommand.Name = "executeSchemaCommand";
-            executeSchemaCommand.Size = new Size(23, 22);
-            executeSchemaCommand.Text = "build Schema Documents";
-            executeSchemaCommand.Click += ExecuteSchemaCommand_Click;
+            schemaDeleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            schemaDeleteCommand.Image = (Image)resources.GetObject("schemaDeleteCommand.Image");
+            schemaDeleteCommand.ImageTransparentColor = Color.Magenta;
+            schemaDeleteCommand.Name = "schemaDeleteCommand";
+            schemaDeleteCommand.Size = new Size(23, 22);
+            schemaDeleteCommand.Text = "Delete Schema";
+            schemaDeleteCommand.Click += SchemaDeleteCommand_Click;
             // 
             // transformTab
             // 
@@ -256,42 +256,42 @@
             // 
             // transformToolStrip
             // 
-            transformToolStrip.Items.AddRange(new ToolStripItem[] { addTransformCommand, openTransformCommand, executeTransformCommand });
+            transformToolStrip.Items.AddRange(new ToolStripItem[] { transformNewCommand, transformOpenCommand, transformDeleteCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
             transformToolStrip.Size = new Size(450, 25);
             transformToolStrip.TabIndex = 0;
             transformToolStrip.Text = "toolStrip1";
             // 
-            // addTransformCommand
+            // transformNewCommand
             // 
-            addTransformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            addTransformCommand.Image = (Image)resources.GetObject("addTransformCommand.Image");
-            addTransformCommand.ImageTransparentColor = Color.Magenta;
-            addTransformCommand.Name = "addTransformCommand";
-            addTransformCommand.Size = new Size(23, 22);
-            addTransformCommand.Text = "add Transform";
-            addTransformCommand.Click += AddTransformCommand_Click;
+            transformNewCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            transformNewCommand.Image = (Image)resources.GetObject("transformNewCommand.Image");
+            transformNewCommand.ImageTransparentColor = Color.Magenta;
+            transformNewCommand.Name = "transformNewCommand";
+            transformNewCommand.Size = new Size(23, 22);
+            transformNewCommand.Text = "add Transform";
+            transformNewCommand.Click += TransformNewCommand_Click;
             // 
-            // openTransformCommand
+            // transformOpenCommand
             // 
-            openTransformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openTransformCommand.Image = (Image)resources.GetObject("openTransformCommand.Image");
-            openTransformCommand.ImageTransparentColor = Color.Magenta;
-            openTransformCommand.Name = "openTransformCommand";
-            openTransformCommand.Size = new Size(23, 22);
-            openTransformCommand.Text = "open Transform";
-            openTransformCommand.Click += OpenTransformCommand_Click;
+            transformOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            transformOpenCommand.Image = (Image)resources.GetObject("transformOpenCommand.Image");
+            transformOpenCommand.ImageTransparentColor = Color.Magenta;
+            transformOpenCommand.Name = "transformOpenCommand";
+            transformOpenCommand.Size = new Size(23, 22);
+            transformOpenCommand.Text = "open Transform";
+            transformOpenCommand.Click += TransformOpenCommand_Click;
             // 
-            // executeTransformCommand
+            // transformDeleteCommand
             // 
-            executeTransformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            executeTransformCommand.Image = (Image)resources.GetObject("executeTransformCommand.Image");
-            executeTransformCommand.ImageTransparentColor = Color.Magenta;
-            executeTransformCommand.Name = "executeTransformCommand";
-            executeTransformCommand.Size = new Size(23, 22);
-            executeTransformCommand.Text = "build Transform Documents";
-            executeTransformCommand.Click += ExecuteTransformCommand_Click;
+            transformDeleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            transformDeleteCommand.Image = (Image)resources.GetObject("transformDeleteCommand.Image");
+            transformDeleteCommand.ImageTransparentColor = Color.Magenta;
+            transformDeleteCommand.Name = "transformDeleteCommand";
+            transformDeleteCommand.Size = new Size(23, 22);
+            transformDeleteCommand.Text = "toolStripButton1";
+            transformDeleteCommand.Click += TransformDeleteCommand_Click;
             // 
             // transformsData
             // 
@@ -341,22 +341,22 @@
             // 
             // documentToolStrip
             // 
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { openDocumentCommand });
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentOpenCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
             documentToolStrip.Size = new Size(450, 25);
             documentToolStrip.TabIndex = 0;
             documentToolStrip.Text = "toolStrip1";
             // 
-            // openDocumentCommand
+            // documentOpenCommand
             // 
-            openDocumentCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openDocumentCommand.Image = (Image)resources.GetObject("openDocumentCommand.Image");
-            openDocumentCommand.ImageTransparentColor = Color.Magenta;
-            openDocumentCommand.Name = "openDocumentCommand";
-            openDocumentCommand.Size = new Size(23, 22);
-            openDocumentCommand.Text = "open Document";
-            openDocumentCommand.Click += OpenDocumentCommand_Click;
+            documentOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentOpenCommand.Image = (Image)resources.GetObject("documentOpenCommand.Image");
+            documentOpenCommand.ImageTransparentColor = Color.Magenta;
+            documentOpenCommand.Name = "documentOpenCommand";
+            documentOpenCommand.Size = new Size(23, 22);
+            documentOpenCommand.Text = "open Document";
+            documentOpenCommand.Click += DocumentOpenCommand_Click;
             // 
             // documentData
             // 
@@ -378,6 +378,15 @@
             FileNameColumn.HeaderText = "File Name";
             FileNameColumn.Name = "FileNameColumn";
             FileNameColumn.ReadOnly = true;
+            // 
+            // bindingSchema
+            // 
+            bindingSchema.CurrentChanged += BindingSchema_CurrentChanged;
+            bindingSchema.ListChanged += BindingSchema_ListChanged;
+            // 
+            // bindingTransform
+            // 
+            bindingTransform.CurrentChanged += BindingTransform_CurrentChanged;
             // 
             // contextTemplate
             // 
@@ -446,15 +455,15 @@
         private ContextMenuStrip contextTemplate;
         private ToolStripMenuItem templateOpenDocumentCommand;
         private ToolStrip schemaToolStrip;
-        private ToolStripButton addSchemaCommand;
-        private ToolStripButton openSchemaCommand;
-        private ToolStripButton executeSchemaCommand;
+        private ToolStripButton schemaNewCommand;
+        private ToolStripButton schemaOpenCommand;
         private ToolStrip transformToolStrip;
-        private ToolStripButton addTransformCommand;
-        private ToolStripButton openTransformCommand;
-        private ToolStripButton executeTransformCommand;
+        private ToolStripButton transformNewCommand;
+        private ToolStripButton transformOpenCommand;
         private TableLayoutPanel tableLayoutPanel1;
         private ToolStrip documentToolStrip;
-        private ToolStripButton openDocumentCommand;
+        private ToolStripButton documentOpenCommand;
+        private ToolStripButton schemaDeleteCommand;
+        private ToolStripButton transformDeleteCommand;
     }
 }

@@ -22,21 +22,21 @@ namespace DataDictionary.DataLayer.AppScript
     public class TemplateItem: BindingTableRow, ITemplateItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? TemplateId
+        public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
-        public String? TemplateTitle
+        public virtual String? TemplateTitle
         {
             get { return GetValue(nameof(TemplateTitle)); }
             set { SetValue(nameof(TemplateTitle), value); }
         }
 
         /// <inheritdoc/>
-        public String? TemplateDescription
+        public virtual String? TemplateDescription
         {
             get { return GetValue(nameof(TemplateDescription)); }
             set { SetValue(nameof(TemplateDescription), value); }

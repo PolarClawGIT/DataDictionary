@@ -48,14 +48,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
         // This can be done in the constructor.
         //
         //   IDataValue dataValue;
-        //   public ImplmentingValue() : base()
+        //   public ImplementingValue() : base()
         //   {
         //       dataValue = new dataValue(this)
         //       {
-        //           GetIndex = () => new ImplmentingIndex(this),
-        //           GetTitle = () => ImplmentingTitle ?? String.Empty,
+        //           GetIndex = () => new ImplementingIndex(this),
+        //           GetTitle = () => ImplementingTitle ?? String.Empty,
         //           GetScope = () => Scope,
-        //           IsTitleChanged = (e) => e.PropertyName is nameof(ImplmentingTitle)
+        //           IsTitleChanged = (e) => e.PropertyName is nameof(ImplementingTitle)
         //       };
         //   }
         //

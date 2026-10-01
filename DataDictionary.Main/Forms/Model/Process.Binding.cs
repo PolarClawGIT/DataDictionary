@@ -202,7 +202,7 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current ProcessValue not defined"); }
             }
 
-            public void AddArgument(PathIndex path)
+            public void AddArgument(PathItem path)
             {
                 if (TryGetValue(out ProcessValue? value))
                 {
