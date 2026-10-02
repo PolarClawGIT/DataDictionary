@@ -85,7 +85,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 DirectoryTypeList.Load(rootFolderData);
                 formBinding.TransformData.AddBinding(rootFolderData, e => e.RootFolder, DirectoryTypeList.NullValue);
-
                 formBinding.TransformData.AddBinding(relativePathData, e => e.RelativePath);
                 formBinding.TransformData.AddBinding(filePrefixData, e => e.FilePrefix);
                 formBinding.TransformData.AddBinding(fileSuffixData, e => e.FileSuffix);
@@ -93,9 +92,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 FileFormatList.Load(fileExtensionData, TransformDocumentValue.FileFormats, formBinding.TransformData.Select(s => s.FileExtension));
                 formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
+                formBinding.TemplateData.AddBinding(transformLocalPath, e => e.InitialDirectory);
                 formBinding.TransformData.AddBinding(documentLocalPathData, e => e.InitialDirectory);
-                formBinding.TransformData.AddBinding(transformLocalPath, e => e.InitialDirectory);
-
+                
                 formBinding.TransformData.AddBinding(scriptFileNameData, e => e.TransformFileName);
                 formBinding.TransformData.AddBinding(scriptData, e => e.FileContent);
 

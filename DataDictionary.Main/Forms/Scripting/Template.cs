@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -104,6 +105,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.TemplateData.AddBinding(templateDescriptionData, e => e.TemplateDescription);
 
+                DirectoryTypeList.Load(rootFolderData);
+                formBinding.TemplateData.AddBinding(rootFolderData, e => e.RootFolder, DirectoryTypeList.NullValue);
+                formBinding.TemplateData.AddBinding(relativePathData, e => e.RelativePath);
+
                 // Schema Tab
                 formBinding.SchemaData.AddBinding(schemaData);
                 schemaOpenCommand.Enabled = false;
@@ -122,6 +127,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
 
                 // Security
+                ValidateFile();
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
             }
@@ -274,6 +280,33 @@ namespace DataDictionary.Main.Forms.Scripting
             throw new NotImplementedException();
         }
 
+        private void RootFolderData_Validated(object sender, EventArgs e)
+        { ValidateFile(); }
 
+        private void RelativePathData_SelectCommand(object sender, EventArgs e)
+        {
+            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? current))
+            {
+                folderBrowserDialog.Reset();
+                folderBrowserDialog.RootFolder = current.RootFolder.GetSystemFolder();
+                folderBrowserDialog.InitialDirectory = current.InitialDirectory;
+
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+                {
+                    current.InitialDirectory = folderBrowserDialog.SelectedPath;
+                    ValidateFile();
+                }
+            }
+        }
+
+        private void ValidateFile()
+        {
+            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
+
+            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? template)
+                 && template is IDirectoryValue directory
+                 && !directory.IsValid(out Exception? exception))
+            { errorProvider.SetError(rootFolderData.ErrorControl, exception); }
+        }
     }
 }

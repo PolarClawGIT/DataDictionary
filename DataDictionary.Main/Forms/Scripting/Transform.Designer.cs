@@ -33,18 +33,21 @@
             TableLayoutPanel detailLayout;
             GroupBox scriptGroupBox;
             TableLayoutPanel scriptFileLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Transform));
             GroupBox filePatternGroup;
             TableLayoutPanel filePatternLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Transform));
             Label fileBaseName;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             transformTabs = new TabControl();
             transformTab = new TabPage();
+            transformLocalPath = new DataDictionary.Main.Controls.TextBoxData();
             scriptFileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             scriptData = new DataDictionary.Main.Controls.TextBoxData();
             schemaIdData = new DataDictionary.Main.Controls.ComboBoxData();
             documentTab = new TabPage();
             fileLayout = new TableLayoutPanel();
+            relativePathData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            rootFolderData = new DataDictionary.Main.Controls.ComboBoxData();
             filePrefixData = new DataDictionary.Main.Controls.TextBoxData();
             fileSuffixData = new DataDictionary.Main.Controls.TextBoxData();
             documentLocalPathData = new DataDictionary.Main.Controls.TextBoxData();
@@ -61,9 +64,6 @@
             openFileDialog = new OpenFileDialog();
             errorProvider = new ErrorProvider(components);
             saveFileDialog = new SaveFileDialog();
-            rootFolderData = new DataDictionary.Main.Controls.ComboBoxData();
-            relativePathData = new DataDictionary.Main.Controls.SelectTextBoxData();
-            transformLocalPath = new DataDictionary.Main.Controls.TextBoxData();
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             scriptGroupBox = new GroupBox();
@@ -172,21 +172,33 @@
             scriptFileLayout.ColumnCount = 2;
             scriptFileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             scriptFileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            scriptFileLayout.Controls.Add(transformLocalPath, 0, 1);
-            scriptFileLayout.Controls.Add(rootFolderData, 0, 0);
-            scriptFileLayout.Controls.Add(scriptFileNameData, 0, 2);
-            scriptFileLayout.Controls.Add(scriptData, 0, 3);
-            scriptFileLayout.Controls.Add(relativePathData, 1, 0);
+            scriptFileLayout.Controls.Add(transformLocalPath, 0, 0);
+            scriptFileLayout.Controls.Add(scriptFileNameData, 0, 1);
+            scriptFileLayout.Controls.Add(scriptData, 0, 2);
             scriptFileLayout.Dock = DockStyle.Fill;
             scriptFileLayout.Location = new Point(3, 19);
             scriptFileLayout.Name = "scriptFileLayout";
-            scriptFileLayout.RowCount = 4;
-            scriptFileLayout.RowStyles.Add(new RowStyle());
+            scriptFileLayout.RowCount = 3;
             scriptFileLayout.RowStyles.Add(new RowStyle());
             scriptFileLayout.RowStyles.Add(new RowStyle());
             scriptFileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            scriptFileLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             scriptFileLayout.Size = new Size(533, 420);
             scriptFileLayout.TabIndex = 7;
+            // 
+            // transformLocalPath
+            // 
+            transformLocalPath.AutoSize = true;
+            scriptFileLayout.SetColumnSpan(transformLocalPath, 4);
+            transformLocalPath.Dock = DockStyle.Fill;
+            transformLocalPath.HeaderText = "Local Path";
+            transformLocalPath.Location = new Point(3, 3);
+            transformLocalPath.Multiline = false;
+            transformLocalPath.Name = "transformLocalPath";
+            transformLocalPath.ReadOnly = true;
+            transformLocalPath.Size = new Size(527, 44);
+            transformLocalPath.TabIndex = 8;
+            transformLocalPath.WordWrap = false;
             // 
             // scriptFileNameData
             // 
@@ -195,7 +207,7 @@
             scriptFileLayout.SetColumnSpan(scriptFileNameData, 2);
             scriptFileNameData.Dock = DockStyle.Fill;
             scriptFileNameData.HeaderText = "Script File";
-            scriptFileNameData.Location = new Point(3, 105);
+            scriptFileNameData.Location = new Point(3, 53);
             scriptFileNameData.Name = "scriptFileNameData";
             scriptFileNameData.ReadOnly = false;
             scriptFileNameData.SelectIcon = (Image)resources.GetObject("scriptFileNameData.SelectIcon");
@@ -209,11 +221,11 @@
             scriptFileLayout.SetColumnSpan(scriptData, 2);
             scriptData.Dock = DockStyle.Fill;
             scriptData.HeaderText = "Script Code";
-            scriptData.Location = new Point(3, 155);
+            scriptData.Location = new Point(3, 103);
             scriptData.Multiline = true;
             scriptData.Name = "scriptData";
             scriptData.ReadOnly = false;
-            scriptData.Size = new Size(527, 262);
+            scriptData.Size = new Size(527, 314);
             scriptData.TabIndex = 2;
             scriptData.WordWrap = false;
             // 
@@ -265,7 +277,7 @@
             filePatternGroup.Dock = DockStyle.Fill;
             filePatternGroup.Location = new Point(3, 28);
             filePatternGroup.Name = "filePatternGroup";
-            filePatternGroup.Size = new Size(539, 124);
+            filePatternGroup.Size = new Size(539, 176);
             filePatternGroup.TabIndex = 15;
             filePatternGroup.TabStop = false;
             filePatternGroup.Text = "File Pattern";
@@ -278,27 +290,59 @@
             filePatternLayout.ColumnStyles.Add(new ColumnStyle());
             filePatternLayout.ColumnStyles.Add(new ColumnStyle());
             filePatternLayout.ColumnStyles.Add(new ColumnStyle());
-            filePatternLayout.Controls.Add(filePrefixData, 0, 1);
-            filePatternLayout.Controls.Add(fileBaseName, 1, 1);
-            filePatternLayout.Controls.Add(fileSuffixData, 2, 1);
-            filePatternLayout.Controls.Add(documentLocalPathData, 0, 0);
-            filePatternLayout.Controls.Add(fileExtensionData, 3, 1);
+            filePatternLayout.Controls.Add(relativePathData, 2, 0);
+            filePatternLayout.Controls.Add(rootFolderData, 0, 0);
+            filePatternLayout.Controls.Add(filePrefixData, 0, 2);
+            filePatternLayout.Controls.Add(fileBaseName, 1, 2);
+            filePatternLayout.Controls.Add(fileSuffixData, 2, 2);
+            filePatternLayout.Controls.Add(documentLocalPathData, 0, 1);
+            filePatternLayout.Controls.Add(fileExtensionData, 3, 2);
             filePatternLayout.Dock = DockStyle.Fill;
             filePatternLayout.Location = new Point(3, 19);
             filePatternLayout.Name = "filePatternLayout";
-            filePatternLayout.RowCount = 2;
+            filePatternLayout.RowCount = 3;
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
-            filePatternLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            filePatternLayout.Size = new Size(533, 102);
+            filePatternLayout.RowStyles.Add(new RowStyle());
+            filePatternLayout.Size = new Size(533, 154);
             filePatternLayout.TabIndex = 0;
+            // 
+            // relativePathData
+            // 
+            relativePathData.AutoSize = true;
+            relativePathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            filePatternLayout.SetColumnSpan(relativePathData, 2);
+            relativePathData.Dock = DockStyle.Fill;
+            relativePathData.HeaderText = "Relative Path";
+            relativePathData.Location = new Point(228, 3);
+            relativePathData.Name = "relativePathData";
+            relativePathData.ReadOnly = false;
+            relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
+            relativePathData.Size = new Size(302, 46);
+            relativePathData.TabIndex = 10;
+            relativePathData.SelectCommand += RelativePathData_SelectCommand;
+            // 
+            // rootFolderData
+            // 
+            rootFolderData.AutoSize = true;
+            rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            filePatternLayout.SetColumnSpan(rootFolderData, 2);
+            rootFolderData.Dock = DockStyle.Fill;
+            rootFolderData.DropDownStyle = ComboBoxStyle.DropDown;
+            rootFolderData.HeaderText = "Root Folder";
+            rootFolderData.Location = new Point(3, 3);
+            rootFolderData.Name = "rootFolderData";
+            rootFolderData.ReadOnly = false;
+            rootFolderData.Size = new Size(219, 46);
+            rootFolderData.TabIndex = 9;
+            rootFolderData.Validated += RootFolderData_Validated;
             // 
             // filePrefixData
             // 
             filePrefixData.AutoSize = true;
             filePrefixData.Dock = DockStyle.Fill;
             filePrefixData.HeaderText = "File Prefix";
-            filePrefixData.Location = new Point(3, 53);
+            filePrefixData.Location = new Point(3, 105);
             filePrefixData.Multiline = false;
             filePrefixData.Name = "filePrefixData";
             filePrefixData.ReadOnly = false;
@@ -310,7 +354,7 @@
             // 
             fileBaseName.Anchor = AnchorStyles.None;
             fileBaseName.AutoSize = true;
-            fileBaseName.Location = new Point(129, 68);
+            fileBaseName.Location = new Point(129, 120);
             fileBaseName.Name = "fileBaseName";
             fileBaseName.Size = new Size(93, 15);
             fileBaseName.TabIndex = 5;
@@ -321,7 +365,7 @@
             fileSuffixData.AutoSize = true;
             fileSuffixData.Dock = DockStyle.Fill;
             fileSuffixData.HeaderText = "File Suffix";
-            fileSuffixData.Location = new Point(228, 53);
+            fileSuffixData.Location = new Point(228, 105);
             fileSuffixData.Multiline = false;
             fileSuffixData.Name = "fileSuffixData";
             fileSuffixData.ReadOnly = false;
@@ -335,7 +379,7 @@
             filePatternLayout.SetColumnSpan(documentLocalPathData, 4);
             documentLocalPathData.Dock = DockStyle.Fill;
             documentLocalPathData.HeaderText = "Local Path";
-            documentLocalPathData.Location = new Point(3, 3);
+            documentLocalPathData.Location = new Point(3, 55);
             documentLocalPathData.Multiline = false;
             documentLocalPathData.Name = "documentLocalPathData";
             documentLocalPathData.ReadOnly = true;
@@ -350,7 +394,7 @@
             fileExtensionData.Dock = DockStyle.Fill;
             fileExtensionData.DropDownStyle = ComboBoxStyle.DropDown;
             fileExtensionData.HeaderText = "File Extension";
-            fileExtensionData.Location = new Point(354, 53);
+            fileExtensionData.Location = new Point(354, 105);
             fileExtensionData.Name = "fileExtensionData";
             fileExtensionData.ReadOnly = false;
             fileExtensionData.Size = new Size(176, 46);
@@ -363,10 +407,10 @@
             documentData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             documentData.Columns.AddRange(new DataGridViewColumn[] { FileNameColumn });
             documentData.Dock = DockStyle.Fill;
-            documentData.Location = new Point(3, 158);
+            documentData.Location = new Point(3, 210);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(539, 339);
+            documentData.Size = new Size(539, 287);
             documentData.TabIndex = 9;
             // 
             // FileNameColumn
@@ -426,46 +470,6 @@
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
-            // 
-            // rootFolderData
-            // 
-            rootFolderData.AutoSize = true;
-            rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            rootFolderData.Dock = DockStyle.Fill;
-            rootFolderData.DropDownStyle = ComboBoxStyle.DropDown;
-            rootFolderData.HeaderText = "Root Folder";
-            rootFolderData.Location = new Point(3, 3);
-            rootFolderData.Name = "rootFolderData";
-            rootFolderData.ReadOnly = false;
-            rootFolderData.Size = new Size(260, 46);
-            rootFolderData.TabIndex = 3;
-            // 
-            // relativePathData
-            // 
-            relativePathData.AutoSize = true;
-            relativePathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            relativePathData.Dock = DockStyle.Fill;
-            relativePathData.HeaderText = "Relative Path";
-            relativePathData.Location = new Point(269, 3);
-            relativePathData.Name = "relativePathData";
-            relativePathData.ReadOnly = false;
-            relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
-            relativePathData.Size = new Size(261, 46);
-            relativePathData.TabIndex = 4;
-            // 
-            // transformLocalPath
-            // 
-            transformLocalPath.AutoSize = true;
-            scriptFileLayout.SetColumnSpan(transformLocalPath, 4);
-            transformLocalPath.Dock = DockStyle.Fill;
-            transformLocalPath.HeaderText = "Local Path";
-            transformLocalPath.Location = new Point(3, 55);
-            transformLocalPath.Multiline = false;
-            transformLocalPath.Name = "transformLocalPath";
-            transformLocalPath.ReadOnly = true;
-            transformLocalPath.Size = new Size(527, 44);
-            transformLocalPath.TabIndex = 8;
-            transformLocalPath.WordWrap = false;
             // 
             // Transform
             // 
@@ -531,7 +535,7 @@
         private Controls.TextBoxData documentLocalPathData;
         private Controls.ComboBoxData fileExtensionData;
         private Controls.TextBoxData transformLocalPath;
-        private Controls.ComboBoxData rootFolderData;
         private Controls.SelectTextBoxData relativePathData;
+        private Controls.ComboBoxData rootFolderData;
     }
 }

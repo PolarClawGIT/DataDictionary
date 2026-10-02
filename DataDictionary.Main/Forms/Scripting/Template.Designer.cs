@@ -30,10 +30,12 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel templateLayout;
-            TableLayoutPanel schemaLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Template));
+            TableLayoutPanel schemaLayout;
             TableLayoutPanel transformLayout;
             TableLayoutPanel documentLayout;
+            relativePathData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            rootFolderData = new DataDictionary.Main.Controls.ComboBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateTabs = new TabControl();
@@ -62,6 +64,9 @@
             bindingObject = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             contextTemplate = new ContextMenuStrip(components);
+            folderBrowserDialog = new FolderBrowserDialog();
+            openFileDialog = new OpenFileDialog();
+            errorProvider = new ErrorProvider(components);
             templateLayout = new TableLayoutPanel();
             schemaLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
@@ -85,28 +90,62 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingObject).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // templateLayout
             // 
-            templateLayout.ColumnCount = 1;
-            templateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            templateLayout.ColumnCount = 2;
+            templateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            templateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            templateLayout.Controls.Add(relativePathData, 1, 2);
+            templateLayout.Controls.Add(rootFolderData, 0, 2);
             templateLayout.Controls.Add(templateTitleData, 0, 0);
             templateLayout.Controls.Add(templateDescriptionData, 0, 1);
-            templateLayout.Controls.Add(templateTabs, 0, 2);
+            templateLayout.Controls.Add(templateTabs, 0, 3);
             templateLayout.Dock = DockStyle.Fill;
             templateLayout.Location = new Point(0, 25);
             templateLayout.Name = "templateLayout";
-            templateLayout.RowCount = 3;
+            templateLayout.RowCount = 4;
             templateLayout.RowStyles.Add(new RowStyle());
-            templateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            templateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            templateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            templateLayout.RowStyles.Add(new RowStyle());
+            templateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             templateLayout.Size = new Size(470, 608);
             templateLayout.TabIndex = 4;
+            // 
+            // relativePathData
+            // 
+            relativePathData.AutoSize = true;
+            relativePathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            relativePathData.Dock = DockStyle.Fill;
+            relativePathData.HeaderText = "Relative Path";
+            relativePathData.Location = new Point(238, 204);
+            relativePathData.Name = "relativePathData";
+            relativePathData.ReadOnly = false;
+            relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
+            relativePathData.Size = new Size(229, 46);
+            relativePathData.TabIndex = 11;
+            relativePathData.SelectCommand += RelativePathData_SelectCommand;
+            // 
+            // rootFolderData
+            // 
+            rootFolderData.AutoSize = true;
+            rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            rootFolderData.Dock = DockStyle.Fill;
+            rootFolderData.DropDownStyle = ComboBoxStyle.DropDown;
+            rootFolderData.HeaderText = "Root Folder";
+            rootFolderData.Location = new Point(3, 204);
+            rootFolderData.Name = "rootFolderData";
+            rootFolderData.ReadOnly = false;
+            rootFolderData.Size = new Size(229, 46);
+            rootFolderData.TabIndex = 10;
+            rootFolderData.Validated += RootFolderData_Validated;
             // 
             // templateTitleData
             // 
             templateTitleData.AutoSize = true;
+            templateLayout.SetColumnSpan(templateTitleData, 2);
             templateTitleData.Dock = DockStyle.Fill;
             templateTitleData.HeaderText = "Template Title";
             templateTitleData.Location = new Point(3, 3);
@@ -120,26 +159,28 @@
             // templateDescriptionData
             // 
             templateDescriptionData.AutoSize = true;
+            templateLayout.SetColumnSpan(templateDescriptionData, 2);
             templateDescriptionData.Dock = DockStyle.Fill;
             templateDescriptionData.HeaderText = "Description";
             templateDescriptionData.Location = new Point(3, 53);
             templateDescriptionData.Multiline = true;
             templateDescriptionData.Name = "templateDescriptionData";
             templateDescriptionData.ReadOnly = false;
-            templateDescriptionData.Size = new Size(464, 217);
+            templateDescriptionData.Size = new Size(464, 145);
             templateDescriptionData.TabIndex = 1;
             templateDescriptionData.WordWrap = true;
             // 
             // templateTabs
             // 
+            templateLayout.SetColumnSpan(templateTabs, 2);
             templateTabs.Controls.Add(schemaTab);
             templateTabs.Controls.Add(transformTab);
             templateTabs.Controls.Add(documentTab);
             templateTabs.Dock = DockStyle.Fill;
-            templateTabs.Location = new Point(3, 276);
+            templateTabs.Location = new Point(3, 256);
             templateTabs.Name = "templateTabs";
             templateTabs.SelectedIndex = 0;
-            templateTabs.Size = new Size(464, 329);
+            templateTabs.Size = new Size(464, 349);
             templateTabs.TabIndex = 2;
             // 
             // schemaTab
@@ -149,7 +190,7 @@
             schemaTab.Location = new Point(4, 24);
             schemaTab.Name = "schemaTab";
             schemaTab.Padding = new Padding(3);
-            schemaTab.Size = new Size(456, 301);
+            schemaTab.Size = new Size(456, 321);
             schemaTab.TabIndex = 1;
             schemaTab.Text = "Schema";
             // 
@@ -165,7 +206,8 @@
             schemaLayout.RowCount = 2;
             schemaLayout.RowStyles.Add(new RowStyle());
             schemaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            schemaLayout.Size = new Size(450, 295);
+            schemaLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            schemaLayout.Size = new Size(450, 315);
             schemaLayout.TabIndex = 7;
             // 
             // schemaData
@@ -178,7 +220,7 @@
             schemaData.Location = new Point(3, 28);
             schemaData.Name = "schemaData";
             schemaData.ReadOnly = true;
-            schemaData.Size = new Size(444, 264);
+            schemaData.Size = new Size(444, 284);
             schemaData.TabIndex = 6;
             // 
             // schemaTitleColumn
@@ -235,7 +277,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(456, 301);
+            transformTab.Size = new Size(456, 270);
             transformTab.TabIndex = 0;
             transformTab.Text = "Transforms";
             // 
@@ -251,7 +293,7 @@
             transformLayout.RowCount = 2;
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformLayout.Size = new Size(450, 295);
+            transformLayout.Size = new Size(450, 264);
             transformLayout.TabIndex = 6;
             // 
             // transformToolStrip
@@ -302,7 +344,7 @@
             transformsData.Location = new Point(3, 28);
             transformsData.Name = "transformsData";
             transformsData.ReadOnly = true;
-            transformsData.Size = new Size(444, 264);
+            transformsData.Size = new Size(444, 233);
             transformsData.TabIndex = 5;
             // 
             // transformTitleColumn
@@ -320,7 +362,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(456, 301);
+            documentTab.Size = new Size(456, 270);
             documentTab.TabIndex = 3;
             documentTab.Text = "Documents";
             // 
@@ -336,7 +378,7 @@
             documentLayout.RowCount = 2;
             documentLayout.RowStyles.Add(new RowStyle());
             documentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            documentLayout.Size = new Size(450, 295);
+            documentLayout.Size = new Size(450, 264);
             documentLayout.TabIndex = 8;
             // 
             // documentToolStrip
@@ -368,7 +410,7 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(444, 264);
+            documentData.Size = new Size(444, 233);
             documentData.TabIndex = 7;
             // 
             // FileNameColumn
@@ -392,6 +434,14 @@
             // 
             contextTemplate.Name = "contextTemplate";
             contextTemplate.Size = new Size(61, 4);
+            // 
+            // openFileDialog
+            // 
+            openFileDialog.FileName = "openFileDialog";
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // Template
             // 
@@ -429,6 +479,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingObject).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -465,5 +516,10 @@
         private ToolStripButton documentOpenCommand;
         private ToolStripButton schemaDeleteCommand;
         private ToolStripButton transformDeleteCommand;
+        private Controls.ComboBoxData rootFolderData;
+        private Controls.SelectTextBoxData relativePathData;
+        private FolderBrowserDialog folderBrowserDialog;
+        private OpenFileDialog openFileDialog;
+        private ErrorProvider errorProvider;
     }
 }
