@@ -12,17 +12,15 @@ With [Dates] As (
 	From	[HsScript].[SchemaDocument]
 	Where	[SysStart] != [SysEnd])
 Select	D.[DocumentId], -- PK
-		D.[TemplateId], -- AK
+		FS.[TemplateId], -- AK
 		D.[SchemaId],
-		-- Useful Data
-		F.[RootFolder], -- AK
-		F.[RelativePath], -- AK
 		D.[DataFileName], -- AK
-		O.[ObjectId],
-		O.[ObjectScope],
-		O.[ObjectMember],
-		O.[IsExcluded],
-		O.[KeepOrphaned],
+		-- Useful Data
+		FO.[ObjectId],
+		FO.[ObjectScope],
+		FO.[ObjectMember],
+		FO.[IsExcluded],
+		FO.[KeepOrphaned],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -35,10 +33,6 @@ Select	D.[DocumentId], -- PK
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppScript].[SchemaDocument] D
-		Inner Join [AppScript].[SchemaDefinition] F
-		On	D.[SchemaId] = F.[SchemaId]
-		Left Join [AppScript].[TemplateObject] O
-		On	D.[ObjectId] = O.[ObjectId]
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
@@ -53,5 +47,28 @@ From	[AppScript].[SchemaDocument] D
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
+		-- Not specifying a For System_Time returns the current value
+		-- For System_Time <some date> returns the value for that date
+		-- Otherwise the last value is returned
+		Outer Apply (
+			Select	Top 1
+					[TemplateId],
+					[SchemaId]
+			From	[AppScript].[SchemaDefinition]
+			Where	[SchemaId] = D.[SchemaId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FS
+		Outer Apply (
+			Select	Top 1
+					[ObjectId],
+					[ObjectScope],
+					[ObjectMember],
+					[IsExcluded],
+					[KeepOrphaned]
+			From	[AppScript].[TemplateObject]
+			Where	[ObjectId] = D.[ObjectId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FO
+
 GO
 

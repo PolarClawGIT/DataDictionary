@@ -37,14 +37,14 @@ Begin Try
 			NullIf(Trim(D.[DataFileName]),'') As [DataFileName],
 			NullIf(Trim(D.[ScriptedFileName]),'') As [ScriptedFileName]
 	From	@Data D
+			Inner Join [AppScript].[Transform] T
+			On	D.[TransformId] = T.[TransformId]
 			Left Join [AppScript].[TemplateModel] M
-			On	D.[TemplateId] = M.[TemplateId] And
+			On	T.[TemplateId] = M.[TemplateId] And
 				@ModelId = M.[ModelId]
 			Cross Apply (
 				Select	Coalesce(D.[DocumentId], NewId()) As [DocumentId]) X
-			Left Join [AppScript].[Transform] T
-			On	D.[TransformId] = T.[TransformId]
-	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
+	Where	(@TemplateId is Null Or @TemplateId = T.[TemplateId]) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
