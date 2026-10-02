@@ -14,6 +14,8 @@ With [Dates] As (
 Select	D.[TemplateId], -- PK
 		D.[TemplateTitle], -- AK
 		D.[TemplateDescription],
+		D.[RootFolder],
+		D.[RelativePath],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

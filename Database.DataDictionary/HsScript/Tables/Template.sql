@@ -3,6 +3,8 @@
 	[TemplateId]            UNIQUEIDENTIFIER Not Null,
 	[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,
 	[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
+	[RootFolder]			[AppGeneral].[uddtFileRoot] Null, -- Name of the Special Folder used as the Root defined in the Application.
+	[RelativePath]			[AppGeneral].[uddtFilePath] Null,
 	[SysStart]				DateTime2 (7) Not Null,
 	[SysEnd]				DateTime2 (7) Not Null,
 )
