@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using System.Diagnostics.CodeAnalysis;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -34,6 +35,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 { templateKey = new TemplateIndex(transformValue); }
 
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
+            }
+
+            public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform)
+            {
+                TemplateIndex templateKey = new TemplateIndex(template);
+                transform = null;
+
+                if (TemplateData.TryGetSingle(w => templateKey.Equals(w), out TemplateValue? templateValue))
+                { transform = new TransformValue(templateValue); return true; }
+                else { return false; }
             }
 
             public Boolean TryGetFile([NotNullWhen(true)] out IDirectoryValue? directory, [NotNullWhen(true)] out IFileValue? file)

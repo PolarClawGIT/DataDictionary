@@ -82,9 +82,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public void LoadValue(TemplateIndex key, out SchemaDefinitionIndex schema)
             {
-                SchemaDefinitionValue value = new SchemaDefinitionValue(key);
-                GetData().Schemata.Add(value);
-                schema = new SchemaDefinitionIndex(value);
+                if (GetData().TryCreate(key, out SchemaDefinitionValue? value))
+                { schema = new SchemaDefinitionIndex(value); }
+                else { schema = new SchemaDefinitionIndex(); }
+
                 LoadValue(schema);
             }
 
@@ -104,7 +105,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public void SaveDocuments()
             {
-                if(SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema))
+                if (SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema))
                 {
                     foreach (var document in DocumentData)
                     {

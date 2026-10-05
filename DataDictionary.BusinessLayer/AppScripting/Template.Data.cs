@@ -7,6 +7,7 @@ using System.Data;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -31,14 +32,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ISchemaNodeData SchemataNodes { get; }
 
         /// <summary>
-        /// Transforms for the Templates
-        /// </summary>
-        ITransformData Transforms { get; }
-
-        /// <summary>
         /// Schema Documents for the Templates
         /// </summary>
         ISchemaDocumentData SchemaDocuments { get; }
+
+        /// <summary>
+        /// Transforms for the Templates
+        /// </summary>
+        ITransformData Transforms { get; }
 
         /// <summary>
         /// Transform Documents for the Templates
@@ -56,6 +57,46 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <returns></returns>
         static ITemplateData Create()
         { return new TemplateData(); }
+
+        /// <summary>
+        /// Given the Template, Try to Create and Add a SchemaDefinition.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out SchemaDefinitionValue? schema);
+
+        /// <summary>
+        /// Given the SchemaDefinition, Try to Create and Add a SchemaNode.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <param name="schemaNode"></param>
+        /// <returns></returns>
+        Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaNodeValue? schemaNode);
+
+        /// <summary>
+        /// Given the SchemaDefinition, Try to Create and Add a SchemaDocument.
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <param name="schemaDocument"></param>
+        /// <returns></returns>
+        Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaDocumentValue? schemaDocument);
+
+        /// <summary>
+        /// Given the Template, Try to Create and Add a TransformValue.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform);
+
+        /// <summary>
+        /// Given the Transform, Try to Create and Add a TransformDocumentValue.
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="transformDocument"></param>
+        /// <returns></returns>
+        Boolean TryCreate(ITransformIndex transform, [NotNullWhen(true)] out TransformDocumentValue? transformDocument);
     }
 
     class TemplateData : TemplateCollection<TemplateValue>, ITemplateData,
@@ -240,7 +281,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             transformDocumentValues.Clear();
         }
 
-
         /// <inheritdoc/>
         public void Remove(ISchemaDefinitionIndex dataKey)
         {
@@ -337,6 +377,97 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         }
 
+        /// <inheritdoc/>
+        public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out SchemaDefinitionValue? schema)
+        {
+            TemplateIndex key = new TemplateIndex(template);
+            schema = null;
 
+            if (this.TryGetSingle(w => key.Equals(w), out TemplateValue? templateValue))
+            {
+                schema = new SchemaDefinitionValue(templateValue)
+                {
+                    RootFolder = templateValue.RootFolder,
+                    RelativePath = templateValue.RelativePath
+                };
+
+                Schemata.Add(schema);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaNodeValue? schemaNode)
+        {
+            SchemaDefinitionIndex key = new SchemaDefinitionIndex(schema);
+            schemaNode = null;
+
+            if (schemaDefinitionValues.TryGetSingle(w => key.Equals(w), out SchemaDefinitionValue? schemaValue))
+            {
+                TemplateIndex template = new TemplateIndex(schemaValue);
+                schemaNode = new SchemaNodeValue(template, schemaValue);
+                schemaNodeValues.Add(schemaNode);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaDocumentValue? schemaDocument)
+        {
+            SchemaDefinitionIndex key = new SchemaDefinitionIndex(schema);
+            schemaDocument = null;
+
+            if (schemaDefinitionValues.TryGetSingle(w => key.Equals(w), out SchemaDefinitionValue? schemaValue))
+            {
+                TemplateIndex template = new TemplateIndex(schemaValue);
+                schemaDocument = new SchemaDocumentValue(template, schemaValue);
+                schemaDocumentValues.Add(schemaDocument);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform)
+        {
+            TemplateIndex key = new TemplateIndex(template);
+            transform = null;
+
+            if (this.TryGetSingle(w => key.Equals(w), out TemplateValue? templateValue))
+            {
+                transform = new TransformValue(templateValue)
+                {
+                    RootFolder = templateValue.RootFolder,
+                    RelativePath = templateValue.RelativePath
+                };
+
+                transformValues.Add(transform);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public Boolean TryCreate(ITransformIndex transform, [NotNullWhen(true)] out TransformDocumentValue? transformDocument)
+        {
+            TransformIndex key = new TransformIndex(transform);
+            transformDocument = null;
+
+            if (transformValues.TryGetSingle(w => key.Equals(w), out TransformValue? transformValue))
+            {
+                TemplateIndex template = new TemplateIndex(transformValue);
+                transformDocument = new TransformDocumentValue(template, transformValue);
+                transformDocumentValues.Add(transformDocument);
+                return true;
+            }
+
+            return false;
+        }
     }
 }
