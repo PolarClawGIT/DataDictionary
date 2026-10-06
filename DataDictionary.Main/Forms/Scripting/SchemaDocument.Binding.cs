@@ -30,21 +30,27 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public override void LoadValue(DocumentIndex key)
             {
+                TemplateIndex templateKey = new TemplateIndex();
+                SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex();
+
                 DocumentData.LoadBinding(w => key.Equals(w));
 
                 if (DocumentData.TryGetSingle(out SchemaDocumentValue? documentValue))
                 {
-                    TemplateIndex templateIndex = new TemplateIndex(documentValue);
-                    SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex(documentValue);
-                    TemplateData.LoadBinding(w => templateIndex.Equals(w));
-                    SchemaData.LoadBinding(w => schemaIndex.Equals(w));
+                    templateKey = new TemplateIndex(documentValue);
+                    schemaKey = new SchemaDefinitionIndex(documentValue);
                 }
-                else
-                {
-                    Exception ex = new ArgumentException("Could not locate value");
-                    ex.Data.Add(nameof(SchemaDocumentValue), key);
-                    throw ex;
-                }
+
+                TemplateData.LoadBinding(w => templateKey.Equals(w));
+                SchemaData.LoadBinding(w => schemaKey.Equals(w));
+            }
+
+            public Boolean TryCreate(ISchemaDefinitionIndex schema, ref DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
+            {
+                if (GetData().TryCreate(schema, out SchemaDocumentValue? value, out exception))
+                { document = new DocumentIndex(value); }
+
+                return exception is null;
             }
 
             /// <summary>

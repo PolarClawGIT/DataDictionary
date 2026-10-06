@@ -69,19 +69,18 @@ namespace DataDictionary.Main.Forms.Scripting
             if (temporalIndex is null)
             {
                 if (templateIndex.HasValue)
-                { formBinding.LoadValue(templateIndex); }
-                else
                 {
-                    TemplateValue value = new TemplateValue();
-                    formBinding.TemplateData.Add(value);
-                    templateIndex = new TemplateIndex(value);
+                    formBinding.LoadValue(templateIndex);
+                    DoBinding();
+                }
+                else if (formBinding.TryCreate(ref templateIndex, out Exception? exception))
+                {
                     formBinding.LoadValue(templateIndex);
                     SendMessage(new RefreshNavigation());
+                    DoBinding();
                 }
-
-                if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
-                { DoBinding(); }
-                else { IsLocked(true); }
+                else
+                { IsLocked(true); throw exception; }
             }
             else
             { formBinding.LoadData(templateIndex, temporalIndex, onCompleting); }
@@ -94,9 +93,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     CommandButtons[ButtonType.Delete].Enabled = false;
                     CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
 
-                    if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
-                    { DoBinding(); }
-                    else { IsLocked(true); }
+                    DoBinding();
                 }
             }
 

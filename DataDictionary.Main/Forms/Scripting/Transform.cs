@@ -55,28 +55,18 @@ namespace DataDictionary.Main.Forms.Scripting
         private void Transform_Load(object sender, EventArgs e)
         {
             if (transformIndex.HasValue)
-            { formBinding.LoadValue(transformIndex); }
-            else
             {
-                if (templateIndex.HasValue)
-                {
-                    TransformValue value = new TransformValue(templateIndex);
-                    formBinding.TransformData.Add(value);
-                    transformIndex = new TransformIndex(value);
-                    formBinding.LoadValue(transformIndex);
-                    SendMessage(new RefreshNavigation());
-                }
-                else
-                {   // This should never occur.
-                    Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(templateIndex), templateIndex);
-                    throw ex;
-                }
+                formBinding.LoadValue(transformIndex);
+                DoBinding();
             }
-
-            if (formBinding.TransformData.TryGetCurrent(out TransformValue? _))
-            { DoBinding(); }
-            else { IsLocked(true); }
+            else if (formBinding.TryCreate(templateIndex, ref transformIndex, out Exception? exception))
+            {
+                formBinding.LoadValue(transformIndex);
+                SendMessage(new RefreshNavigation());
+                DoBinding();
+            }
+            else
+            { IsLocked(true); throw exception; }
 
             void DoBinding()
             {

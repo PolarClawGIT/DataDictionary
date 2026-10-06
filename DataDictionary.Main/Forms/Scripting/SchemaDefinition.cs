@@ -68,23 +68,19 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaDefinition_Load(object sender, EventArgs e)
         {
-            if (schemaIndex.HasValue)
-            { formBinding.LoadValue(schemaIndex); }
-            else if (templateIndex.HasValue)
+            if(schemaIndex.HasValue)
             {
-                formBinding.LoadValue(templateIndex, out schemaIndex);
+                formBinding.LoadValue(schemaIndex);
+                DoBinding();
+            }
+            else if (formBinding.TryCreate(templateIndex, ref schemaIndex, out Exception? exception))
+            {
+                formBinding.LoadValue(schemaIndex);
                 SendMessage(new RefreshNavigation());
+                DoBinding();
             }
             else
-            {   // This should never occur.
-                Exception ex = new InvalidOperationException("Template not found");
-                ex.Data.Add(nameof(templateIndex), templateIndex);
-                throw ex;
-            }
-
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? _))
-            { DoBinding(); }
-            else { IsLocked(true); }
+            { IsLocked(true); throw exception; }
 
             void DoBinding()
             {

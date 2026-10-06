@@ -37,14 +37,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
             }
 
-            public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform)
-            {
-                TemplateIndex templateKey = new TemplateIndex(template);
-                transform = null;
 
-                if (TemplateData.TryGetSingle(w => templateKey.Equals(w), out TemplateValue? templateValue))
-                { transform = new TransformValue(templateValue); return true; }
-                else { return false; }
+            public Boolean TryCreate(ITemplateIndex templateIndex, ref TransformIndex transform, [NotNullWhen(false)] out Exception? exception)
+            {
+                if (GetData().TryCreate(templateIndex, out TransformValue? value, out exception))
+                { transform = new TransformIndex(value); }
+
+                return exception is null;
             }
 
             public Boolean TryGetFile([NotNullWhen(true)] out IDirectoryValue? directory, [NotNullWhen(true)] out IFileValue? file)

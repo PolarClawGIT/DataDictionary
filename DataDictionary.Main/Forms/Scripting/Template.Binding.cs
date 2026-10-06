@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -34,6 +35,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.LoadBinding(w => key.Equals(w));
                 SchemaData.LoadBinding(w => key.Equals(w));
                 TransformData.LoadBinding(w => key.Equals(w));
+            }
+
+            public Boolean TryCreate(ref TemplateIndex template, [NotNullWhen(false)] out Exception? exception)
+            {
+                if (GetData().TryCreate(out TemplateValue? value, out exception))
+                { template = new TemplateIndex(value);  }
+
+                return exception is null;
             }
 
             public Boolean RemoveValue()

@@ -5,6 +5,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -50,21 +51,17 @@ namespace DataDictionary.Main.Forms.Scripting
             if (documentIndex.HasValue)
             {
                 formBinding.LoadValue(documentIndex);
+                DoBinding();
             }
-            else if (schemaIndex.HasValue)
+            else if (formBinding.TryCreate(schemaIndex, ref documentIndex, out Exception? exception))
             {
-                formBinding.LoadValue(schemaIndex, out documentIndex);
+                formBinding.LoadValue(documentIndex);
+                SendMessage(new RefreshNavigation());
+                DoBinding();
             }
             else
-            {   // This should never occur.
-                Exception ex = new InvalidOperationException("SchemaDefinition not found");
-                ex.Data.Add(nameof(schemaIndex), schemaIndex);
-                throw ex;
-            }
+            { IsLocked(true); throw exception; }
 
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? _))
-            { DoBinding(); }
-            else { IsLocked(true); }
 
             void DoBinding()
             {
