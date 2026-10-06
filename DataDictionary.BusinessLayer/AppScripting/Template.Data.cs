@@ -8,6 +8,7 @@ using Toolbox.Threading;
 using Toolbox.BindingTable;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -59,44 +60,57 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { return new TemplateData(); }
 
         /// <summary>
+        /// Try to Create and Add a TemplateValue.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        Boolean TryCreate([NotNullWhen(true)] out TemplateValue? template, [NotNullWhen(false)] out Exception? exception);
+
+        /// <summary>
         /// Given the Template, Try to Create and Add a SchemaDefinition.
         /// </summary>
         /// <param name="template"></param>
         /// <param name="schema"></param>
+        /// <param name="exception"></param>
         /// <returns></returns>
-        Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out SchemaDefinitionValue? schema);
+        Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out SchemaDefinitionValue? schema, [NotNullWhen(false)] out Exception? exception);
 
         /// <summary>
         /// Given the SchemaDefinition, Try to Create and Add a SchemaNode.
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="schemaNode"></param>
+        /// <param name="exception"></param>
         /// <returns></returns>
-        Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaNodeValue? schemaNode);
+        Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaNodeValue? schemaNode, [NotNullWhen(false)] out Exception? exception);
 
         /// <summary>
         /// Given the SchemaDefinition, Try to Create and Add a SchemaDocument.
         /// </summary>
         /// <param name="schema"></param>
         /// <param name="schemaDocument"></param>
+        /// <param name="exception"></param>
         /// <returns></returns>
-        Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaDocumentValue? schemaDocument);
+        Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaDocumentValue? schemaDocument, [NotNullWhen(false)] out Exception? exception);
 
         /// <summary>
         /// Given the Template, Try to Create and Add a TransformValue.
         /// </summary>
         /// <param name="template"></param>
         /// <param name="transform"></param>
+        /// <param name="exception"></param>
         /// <returns></returns>
-        Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform);
+        Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform, [NotNullWhen(false)] out Exception? exception);
 
         /// <summary>
         /// Given the Transform, Try to Create and Add a TransformDocumentValue.
         /// </summary>
         /// <param name="transform"></param>
         /// <param name="transformDocument"></param>
+        /// <param name="exception"></param>
         /// <returns></returns>
-        Boolean TryCreate(ITransformIndex transform, [NotNullWhen(true)] out TransformDocumentValue? transformDocument);
+        Boolean TryCreate(ITransformIndex transform, [NotNullWhen(true)] out TransformDocumentValue? transformDocument, [NotNullWhen(false)] out Exception? exception);
     }
 
     class TemplateData : TemplateCollection<TemplateValue>, ITemplateData,
@@ -378,12 +392,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out SchemaDefinitionValue? schema)
-        {
-            TemplateIndex key = new TemplateIndex(template);
-            schema = null;
+        /// <remarks>Does not generate exceptions.</remarks>
+        public Boolean TryCreate([NotNullWhen(true)] out TemplateValue? template, [NotNullWhen(false)] out Exception? exception)
+        {   
+            exception = null;
+            template = new TemplateValue();
+            Add(template);
+            return exception is null;
+        }
 
-            if (this.TryGetSingle(w => key.Equals(w), out TemplateValue? templateValue))
+        /// <inheritdoc/>
+        public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out SchemaDefinitionValue? schema, [NotNullWhen(false)] out Exception? exception)
+        {
+            schema = null;
+            TemplateIndex key = new TemplateIndex(template);
+
+            if (this.TryGetSingle(w => key.Equals(w), out TemplateValue? templateValue, out exception))
             {
                 schema = new SchemaDefinitionValue(templateValue)
                 {
@@ -392,53 +416,51 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 };
 
                 Schemata.Add(schema);
-                return true;
             }
 
-            return false;
+            return exception is null;
         }
 
+
         /// <inheritdoc/>
-        public Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaNodeValue? schemaNode)
+        public Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaNodeValue? schemaNode, [NotNullWhen(false)] out Exception? exception)
         {
             SchemaDefinitionIndex key = new SchemaDefinitionIndex(schema);
             schemaNode = null;
 
-            if (schemaDefinitionValues.TryGetSingle(w => key.Equals(w), out SchemaDefinitionValue? schemaValue))
+            if (schemaDefinitionValues.TryGetSingle(w => key.Equals(w), out SchemaDefinitionValue? schemaValue, out exception))
             {
                 TemplateIndex template = new TemplateIndex(schemaValue);
                 schemaNode = new SchemaNodeValue(template, schemaValue);
                 schemaNodeValues.Add(schemaNode);
-                return true;
             }
 
-            return false;
+            return exception is null;
         }
 
         /// <inheritdoc/>
-        public Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaDocumentValue? schemaDocument)
+        public Boolean TryCreate(ISchemaDefinitionIndex schema, [NotNullWhen(true)] out SchemaDocumentValue? schemaDocument, [NotNullWhen(false)] out Exception? exception)
         {
             SchemaDefinitionIndex key = new SchemaDefinitionIndex(schema);
             schemaDocument = null;
 
-            if (schemaDefinitionValues.TryGetSingle(w => key.Equals(w), out SchemaDefinitionValue? schemaValue))
+            if (schemaDefinitionValues.TryGetSingle(w => key.Equals(w), out SchemaDefinitionValue? schemaValue, out exception))
             {
                 TemplateIndex template = new TemplateIndex(schemaValue);
                 schemaDocument = new SchemaDocumentValue(template, schemaValue);
                 schemaDocumentValues.Add(schemaDocument);
-                return true;
             }
 
-            return false;
+            return exception is null;
         }
 
         /// <inheritdoc/>
-        public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform)
+        public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? transform, [NotNullWhen(false)] out Exception? exception)
         {
             TemplateIndex key = new TemplateIndex(template);
             transform = null;
 
-            if (this.TryGetSingle(w => key.Equals(w), out TemplateValue? templateValue))
+            if (this.TryGetSingle(w => key.Equals(w), out TemplateValue? templateValue, out exception))
             {
                 transform = new TransformValue(templateValue)
                 {
@@ -447,27 +469,26 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 };
 
                 transformValues.Add(transform);
-                return true;
             }
 
-            return false;
+            return exception is null;
         }
 
         /// <inheritdoc/>
-        public Boolean TryCreate(ITransformIndex transform, [NotNullWhen(true)] out TransformDocumentValue? transformDocument)
+        public Boolean TryCreate(ITransformIndex transform, [NotNullWhen(true)] out TransformDocumentValue? transformDocument, [NotNullWhen(false)] out Exception? exception)
         {
             TransformIndex key = new TransformIndex(transform);
             transformDocument = null;
 
-            if (transformValues.TryGetSingle(w => key.Equals(w), out TransformValue? transformValue))
+            if (transformValues.TryGetSingle(w => key.Equals(w), out TransformValue? transformValue, out exception))
             {
                 TemplateIndex template = new TemplateIndex(transformValue);
                 transformDocument = new TransformDocumentValue(template, transformValue);
                 transformDocumentValues.Add(transformDocument);
-                return true;
             }
 
-            return false;
+            return exception is null;
         }
+
     }
 }
