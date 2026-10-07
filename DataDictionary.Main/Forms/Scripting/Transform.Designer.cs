@@ -33,9 +33,9 @@
             TableLayoutPanel detailLayout;
             GroupBox scriptGroupBox;
             TableLayoutPanel scriptFileLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Transform));
             GroupBox filePatternGroup;
             TableLayoutPanel filePatternLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Transform));
             Label fileBaseName;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             transformTabs = new TabControl();
@@ -199,6 +199,7 @@
             transformLocalPath.Size = new Size(527, 44);
             transformLocalPath.TabIndex = 8;
             transformLocalPath.WordWrap = false;
+            transformLocalPath.Validated += TransformLocalPath_Validated;
             // 
             // scriptFileNameData
             // 
@@ -213,6 +214,7 @@
             scriptFileNameData.SelectIcon = (Image)resources.GetObject("scriptFileNameData.SelectIcon");
             scriptFileNameData.Size = new Size(527, 44);
             scriptFileNameData.TabIndex = 1;
+            scriptFileNameData.Validated += ScriptFileNameData_Validated;
             scriptFileNameData.SelectCommand += ScriptFileNameData_SelectCommand;
             // 
             // scriptData
@@ -241,6 +243,7 @@
             schemaIdData.ReadOnly = false;
             schemaIdData.Size = new Size(539, 46);
             schemaIdData.TabIndex = 7;
+            schemaIdData.Validated += SchemaIdData_Validated;
             // 
             // documentTab
             // 
@@ -249,7 +252,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(551, 506);
+            documentTab.Size = new Size(192, 72);
             documentTab.TabIndex = 1;
             documentTab.Text = "Documents";
             // 
@@ -267,7 +270,7 @@
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            fileLayout.Size = new Size(545, 500);
+            fileLayout.Size = new Size(186, 66);
             fileLayout.TabIndex = 5;
             // 
             // filePatternGroup
@@ -277,7 +280,7 @@
             filePatternGroup.Dock = DockStyle.Fill;
             filePatternGroup.Location = new Point(3, 28);
             filePatternGroup.Name = "filePatternGroup";
-            filePatternGroup.Size = new Size(539, 176);
+            filePatternGroup.Size = new Size(180, 176);
             filePatternGroup.TabIndex = 15;
             filePatternGroup.TabStop = false;
             filePatternGroup.Text = "File Pattern";
@@ -304,7 +307,7 @@
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
             filePatternLayout.RowStyles.Add(new RowStyle());
-            filePatternLayout.Size = new Size(533, 154);
+            filePatternLayout.Size = new Size(174, 154);
             filePatternLayout.TabIndex = 0;
             // 
             // relativePathData
@@ -318,8 +321,9 @@
             relativePathData.Name = "relativePathData";
             relativePathData.ReadOnly = false;
             relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
-            relativePathData.Size = new Size(302, 46);
+            relativePathData.Size = new Size(255, 46);
             relativePathData.TabIndex = 10;
+            relativePathData.Validated += RelativePathData_Validated;
             relativePathData.SelectCommand += RelativePathData_SelectCommand;
             // 
             // rootFolderData
@@ -383,7 +387,7 @@
             documentLocalPathData.Multiline = false;
             documentLocalPathData.Name = "documentLocalPathData";
             documentLocalPathData.ReadOnly = true;
-            documentLocalPathData.Size = new Size(527, 44);
+            documentLocalPathData.Size = new Size(480, 44);
             documentLocalPathData.TabIndex = 7;
             documentLocalPathData.WordWrap = false;
             // 
@@ -397,7 +401,7 @@
             fileExtensionData.Location = new Point(354, 105);
             fileExtensionData.Name = "fileExtensionData";
             fileExtensionData.ReadOnly = false;
-            fileExtensionData.Size = new Size(176, 46);
+            fileExtensionData.Size = new Size(129, 46);
             fileExtensionData.TabIndex = 8;
             // 
             // documentData
@@ -410,7 +414,7 @@
             documentData.Location = new Point(3, 210);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(539, 287);
+            documentData.Size = new Size(180, 1);
             documentData.TabIndex = 9;
             // 
             // FileNameColumn
@@ -426,7 +430,7 @@
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(545, 25);
+            documentToolStrip.Size = new Size(186, 25);
             documentToolStrip.TabIndex = 14;
             documentToolStrip.Text = "Document Tools";
             // 
@@ -462,6 +466,10 @@
             transformTitleData.Size = new Size(559, 44);
             transformTitleData.TabIndex = 1;
             transformTitleData.WordWrap = true;
+            // 
+            // bindingTemplate
+            // 
+            bindingTemplate.CurrentItemChanged += BindingTemplate_CurrentItemChanged;
             // 
             // openFileDialog
             // 

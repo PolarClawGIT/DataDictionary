@@ -98,8 +98,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
             }
         }
 
-
-
         /// <summary>
         /// Create an Instance of a DirectoryValue.
         /// </summary>
@@ -166,5 +164,15 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
             return exception is null;
         }
+    }
+
+    /// <summary>
+    /// Extensions for DirectoryValue.
+    /// </summary>
+    public static class DirectoryValueExtension
+    {
+        /// <inheritdoc cref="IDirectoryValue.IsValid(out Exception?)"/>
+        public static Boolean IsDirectoryValid(this IDirectoryValue directory, [NotNullWhen(false)] out Exception? exception)
+        { return directory.IsValid(out exception); }
     }
 }

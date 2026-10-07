@@ -246,4 +246,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
             return exception is null;
         }
     }
+
+    /// <summary>
+    /// Extensions for FileValue.
+    /// </summary>
+    public static class FileValueExtension
+    {
+        /// <inheritdoc cref="IFileValue.IsValid(out Exception?)"/>
+        public static Boolean IsFileValid(this IFileValue file, [NotNullWhen(false)] out Exception? exception)
+        { return file.IsValid(out exception); }
+    }
 }

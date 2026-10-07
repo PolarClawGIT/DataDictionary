@@ -9,7 +9,8 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITransformValue : ITransformItem, ITransformComposite,
+    public interface ITransformValue : ITransformItem, 
+        ITemplateIndex, ISchemaDefinitionIndex, ITransformIndex, ITransformComposite,
         IScopeType, ITemporal, IDirectoryValue, IFileValue
     { }
 

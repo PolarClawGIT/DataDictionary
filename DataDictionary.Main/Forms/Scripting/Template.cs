@@ -124,7 +124,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
 
                 // Security
-                ValidateFile();
+                ValidateChildren();
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
             }
@@ -278,7 +278,14 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)
-        { ValidateFile(); }
+        {
+            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
+
+            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? template)
+                 && template is IDirectoryValue directory
+                 && !directory.IsValid(out Exception? exception))
+            { errorProvider.SetError(rootFolderData.ErrorControl, exception); }
+        }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
         {
@@ -289,21 +296,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 folderBrowserDialog.InitialDirectory = current.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
-                {
-                    current.InitialDirectory = folderBrowserDialog.SelectedPath;
-                    ValidateFile();
-                }
+                {   current.InitialDirectory = folderBrowserDialog.SelectedPath; }
             }
         }
 
-        private void ValidateFile()
-        {
-            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
-
-            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? template)
-                 && template is IDirectoryValue directory
-                 && !directory.IsValid(out Exception? exception))
-            { errorProvider.SetError(rootFolderData.ErrorControl, exception); }
-        }
     }
 }
