@@ -8,13 +8,8 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting SchemaDefinition
     /// </summary>
-    public interface ISchemaDefinitionItem : ISchemaDefinitionKey, ITemplateKey, IDocumentDirectory, IDocumentFilePattern
+    public interface ISchemaDefinitionItem : ISchemaDefinitionKey, ISchemaDefinitionKeyName, ITemplateKey, IDocumentDirectory, IDocumentFilePattern
     {
-        /// <summary>
-        /// Title of the Scripting Schema (aka Name of the Schema)
-        /// </summary>
-        String? SchemaTitle { get; }
-
         /// <summary>
         ///  ForEach Object of this type in the Model.
         ///  This impact file breaks as a new file is produced for each item of this scope.

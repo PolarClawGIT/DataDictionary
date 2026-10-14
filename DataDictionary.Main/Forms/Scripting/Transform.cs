@@ -89,6 +89,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TransformData.AddBinding(scriptFileNameData, e => e.TransformFileName);
                 formBinding.TransformData.AddBinding(scriptData, e => e.FileContent);
 
+                SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData, "<Select Schema>");
+                formBinding.TransformData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
+
                 // Security
                 ValidateChildren();
                 IsLocked(formBinding.GetLocked());
@@ -210,13 +213,15 @@ namespace DataDictionary.Main.Forms.Scripting
             { errorProvider.SetError(relativePathData.ErrorControl, exception); }
         }
 
-
         private void SchemaIdData_Validated(object sender, EventArgs e)
         {
             errorProvider.SetError(schemaIdData.ErrorControl, String.Empty);
 
             if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform))
             {
+                // TODO: The list is populated and even updates when Schema's are added.
+                // But the SchemaID of the Transform is not set.
+
                 if (!new SchemaDefinitionIndex(transform).HasValue)
                 { errorProvider.SetError(schemaIdData.ErrorControl, "Missing Value"); }
             }

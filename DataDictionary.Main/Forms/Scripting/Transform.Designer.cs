@@ -64,6 +64,7 @@
             openFileDialog = new OpenFileDialog();
             errorProvider = new ErrorProvider(components);
             saveFileDialog = new SaveFileDialog();
+            bindingSchema = new BindingSource(components);
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             scriptGroupBox = new GroupBox();
@@ -86,6 +87,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             SuspendLayout();
             // 
             // transformLayout
@@ -511,6 +513,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -545,5 +548,6 @@
         private Controls.TextBoxData transformLocalPath;
         private Controls.SelectTextBoxData relativePathData;
         private Controls.ComboBoxData rootFolderData;
+        private BindingSource bindingSchema;
     }
 }
