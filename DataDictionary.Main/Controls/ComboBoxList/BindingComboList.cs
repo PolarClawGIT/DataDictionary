@@ -166,7 +166,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Switchs the order of two items in the list and calls the Moved ChangedList event.
+        /// Switches the order of two items in the list and calls the Moved ChangedList event.
         /// </summary>
         /// <param name="oldIndex"></param>
         /// <param name="newIndex"></param>
@@ -223,7 +223,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
     static class BindingComboListExtension
     {
         /// <summary>
-        /// Trys to Get the Selected Item from the Control.
+        /// Try to Get the Selected Item from the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -237,7 +237,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// Try to Set the Selected Item of the Control to the first value that matches.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -252,7 +252,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the list of Items of the Control.
+        /// Tries to Get the list of Items of the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -282,7 +282,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the Selected Item from the Control.
+        /// Try to Get the Selected Item from the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -296,7 +296,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// Try to Set the Selected Item of the Control to the first value that matches.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -311,7 +311,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the list of Items of the Control.
+        /// Tries to Get the list of Items of the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -357,7 +357,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// Try to Set the Selected Item of the Control to the first value that matches.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -374,7 +374,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the list of Items of the Control.
+        /// Try to Get the list of Items of the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
