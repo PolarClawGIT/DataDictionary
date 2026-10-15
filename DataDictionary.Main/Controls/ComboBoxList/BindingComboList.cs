@@ -128,7 +128,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         }
                         break;
                     case ListChangedType.ItemDeleted:
-                        List<T> disired = source.
+                        List<T> desired = source.
                             Where(w => filterBy(w)).
                             Select(s => constructor(s)).
                             ToList();
@@ -137,7 +137,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                             Where(w => !(emptyItem is not null && areEqual(w, emptyItem))).
                             ToList();
 
-                        this.RemoveRange(current.Except(disired));
+                        this.RemoveRange(current.Except(desired));
                         break;
                     case ListChangedType.ItemChanged:
                         if (filterBy(source[e.NewIndex]))
