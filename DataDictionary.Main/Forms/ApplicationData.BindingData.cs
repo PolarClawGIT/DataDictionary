@@ -399,7 +399,6 @@ namespace DataDictionary.Main.Forms
                 return members.AsReadOnly();
             }
 
-
             /// <summary>
             /// Validate the binding property against the object and return any exceptions if found.
             /// </summary>
@@ -411,7 +410,7 @@ namespace DataDictionary.Main.Forms
             /// The FindGoodRow method (Microsoft code: System.Windows.Forms.CurrencyManager) traps errors but returns very little useful information.
             /// This method catches common issues and throws exceptions during binding rather then when data is retrieved.<br/>
             /// </remarks>
-            public virtual Exception? ValidateProperty<TProperty>(IReadOnlyList<String> bindingProperty)
+            protected virtual Exception? ValidateProperty<TProperty>(IReadOnlyList<String> bindingProperty)
             {
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
                 String bindField = String.Join(".", bindingProperty);
