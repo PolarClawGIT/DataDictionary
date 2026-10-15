@@ -294,11 +294,7 @@ namespace DataDictionary.Main.Forms
             /// </remarks>
             protected virtual Binding CreateBinding<TProperty>(String controlField, Expression<Func<TRow, TProperty>> expression, Object? nullValue = null)
             {
-                if (BindingData.DataSource is null)
-                { throw new ArgumentNullException(nameof(BindingData.DataSource), "DataSource is Null. Binding has not been loaded"); }
-
                 IReadOnlyList<String> members = ParseExpression(expression);
-                Type dataSourceType = BindingData.DataSource.GetType();
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
                 Exception? memberException = ValidateProperty<TProperty>(members);
 
@@ -306,24 +302,10 @@ namespace DataDictionary.Main.Forms
                 {
                     Boolean needsFormatting = false;
 
-                    if (BindingData.DataSource is not IBindingList)
-                    {
-                        Exception ex = new InvalidOperationException("Not a IBindingList");
-                        ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
-                        throw ex;
-                    }
-
-                    if (BindingData.DataSource is IEnumerable<Object> values
-                        && values.Any(a => !(a is INotifyPropertyChanged)))
-                    {
-                        Exception ex = new InvalidOperationException("Not a INotifyPropertyChanged");
-                        ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
-                        throw ex;
-                    }
-
                     // This logic is intended to handle issues that just do not throw exceptions.
                     if (Find(properties, members) is PropertyDescriptor detail)
-                    {   //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
+                    {   
+                        //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
                         if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                         { needsFormatting = true; }
 
@@ -434,11 +416,42 @@ namespace DataDictionary.Main.Forms
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
                 String bindField = String.Join(".", bindingProperty);
 
+                // BindingSource issues.
+                if (BindingData.DataSource is null)
+                { throw new ArgumentNullException(nameof(BindingData.DataSource), "DataSource is Null. Binding has not been loaded"); }
+
+                Type dataSourceType = BindingData.DataSource.GetType();
+
+                if (BindingData.DataSource is not IBindingList)
+                {
+                    Exception ex = new InvalidOperationException("Not a IBindingList");
+                    ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
+                    return ex;
+                }
+
+                if (BindingData.DataSource is IEnumerable<Object> values
+                    && values.Any(a => !(a is INotifyPropertyChanged)))
+                {
+                    Exception ex = new InvalidOperationException("Not a INotifyPropertyChanged");
+                    ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
+                    return ex;
+                }
+
+                // Field Issues
                 foreach (String fieldName in bindingProperty)
                 {
                     // Property Name check
                     if (properties.Find(fieldName, false) is PropertyDescriptor property)
                     {
+                        if (property.IsReadOnly)
+                        {   // If the field is ReadOnly and Set is called, nothing happens.
+                            // However, the field may be intentionally Read Only.
+                            // Currently cannot tell the difference.
+                            Exception ex = new InvalidOperationException("value is ReadOnly");
+                            ex.Data.Add(nameof(bindField), bindField);
+                            ex.Data.Add(nameof(property.Name), property.Name);
+                            //throw ex;
+                        }
 
                         // Property Type Check
                         if (bindingProperty.Count == 0 && property.PropertyType != typeof(TProperty))

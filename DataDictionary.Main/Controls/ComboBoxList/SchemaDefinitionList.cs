@@ -1,8 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Controls.ComboBoxList

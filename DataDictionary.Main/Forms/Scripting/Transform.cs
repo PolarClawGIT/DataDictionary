@@ -219,9 +219,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform))
             {
-                // TODO: The list is populated and even updates when Schema's are added.
-                // But the SchemaID of the Transform is not set.
-
                 if (!new SchemaDefinitionIndex(transform).HasValue)
                 { errorProvider.SetError(schemaIdData.ErrorControl, "Missing Value"); }
             }

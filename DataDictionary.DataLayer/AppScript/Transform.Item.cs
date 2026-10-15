@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.AppScript
         public virtual Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
-            protected set { SetValue(nameof(SchemaId), value); }
+            set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
