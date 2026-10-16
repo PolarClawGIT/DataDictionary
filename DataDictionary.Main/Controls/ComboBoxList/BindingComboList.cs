@@ -32,6 +32,15 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             { return obj.GetHashCode(); }
         }
 
+        /// <summary>
+        /// Method executed before the ListChange event is applied. Used to Save the Selected Item.
+        /// </summary>
+        Action OnChanging = () => { };
+
+        /// <summary>
+        /// Method executed after the ListChange event is applied. Used to Restore the Selected Item
+        /// </summary>
+        Action OnChanged = () => { };
 
         /// <summary>
         /// Binds the ComboBox control
@@ -46,6 +55,26 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.ValueMember = valueMember();
             control.DisplayMember = displayMember();
             control.DataSource = this;
+
+            T? currentValue = default;
+            OnChanging = onListChanging;
+            OnChanged = onListChanged;
+
+            void onListChanging()
+            {
+                if (control.SelectedItem is T value)
+                { currentValue = value; }
+                else { currentValue = default; }
+            }
+
+            void onListChanged()
+            {
+                if (currentValue is T value
+                    && control.Items.Contains(value))
+                { control.SelectedItem = value; }
+                else
+                { control.SelectedIndex = 0; }
+            }
         }
 
         /// <summary>
@@ -61,6 +90,26 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.ValueMember = valueMember();
             control.DisplayMember = displayMember();
             control.DataSource = this;
+
+            T? currentValue = default;
+            OnChanging = onListChanging;
+            OnChanged = onListChanged;
+
+            void onListChanging()
+            {
+                if (control.SelectedItem is T value)
+                { currentValue = value; }
+                else { currentValue = default; }
+            }
+
+            void onListChanged()
+            {
+                if (currentValue is T value
+                    && control.Items.Contains(value))
+                { control.SelectedItem = value; }
+                else
+                { control.SelectedIndex = 0; }
+            }
         }
 
         /// <summary>
@@ -72,10 +121,53 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         public void BindTo(DataGridViewComboBoxColumn control,
             Func<String> valueMember,
             Func<String> displayMember)
-        {
+        {   // Not verified.
             control.ValueMember = valueMember();
             control.DisplayMember = displayMember();
             control.DataSource = this;
+
+            T? currentValue = default;
+            OnChanging = onListChanging;
+            OnChanged = onListChanged;
+
+            // TODO: DataGridViewComboBoxColumn does not give access to the underlining ComboBox.
+            // It may not be necessary to do anything as the internal ComboBox is built on the fly upon cell entry.
+
+            void onListChanging()
+            {
+                Exception ex = new NotSupportedException();
+                if(control.DataGridView is not null)
+                { ex.Data.Add(nameof(control.DataGridView), control.DataGridView.Name); }
+                
+                ex.Data.Add(nameof(control.Name), control.Name);
+                ex.Data.Add(nameof(control.DataPropertyName), control.DataPropertyName);
+                throw ex;
+
+                //if(control.DataGridView is DataGridView view
+                //    && view.CurrentCell is DataGridViewCell cell
+                //    && cell.Value is T value) 
+                //{ currentValue = value; }
+                //else { currentValue = default; }
+            }
+
+            void onListChanged()
+            {
+                Exception ex = new NotSupportedException();
+                if (control.DataGridView is not null)
+                { ex.Data.Add(nameof(control.DataGridView), control.DataGridView.Name); }
+
+                ex.Data.Add(nameof(control.Name), control.Name);
+                ex.Data.Add(nameof(control.DataPropertyName), control.DataPropertyName);
+                throw ex;
+
+                //if (currentValue is T value
+                //    && control.Items.Contains(value)
+                //    && control.DataGridView is DataGridView view
+                //    && view.CurrentCell is DataGridViewCell cell)
+                //{ cell.Value = value; }
+                //else
+                //{ }
+            }
         }
 
         /// <summary>
@@ -87,8 +179,6 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <param name="areEqual">Call used to determine if items are equal. Use the Index class for the items.</param>
         /// <param name="emptyValue">Call to create the Empty Item. Null = no empty item added.</param>
         /// <param name="onItemChanged">Action to be performed if a change in the item (such as a title change) occurs.</param>
-        /// <param name="onListChanging">Action to be performed before the list is updated. Such as getting the selected item.</param>
-        /// <param name="onListChanged">Action to be performed after the list is updated. Such as reselecting the selected item.</param>
         /// <param name="filterBy">Filters the Source before adding it to the items.</param>
         /// <param name="orderBy">Orders the Source before adding it to the items.</param>
         public void BuildList<TSource>(
@@ -97,8 +187,6 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             Func<T, T, Boolean> areEqual,
             Func<T>? emptyValue = null,
             Action<TSource, T>? onItemChanged = null,
-            Action? onListChanging = null,
-            Action? onListChanged = null,
             Func<TSource, Boolean>? filterBy = null,
             Func<T, Object>? orderBy = null)
             where TSource : IBindingPropertyChanged
@@ -107,8 +195,6 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             orderBy = orderBy ?? (o => 1);
             areEqual = areEqual ?? ((a, b) => false);
             onItemChanged = onItemChanged ?? ((t, s) => { });
-            onListChanging = onListChanging ?? (() => { });
-            onListChanged = onListChanged ?? (() => { });
 
             Func<IReadOnlyList<T>> getList = () => source.
                     Where(w => filterBy(w)).
@@ -136,7 +222,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
             void ListChanged(Object? sender, ListChangedEventArgs e)
             {
-                onListChanging();
+                OnChanging();
 
                 switch (e.ListChangedType)
                 {
@@ -197,7 +283,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         throw ex;
                 }
 
-                onListChanged();
+                OnChanged();
             }
         }
 
