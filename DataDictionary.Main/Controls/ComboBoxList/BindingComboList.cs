@@ -11,6 +11,28 @@ namespace DataDictionary.Main.Controls.ComboBoxList
     /// <typeparam name="T"></typeparam>
     class BindingComboList<T> : BindingList<T>
     {
+        class Comparer : IEqualityComparer<T>
+        {   // This does the same thing as EqualityComparer<T>.Create
+            // The issue is that ToList and similar uses the IEqualityComparer before it is constructed by Create.
+            // When this happens, a "not supported" exception is thrown.
+            // By making a physical implementation, instead of LINQ statement, this is not an issue.
+            Func<T, T, Boolean>? funcEqual = (a, b) => false;
+
+            public Comparer(Func<T, T, Boolean>? areEqual) : base()
+            { funcEqual = areEqual; }
+
+            public Boolean Equals(T? x, T? y)
+            {   // Note: Most Indexes/Keys consider the empty object (String.Empty, GUID.Empty, ...)
+                // to be not equal to anything. The EmptyItem in the list must be handled differently.
+                if (x is null || y is null || funcEqual is null) { return false; }
+                else { return funcEqual(x, y); }
+            }
+
+            public Int32 GetHashCode([DisallowNull] T obj)
+            { return obj.GetHashCode(); }
+        }
+
+
         /// <summary>
         /// Binds the ComboBox control
         /// </summary>
@@ -57,37 +79,44 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Fills the ComboBox List.
+        /// Builds the List for the ComboBox. The list is assigned on the BindTo call.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>
-        /// <param name="constructor"></param>
-        /// <param name="onItemChanged"></param>
-        /// <param name="filterBy"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="areEqual"></param>
-        /// <param name="emptyValue"></param>
+        /// <param name="constructor">Call to create an item from the Source. This should be a constructor call.</param>
+        /// <param name="areEqual">Call used to determine if items are equal. Use the Index class for the items.</param>
+        /// <param name="emptyValue">Call to create the Empty Item. Null = no empty item added.</param>
+        /// <param name="onItemChanged">Action to be performed if a change in the item (such as a title change) occurs.</param>
+        /// <param name="onListChanging">Action to be performed before the list is updated. Such as getting the selected item.</param>
+        /// <param name="onListChanged">Action to be performed after the list is updated. Such as reselecting the selected item.</param>
+        /// <param name="filterBy">Filters the Source before adding it to the items.</param>
+        /// <param name="orderBy">Orders the Source before adding it to the items.</param>
         public void BuildList<TSource>(
             IBindingList<TSource> source,
             Func<TSource, T> constructor,
+            Func<T, T, Boolean> areEqual,
+            Func<T>? emptyValue = null,
             Action<TSource, T>? onItemChanged = null,
+            Action? onListChanging = null,
+            Action? onListChanged = null,
             Func<TSource, Boolean>? filterBy = null,
-            Func<T, Object>? orderBy = null,
-            Func<T, T, Boolean>? areEqual = null,
-            Func<T>? emptyValue = null)
+            Func<T, Object>? orderBy = null)
             where TSource : IBindingPropertyChanged
         {
             filterBy = filterBy ?? (f => 1 == 1);
             orderBy = orderBy ?? (o => 1);
             areEqual = areEqual ?? ((a, b) => false);
             onItemChanged = onItemChanged ?? ((t, s) => { });
+            onListChanging = onListChanging ?? (() => { });
+            onListChanged = onListChanged ?? (() => { });
+
             Func<IReadOnlyList<T>> getList = () => source.
                     Where(w => filterBy(w)).
                     Select(s => constructor(s)).
                     OrderBy(orderBy).
                     ToList().
                     AsReadOnly();
-            
+
             Boolean isRaised = RaiseListChangedEvents;
             RaiseListChangedEvents = false;
             T? emptyItem = default;
@@ -107,6 +136,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
             void ListChanged(Object? sender, ListChangedEventArgs e)
             {
+                onListChanging();
+
                 switch (e.ListChangedType)
                 {
                     case ListChangedType.Reset:
@@ -128,16 +159,19 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         }
                         break;
                     case ListChangedType.ItemDeleted:
+                        // Need to compare what is currently in the source and what is currently in the list in the BindingComboList
+                        // The ones that are missing in the source should be removed from the BindingComboList.
                         List<T> desired = source.
                             Where(w => filterBy(w)).
                             Select(s => constructor(s)).
                             ToList();
 
                         List<T> current = this.
-                            Where(w => !(emptyItem is not null && areEqual(w, emptyItem))).
+                            // Don't compare the Empty Item.
+                            Where(w => !(emptyItem is not null && Object.ReferenceEquals(w, emptyItem))). 
                             ToList();
 
-                        this.RemoveRange(current.Except(desired));
+                        this.RemoveRange(current.Except(desired, new Comparer(areEqual)));
                         break;
                     case ListChangedType.ItemChanged:
                         if (filterBy(source[e.NewIndex]))
@@ -162,6 +196,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         ex.Data.Add(nameof(e.PropertyDescriptor), e.PropertyDescriptor);
                         throw ex;
                 }
+
+                onListChanged();
             }
         }
 

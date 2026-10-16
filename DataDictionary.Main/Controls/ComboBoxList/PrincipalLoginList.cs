@@ -42,14 +42,14 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             comboList.BuildList(
                 source: data,
                 constructor: (c) => new PrincipalLoginList(c),
+                areEqual: (a, b) => new PrincipalIndex(a).Equals(b),
+                emptyValue: () => new PrincipalLoginList(emptyText),
                 onItemChanged: (s, t) =>
                 {
                     t.PrincipalLogin = s.PrincipalLogin ?? String.Empty;
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.PrincipalLogin));
                 },
-                orderBy: (o) => o.PrincipalLogin,
-                areEqual: (a, b) => new PrincipalIndex(a).Equals(b),
-                emptyValue: () => new PrincipalLoginList(emptyText));
+                orderBy: (o) => o.PrincipalLogin);
 
             return comboList;
         }

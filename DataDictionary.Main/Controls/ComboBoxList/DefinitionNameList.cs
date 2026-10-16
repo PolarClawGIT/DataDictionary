@@ -42,14 +42,14 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             comboList.BuildList(
                 source: BusinessData.Model.Definitions,
                 constructor: (c) => new DefinitionNameList(c),
+                areEqual: (a, b) => new DefinitionIndex(a).Equals(b),
+                emptyValue: () => new DefinitionNameList(emptyText),
                 onItemChanged: (s, t) =>
                 {
                     t.DefinitionTitle = s.DefinitionTitle ?? String.Empty;
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.DefinitionTitle));
                 },
-                orderBy: (o) => o.DefinitionTitle,
-                areEqual: (a, b) => new DefinitionIndex(a).Equals(b),
-                emptyValue: () => new DefinitionNameList(emptyText));
+                orderBy: (o) => o.DefinitionTitle);
 
             return comboList;
         }

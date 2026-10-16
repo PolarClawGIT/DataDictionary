@@ -48,14 +48,14 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             comboList.BuildList(
                 source: data,
                 constructor: (c) => new RoleNameList(c),
+                areEqual: (a, b) => new RoleIndex(a).Equals(b),
+                emptyValue: () => new RoleNameList(emptyText),
                 onItemChanged: (s, t) =>
                 {
                     t.RoleName = s.RoleName ?? String.Empty;
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.RoleName));
                 },
-                orderBy: (o) => o.RoleName,
-                areEqual: (a, b) => new RoleIndex(a).Equals(b),
-                emptyValue: () => new RoleNameList(emptyText));
+                orderBy: (o) => o.RoleName);
 
             return comboList;
         }

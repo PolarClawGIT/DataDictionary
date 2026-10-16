@@ -29,35 +29,80 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
         public static void Load(ComboBoxData control, String? emptyText = null)
         {
-            BindingComboList<SchemaDefinitionList> comboList = BuildList(BusinessData.Templates.Schemata, emptyText);
-            comboList.BindTo(control, () => nameof(SchemaId), () => nameof(SchemaTitle));
-        }
-
-        public static void Load(ComboBoxData control, IBindingList<SchemaDefinitionValue> source, String? emptyText = null)
-        {
-            BindingComboList<SchemaDefinitionList> comboList = BuildList(source, emptyText);
-            comboList.BindTo(control, () => nameof(SchemaId), () => nameof(SchemaTitle));
-        }
-
-        static BindingComboList<SchemaDefinitionList> BuildList<TData>(TData source, String? emptyText = null)
-            where TData : IBindingList<SchemaDefinitionValue>
-        {
+            SchemaDefinitionList? currentValue = null;
             BindingComboList<SchemaDefinitionList> comboList = new BindingComboList<SchemaDefinitionList>();
 
             comboList.BuildList(
-                source: source,
+                source: BusinessData.Templates.Schemata,
                 constructor: (c) => new SchemaDefinitionList(c),
+                areEqual: (a, b) => new SchemaDefinitionIndex(a).Equals(b),
+                emptyValue: () => new SchemaDefinitionList(emptyText),
                 onItemChanged: (s, t) =>
                 {
                     t.SchemaTitle = s.SchemaTitle ?? String.Empty;
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.SchemaTitle));
                 },
-                orderBy: (o) => o.SchemaTitle,
-                areEqual: (a, b) => new SchemaDefinitionIndex(a).Equals(b),
-                emptyValue: () => new SchemaDefinitionList(emptyText));
+                onListChanging: onListChanging,
+                onListChanged: onListChanged,
+                orderBy: (o) => o.SchemaTitle);
+            comboList.BindTo(control, () => nameof(SchemaId), () => nameof(SchemaTitle));
 
-            return comboList;
+            void onListChanging()
+            {
+                if (control.SelectedItem is SchemaDefinitionList value)
+                { currentValue = value; }
+                else { currentValue = null; }
+            }
+
+            void onListChanged()
+            {
+                if (currentValue is SchemaDefinitionList value
+                    && control.Items.Contains(value))
+                { control.SelectedItem = value; }
+                else
+                { control.SelectedIndex = 0; }
+            }
         }
 
+        public static void Load(ComboBoxData control, IBindingList<SchemaDefinitionValue> source, String? emptyText = null)
+        {
+            SchemaDefinitionList? currentValue = null;
+            BindingComboList<SchemaDefinitionList> comboList = new BindingComboList<SchemaDefinitionList>();
+
+            comboList.BuildList(
+                source: source,
+                constructor: (c) => new SchemaDefinitionList(c),
+                areEqual: (a, b) => new SchemaDefinitionIndex(a).Equals(b),
+                emptyValue: () => new SchemaDefinitionList(emptyText),
+                onItemChanged: (s, t) =>
+                {
+                    t.SchemaTitle = s.SchemaTitle ?? String.Empty;
+                    t.OnPropertyChanged(t.PropertyChanged, nameof(t.SchemaTitle));
+                },
+                onListChanging: onListChanging,
+                onListChanged: onListChanged,
+                orderBy: (o) => o.SchemaTitle);
+
+            comboList.BindTo(control, () => nameof(SchemaId), () => nameof(SchemaTitle));
+
+            void onListChanging()
+            {
+                if (control.SelectedItem is SchemaDefinitionList value)
+                { currentValue = value; }
+                else { currentValue = null; }
+            }
+
+            void onListChanged()
+            {
+                if (currentValue is SchemaDefinitionList value
+                    && control.Items.Contains(value))
+                { control.SelectedItem = value; }
+                else
+                { control.SelectedIndex = 0; }
+            }
+        }
+
+        public override Int32 GetHashCode() // Needed by BindingComboList.
+        { return SchemaId.GetHashCode(); }
     }
 }

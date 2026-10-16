@@ -9,8 +9,8 @@
         /// <param name="target"></param>
         /// <param name="source"></param>
         /// <remarks>
-        /// ICollection (and direved types, does not include AddRange).
-        /// List has a speciallized AddRange that is better then this generic version.
+        /// ICollection (and derived types, does not include AddRange).
+        /// List has a specialized AddRange that is better then this generic version.
         /// </remarks>
         public static void AddRange<T>(this ICollection<T> target, IEnumerable<T> source)
         {
@@ -19,7 +19,7 @@
         }
 
         /// <summary>
-        /// Removes specfic elements of the given collection.
+        /// Removes specific elements of the given collection.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
