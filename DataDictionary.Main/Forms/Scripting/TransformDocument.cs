@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class TransformDocument : ApplicationData
     {
         DocumentIndex documentIndex = new DocumentIndex();
+        TransformIndex transformIndex = new TransformIndex();
         TemporalIndex? temporalIndex = null;
+        FormBinding formBinding;
 
         public override Boolean IsOpenItem(object? item)
         { return item is IDocumentIndex key && documentIndex.Equals(key); }
@@ -23,13 +26,52 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingDocument);
+            formBinding = new FormBinding(bindingTemplate, bindingTransform, bindingDocument);
 
-            SetCommand(Enumerations.ButtonType.Delete);
+            SetRowState(bindingDocument);
+            SetTitle(bindingDocument);
+            SetIcon(bindingDocument);
+        }
+
+        public TransformDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
+        {
+            documentIndex = new DocumentIndex(document);
+            formBinding.GetData = getData;
+        }
+
+        public TransformDocument(ITransformIndex transform, Func<ITemplateData> getData) : this()
+        {
+            transformIndex = new TransformIndex(transform);
+            formBinding.GetData = getData;
         }
 
         private void TransformDocument_Load(object sender, EventArgs e)
         {
+            if (documentIndex.HasValue)
+            {
+                formBinding.LoadValue(documentIndex);
+                DoBinding();
+            }
+            else if (formBinding.TryCreate(transformIndex, ref documentIndex, out Exception? exception))
+            {
+                formBinding.LoadValue(documentIndex);
+                SendMessage(new RefreshNavigation());
+                DoBinding();
+            }
+            else
+            { IsLocked(true); throw exception; }
+
+            void DoBinding()
+            {
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.TransformData.AddBinding(transformTitleData, e => e.TransformTitle);
+
+
+                // Security
+                ValidateChildren();
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.Authorize);
+            }
 
         }
 

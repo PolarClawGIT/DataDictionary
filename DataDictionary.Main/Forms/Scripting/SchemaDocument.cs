@@ -40,11 +40,16 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         public SchemaDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
-        { documentIndex = new DocumentIndex(document); }
+        {
+            documentIndex = new DocumentIndex(document);
+            formBinding.GetData = getData;
+        }
 
         public SchemaDocument(ISchemaDefinitionIndex schema, Func<ITemplateData> getData) : this()
-        { schemaIndex = new SchemaDefinitionIndex(schema); }
-
+        {
+            schemaIndex = new SchemaDefinitionIndex(schema);
+            formBinding.GetData = getData;
+        }
 
         private void SchemaDocument_Load(object sender, EventArgs e)
         {
@@ -90,7 +95,7 @@ namespace DataDictionary.Main.Forms.Scripting
             base.OpenCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
-            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); } 
+            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -187,7 +192,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
             {
-                if(!directory.IsValid(out Exception? dirException))
+                if (!directory.IsValid(out Exception? dirException))
                 {
                     errorProvider.SetError(localPathData.ErrorControl, dirException);
                     CommandButtons[ButtonType.Open].Enabled = false;

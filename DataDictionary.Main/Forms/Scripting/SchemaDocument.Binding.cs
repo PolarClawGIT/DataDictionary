@@ -9,7 +9,7 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding : PresenterData<DocumentIndex>
         {
-            public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
+            public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<SchemaDocumentValue> DocumentData { get; }

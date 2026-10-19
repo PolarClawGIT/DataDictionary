@@ -126,7 +126,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.DisplayMember = displayMember();
             control.DataSource = this;
 
-            T? currentValue = default;
+            //T? currentValue = default;
             OnChanging = onListChanging;
             OnChanged = onListChanged;
 

@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingTransform);
+            formBinding = new FormBinding(bindingTemplate, bindingTransform, bindingDocument);
 
             SetRowState(bindingTransform);
             SetTitle(bindingTransform);
@@ -92,6 +92,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData, "<Select Schema>");
                 formBinding.TransformData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
 
+                formBinding.DocumentData.AddBinding(documentData);
+
                 // Security
                 ValidateChildren();
                 IsLocked(formBinding.GetLocked());
@@ -102,12 +104,6 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-        }
-
-        private void DocumentNewCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
@@ -140,10 +136,16 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void DocumentNewCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.TransformDocument(transformIndex, formBinding.GetData)); }
+
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
+            if (formBinding.DocumentData.TryGetCurrent(out TransformDocumentValue? value))
+            {
+                DocumentIndex key = new DocumentIndex(value);
+                Activate(() => new Forms.Scripting.TransformDocument(key, formBinding.GetData), o => o.IsOpenItem(key));
+            }
         }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
