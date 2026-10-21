@@ -37,9 +37,9 @@
             TableLayoutPanel objectLayout;
             GroupBox groupBox1;
             TableLayoutPanel nodeSummaryLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             GroupBox filePatternGroup;
             TableLayoutPanel filePatternLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             Label fileBaseName;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTabs = new TabControl();
@@ -534,6 +534,7 @@
             relativePathData.Size = new Size(299, 46);
             relativePathData.TabIndex = 1;
             relativePathData.Validated += RelativePathData_Validated;
+            relativePathData.SelectCommand += RelativePathData_SelectCommand;
             // 
             // filePrefixData
             // 

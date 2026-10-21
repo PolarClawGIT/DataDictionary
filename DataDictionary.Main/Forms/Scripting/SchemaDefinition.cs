@@ -68,7 +68,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaDefinition_Load(object sender, EventArgs e)
         {
-            if(schemaIndex.HasValue)
+            if (schemaIndex.HasValue)
             {
                 formBinding.LoadValue(schemaIndex);
                 DoBinding();
