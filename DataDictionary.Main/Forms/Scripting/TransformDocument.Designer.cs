@@ -38,10 +38,13 @@
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             documentTabs = new TabControl();
             sourceTab = new TabPage();
-            schemaDocumentIdData = new DataDictionary.Main.Controls.ComboBoxData();
-            sourceDocumentData = new DataDictionary.Main.Controls.TextBoxData();
-            schemaDocumentPathData = new DataDictionary.Main.Controls.TextBoxData();
             schemaSourceObjectData = new DataDictionary.Main.Controls.ComboBoxData();
+            schemaDocumentPathData = new DataDictionary.Main.Controls.TextBoxData();
+            dataFileNameLayout = new TableLayoutPanel();
+            reloadDataFileCommand = new Button();
+            selectDataFileCommand = new Button();
+            dataFileNameData = new DataDictionary.Main.Controls.ComboBoxData();
+            sourceDocumentData = new DataDictionary.Main.Controls.TextBoxData();
             transformTab = new TabPage();
             transformScriptData = new DataDictionary.Main.Controls.TextBoxData();
             transformFileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
@@ -59,6 +62,7 @@
             documentTabs.SuspendLayout();
             sourceTab.SuspendLayout();
             sourceDocumentLayout.SuspendLayout();
+            dataFileNameLayout.SuspendLayout();
             transformTab.SuspendLayout();
             transformScriptLayout.SuspendLayout();
             resultTab.SuspendLayout();
@@ -138,10 +142,10 @@
             // 
             sourceDocumentLayout.ColumnCount = 1;
             sourceDocumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            sourceDocumentLayout.Controls.Add(schemaDocumentIdData, 0, 0);
+            sourceDocumentLayout.Controls.Add(schemaSourceObjectData, 0, 2);
+            sourceDocumentLayout.Controls.Add(schemaDocumentPathData, 0, 0);
+            sourceDocumentLayout.Controls.Add(dataFileNameLayout, 0, 1);
             sourceDocumentLayout.Controls.Add(sourceDocumentData, 0, 3);
-            sourceDocumentLayout.Controls.Add(schemaDocumentPathData, 0, 2);
-            sourceDocumentLayout.Controls.Add(schemaSourceObjectData, 0, 1);
             sourceDocumentLayout.Dock = DockStyle.Fill;
             sourceDocumentLayout.Location = new Point(3, 3);
             sourceDocumentLayout.Name = "sourceDocumentLayout";
@@ -153,38 +157,25 @@
             sourceDocumentLayout.Size = new Size(592, 421);
             sourceDocumentLayout.TabIndex = 5;
             // 
-            // schemaDocumentIdData
+            // schemaSourceObjectData
             // 
-            schemaDocumentIdData.AutoSize = true;
-            schemaDocumentIdData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            schemaDocumentIdData.Dock = DockStyle.Fill;
-            schemaDocumentIdData.DropDownStyle = ComboBoxStyle.DropDown;
-            schemaDocumentIdData.HeaderText = "Schema Document";
-            schemaDocumentIdData.Location = new Point(3, 3);
-            schemaDocumentIdData.Name = "schemaDocumentIdData";
-            schemaDocumentIdData.ReadOnly = false;
-            schemaDocumentIdData.Size = new Size(586, 46);
-            schemaDocumentIdData.TabIndex = 0;
-            // 
-            // sourceDocumentData
-            // 
-            sourceDocumentData.AutoSize = true;
-            sourceDocumentData.Dock = DockStyle.Fill;
-            sourceDocumentData.HeaderText = "Source Data";
-            sourceDocumentData.Location = new Point(3, 157);
-            sourceDocumentData.Multiline = true;
-            sourceDocumentData.Name = "sourceDocumentData";
-            sourceDocumentData.ReadOnly = false;
-            sourceDocumentData.Size = new Size(586, 261);
-            sourceDocumentData.TabIndex = 2;
-            sourceDocumentData.WordWrap = false;
+            schemaSourceObjectData.AutoSize = true;
+            schemaSourceObjectData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            schemaSourceObjectData.Dock = DockStyle.Fill;
+            schemaSourceObjectData.DropDownStyle = ComboBoxStyle.DropDownList;
+            schemaSourceObjectData.HeaderText = "Object";
+            schemaSourceObjectData.Location = new Point(3, 111);
+            schemaSourceObjectData.Name = "schemaSourceObjectData";
+            schemaSourceObjectData.ReadOnly = true;
+            schemaSourceObjectData.Size = new Size(586, 46);
+            schemaSourceObjectData.TabIndex = 3;
             // 
             // schemaDocumentPathData
             // 
             schemaDocumentPathData.AutoSize = true;
             schemaDocumentPathData.Dock = DockStyle.Fill;
-            schemaDocumentPathData.HeaderText = "Source File (Local path)";
-            schemaDocumentPathData.Location = new Point(3, 107);
+            schemaDocumentPathData.HeaderText = "Location (Local path)";
+            schemaDocumentPathData.Location = new Point(3, 3);
             schemaDocumentPathData.Multiline = false;
             schemaDocumentPathData.Name = "schemaDocumentPathData";
             schemaDocumentPathData.ReadOnly = true;
@@ -192,18 +183,71 @@
             schemaDocumentPathData.TabIndex = 1;
             schemaDocumentPathData.WordWrap = true;
             // 
-            // schemaSourceObjectData
+            // dataFileNameLayout
             // 
-            schemaSourceObjectData.AutoSize = true;
-            schemaSourceObjectData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            schemaSourceObjectData.Dock = DockStyle.Fill;
-            schemaSourceObjectData.DropDownStyle = ComboBoxStyle.DropDownList;
-            schemaSourceObjectData.HeaderText = "Source Object";
-            schemaSourceObjectData.Location = new Point(3, 55);
-            schemaSourceObjectData.Name = "schemaSourceObjectData";
-            schemaSourceObjectData.ReadOnly = true;
-            schemaSourceObjectData.Size = new Size(586, 46);
-            schemaSourceObjectData.TabIndex = 3;
+            dataFileNameLayout.AutoSize = true;
+            dataFileNameLayout.ColumnCount = 3;
+            dataFileNameLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            dataFileNameLayout.ColumnStyles.Add(new ColumnStyle());
+            dataFileNameLayout.ColumnStyles.Add(new ColumnStyle());
+            dataFileNameLayout.Controls.Add(reloadDataFileCommand, 2, 0);
+            dataFileNameLayout.Controls.Add(selectDataFileCommand, 1, 0);
+            dataFileNameLayout.Controls.Add(dataFileNameData, 0, 0);
+            dataFileNameLayout.Dock = DockStyle.Fill;
+            dataFileNameLayout.Location = new Point(3, 53);
+            dataFileNameLayout.Name = "dataFileNameLayout";
+            dataFileNameLayout.RowCount = 1;
+            dataFileNameLayout.RowStyles.Add(new RowStyle());
+            dataFileNameLayout.Size = new Size(586, 52);
+            dataFileNameLayout.TabIndex = 4;
+            // 
+            // reloadDataFileCommand
+            // 
+            reloadDataFileCommand.Dock = DockStyle.Bottom;
+            reloadDataFileCommand.Image = Properties.Resources.OpenFolder;
+            reloadDataFileCommand.Location = new Point(559, 26);
+            reloadDataFileCommand.Name = "reloadDataFileCommand";
+            reloadDataFileCommand.Size = new Size(24, 23);
+            reloadDataFileCommand.TabIndex = 5;
+            reloadDataFileCommand.UseVisualStyleBackColor = true;
+            reloadDataFileCommand.Click += ReloadDataFileCommand_Click;
+            // 
+            // selectDataFileCommand
+            // 
+            selectDataFileCommand.Dock = DockStyle.Bottom;
+            selectDataFileCommand.Image = Properties.Resources.OpenFolder;
+            selectDataFileCommand.Location = new Point(529, 26);
+            selectDataFileCommand.Name = "selectDataFileCommand";
+            selectDataFileCommand.Size = new Size(24, 23);
+            selectDataFileCommand.TabIndex = 4;
+            selectDataFileCommand.UseVisualStyleBackColor = true;
+            selectDataFileCommand.Click += SelectDataFileCommand_Click;
+            // 
+            // dataFileNameData
+            // 
+            dataFileNameData.AutoSize = true;
+            dataFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            dataFileNameData.Dock = DockStyle.Fill;
+            dataFileNameData.DropDownStyle = ComboBoxStyle.DropDown;
+            dataFileNameData.HeaderText = "Data File";
+            dataFileNameData.Location = new Point(3, 3);
+            dataFileNameData.Name = "dataFileNameData";
+            dataFileNameData.ReadOnly = false;
+            dataFileNameData.Size = new Size(520, 46);
+            dataFileNameData.TabIndex = 0;
+            // 
+            // sourceDocumentData
+            // 
+            sourceDocumentData.AutoSize = true;
+            sourceDocumentData.Dock = DockStyle.Fill;
+            sourceDocumentData.HeaderText = "Data File content";
+            sourceDocumentData.Location = new Point(3, 163);
+            sourceDocumentData.Multiline = true;
+            sourceDocumentData.Name = "sourceDocumentData";
+            sourceDocumentData.ReadOnly = false;
+            sourceDocumentData.Size = new Size(586, 255);
+            sourceDocumentData.TabIndex = 2;
+            sourceDocumentData.WordWrap = false;
             // 
             // transformTab
             // 
@@ -325,6 +369,8 @@
             sourceTab.ResumeLayout(false);
             sourceDocumentLayout.ResumeLayout(false);
             sourceDocumentLayout.PerformLayout();
+            dataFileNameLayout.ResumeLayout(false);
+            dataFileNameLayout.PerformLayout();
             transformTab.ResumeLayout(false);
             transformScriptLayout.ResumeLayout(false);
             transformScriptLayout.PerformLayout();
@@ -343,7 +389,6 @@
         private TableLayoutPanel transformDocumentLayout;
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData transformTitleData;
-        private Controls.ComboBoxData schemaDocumentIdData;
         private Controls.TextBoxData schemaDocumentPathData;
         private Controls.TextBoxData sourceDocumentData;
         private TableLayoutPanel transformScriptLayout;
@@ -360,5 +405,9 @@
         private BindingSource bindingTemplate;
         private BindingSource bindingTransform;
         private BindingSource bindingDocument;
+        private TableLayoutPanel dataFileNameLayout;
+        private Controls.ComboBoxData dataFileNameData;
+        private Button selectDataFileCommand;
+        private Button reloadDataFileCommand;
     }
 }

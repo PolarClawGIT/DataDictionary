@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -31,6 +32,9 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(bindingDocument);
             SetTitle(bindingDocument);
             SetIcon(bindingDocument);
+
+            selectDataFileCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Select);
+            reloadDataFileCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Refresh);
         }
 
         public TransformDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
@@ -103,6 +107,16 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+        }
+
+        private void SelectDataFileCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ReloadDataFileCommand_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
