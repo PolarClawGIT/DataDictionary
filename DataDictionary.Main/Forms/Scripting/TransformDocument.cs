@@ -70,6 +70,33 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.TransformData.AddBinding(transformTitleData, e => e.TransformTitle);
 
+                dataFileNameData.ValueMember = nameof(ISchemaDocumentValue.DataFileName);
+                dataFileNameData.DataSource = formBinding.SchemaDocumentData;
+
+                // Special Handling for FK related values.
+                dataFileNameData.ValueMember = nameof(ISchemaDocumentValue.DataFileName);
+                dataFileNameData.DataSource = formBinding.SchemaDocumentData;
+                formBinding.DocumentData.AddBinding(dataFileNameData, e => e.DataFileName, String.Empty);
+
+                if (formBinding.TryGetSchemaDirectory(out IDirectoryValue? directory))
+                { schemaDocumentPathData.Text = directory.InitialDirectory; }
+                else { schemaDocumentPathData.Text = String.Empty; }
+
+                if (formBinding.TryGetSchemaDocument(out SchemaDocumentValue? schemaDocument))
+                {
+                    schemaSourceObjectData.Text = schemaDocument.ObjectPath ?? String.Empty;
+                    sourceDocumentData.Text = schemaDocument.FileContent;
+                }
+                else
+                {
+                    schemaSourceObjectData.Text = String.Empty;
+                    sourceDocumentData.Text = String.Empty;
+                }
+
+
+
+                //formBinding.SchemaDocumentData.AddBinding(schemaSourceObjectData, e => e.ObjectPath);
+                //formBinding.SchemaDocumentData.AddBinding(sourceDocumentData, e => e.FileContent);
 
                 // Security
                 ValidateChildren();
@@ -117,6 +144,33 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ReloadDataFileCommand_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void BindingSchemaDocument_CurrentChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BindingTransform_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetSchemaDirectory(out IDirectoryValue? directory))
+            { schemaDocumentPathData.Text = directory.InitialDirectory; }
+            else { schemaDocumentPathData.Text = String.Empty; }
+
+        }
+
+        private void DataFileNameData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetSchemaDocument(out SchemaDocumentValue? schemaDocument))
+            {
+                schemaSourceObjectData.Text = schemaDocument.ObjectPath ?? String.Empty;
+                sourceDocumentData.Text = schemaDocument.FileContent;
+            }
+            else
+            {
+                schemaSourceObjectData.Text = String.Empty;
+                sourceDocumentData.Text = String.Empty;
+            }
         }
     }
 }

@@ -154,6 +154,32 @@ namespace DataDictionary.Main.Forms
                 else { return false; }
             }
 
+            /// <summary>
+            /// Try to set the Position of the current row matching the Condition past and return the item, if successful.
+            /// </summary>
+            /// <param name="condition"></param>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public virtual Boolean TrySetCurrent(Func<TRow, Boolean> condition, [NotNullWhen(true)] out TRow? result)
+            {
+                result = null;
+
+                if (this.TryGetSingle(condition, out result))
+                {
+                    Int32 position = bindingValues.IndexOf(result);
+
+                    if (position < 0 || position >= BindingData.Count)
+                    {   // This should never occur.
+                        Exception ex = new IndexOutOfRangeException();
+                        ex.Data.Add(nameof(BindingData.Count), BindingData.Count);
+                        ex.Data.Add(nameof(position), position);
+                        throw ex;
+                    }
+                    else { BindingData.Position = position; return true; }
+                }
+                else { return false; }
+            }
+
             /// <inheritdoc cref="BindingSource.ResetCurrentItem"/>
             public void ResetCurrent()
             { BindingData.ResetCurrentItem(); }
@@ -304,7 +330,7 @@ namespace DataDictionary.Main.Forms
 
                     // This logic is intended to handle issues that just do not throw exceptions.
                     if (Find(properties, members) is PropertyDescriptor detail)
-                    {   
+                    {
                         //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
                         if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                         { needsFormatting = true; }
@@ -531,7 +557,14 @@ namespace DataDictionary.Main.Forms
                 ComboBox formControl,
                 Expression<Func<TRow, TProperty>> expression,
                 TProperty nullValue)
-            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression, nullValue)); }
+            {
+                formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression, nullValue));
+
+                // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
+                if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple
+                    && (formControl.DisplayMember == String.Empty || formControl.DisplayMember == formControl.ValueMember))
+                { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.Text), expression, nullValue)); }
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
@@ -545,7 +578,14 @@ namespace DataDictionary.Main.Forms
                 ComboBoxData formControl,
                 Expression<Func<TRow, TProperty>> expression,
                 TProperty nullValue)
-            { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression, nullValue)); }
+            {
+                formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression, nullValue));
+
+                // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
+                if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple
+                    && (formControl.DisplayMember == String.Empty || formControl.DisplayMember == formControl.ValueMember))
+                { formControl.DataBindings.Add(CreateBinding(nameof(ComboBox.Text), expression, nullValue)); }
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(

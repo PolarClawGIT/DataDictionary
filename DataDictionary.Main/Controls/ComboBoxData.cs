@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Controls
                 comboBox.Enabled = !value;
 
                 //Issue-
-                //The base Combobox does not change appearance based on enabled & readonly options like a textbox
+                //The base ComboBox does not change appearance based on enabled & readonly options like a textbox
                 //There is no easy solution.
                 //The most direct option is to play with the margins and the background color.
 
@@ -123,6 +123,7 @@ namespace DataDictionary.Main.Controls
         public void Undo() { }
 
         /// <inheritdoc cref="ComboBox.SelectionChangeCommitted"/>
+        /// <remarks>Occurs before bound field is set.</remarks>
         public event EventHandler? SelectionChangeCommitted
         {
             add { comboBox.SelectionChangeCommitted += value; }
@@ -130,7 +131,7 @@ namespace DataDictionary.Main.Controls
         }
 
         /// <inheritdoc cref="ComboBox.SelectedIndexChanged"/>
-        /// <remarks>Triggered by Binding</remarks>
+        /// <remarks>Triggered by Binding. Occurs before bound field is set.</remarks>
         public event EventHandler? SelectedIndexChanged
         {
             add { comboBox.SelectedIndexChanged += value; }
