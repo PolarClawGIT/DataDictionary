@@ -133,7 +133,7 @@
             rootFolderData.AutoSize = true;
             rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             rootFolderData.Dock = DockStyle.Fill;
-            rootFolderData.DropDownStyle = ComboBoxStyle.DropDown;
+            rootFolderData.DropDownStyle = ComboBoxStyle.DropDownList;
             rootFolderData.HeaderText = "Root Folder";
             rootFolderData.Location = new Point(3, 204);
             rootFolderData.Name = "rootFolderData";
@@ -277,7 +277,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(456, 270);
+            transformTab.Size = new Size(456, 321);
             transformTab.TabIndex = 0;
             transformTab.Text = "Transforms";
             // 
@@ -293,7 +293,7 @@
             transformLayout.RowCount = 2;
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformLayout.Size = new Size(450, 264);
+            transformLayout.Size = new Size(450, 315);
             transformLayout.TabIndex = 6;
             // 
             // transformToolStrip
@@ -344,7 +344,7 @@
             transformsData.Location = new Point(3, 28);
             transformsData.Name = "transformsData";
             transformsData.ReadOnly = true;
-            transformsData.Size = new Size(444, 233);
+            transformsData.Size = new Size(444, 284);
             transformsData.TabIndex = 5;
             // 
             // transformTitleColumn
@@ -362,7 +362,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(456, 270);
+            documentTab.Size = new Size(456, 321);
             documentTab.TabIndex = 3;
             documentTab.Text = "Documents";
             // 
@@ -378,7 +378,7 @@
             documentLayout.RowCount = 2;
             documentLayout.RowStyles.Add(new RowStyle());
             documentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            documentLayout.Size = new Size(450, 264);
+            documentLayout.Size = new Size(450, 315);
             documentLayout.TabIndex = 8;
             // 
             // documentToolStrip
@@ -410,7 +410,7 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(444, 233);
+            documentData.Size = new Size(444, 284);
             documentData.TabIndex = 7;
             // 
             // FileNameColumn

@@ -37,9 +37,9 @@
             TableLayoutPanel objectLayout;
             GroupBox groupBox1;
             TableLayoutPanel nodeSummaryLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             GroupBox filePatternGroup;
             TableLayoutPanel filePatternLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             Label fileBaseName;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTabs = new TabControl();
@@ -511,7 +511,7 @@
             rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             filePatternLayout.SetColumnSpan(rootFolderData, 2);
             rootFolderData.Dock = DockStyle.Fill;
-            rootFolderData.DropDownStyle = ComboBoxStyle.DropDown;
+            rootFolderData.DropDownStyle = ComboBoxStyle.DropDownList;
             rootFolderData.HeaderText = "Root Folder";
             rootFolderData.Location = new Point(3, 3);
             rootFolderData.Name = "rootFolderData";

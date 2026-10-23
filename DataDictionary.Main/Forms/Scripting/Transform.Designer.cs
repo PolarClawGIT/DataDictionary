@@ -336,7 +336,7 @@
             rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             filePatternLayout.SetColumnSpan(rootFolderData, 2);
             rootFolderData.Dock = DockStyle.Fill;
-            rootFolderData.DropDownStyle = ComboBoxStyle.DropDown;
+            rootFolderData.DropDownStyle = ComboBoxStyle.DropDownList;
             rootFolderData.HeaderText = "Root Folder";
             rootFolderData.Location = new Point(3, 3);
             rootFolderData.Name = "rootFolderData";
