@@ -56,6 +56,7 @@
             bindingTransform = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             bindingSchema = new BindingSource(components);
+            errorProvider = new ErrorProvider(components);
             transformDocumentLayout = new TableLayoutPanel();
             sourceDocumentLayout = new TableLayoutPanel();
             transformScriptLayout = new TableLayoutPanel();
@@ -73,6 +74,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // transformDocumentLayout
@@ -376,6 +378,10 @@
             // 
             bindingTransform.CurrentItemChanged += BindingTransform_CurrentItemChanged;
             // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
+            // 
             // TransformDocument
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -404,6 +410,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -435,5 +442,6 @@
         private Controls.TextBoxData schemaSourceObjectData;
         private Controls.TextBoxData transformFileDirectoryData;
         private Controls.TextBoxData transformFileNameData;
+        private ErrorProvider errorProvider;
     }
 }

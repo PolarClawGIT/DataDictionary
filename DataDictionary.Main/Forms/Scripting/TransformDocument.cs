@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -10,6 +11,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Xsl;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -32,6 +36,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(bindingDocument);
             SetTitle(bindingDocument);
             SetIcon(bindingDocument);
+            SetCommand(ButtonType.Export, ButtonType.Save);
 
             selectDataFileCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Select);
             reloadDataFileCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Refresh);
@@ -112,6 +117,14 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+        }
+
+        protected override void ExportCommand_Click(Object? sender, EventArgs e)
+        {
+            base.ExportCommand_Click(sender, e);
+
+            formBinding.TryExecuteTransform(out Exception? exception);
+            errorProvider.SetError(documentFileContentData, exception);
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)

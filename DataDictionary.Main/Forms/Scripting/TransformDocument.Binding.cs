@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Xml;
+using System.Xml.Xsl;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -106,6 +108,48 @@ namespace DataDictionary.Main.Forms.Scripting
                          out schemaDocument);
                 }
                 else { return false; }
+            }
+
+            public Boolean TryExecuteTransform([NotNullWhen(false)] out Exception? exception )
+            {
+                exception = null;
+
+                if(TryGetSchemaDocument(out SchemaDocumentValue? source)
+                    && TransformData.TryGetCurrent(out TransformValue? transform)
+                    && DocumentData.TryGetCurrent(out TransformDocumentValue? result))
+                {
+                    // Setup the XML Transform
+                    XslCompiledTransform xslt = new XslCompiledTransform();
+                    using (StringReader xsltReader = new StringReader(transform.FileContent))
+                    using (XmlReader xmlReader = XmlReader.Create(xsltReader))
+                    { xslt.Load(xmlReader); }
+
+                    // Execute the XML Transform
+                    using (StringReader xmlInputReader = new StringReader(source.FileContent))
+                    using (XmlReader xmlReader = XmlReader.Create(xmlInputReader))
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        try
+                        { xslt.Transform(xmlReader, null, stringWriter); }
+                        catch (Exception ex)
+                        {
+                            ex.Data.Add(nameof(source.DataFileName), source.DataFileName);
+                            ex.Data.Add(nameof(transform.TransformFileName), transform.TransformFileName);
+                            exception = ex;
+                        }
+
+                        result.FileContent = stringWriter.ToString();
+                    }
+                }
+                else
+                {   // Should not occur
+                    exception = new InvalidOperationException();
+                    exception.Data.Add(nameof(SchemaDocumentData), SchemaDocumentData.Count());
+                    exception.Data.Add(nameof(TransformData), TransformData.Count());
+                    exception.Data.Add(nameof(DocumentData), DocumentData.Count());
+                }
+
+                return exception is null;
             }
         }
     }
