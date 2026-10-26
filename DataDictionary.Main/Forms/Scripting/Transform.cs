@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle(bindingTransform);
             SetIcon(bindingTransform);
 
-            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Delete);
+            SetCommand(ButtonType.Open, ButtonType.Save);
 
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
@@ -99,11 +99,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
             }
-        }
-
-        protected override void AddCommand_Click(Object? sender, EventArgs e)
-        {
-            base.AddCommand_Click(sender, e);
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
