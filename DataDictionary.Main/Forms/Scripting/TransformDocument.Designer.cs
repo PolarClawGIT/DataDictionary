@@ -32,8 +32,8 @@
             TableLayoutPanel transformDocumentLayout;
             TableLayoutPanel sourceDocumentLayout;
             TableLayoutPanel transformScriptLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TransformDocument));
             TableLayoutPanel transformResultLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TransformDocument));
             transformTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             documentTabs = new TabControl();
@@ -47,9 +47,10 @@
             schemaSourceObjectData = new DataDictionary.Main.Controls.TextBoxData();
             transformTab = new TabPage();
             transformScriptData = new DataDictionary.Main.Controls.TextBoxData();
-            transformFileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            transformFileDirectoryData = new DataDictionary.Main.Controls.TextBoxData();
+            transformFileNameData = new DataDictionary.Main.Controls.TextBoxData();
             resultTab = new TabPage();
-            documentFileData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            documentFileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             documentFileContentData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingTransform = new BindingSource(components);
@@ -267,12 +268,14 @@
             // 
             transformScriptLayout.ColumnCount = 1;
             transformScriptLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            transformScriptLayout.Controls.Add(transformScriptData, 0, 1);
-            transformScriptLayout.Controls.Add(transformFileNameData, 0, 0);
+            transformScriptLayout.Controls.Add(transformScriptData, 0, 2);
+            transformScriptLayout.Controls.Add(transformFileDirectoryData, 0, 0);
+            transformScriptLayout.Controls.Add(transformFileNameData, 0, 1);
             transformScriptLayout.Dock = DockStyle.Fill;
             transformScriptLayout.Location = new Point(3, 3);
             transformScriptLayout.Name = "transformScriptLayout";
-            transformScriptLayout.RowCount = 2;
+            transformScriptLayout.RowCount = 3;
+            transformScriptLayout.RowStyles.Add(new RowStyle());
             transformScriptLayout.RowStyles.Add(new RowStyle());
             transformScriptLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             transformScriptLayout.Size = new Size(186, 66);
@@ -283,26 +286,39 @@
             transformScriptData.AutoSize = true;
             transformScriptData.Dock = DockStyle.Fill;
             transformScriptData.HeaderText = "Transform Script";
-            transformScriptData.Location = new Point(3, 53);
+            transformScriptData.Location = new Point(3, 103);
             transformScriptData.Multiline = true;
             transformScriptData.Name = "transformScriptData";
-            transformScriptData.ReadOnly = false;
-            transformScriptData.Size = new Size(180, 10);
+            transformScriptData.ReadOnly = true;
+            transformScriptData.Size = new Size(180, 1);
             transformScriptData.TabIndex = 1;
             transformScriptData.WordWrap = false;
+            // 
+            // transformFileDirectoryData
+            // 
+            transformFileDirectoryData.AutoSize = true;
+            transformFileDirectoryData.Dock = DockStyle.Fill;
+            transformFileDirectoryData.HeaderText = "Script File Directory (local)";
+            transformFileDirectoryData.Location = new Point(3, 3);
+            transformFileDirectoryData.Multiline = false;
+            transformFileDirectoryData.Name = "transformFileDirectoryData";
+            transformFileDirectoryData.ReadOnly = true;
+            transformFileDirectoryData.Size = new Size(180, 44);
+            transformFileDirectoryData.TabIndex = 2;
+            transformFileDirectoryData.WordWrap = true;
             // 
             // transformFileNameData
             // 
             transformFileNameData.AutoSize = true;
-            transformFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             transformFileNameData.Dock = DockStyle.Fill;
-            transformFileNameData.HeaderText = "Script File (Local path)";
-            transformFileNameData.Location = new Point(3, 3);
+            transformFileNameData.HeaderText = "Script File Name";
+            transformFileNameData.Location = new Point(3, 53);
+            transformFileNameData.Multiline = false;
             transformFileNameData.Name = "transformFileNameData";
-            transformFileNameData.ReadOnly = false;
-            transformFileNameData.SelectIcon = (Image)resources.GetObject("transformFileNameData.SelectIcon");
+            transformFileNameData.ReadOnly = true;
             transformFileNameData.Size = new Size(180, 44);
-            transformFileNameData.TabIndex = 2;
+            transformFileNameData.TabIndex = 3;
+            transformFileNameData.WordWrap = true;
             // 
             // resultTab
             // 
@@ -311,7 +327,7 @@
             resultTab.Location = new Point(4, 24);
             resultTab.Name = "resultTab";
             resultTab.Padding = new Padding(3);
-            resultTab.Size = new Size(192, 72);
+            resultTab.Size = new Size(598, 427);
             resultTab.TabIndex = 2;
             resultTab.Text = "Result";
             // 
@@ -319,7 +335,7 @@
             // 
             transformResultLayout.ColumnCount = 1;
             transformResultLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            transformResultLayout.Controls.Add(documentFileData, 0, 0);
+            transformResultLayout.Controls.Add(documentFileNameData, 0, 0);
             transformResultLayout.Controls.Add(documentFileContentData, 0, 1);
             transformResultLayout.Dock = DockStyle.Fill;
             transformResultLayout.Location = new Point(3, 3);
@@ -327,21 +343,21 @@
             transformResultLayout.RowCount = 2;
             transformResultLayout.RowStyles.Add(new RowStyle());
             transformResultLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformResultLayout.Size = new Size(186, 66);
+            transformResultLayout.Size = new Size(592, 421);
             transformResultLayout.TabIndex = 7;
             // 
-            // documentFileData
+            // documentFileNameData
             // 
-            documentFileData.AutoSize = true;
-            documentFileData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            documentFileData.Dock = DockStyle.Fill;
-            documentFileData.HeaderText = "Transform Result (Local Path)";
-            documentFileData.Location = new Point(3, 3);
-            documentFileData.Name = "documentFileData";
-            documentFileData.ReadOnly = false;
-            documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
-            documentFileData.Size = new Size(180, 44);
-            documentFileData.TabIndex = 0;
+            documentFileNameData.AutoSize = true;
+            documentFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            documentFileNameData.Dock = DockStyle.Fill;
+            documentFileNameData.HeaderText = "Transform Result (Local Path)";
+            documentFileNameData.Location = new Point(3, 3);
+            documentFileNameData.Name = "documentFileNameData";
+            documentFileNameData.ReadOnly = false;
+            documentFileNameData.SelectIcon = (Image)resources.GetObject("documentFileNameData.SelectIcon");
+            documentFileNameData.Size = new Size(586, 44);
+            documentFileNameData.TabIndex = 0;
             // 
             // documentFileContentData
             // 
@@ -352,7 +368,7 @@
             documentFileContentData.Multiline = true;
             documentFileContentData.Name = "documentFileContentData";
             documentFileContentData.ReadOnly = true;
-            documentFileContentData.Size = new Size(180, 10);
+            documentFileContentData.Size = new Size(586, 365);
             documentFileContentData.TabIndex = 1;
             documentFileContentData.WordWrap = false;
             // 
@@ -402,13 +418,12 @@
         private TableLayoutPanel transformScriptLayout;
         private Controls.TextBoxData transformScriptData;
         private TableLayoutPanel transformResultLayout;
-        private Controls.SelectTextBoxData documentFileData;
+        private Controls.SelectTextBoxData documentFileNameData;
         private Controls.TextBoxData documentFileContentData;
         private TabControl documentTabs;
         private TabPage sourceTab;
         private TabPage transformTab;
         private TabPage resultTab;
-        private Controls.SelectTextBoxData transformFileNameData;
         private BindingSource bindingTemplate;
         private BindingSource bindingTransform;
         private BindingSource bindingDocument;
@@ -418,5 +433,7 @@
         private Button reloadDataFileCommand;
         private BindingSource bindingSchema;
         private Controls.TextBoxData schemaSourceObjectData;
+        private Controls.TextBoxData transformFileDirectoryData;
+        private Controls.TextBoxData transformFileNameData;
     }
 }

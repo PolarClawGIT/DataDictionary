@@ -70,14 +70,12 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.TransformData.AddBinding(transformTitleData, e => e.TransformTitle);
 
-                dataFileNameData.ValueMember = nameof(ISchemaDocumentValue.DataFileName);
-                dataFileNameData.DataSource = formBinding.SchemaDocumentData;
-
-                // Special Handling for FK related values.
+                // Source Tab
                 dataFileNameData.ValueMember = nameof(ISchemaDocumentValue.DataFileName);
                 dataFileNameData.DataSource = formBinding.SchemaDocumentData;
                 formBinding.DocumentData.AddBinding(dataFileNameData, e => e.DataFileName, String.Empty);
 
+                // Special Handling for FK related values.
                 if (formBinding.TryGetSchemaDirectory(out IDirectoryValue? directory))
                 { schemaDocumentPathData.Text = directory.InitialDirectory; }
                 else { schemaDocumentPathData.Text = String.Empty; }
@@ -93,10 +91,15 @@ namespace DataDictionary.Main.Forms.Scripting
                     sourceDocumentData.Text = String.Empty;
                 }
 
+                // Transform Tab
+                formBinding.TransformData.AddBinding(transformFileDirectoryData, e => e.InitialDirectory);
+                formBinding.TransformData.AddBinding(transformFileNameData, e => e.TransformFileName);
+                formBinding.TransformData.AddBinding(transformScriptData, e => e.FileContent);
 
+                // Result Tab
+                formBinding.DocumentData.AddBinding(documentFileNameData, e => e.ScriptedFileName);
+                formBinding.DocumentData.AddBinding(documentFileContentData, e => e.FileContent);
 
-                //formBinding.SchemaDocumentData.AddBinding(schemaSourceObjectData, e => e.ObjectPath);
-                //formBinding.SchemaDocumentData.AddBinding(sourceDocumentData, e => e.FileContent);
 
                 // Security
                 ValidateChildren();
