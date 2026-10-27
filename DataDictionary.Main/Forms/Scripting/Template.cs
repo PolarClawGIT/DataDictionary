@@ -52,6 +52,7 @@ namespace DataDictionary.Main.Forms.Scripting
             transformNewCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
             transformDeleteCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Delete);
 
+            documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
 
@@ -272,6 +273,15 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+
+        private void DocumentNewCommand_Click(object sender, EventArgs e)
+        {
+            Activate(() => new Forms.Scripting.TemplateDocument(
+                template: templateIndex,
+                document: null,
+                getData: formBinding.GetData));
+        }
+
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
@@ -296,7 +306,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 folderBrowserDialog.InitialDirectory = current.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
-                {   current.InitialDirectory = folderBrowserDialog.SelectedPath; }
+                { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
             }
         }
 

@@ -9,7 +9,7 @@
   </SourceModelProvider>
   <TargetModelProvider>
     <ConnectionBasedModelProvider>
-      <ConnectionString>Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SampleDatabase;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=False;Trust Server Certificate=False;Command Timeout=0</ConnectionString>
+      <ConnectionString>Data Source=.\SQLEXPRESS;Initial Catalog=SampleDatabase;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Encrypt=False;Trust Server Certificate=False;Command Timeout=0</ConnectionString>
     </ConnectionBasedModelProvider>
   </TargetModelProvider>
   <SchemaCompareSettingsService>
@@ -31,6 +31,10 @@
       <PropertyElementName>
         <Name>AllowIncompatiblePlatform</Name>
         <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>AllowTableRecreation</Name>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>BackupDatabaseBeforeChanges</Name>
@@ -173,6 +177,14 @@
         <Value>False</Value>
       </PropertyElementName>
       <PropertyElementName>
+        <Name>IgnorePreDeployScript</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>IgnorePostDeployScript</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
         <Name>IgnoreTablePartitionOptions</Name>
         <Value>False</Value>
       </PropertyElementName>
@@ -298,6 +310,10 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>RegisterDataTierApplication</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>PerformIndexOperationsOnline</Name>
         <Value>False</Value>
       </PropertyElementName>
       <PropertyElementName>
@@ -494,6 +510,10 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>DoNotDropExternalLibraries</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>DoNotDropExternalModels</Name>
         <Value>False</Value>
       </PropertyElementName>
       <PropertyElementName>
@@ -754,6 +774,10 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>ExcludeExternalLibraries</Name>
+        <Value>False</Value>
+      </PropertyElementName>
+      <PropertyElementName>
+        <Name>ExcludeExternalModels</Name>
         <Value>False</Value>
       </PropertyElementName>
       <PropertyElementName>

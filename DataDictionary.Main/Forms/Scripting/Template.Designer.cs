@@ -55,6 +55,7 @@
             transformTitleColumn = new DataGridViewTextBoxColumn();
             documentTab = new TabPage();
             documentToolStrip = new ToolStrip();
+            documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             documentData = new DataGridView();
             FileNameColumn = new DataGridViewTextBoxColumn();
@@ -383,12 +384,22 @@
             // 
             // documentToolStrip
             // 
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentOpenCommand });
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
             documentToolStrip.Size = new Size(450, 25);
             documentToolStrip.TabIndex = 0;
             documentToolStrip.Text = "toolStrip1";
+            // 
+            // documentNewCommand
+            // 
+            documentNewCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentNewCommand.Image = (Image)resources.GetObject("documentNewCommand.Image");
+            documentNewCommand.ImageTransparentColor = Color.Magenta;
+            documentNewCommand.Name = "documentNewCommand";
+            documentNewCommand.Size = new Size(23, 22);
+            documentNewCommand.Text = "New Document";
+            documentNewCommand.Click += DocumentNewCommand_Click;
             // 
             // documentOpenCommand
             // 
@@ -521,5 +532,6 @@
         private FolderBrowserDialog folderBrowserDialog;
         private OpenFileDialog openFileDialog;
         private ErrorProvider errorProvider;
+        private ToolStripButton documentNewCommand;
     }
 }

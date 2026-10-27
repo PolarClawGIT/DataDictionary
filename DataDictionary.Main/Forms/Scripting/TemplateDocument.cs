@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -12,36 +13,71 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class Document : ApplicationData
+    partial class TemplateDocument : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();
+        DocumentIndex documentIndex = new DocumentIndex();
         TemporalIndex? temporalIndex = null;
+        FormBinding formBinding;
 
         public override Boolean IsOpenItem(object? item)
         { return item is ITemplateIndex key && templateIndex.Equals(key); }
 
-        public Document() : base()
+        public TemplateDocument() : base()
         {
             InitializeComponent();
 
+            formBinding = new FormBinding();
             SetIcon(ScopeType.ScriptingDocument);
 
             SetCommand(ButtonType.Delete);
 
-            documentOpenSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
-            documentOpenTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
-            AddCommands(documentCcontextMenu, ToolStripItemDisplayStyle.Image);
+            schemaOpenCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
+            schemaBuildCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
+            schemaSaveCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Save);
+
+            transformOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
+            transformSaveCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Save);
+
+            scriptedOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+            scriptedBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
+            scriptedSaveCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Save);
         }
 
-        public Document(ITemplateIndex template) : this()
-        { templateIndex = new TemplateIndex(template); }
+        public TemplateDocument(ITemplateIndex template, IDocumentIndex? document, Func<ITemplateData> getData) : this()
+        {
+            templateIndex = new TemplateIndex(template);
 
-        public Document(ITemplateIndex template, ITemporalIndex temporal) : this(template)
-        { temporalIndex = new TemporalIndex(); }
+            if (document is IDocumentIndex key)
+            { documentIndex = new DocumentIndex(key); }
+        }
+
+        public TemplateDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
+        {
+            documentIndex = new DocumentIndex(document);
+            //formBinding.GetData = getData;
+        }
 
         private void Document_Load(object sender, EventArgs e)
         {
+            if (documentIndex.HasValue)
+            {
+                formBinding.LoadValue(documentIndex);
+                DoBinding();
+            }
+            else if (formBinding.TryCreate(templateIndex, ref documentIndex, out Exception? exception))
+            {
+                formBinding.LoadValue(documentIndex);
+                SendMessage(new RefreshNavigation());
+                DoBinding();
+            }
+            else
+            { IsLocked(true); throw exception; }
 
+            void DoBinding()
+            {
+
+            }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)

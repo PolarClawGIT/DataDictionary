@@ -131,20 +131,6 @@ namespace DataDictionary.Main
                 (form) => form.IsOpenItem(modelItem));
         }
 
-        void OpenForm(ISchemaDocumentValue documentItem)
-        {
-            Activate(
-                () => new Forms.Scripting.Document(documentItem),
-                (form) => form.IsOpenItem(documentItem));
-        }
-
-        void OpenForm(ITransformDocumentValue documentItem)
-        {
-            Activate(
-                () => new Forms.Scripting.Document(documentItem),
-                (form) => form.IsOpenItem(documentItem));
-        }
-
         void OpenForm(ISchemaDefinitionValue schemaItem)
         {
             Activate(
