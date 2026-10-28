@@ -146,25 +146,17 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaIdData_Validated(object sender, EventArgs e)
         {
-            errorProvider.SetError(schemaIdData, String.Empty);
+            errorProvider.SetError(schemaIdData.ErrorControl, String.Empty);
             dataFileLocationData.Text = String.Empty;
-
-            
 
             if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
             {
-
-                var x = schemaIdData.SelectedValue;
-                var y = document.SchemaId;
-
                 SchemaDefinitionIndex key = new SchemaDefinitionIndex(document);
                 if (key.HasValue && formBinding.SchemaData.TrySetCurrent(w => key.Equals(w), out SchemaDefinitionValue? schema))
                 { dataFileLocationData.Text = schema.InitialDirectory; }
                 else { errorProvider.SetError(schemaIdData.ErrorControl, "schema not found"); }
             }
             else { errorProvider.SetError(schemaIdData.ErrorControl, "document not found"); } // Should never occur
-
-
         }
 
         private void SchemaFileNameData_Validated(object sender, EventArgs e)

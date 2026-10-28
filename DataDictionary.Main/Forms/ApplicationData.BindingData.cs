@@ -308,7 +308,6 @@ namespace DataDictionary.Main.Forms
             /// Helper Method to create the Binding class for a DataField
             /// </summary>
             /// <typeparam name="TProperty">Data Type of the property of the expression.</typeparam>
-            /// <param name="formControl"></param>
             /// <param name="controlField">Property of the Control that is too be bound.</param>
             /// <param name="expression">The Expression that is the name of the property that the control is bound to.</param>
             /// <param name="nullValue">Value that represents Null</param>
@@ -320,47 +319,43 @@ namespace DataDictionary.Main.Forms
             /// Each AddBinding method is wired to handle a specific Control type.
             /// This allows for specialized handling, as needed.
             /// </remarks>
-            protected virtual Binding CreateBinding<TProperty>(Control formControl,  String controlField, Expression<Func<TRow, TProperty>> expression, Object? nullValue = null)
+            protected virtual Binding CreateBinding<TProperty>(String controlField, Expression<Func<TRow, TProperty>> expression, Object? nullValue = null)
             {
                 IReadOnlyList<String> members = ParseExpression(expression);
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
-                Exception? memberException = ValidateProperty<TProperty>(formControl, members);
 
-                if (memberException is null)
+                Boolean needsFormatting = false;
+
+                // This logic is intended to handle issues that just do not throw exceptions.
+                if (Find(properties, members) is PropertyDescriptor detail)
                 {
-                    Boolean needsFormatting = false;
+                    //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
+                    if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    { needsFormatting = true; }
 
-                    // This logic is intended to handle issues that just do not throw exceptions.
-                    if (Find(properties, members) is PropertyDescriptor detail)
+                    // Strings are already assumed to be formatted.
+                    if (detail.PropertyType == typeof(String))
                     {
-                        //Nullable needs FormattingEnabled or the Set operator will NEVER be called and no exception occurs.
-                        if (detail.PropertyType.IsGenericType && detail.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                        { needsFormatting = true; }
-
-                        // Strings are already assumed to be formatted.
-                        if (detail.PropertyType == typeof(String))
-                        {
-                            needsFormatting = false;
-                            nullValue = nullValue ?? String.Empty;
-                        }
+                        needsFormatting = false;
+                        nullValue = nullValue ?? String.Empty;
                     }
-                    else
-                    {
-                        Exception ex = new ArgumentException("The Property Name could not be resolved.");
-                        ex.Data.Add(nameof(members), String.Join(".", members));
-                        foreach (PropertyDescriptor item in properties)
-                        { ex.Data.Add(item.Name, item.PropertyType.Name); }
-
-                        throw ex;
-                    }
-
-                    return new Binding(controlField, BindingData, String.Join(".", members))
-                    {
-                        DataSourceNullValue = nullValue,
-                        FormattingEnabled = needsFormatting
-                    };
                 }
-                else { throw memberException; }
+                else
+                {
+                    Exception ex = new ArgumentException("The Property Name could not be resolved.");
+                    ex.Data.Add(nameof(members), String.Join(".", members));
+                    foreach (PropertyDescriptor item in properties)
+                    { ex.Data.Add(item.Name, item.PropertyType.Name); }
+
+                    throw ex;
+                }
+
+                return new Binding(controlField, BindingData, String.Join(".", members))
+                {
+                    DataSourceNullValue = nullValue,
+                    FormattingEnabled = needsFormatting
+                };
+
 
                 PropertyDescriptor? Find(PropertyDescriptorCollection source, IEnumerable<String> target)
                 {   // Data Binding allows for items nested inside child classes.
@@ -432,15 +427,18 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <typeparam name="TProperty"></typeparam>
             /// <param name="formControl"></param>
-            /// <param name="bindingProperty"></param>
+            /// <param name="expression"></param>
+            /// <param name="exception"></param>
             /// <returns></returns>
             /// <remarks>
             /// This is intended to trap issues with the FindGoodRow method, before that method raises an error.<br/>
             /// The FindGoodRow method (Microsoft code: System.Windows.Forms.CurrencyManager) traps errors but returns very little useful information.
             /// This method catches common issues and throws exceptions during binding rather then when data is retrieved.<br/>
             /// </remarks>
-            protected virtual Exception? ValidateProperty<TProperty>(Control formControl, IReadOnlyList<String> bindingProperty)
+            protected virtual Boolean ValidateProperty<TProperty>(Control formControl, Expression<Func<TRow, TProperty>> expression, [NotNullWhen(false)] out Exception? exception)
             {
+                exception = null;
+                IReadOnlyList<String> bindingProperty = ParseExpression(expression);
                 PropertyDescriptorCollection properties = BindingData.GetItemProperties(null);
                 String controlBinding = String.Join(".", bindingProperty);
 
@@ -452,62 +450,79 @@ namespace DataDictionary.Main.Forms
 
                 if (BindingData.DataSource is not IBindingList)
                 {
-                    Exception ex = new InvalidOperationException("Not a IBindingList");
-                    ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
-                    return ex;
+                    exception = new InvalidOperationException("Not a IBindingList");
+                    exception.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
                 }
 
                 if (BindingData.DataSource is IEnumerable<Object> values
                     && values.Any(a => !(a is INotifyPropertyChanged)))
                 {
-                    Exception ex = new InvalidOperationException("Not a INotifyPropertyChanged");
-                    ex.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
-                    return ex;
+                    exception = new InvalidOperationException("Not a INotifyPropertyChanged");
+                    exception.Data.Add(nameof(dataSourceType.Name), dataSourceType.Name);
                 }
 
                 // Field Issues
+
                 foreach (String fieldName in bindingProperty)
                 {
                     // Property Name check
                     if (properties.Find(fieldName, false) is PropertyDescriptor property)
                     {
-                        if (property.IsReadOnly && formControl.Enabled)
-                        {   // If the field is ReadOnly and Set is called, nothing happens.
-                            // However, the field may be intentionally Read Only.
-                            // Currently cannot tell the difference.
-                            Exception ex = new InvalidOperationException("value is ReadOnly. Check property Set modifier. It may be Private or Protected.");
-                            ex.Data.Add(nameof(formControl), formControl.Name);
-                            ex.Data.Add(nameof(controlBinding), controlBinding);
-                            ex.Data.Add(nameof(property.Name), property.Name);
-                            return ex;
-                        }
-
-                        // Property Type Check
-                        if (bindingProperty.Count == 0 && property.PropertyType != typeof(TProperty))
+                        if (fieldName == bindingProperty.Last()) // Check the details on the child most property only.
                         {
-                            Exception ex = new ArgumentException("Type does not match what is expected", controlBinding);
-                            ex.Data.Add(nameof(controlBinding), controlBinding);
-                            ex.Data.Add(nameof(TRow), typeof(TRow).ToString());
-                            ex.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
-                            ex.Data.Add(nameof(property.PropertyType), property.PropertyType.ToString());
-                            return ex;
+                            // Property Type Check
+                            if (bindingProperty.Count == 0 && property.PropertyType != typeof(TProperty))
+                            {
+                                exception = new ArgumentException("Type does not match what is expected", controlBinding);
+                                exception.Data.Add(nameof(formControl), formControl.Name);
+                                exception.Data.Add(nameof(controlBinding), controlBinding);
+                                exception.Data.Add(nameof(TRow), typeof(TRow).ToString());
+                                exception.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
+                                exception.Data.Add(nameof(property.PropertyType), property.PropertyType.ToString());
+                            }
+
+                            // If the field is ReadOnly and Set is called, nothing happens.
+                            // This logic is attempting to catch this and tell the developer there is a mis-match.
+                            //
+                            // The Object Property is flagged as Read only. Private, Protected, or Internal will cause this.
+                            // The Control is Enabled or the control has a ReadOnly property set to false. Makes the control Read/Write.
+                            else if (property.IsReadOnly &&
+                                !(!formControl.Enabled ||
+                                    (formControl.GetType().GetProperty(nameof(TextBox.ReadOnly)) is PropertyInfo readOnlyProperty
+                                    && readOnlyProperty.GetValue(formControl) is Boolean readOnlyValue
+                                    && readOnlyValue)))
+                            {
+                                exception = new InvalidOperationException("value is ReadOnly but the control is read/write.");
+                                exception.Data.Add(nameof(formControl), formControl.Name);
+                                exception.Data.Add(nameof(controlBinding), controlBinding);
+                            }
+
+                            // CheckBox or RadioButton Type mismatch
+                            else if (formControl is CheckBox or RadioButton
+                                && typeof(TProperty) != typeof(Boolean))
+                            {
+                                exception = new ArgumentException("Checkbox and RadioButton TProperty needs to be of Type Boolean", controlBinding);
+                                exception.Data.Add(nameof(formControl), formControl.Name);
+                                exception.Data.Add(nameof(controlBinding), controlBinding);
+                                exception.Data.Add(nameof(TRow), typeof(TRow).ToString());
+                                exception.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
+                            }
                         }
 
-                        properties = property.GetChildProperties();
+                        properties = property.GetChildProperties(); //Loop to children
                     }
                     else
                     {
-                        Exception ex = new ArgumentException("Property Not Found", controlBinding);
-                        ex.Data.Add(nameof(controlBinding), controlBinding);
-                        ex.Data.Add(nameof(TRow), typeof(TRow).ToString());
-                        ex.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
+                        exception = new ArgumentException("Property Not Found", controlBinding);
+                        exception.Data.Add(nameof(controlBinding), controlBinding);
+                        exception.Data.Add(nameof(TRow), typeof(TRow).ToString());
+                        exception.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
                         foreach (PropertyDescriptor item in BindingData.GetItemProperties(null).OfType<PropertyDescriptor>())
-                        { ex.Data.Add(item.Name, item.PropertyType); }
-                        return ex;
+                        { exception.Data.Add(item.Name, item.PropertyType); }
                     }
                 }
 
-                return null;
+                return exception is null;
             }
 
             /// <summary>
@@ -536,25 +551,41 @@ namespace DataDictionary.Main.Forms
             public virtual void AddBinding<TProperty>(
                 Form formControl,
                 Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(formControl, nameof(Form.Text), expression)); }
+            {
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Text), expression)); }
+                else { throw exception; }
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 TextBox formControl,
                 Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(formControl, nameof(TextBox.Text), expression)); }
+            {
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Text), expression)); }
+                else { throw exception; }
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 TextBoxData formControl,
                 Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(formControl, nameof(TextBox.Text), expression)); }
+            {
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Text), expression)); }
+                else { throw exception; }
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
                 SelectTextBoxData formControl,
                 Expression<Func<TRow, TProperty>> expression)
-            { formControl.DataBindings.Add(CreateBinding(formControl, nameof(TextBox.Text), expression)); }
+            {
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Text), expression)); }
+                else { throw exception; }
+            }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
             public virtual void AddBinding<TProperty>(
@@ -562,12 +593,16 @@ namespace DataDictionary.Main.Forms
                 Expression<Func<TRow, TProperty>> expression,
                 TProperty nullValue)
             {
-                formControl.DataBindings.Add(CreateBinding(formControl, nameof(ComboBox.SelectedValue), expression, nullValue));
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                {
+                    formControl.DataBindings.Add(CreateBinding(nameof(formControl.SelectedValue), expression));
 
-                // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
-                if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple
-                    && (formControl.DisplayMember == String.Empty || formControl.DisplayMember == formControl.ValueMember))
-                { formControl.DataBindings.Add(CreateBinding(formControl, nameof(ComboBox.Text), expression, nullValue)); }
+                    // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
+                    if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple
+                        && (formControl.DisplayMember == String.Empty || formControl.DisplayMember == formControl.ValueMember))
+                    { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Text), expression, nullValue)); }
+                }
+                else { throw exception; }
             }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
@@ -583,12 +618,16 @@ namespace DataDictionary.Main.Forms
                 Expression<Func<TRow, TProperty>> expression,
                 TProperty nullValue)
             {
-                formControl.DataBindings.Add(CreateBinding(formControl, nameof(ComboBox.SelectedValue), expression, nullValue));
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                {
+                    formControl.DataBindings.Add(CreateBinding(nameof(formControl.SelectedValue), expression));
 
-                // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
-                if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple
-                    && (formControl.DisplayMember == String.Empty || formControl.DisplayMember == formControl.ValueMember))
-                { formControl.DataBindings.Add(CreateBinding(formControl, nameof(ComboBox.Text), expression, nullValue)); }
+                    // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
+                    if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple
+                        && (formControl.DisplayMember == String.Empty || formControl.DisplayMember == formControl.ValueMember))
+                    { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Text), expression, nullValue)); }
+                }
+                else { throw exception; }
             }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
@@ -598,15 +637,9 @@ namespace DataDictionary.Main.Forms
             {
                 Type propertyType = typeof(TProperty);
 
-                if (propertyType == typeof(Boolean))
-                { formControl.DataBindings.Add(CreateBinding(formControl, nameof(CheckBox.Checked), expression)); }
-                else
-                {
-                    Exception ex = new ArgumentException("Checkbox TProperty needs to be of Type Boolean");
-                    ex.Data.Add(nameof(TRow), typeof(TRow).ToString());
-                    ex.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
-                    throw ex;
-                }
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Checked), expression)); }
+                else { throw exception; }
             }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>
@@ -616,15 +649,9 @@ namespace DataDictionary.Main.Forms
             {
                 Type propertyType = typeof(TProperty);
 
-                if (propertyType == typeof(Boolean))
-                { formControl.DataBindings.Add(CreateBinding(formControl, nameof(CheckBox.Checked), expression)); }
-                else
-                {
-                    Exception ex = new ArgumentException("RadioButton TProperty needs to be of Type Boolean");
-                    ex.Data.Add(nameof(TRow), typeof(TRow).ToString());
-                    ex.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
-                    throw ex;
-                }
+                if (ValidateProperty(formControl, expression, out Exception? exception))
+                { formControl.DataBindings.Add(CreateBinding(nameof(formControl.Checked), expression)); }
+                else { throw exception; }
             }
 
             /// <inheritdoc cref="AddBinding{TProperty}(Control, Expression{Func{TRow, TProperty}})"/>

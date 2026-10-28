@@ -59,14 +59,14 @@ namespace DataDictionary.DataLayer.AppScript
         public virtual Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
-            protected set { SetValue(nameof(TemplateId), value); }
+            set { SetValue(nameof(TemplateId), value); }
         }
 
         /// <inheritdoc/>
         public virtual Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
-            protected set { SetValue(nameof(SchemaId), value); }
+            set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
