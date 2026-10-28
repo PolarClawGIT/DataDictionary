@@ -73,7 +73,7 @@ namespace DataDictionary.DataLayer.AppScript
         public virtual Guid? TransformId
         {
             get { return GetValue<Guid>(nameof(TransformId)); }
-            protected set { SetValue(nameof(TransformId), value); }
+            set { SetValue(nameof(TransformId), value); }
         }
 
         /// <inheritdoc/>
@@ -150,7 +150,7 @@ namespace DataDictionary.DataLayer.AppScript
         protected TemplateDocumentItem() : base()
         {
             if (DocumentId is null) { DocumentId = Guid.NewGuid(); }
-            if (String.IsNullOrWhiteSpace(DataFileName)) { DataFileName = "newDocument"; }
+            if (String.IsNullOrWhiteSpace(DocumentTitle)) { DocumentTitle = "newDocument"; }
 
             Temporal = new TemporalItem()
             {

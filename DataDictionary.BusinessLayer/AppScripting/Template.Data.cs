@@ -48,9 +48,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ITransformDocumentData TransformDocuments { get; }
 
         /// <summary>
+        /// The files/documents of the templates
+        /// </summary>
+        ITemplateDocumentData Documents { get; }
+
+        /// <summary>
         /// List of <b>default</b> XmlBuilders supported by the application.
         /// </summary>
-        IEnumerable<XmlBuilder> XmlBuilders { get; }
+        IEnumerable <XmlBuilder> XmlBuilders { get; }
 
         /// <summary>
         /// Creates an empty ITemplateData.
@@ -111,6 +116,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="exception"></param>
         /// <returns></returns>
         Boolean TryCreate(ITransformIndex transform, [NotNullWhen(true)] out TransformDocumentValue? transformDocument, [NotNullWhen(false)] out Exception? exception);
+
+        /// <summary>
+        /// Given the Transform, Try to Create and Add a TemplateDocumentValue.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="templateDocument"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TemplateDocumentValue? templateDocument, [NotNullWhen(false)] out Exception? exception);
     }
 
     class TemplateData : TemplateCollection<TemplateValue>, ITemplateData,
@@ -137,6 +151,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         TransformDocumentData transformDocumentValues;
 
         /// <inheritdoc/>
+        public ITemplateDocumentData Documents { get { return templateDocumentValues; } }
+        TemplateDocumentData templateDocumentValues;
+
+        /// <inheritdoc/>
         public IEnumerable<XmlBuilder> XmlBuilders { get { return xmlBuilderValues; } }
         static Collection<XmlBuilder> xmlBuilderValues = new Collection<XmlBuilder>();
 
@@ -148,6 +166,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaDocumentValues = new SchemaDocumentData();
             transformValues = new TransformData();
             transformDocumentValues = new TransformDocumentData();
+            templateDocumentValues = new TemplateDocumentData();
         }
 
         /// <inheritdoc/>
@@ -174,6 +193,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(transformValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateLoad(templateDocumentValues, (IModelKey)dataKey));
             return work;
         }
 
@@ -187,6 +207,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (IModelKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(templateDocumentValues, (IModelKey)dataKey, asOfUtcDate));
             return work;
         }
 
@@ -200,6 +221,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(transformValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateLoad(templateDocumentValues, (ITemplateKey)dataKey));
             return work;
         }
 
@@ -213,6 +235,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaDocumentValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(transformDocumentValues, (ITemplateKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(templateDocumentValues, (ITemplateKey)dataKey, asOfUtcDate));
             return work;
         }
 
@@ -226,6 +249,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateSave(schemaDocumentValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(transformValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(transformDocumentValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateSave(templateDocumentValues, (ITemplateKey)dataKey));
             return work;
         }
 
@@ -239,6 +263,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateSave(schemaDocumentValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(transformValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(transformDocumentValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateSave(templateDocumentValues, (IModelKey)dataKey));
             return work;
         }
 
@@ -251,6 +276,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(schemaDocumentValues.Delete(dataKey));
             work.AddRange(transformValues.Delete(dataKey));
             work.AddRange(transformDocumentValues.Delete(dataKey));
+            work.AddRange(templateDocumentValues.Delete(dataKey));
             return work;
         }
 
@@ -264,6 +290,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(schemaDocumentValues.Delete());
             work.AddRange(transformValues.Delete());
             work.AddRange(transformDocumentValues.Delete());
+            work.AddRange(templateDocumentValues.Delete());
             return work;
         }
 
@@ -281,6 +308,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaDocumentValues.Remove(dataKey);
             transformValues.Remove(dataKey);
             transformDocumentValues.Remove(dataKey);
+            templateDocumentValues.Remove(dataKey);
         }
 
         /// <inheritdoc/>
@@ -293,6 +321,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaDocumentValues.Clear();
             transformValues.Clear();
             transformDocumentValues.Clear();
+            templateDocumentValues.Clear();
         }
 
         /// <inheritdoc/>
@@ -301,6 +330,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaDefinitionValues.Remove(dataKey);
             schemaNodeValues.Remove(dataKey);
             schemaDocumentValues.Remove(dataKey);
+            templateDocumentValues.Remove(dataKey);
         }
 
         /// <inheritdoc/>
@@ -308,6 +338,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             transformValues.Remove(dataKey);
             transformDocumentValues.Remove(dataKey);
+            templateDocumentValues.Remove(dataKey);
         }
 
         /// <inheritdoc/>
@@ -342,6 +373,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             result.Add(schemaDocumentValues.ToDataTable());
             result.Add(transformValues.ToDataTable());
             result.Add(transformDocumentValues.ToDataTable());
+            result.Add(templateDocumentValues.ToDataTable());
 
             return result;
         }
@@ -355,6 +387,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaDocumentValues.Load(source);
             transformValues.Load(source);
             transformDocumentValues.Load(source);
+            templateDocumentValues.Load(source);
         }
 
         /// <summary>
@@ -490,5 +523,19 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return exception is null;
         }
 
+        /// <inheritdoc/>
+        public Boolean TryCreate(ITemplateIndex template, [NotNullWhen(true)] out TemplateDocumentValue? templateDocument, [NotNullWhen(false)] out Exception? exception)
+        {
+            templateDocument = null;
+            TemplateIndex key = new TemplateIndex(template);
+
+            if (this.TryGetSingle(w => key.Equals(w), out TemplateValue? templateValue, out exception))
+            {
+                templateDocument = new TemplateDocumentValue(templateValue);
+                Documents.Add(templateDocument);
+            }
+
+            return exception is null;
+        }
     }
 }

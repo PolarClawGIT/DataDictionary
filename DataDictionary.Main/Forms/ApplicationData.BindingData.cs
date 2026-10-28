@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.AppSecurity;
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.Main.Controls;
 using System.Collections;
 using System.ComponentModel;
@@ -341,6 +342,10 @@ namespace DataDictionary.Main.Forms
                             needsFormatting = false;
                             nullValue = nullValue ?? String.Empty;
                         }
+
+                        // Read-Only properties to have the formatted in order to catch exceptions if the Setter is called.
+                        if (detail.IsReadOnly)
+                        { needsFormatting = true; }
                     }
                     else
                     {
@@ -472,10 +477,10 @@ namespace DataDictionary.Main.Forms
                         {   // If the field is ReadOnly and Set is called, nothing happens.
                             // However, the field may be intentionally Read Only.
                             // Currently cannot tell the difference.
-                            Exception ex = new InvalidOperationException("value is ReadOnly");
+                            Exception ex = new InvalidOperationException("value is ReadOnly. Check property Set modifier. It may be Private or Protected.");
                             ex.Data.Add(nameof(bindField), bindField);
                             ex.Data.Add(nameof(property.Name), property.Name);
-                            //throw ex;
+                            //return ex;
                         }
 
                         // Property Type Check
@@ -772,6 +777,13 @@ namespace DataDictionary.Main.Forms
             /// <inheritdoc/>
             IEnumerator IEnumerable.GetEnumerator()
             { return ((IEnumerable)bindingValues).GetEnumerator(); }
+
+            /// <summary>
+            /// Returns the controlling BindingList.
+            /// </summary>
+            /// <returns></returns>
+            public IBindingList<TRow> AsBindingList()
+            { return bindingValues; }
 
             /// <inheritdoc/>
             public Int32 Count => ((ICollection<TRow>)bindingValues).Count;

@@ -255,5 +255,21 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc cref="IFileValue.IsValid(out Exception?)"/>
         public static Boolean IsFileValid(this IFileValue file, [NotNullWhen(false)] out Exception? exception)
         { return file.IsValid(out exception); }
+
+        /// <summary>
+        /// Performs a TryParse on the selected FileValue into XML.
+        /// If successfully parsed, the file content is updated to the content of the XDocument.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public static Boolean TryParseXml(this IFileValue value, [NotNullWhen(false)] out Exception? exception)
+        {
+            exception = null;
+            if (value.FileContent.TryParse(out XDocument? document, out exception))
+            { value.FileContent = document.Format(); }
+
+            return exception is null;
+        }
     }
 }

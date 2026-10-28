@@ -41,7 +41,10 @@
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaToolStrip = new ToolStrip();
-            dataFileNameData = new DataDictionary.Main.Controls.TextBoxData();
+            schemaOpenCommand = new ToolStripButton();
+            schemaBuildCommand = new ToolStripButton();
+            schemaSaveCommand = new ToolStripButton();
+            schemaFileNameData = new DataDictionary.Main.Controls.TextBoxData();
             schemaFileContentData = new DataDictionary.Main.Controls.TextBoxData();
             dataFileLocationData = new DataDictionary.Main.Controls.TextBoxData();
             transformTab = new TabPage();
@@ -62,9 +65,10 @@
             textBoxData2 = new DataDictionary.Main.Controls.TextBoxData();
             scriptedFileLocationData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
-            schemaOpenCommand = new ToolStripButton();
-            schemaBuildCommand = new ToolStripButton();
-            schemaSaveCommand = new ToolStripButton();
+            bindingSchema = new BindingSource(components);
+            bindingTransform = new BindingSource(components);
+            bindingDocument = new BindingSource(components);
+            errorProvider = new ErrorProvider(components);
             documentLayout = new TableLayoutPanel();
             documentTabs = new TabControl();
             schemaTabLayout = new TableLayoutPanel();
@@ -81,6 +85,10 @@
             scriptedLayout.SuspendLayout();
             scriptedToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // documentLayout
@@ -157,7 +165,7 @@
             schemaTabLayout.Controls.Add(objectScopeData, 0, 1);
             schemaTabLayout.Controls.Add(objectPathData, 0, 2);
             schemaTabLayout.Controls.Add(schemaToolStrip, 0, 0);
-            schemaTabLayout.Controls.Add(dataFileNameData, 0, 5);
+            schemaTabLayout.Controls.Add(schemaFileNameData, 0, 5);
             schemaTabLayout.Controls.Add(schemaFileContentData, 0, 6);
             schemaTabLayout.Controls.Add(dataFileLocationData, 0, 4);
             schemaTabLayout.Dock = DockStyle.Fill;
@@ -186,6 +194,7 @@
             schemaIdData.ReadOnly = false;
             schemaIdData.Size = new Size(516, 46);
             schemaIdData.TabIndex = 0;
+            schemaIdData.Validated += SchemaIdData_Validated;
             // 
             // objectScopeData
             // 
@@ -222,18 +231,46 @@
             schemaToolStrip.TabIndex = 3;
             schemaToolStrip.Text = "toolStrip1";
             // 
-            // dataFileNameData
+            // schemaOpenCommand
             // 
-            dataFileNameData.AutoSize = true;
-            dataFileNameData.Dock = DockStyle.Fill;
-            dataFileNameData.HeaderText = "Data File Name";
-            dataFileNameData.Location = new Point(3, 232);
-            dataFileNameData.Multiline = false;
-            dataFileNameData.Name = "dataFileNameData";
-            dataFileNameData.ReadOnly = false;
-            dataFileNameData.Size = new Size(516, 44);
-            dataFileNameData.TabIndex = 4;
-            dataFileNameData.WordWrap = true;
+            schemaOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            schemaOpenCommand.Image = (Image)resources.GetObject("schemaOpenCommand.Image");
+            schemaOpenCommand.ImageTransparentColor = Color.Magenta;
+            schemaOpenCommand.Name = "schemaOpenCommand";
+            schemaOpenCommand.Size = new Size(23, 22);
+            schemaOpenCommand.Text = "Open Schema";
+            // 
+            // schemaBuildCommand
+            // 
+            schemaBuildCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            schemaBuildCommand.Image = (Image)resources.GetObject("schemaBuildCommand.Image");
+            schemaBuildCommand.ImageTransparentColor = Color.Magenta;
+            schemaBuildCommand.Name = "schemaBuildCommand";
+            schemaBuildCommand.Size = new Size(23, 22);
+            schemaBuildCommand.Text = "Build Schema";
+            // 
+            // schemaSaveCommand
+            // 
+            schemaSaveCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            schemaSaveCommand.Image = (Image)resources.GetObject("schemaSaveCommand.Image");
+            schemaSaveCommand.ImageTransparentColor = Color.Magenta;
+            schemaSaveCommand.Name = "schemaSaveCommand";
+            schemaSaveCommand.Size = new Size(23, 22);
+            schemaSaveCommand.Text = "Save Schema";
+            // 
+            // schemaFileNameData
+            // 
+            schemaFileNameData.AutoSize = true;
+            schemaFileNameData.Dock = DockStyle.Fill;
+            schemaFileNameData.HeaderText = "Data File Name";
+            schemaFileNameData.Location = new Point(3, 232);
+            schemaFileNameData.Multiline = false;
+            schemaFileNameData.Name = "schemaFileNameData";
+            schemaFileNameData.ReadOnly = false;
+            schemaFileNameData.Size = new Size(516, 44);
+            schemaFileNameData.TabIndex = 4;
+            schemaFileNameData.WordWrap = true;
+            schemaFileNameData.Validated += SchemaFileNameData_Validated;
             // 
             // schemaFileContentData
             // 
@@ -247,6 +284,7 @@
             schemaFileContentData.Size = new Size(516, 240);
             schemaFileContentData.TabIndex = 5;
             schemaFileContentData.WordWrap = true;
+            schemaFileContentData.Validated += SchemaFileContentData_Validated;
             // 
             // dataFileLocationData
             // 
@@ -268,7 +306,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(528, 531);
+            transformTab.Size = new Size(192, 72);
             transformTab.TabIndex = 1;
             transformTab.Text = "Transform (process)";
             // 
@@ -290,7 +328,7 @@
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformLayout.Size = new Size(522, 525);
+            transformLayout.Size = new Size(186, 66);
             transformLayout.TabIndex = 0;
             // 
             // transformFileNameData
@@ -302,7 +340,7 @@
             transformFileNameData.Multiline = false;
             transformFileNameData.Name = "transformFileNameData";
             transformFileNameData.ReadOnly = false;
-            transformFileNameData.Size = new Size(516, 44);
+            transformFileNameData.Size = new Size(180, 44);
             transformFileNameData.TabIndex = 1;
             transformFileNameData.WordWrap = true;
             // 
@@ -316,7 +354,7 @@
             transformIdData.Location = new Point(3, 28);
             transformIdData.Name = "transformIdData";
             transformIdData.ReadOnly = false;
-            transformIdData.Size = new Size(516, 46);
+            transformIdData.Size = new Size(180, 46);
             transformIdData.TabIndex = 0;
             // 
             // transformToolStrip
@@ -324,7 +362,7 @@
             transformToolStrip.Items.AddRange(new ToolStripItem[] { transformOpenCommand, transformSaveCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(522, 25);
+            transformToolStrip.Size = new Size(186, 25);
             transformToolStrip.TabIndex = 2;
             transformToolStrip.Text = "toolStrip1";
             // 
@@ -355,7 +393,7 @@
             transformFileContentData.Multiline = true;
             transformFileContentData.Name = "transformFileContentData";
             transformFileContentData.ReadOnly = false;
-            transformFileContentData.Size = new Size(516, 342);
+            transformFileContentData.Size = new Size(180, 1);
             transformFileContentData.TabIndex = 3;
             transformFileContentData.WordWrap = true;
             // 
@@ -368,7 +406,7 @@
             transformFileLocationData.Multiline = false;
             transformFileLocationData.Name = "transformFileLocationData";
             transformFileLocationData.ReadOnly = true;
-            transformFileLocationData.Size = new Size(516, 44);
+            transformFileLocationData.Size = new Size(180, 44);
             transformFileLocationData.TabIndex = 4;
             transformFileLocationData.WordWrap = true;
             // 
@@ -477,40 +515,17 @@
             scriptedFileLocationData.TabIndex = 3;
             scriptedFileLocationData.WordWrap = true;
             // 
-            // schemaOpenCommand
+            // errorProvider
             // 
-            schemaOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            schemaOpenCommand.Image = (Image)resources.GetObject("schemaOpenCommand.Image");
-            schemaOpenCommand.ImageTransparentColor = Color.Magenta;
-            schemaOpenCommand.Name = "schemaOpenCommand";
-            schemaOpenCommand.Size = new Size(23, 22);
-            schemaOpenCommand.Text = "Open Schema";
+            errorProvider.ContainerControl = this;
             // 
-            // schemaBuildCommand
-            // 
-            schemaBuildCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            schemaBuildCommand.Image = (Image)resources.GetObject("schemaBuildCommand.Image");
-            schemaBuildCommand.ImageTransparentColor = Color.Magenta;
-            schemaBuildCommand.Name = "schemaBuildCommand";
-            schemaBuildCommand.Size = new Size(23, 22);
-            schemaBuildCommand.Text = "Build Schema";
-            // 
-            // schemaSaveCommand
-            // 
-            schemaSaveCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            schemaSaveCommand.Image = (Image)resources.GetObject("schemaSaveCommand.Image");
-            schemaSaveCommand.ImageTransparentColor = Color.Magenta;
-            schemaSaveCommand.Name = "schemaSaveCommand";
-            schemaSaveCommand.Size = new Size(23, 22);
-            schemaSaveCommand.Text = "Save Schema";
-            // 
-            // Document
+            // TemplateDocument
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(542, 690);
             Controls.Add(documentLayout);
-            Name = "Document";
+            Name = "TemplateDocument";
             Text = "Document";
             Load += Document_Load;
             Controls.SetChildIndex(documentLayout, 0);
@@ -533,6 +548,10 @@
             scriptedToolStrip.ResumeLayout(false);
             scriptedToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -554,7 +573,7 @@
         private Controls.ComboBoxData objectScopeData;
         private Controls.SelectTextBoxData objectPathData;
         private ToolStrip schemaToolStrip;
-        private Controls.TextBoxData dataFileNameData;
+        private Controls.TextBoxData schemaFileNameData;
         private Controls.TextBoxData schemaFileContentData;
         private Controls.TextBoxData transformFileNameData;
         private Controls.ComboBoxData transformIdData;
@@ -575,5 +594,9 @@
         private ToolStripButton schemaOpenCommand;
         private ToolStripButton schemaBuildCommand;
         private ToolStripButton schemaSaveCommand;
+        private BindingSource bindingSchema;
+        private BindingSource bindingTransform;
+        private BindingSource bindingDocument;
+        private ErrorProvider errorProvider;
     }
 }

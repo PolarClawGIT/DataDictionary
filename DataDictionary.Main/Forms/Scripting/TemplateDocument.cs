@@ -1,5 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -10,6 +12,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -27,8 +30,9 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding();
-            SetIcon(ScopeType.ScriptingDocument);
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingTransform, bindingDocument);
+            SetIcon(bindingDocument);
+            SetTitle(bindingDocument);
 
             SetCommand(ButtonType.Delete);
 
@@ -76,7 +80,25 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.DocumentData.AddBinding(documentTitleData, e => e.DocumentTitle);
 
+                // Schema Tab (Input)
+                SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData.AsBindingList(), "none");
+                formBinding.DocumentData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
+
+                ScopeNameList.Load(objectScopeData);
+                formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+                formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
+
+                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName);
+                formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent);
+
+                ValidateChildren();
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.Authorize);
             }
         }
 
@@ -120,6 +142,52 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             // TODO: Add Data
             Activate(static () => new Forms.Scripting.TransformDocument());
+        }
+
+        private void SchemaIdData_Validated(object sender, EventArgs e)
+        {
+            errorProvider.SetError(schemaIdData, String.Empty);
+            dataFileLocationData.Text = String.Empty;
+
+            
+
+            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            {
+
+                var x = schemaIdData.SelectedValue;
+                var y = document.SchemaId;
+
+                SchemaDefinitionIndex key = new SchemaDefinitionIndex(document);
+                if (key.HasValue && formBinding.SchemaData.TrySetCurrent(w => key.Equals(w), out SchemaDefinitionValue? schema))
+                { dataFileLocationData.Text = schema.InitialDirectory; }
+                else { errorProvider.SetError(schemaIdData.ErrorControl, "schema not found"); }
+            }
+            else { errorProvider.SetError(schemaIdData.ErrorControl, "document not found"); } // Should never occur
+
+
+        }
+
+        private void SchemaFileNameData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            {
+                document.ScriptedFile.IsValid(out Exception? exception);
+                errorProvider.SetError(schemaFileNameData.ErrorControl, exception);
+            }
+            else { errorProvider.SetError(schemaIdData.ErrorControl, "document not found"); } // Should never occur
+        }
+
+        private void SchemaFileContentData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            {
+                var x = schemaFileContentData.Text;
+                var y = document.DataFile.FileContent;
+
+                document.DataFile.TryParseXml(out Exception? exception);
+                errorProvider.SetError(schemaFileContentData.ErrorControl, exception);
+            }
+            else { errorProvider.SetError(schemaIdData.ErrorControl, "document not found"); } // Should never occur
         }
     }
 }
