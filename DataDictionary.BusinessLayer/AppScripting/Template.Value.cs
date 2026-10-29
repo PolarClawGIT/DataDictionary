@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -37,8 +38,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
             set
             {
                 base.RootFolder = value;
-                // Causes InitialDirectory and RootPath to be adjusted based on change in RootFolder
-                InitialDirectory = directory.InitialDirectory;
+                OnPropertyChanged(nameof(InitialDirectory));
+                directory.OnPropertyChanged(nameof(directory.InitialDirectory));
+            }
+        }
+
+        /// <inheritdoc/>
+        public override String? RelativePath
+        {
+            get { return base.RelativePath; }
+
+            set
+            {
+                base.RelativePath = value;
+                OnPropertyChanged(nameof(InitialDirectory));
+                directory.OnPropertyChanged(nameof(directory.InitialDirectory));
             }
         }
 
@@ -46,7 +60,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public String InitialDirectory
         {
             get { return directory.InitialDirectory; }
-            set { directory.InitialDirectory = value; }
+            set
+            {
+                directory.InitialDirectory = value;
+                OnPropertyChanged(nameof(InitialDirectory));
+            }
         }
 
         /// <inheritdoc/>
