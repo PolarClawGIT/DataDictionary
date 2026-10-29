@@ -106,6 +106,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 DirectoryTypeList.Load(rootFolderData);
                 formBinding.TemplateData.AddBinding(rootFolderData, e => e.RootFolder, DirectoryTypeList.NullValue);
                 formBinding.TemplateData.AddBinding(relativePathData, e => e.RelativePath);
+                formBinding.TemplateData.AddBinding(localPathData, e => e.InitialDirectory);
 
                 // Schema Tab
                 formBinding.SchemaData.AddBinding(schemaData);

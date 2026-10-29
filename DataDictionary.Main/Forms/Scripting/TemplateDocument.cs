@@ -84,8 +84,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.DocumentData.AddBinding(documentTitleData, e => e.DocumentTitle);
 
                 // Schema Tab (Input)
-                SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData.AsBindingList(), "none");
+                SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData.AsBindingList());
                 formBinding.DocumentData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
+
+                dataFileLocationData.DataBindings.Add(new Binding(nameof(dataFileLocationData.Text), formBinding, nameof(formBinding.SchemaDirectory)));
 
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
@@ -152,9 +154,9 @@ namespace DataDictionary.Main.Forms.Scripting
             if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
             {
                 SchemaDefinitionIndex key = new SchemaDefinitionIndex(document);
-                if (key.HasValue && formBinding.SchemaData.TrySetCurrent(w => key.Equals(w), out SchemaDefinitionValue? schema))
-                { dataFileLocationData.Text = schema.InitialDirectory; }
-                else { errorProvider.SetError(schemaIdData.ErrorControl, "schema not found"); }
+
+                if (key.HasValue)
+                { formBinding.SchemaData.TrySetCurrent(w => key.Equals(w)); }
             }
             else { errorProvider.SetError(schemaIdData.ErrorControl, "document not found"); } // Should never occur
         }
@@ -173,9 +175,6 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
             {
-                var x = schemaFileContentData.Text;
-                var y = document.DataFile.FileContent;
-
                 document.DataFile.TryParseXml(out Exception? exception);
                 errorProvider.SetError(schemaFileContentData.ErrorControl, exception);
             }

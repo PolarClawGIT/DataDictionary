@@ -1,15 +1,13 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
     partial class TemplateDocument
     {
-        class FormBinding : PresenterData<DocumentIndex>
+        class FormBinding : PresenterData<DocumentIndex>, INotifyPropertyChanged
         {
             public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
             public DataBinding<TemplateValue> TemplateData { get; }
@@ -34,12 +32,45 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
 
+            public String SchemaDirectory
+            {
+                get
+                {
+                    if (SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema))
+                    { return schema.InitialDirectory; }
+                    else if (TemplateData.TryGetCurrent(out TemplateValue? template))
+                    { return template.InitialDirectory; }
+                    else { return String.Empty; }
+                }
+            }
+
+            public String TransformDirectory
+            {
+                get
+                {
+                    if (TemplateData.TryGetCurrent(out TemplateValue? template))
+                    { return template.InitialDirectory; }
+                    else { return String.Empty; }
+                }
+            }
+
+            public String ScriptedDirectory
+            {
+                get
+                {
+                    if (TransformData.TryGetCurrent(out TransformValue? transform))
+                    { return transform.InitialDirectory; }
+                    else if (TemplateData.TryGetCurrent(out TemplateValue? template))
+                    { return template.InitialDirectory; }
+                    else { return String.Empty; }
+                }
+            }
 
             public override void LoadValue(DocumentIndex key)
             {
                 DocumentData.LoadBinding(w => key.Equals(w));
 
-                if(DocumentData.TryGetSingle(out TemplateDocumentValue? document))
+                if (DocumentData.TryGetSingle(out TemplateDocumentValue? document))
                 {
                     TemplateIndex templateKey = new TemplateIndex(document);
 
@@ -47,7 +78,52 @@ namespace DataDictionary.Main.Forms.Scripting
                     SchemaData.LoadBinding(w => templateKey.Equals(w));
                     TransformData.LoadBinding(w => templateKey.Equals(w));
                 }
+
+                DocumentData.ListChanged += DocumentData_ListChanged;
+                TemplateData.ListChanged += TemplateData_ListChanged;
+                SchemaData.ListChanged += SchemaData_ListChanged;
+                TransformData.ListChanged += TransformData_ListChanged;
+
+                void DocumentData_ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    if (e.PropertyDescriptor is PropertyDescriptor property)
+                    {
+                        if (property.Name == nameof(TemplateDocumentValue.SchemaId))
+                        { OnPropertyChanged(nameof(SchemaDirectory)); }
+
+                        if (property.Name == nameof(TemplateDocumentValue.TransformId))
+                        { OnPropertyChanged(nameof(ScriptedDirectory)); }
+                    }
+                }
+
+                void TemplateData_ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    if (e.PropertyDescriptor is PropertyDescriptor property && property.Name == nameof(TemplateValue.InitialDirectory))
+                    {
+                        OnPropertyChanged(nameof(SchemaDirectory));
+                        OnPropertyChanged(nameof(TransformDirectory));
+                        OnPropertyChanged(nameof(ScriptedDirectory));
+                    }
+                }
+
+                void SchemaData_ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    if (e.PropertyDescriptor is PropertyDescriptor property && property.Name == nameof(SchemaDefinitionValue.InitialDirectory))
+                    { OnPropertyChanged(nameof(SchemaDirectory)); }
+                }
+
+                void TransformData_ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    if (e.PropertyDescriptor is PropertyDescriptor property && property.Name == nameof(TransformValue.InitialDirectory))
+                    {
+                        OnPropertyChanged(nameof(TransformDirectory));
+                        OnPropertyChanged(nameof(ScriptedDirectory));
+                    }
+                }
+
             }
+
+
 
             public Boolean TryCreate(TemplateIndex template, ref DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
             {
@@ -55,6 +131,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 { document = new DocumentIndex(value); }
 
                 return exception is null;
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+            protected virtual void OnPropertyChanged(String propertyName)
+            {
+                if (PropertyChanged is PropertyChangedEventHandler handler)
+                { handler(this, new PropertyChangedEventArgs(propertyName)); }
             }
         }
     }

@@ -68,6 +68,7 @@
             folderBrowserDialog = new FolderBrowserDialog();
             openFileDialog = new OpenFileDialog();
             errorProvider = new ErrorProvider(components);
+            localPathData = new DataDictionary.Main.Controls.TextBoxData();
             templateLayout = new TableLayoutPanel();
             schemaLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
@@ -99,17 +100,19 @@
             templateLayout.ColumnCount = 2;
             templateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             templateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            templateLayout.Controls.Add(localPathData, 0, 3);
             templateLayout.Controls.Add(relativePathData, 1, 2);
             templateLayout.Controls.Add(rootFolderData, 0, 2);
             templateLayout.Controls.Add(templateTitleData, 0, 0);
             templateLayout.Controls.Add(templateDescriptionData, 0, 1);
-            templateLayout.Controls.Add(templateTabs, 0, 3);
+            templateLayout.Controls.Add(templateTabs, 0, 4);
             templateLayout.Dock = DockStyle.Fill;
             templateLayout.Location = new Point(0, 25);
             templateLayout.Name = "templateLayout";
-            templateLayout.RowCount = 4;
+            templateLayout.RowCount = 5;
             templateLayout.RowStyles.Add(new RowStyle());
             templateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            templateLayout.RowStyles.Add(new RowStyle());
             templateLayout.RowStyles.Add(new RowStyle());
             templateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             templateLayout.Size = new Size(470, 608);
@@ -121,7 +124,7 @@
             relativePathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             relativePathData.Dock = DockStyle.Fill;
             relativePathData.HeaderText = "Relative Path";
-            relativePathData.Location = new Point(238, 204);
+            relativePathData.Location = new Point(238, 189);
             relativePathData.Name = "relativePathData";
             relativePathData.ReadOnly = false;
             relativePathData.SelectIcon = (Image)resources.GetObject("relativePathData.SelectIcon");
@@ -136,7 +139,7 @@
             rootFolderData.Dock = DockStyle.Fill;
             rootFolderData.DropDownStyle = ComboBoxStyle.DropDownList;
             rootFolderData.HeaderText = "Root Folder";
-            rootFolderData.Location = new Point(3, 204);
+            rootFolderData.Location = new Point(3, 189);
             rootFolderData.Name = "rootFolderData";
             rootFolderData.ReadOnly = false;
             rootFolderData.Size = new Size(229, 46);
@@ -167,7 +170,7 @@
             templateDescriptionData.Multiline = true;
             templateDescriptionData.Name = "templateDescriptionData";
             templateDescriptionData.ReadOnly = false;
-            templateDescriptionData.Size = new Size(464, 145);
+            templateDescriptionData.Size = new Size(464, 130);
             templateDescriptionData.TabIndex = 1;
             templateDescriptionData.WordWrap = true;
             // 
@@ -178,10 +181,10 @@
             templateTabs.Controls.Add(transformTab);
             templateTabs.Controls.Add(documentTab);
             templateTabs.Dock = DockStyle.Fill;
-            templateTabs.Location = new Point(3, 256);
+            templateTabs.Location = new Point(3, 291);
             templateTabs.Name = "templateTabs";
             templateTabs.SelectedIndex = 0;
-            templateTabs.Size = new Size(464, 349);
+            templateTabs.Size = new Size(464, 314);
             templateTabs.TabIndex = 2;
             // 
             // schemaTab
@@ -191,7 +194,7 @@
             schemaTab.Location = new Point(4, 24);
             schemaTab.Name = "schemaTab";
             schemaTab.Padding = new Padding(3);
-            schemaTab.Size = new Size(456, 321);
+            schemaTab.Size = new Size(456, 286);
             schemaTab.TabIndex = 1;
             schemaTab.Text = "Schema";
             // 
@@ -208,7 +211,7 @@
             schemaLayout.RowStyles.Add(new RowStyle());
             schemaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             schemaLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            schemaLayout.Size = new Size(450, 315);
+            schemaLayout.Size = new Size(450, 280);
             schemaLayout.TabIndex = 7;
             // 
             // schemaData
@@ -221,7 +224,7 @@
             schemaData.Location = new Point(3, 28);
             schemaData.Name = "schemaData";
             schemaData.ReadOnly = true;
-            schemaData.Size = new Size(444, 284);
+            schemaData.Size = new Size(444, 249);
             schemaData.TabIndex = 6;
             // 
             // schemaTitleColumn
@@ -454,6 +457,20 @@
             // 
             errorProvider.ContainerControl = this;
             // 
+            // localPathData
+            // 
+            localPathData.AutoSize = true;
+            templateLayout.SetColumnSpan(localPathData, 2);
+            localPathData.Dock = DockStyle.Fill;
+            localPathData.HeaderText = "Local Path";
+            localPathData.Location = new Point(3, 241);
+            localPathData.Multiline = false;
+            localPathData.Name = "localPathData";
+            localPathData.ReadOnly = true;
+            localPathData.Size = new Size(464, 44);
+            localPathData.TabIndex = 12;
+            localPathData.WordWrap = false;
+            // 
             // Template
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -533,5 +550,6 @@
         private OpenFileDialog openFileDialog;
         private ErrorProvider errorProvider;
         private ToolStripButton documentNewCommand;
+        private Controls.TextBoxData localPathData;
     }
 }
