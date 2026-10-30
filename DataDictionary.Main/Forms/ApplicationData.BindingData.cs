@@ -38,7 +38,11 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="binding">Binding Source linked with this data.</param>
             /// <param name="getData">Functions used called to get data. Use "() => GetData()" syntax.</param>
-            /// <remarks>The getData called but filtered to no rows. Allows AddValue to work.</remarks>
+            /// <remarks>
+            /// The constructor creates pointers to the data but DOES NOT LOAD it.
+            /// The getData called but filtered to no rows. Allows AddValue to work.
+            /// A call to LoadBinding is required to prepare the instance for use.
+            /// </remarks>
             /// <example><![CDATA[TemplateData = new DataBinding<TemplateValue>(templateBinding, () => GetData());]]></example>
             public DataBinding(BindingSource binding, Func<IBindingList<TRow>> getData) : base()
             {

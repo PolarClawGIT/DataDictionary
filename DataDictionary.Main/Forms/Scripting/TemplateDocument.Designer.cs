@@ -69,6 +69,7 @@
             bindingTransform = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             errorProvider = new ErrorProvider(components);
+            bindingOther = new BindingSource(components);
             documentLayout = new TableLayoutPanel();
             documentTabs = new TabControl();
             schemaTabLayout = new TableLayoutPanel();
@@ -89,6 +90,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingOther).BeginInit();
             SuspendLayout();
             // 
             // documentLayout
@@ -552,6 +554,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingOther).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -598,5 +601,6 @@
         private BindingSource bindingTransform;
         private BindingSource bindingDocument;
         private ErrorProvider errorProvider;
+        private BindingSource bindingOther;
     }
 }

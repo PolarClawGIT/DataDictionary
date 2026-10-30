@@ -30,7 +30,9 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingTransform, bindingDocument);
+            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingTransform, bindingDocument, bindingOther);
+
+            SetRowState(bindingDocument);
             SetIcon(bindingDocument);
             SetTitle(bindingDocument);
 
@@ -87,7 +89,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData.AsBindingList());
                 formBinding.DocumentData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
 
-                dataFileLocationData.DataBindings.Add(new Binding(nameof(dataFileLocationData.Text), formBinding, nameof(formBinding.SchemaDirectory)));
+                formBinding.OtherData.AddBinding(dataFileLocationData, e => e.SchemaDirectory);
 
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
