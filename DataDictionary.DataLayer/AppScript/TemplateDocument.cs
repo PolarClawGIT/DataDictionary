@@ -5,7 +5,7 @@
     /// </summary>
     static class TemplateDocument
     {
-        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Document));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(TemplateDocument));
 
         /// <summary>
         /// Stored procedure to retrieve an Document.
