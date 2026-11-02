@@ -106,16 +106,47 @@ namespace DataDictionary.Main.Forms
                     // Must be FormattingEnabled = true
                     // Must implement INotifyPropertyChanged 
 
-                    if (e.BindingCompleteState is BindingCompleteState.DataError)
+                    if (e.Exception is not null || e.BindingCompleteState is not BindingCompleteState.Success)
                     {
-                        //TODO: Collect more data
-                        throw new Exception("Binding Data Error occurred. Need to add details here.");
-                    }
+                        Exception ex = e.Exception ?? new Exception("Binding Data Error occurred.");
+                        ex.Data.Add(nameof(e.BindingCompleteState), e.BindingCompleteState);
 
-                    if (e.Exception is Exception ex)
-                    {
-                        //TODO: Collect more data
-                        throw ex;
+                        if (sender is BindingSource source && source.Current is not null)
+                        { ex.Data.Add(nameof(source.Current), source.Current.GetType().Name); }
+
+                        if (e.Binding is not null)
+                        {
+                            List<String> controlPath = new List<String>();
+                            Control? nestControl = e.Binding.Control;
+
+                            while (nestControl is not null)
+                            {
+                                controlPath.Add(nestControl.Name);
+                                nestControl = nestControl.Parent;
+                            }
+
+                            controlPath.Reverse();
+                            ex.Data.Add(nameof(controlPath),  String.Join('.', controlPath));
+
+                            if (e.Binding.Control is not null)
+                            {
+                                ex.Data.Add(nameof(e.Binding.Control), e.Binding.Control.Name);
+
+                                if (e.Binding.Control.Parent is not null)
+                                { ex.Data.Add(nameof(e.Binding.Control.Parent), e.Binding.Control.Parent.Name); }
+                            }
+
+                            ex.Data.Add(nameof(e.Binding.PropertyName), e.Binding.PropertyName);
+                            ex.Data.Add(nameof(e.Binding.BindingMemberInfo.BindingField), e.Binding.BindingMemberInfo.BindingField);
+                            ex.Data.Add(nameof(e.Binding.BindingMemberInfo.BindingMember), e.Binding.BindingMemberInfo.BindingMember);
+                            ex.Data.Add(nameof(e.Binding.BindingMemberInfo.BindingPath), e.Binding.BindingMemberInfo.BindingPath);
+                        }
+
+                        // Exception Dialog must be called directly as DataBinding does not return the exception.
+                        using (Dialogs.ExceptionDialog dialog = new Dialogs.ExceptionDialog(ex))
+                        { dialog.ShowDialog(); }
+
+                        e.Cancel = true;
                     }
                 }
             }
