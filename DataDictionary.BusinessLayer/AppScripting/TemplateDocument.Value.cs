@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
     /// <inheritdoc/>
     public interface ITemplateDocumentValue : ITemplateDocumentItem,
-        IDocumentIndex, ITemplateIndex, ISchemaDefinitionIndex, ITransformIndex,
+        IDocumentIndex, ITemplateIndex, ISchemaDefinitionIndex, ITransformIndex, ITemplateObjectIndex,
         IScopeType, ITemporal
     { }
 

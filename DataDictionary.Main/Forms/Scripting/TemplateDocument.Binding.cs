@@ -31,9 +31,9 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if(GetDocument(out TemplateDocumentValue? document))
+                    if (GetDocument(out TemplateDocumentValue? document))
                     {
-                        if(new SchemaDefinitionIndex(document).HasValue
+                        if (new SchemaDefinitionIndex(document).HasValue
                             && GetSchema(out SchemaDefinitionValue? schema))
                         { return schema.InitialDirectory; }
                         else if (GetTemplate(out TemplateValue? template))
@@ -74,6 +74,16 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                     else { return String.Empty; }
 
+                }
+            }
+
+            public Boolean IsObjectInModel
+            {
+                get
+                {
+                    if (GetDocument(out TemplateDocumentValue? document))
+                    { return BusinessData.Model.IsInModel(document); }
+                    else { return false; }
                 }
             }
 
@@ -170,6 +180,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         if (property.Name == nameof(TemplateDocumentValue.TransformId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory)); }
+
+                        if(property.Name == nameof(TemplateDocumentValue.ObjectPath))
+                        { otherValue.OnPropertyChanged(nameof(otherValue.IsObjectInModel)); }
                     }
                 }
 

@@ -1,7 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -53,16 +55,17 @@ namespace DataDictionary.Main.Forms.Scripting
         public TemplateDocument(ITemplateIndex template, IDocumentIndex? document, Func<ITemplateData> getData) : this()
         {
             templateIndex = new TemplateIndex(template);
+            formBinding.GetData = getData;
 
             if (document is IDocumentIndex key)
             { documentIndex = new DocumentIndex(key); }
         }
 
-        public TemplateDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
-        {
-            documentIndex = new DocumentIndex(document);
-            //formBinding.GetData = getData;
-        }
+        public TemplateDocument(IDocumentIndex document) : this()
+        {   documentIndex = new DocumentIndex(document); }
+
+        public TemplateDocument(IDocumentIndex document, Func<ITemplateData> getData) : this(document)
+        {   formBinding.GetData = getData; }
 
         private void Document_Load(object sender, EventArgs e)
         {
@@ -94,6 +97,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
+                formBinding.OtherData.AddBinding(isObjectInModelData, e => e.IsObjectInModel);
 
                 formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName);
                 formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent);
@@ -181,6 +185,32 @@ namespace DataDictionary.Main.Forms.Scripting
                 errorProvider.SetError(schemaFileContentData.ErrorControl, exception);
             }
             else { errorProvider.SetError(schemaIdData.ErrorControl, "document not found"); } // Should never occur
+        }
+
+        private void ObjectPathData_SelectCommand(object sender, EventArgs e)
+        {
+            if (bindingDocument is not null
+                && formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? fileValue))
+            {
+                using (SelectionDialog dialog = new SelectionDialog(this))
+                {
+                    dialog.MultiSelect = false;
+                    dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
+
+                    dialog.BuildData(new List<PathItem>() { new PathItem(fileValue.ObjectPath) });
+
+                    if (dialog.ShowDialog(this) is DialogResult.OK
+                        && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))
+                    {
+                        fileValue.DocumentTitle = selected.Path.Member;
+                        fileValue.ObjectPath = selected.Path.MemberFullPath;
+                        fileValue.ObjectScope = selected.Scope;
+
+                        if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
+                        { fileValue.DataFileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension); }
+                    }
+                }
+            }
         }
     }
 }

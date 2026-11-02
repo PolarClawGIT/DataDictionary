@@ -38,8 +38,6 @@
             documentTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTab = new TabPage();
             schemaIdData = new DataDictionary.Main.Controls.ComboBoxData();
-            objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             schemaToolStrip = new ToolStrip();
             schemaOpenCommand = new ToolStripButton();
             schemaBuildCommand = new ToolStripButton();
@@ -47,6 +45,9 @@
             schemaFileNameData = new DataDictionary.Main.Controls.TextBoxData();
             schemaFileContentData = new DataDictionary.Main.Controls.TextBoxData();
             dataFileLocationData = new DataDictionary.Main.Controls.TextBoxData();
+            objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            isObjectInModelData = new CheckBox();
             transformTab = new TabPage();
             transformFileNameData = new DataDictionary.Main.Controls.TextBoxData();
             transformIdData = new DataDictionary.Main.Controls.ComboBoxData();
@@ -161,15 +162,17 @@
             // 
             // schemaTabLayout
             // 
-            schemaTabLayout.ColumnCount = 1;
+            schemaTabLayout.ColumnCount = 2;
             schemaTabLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            schemaTabLayout.ColumnStyles.Add(new ColumnStyle());
             schemaTabLayout.Controls.Add(schemaIdData, 0, 1);
-            schemaTabLayout.Controls.Add(objectScopeData, 0, 1);
-            schemaTabLayout.Controls.Add(objectPathData, 0, 2);
             schemaTabLayout.Controls.Add(schemaToolStrip, 0, 0);
             schemaTabLayout.Controls.Add(schemaFileNameData, 0, 5);
             schemaTabLayout.Controls.Add(schemaFileContentData, 0, 6);
             schemaTabLayout.Controls.Add(dataFileLocationData, 0, 4);
+            schemaTabLayout.Controls.Add(objectPathData, 0, 3);
+            schemaTabLayout.Controls.Add(objectScopeData, 0, 2);
+            schemaTabLayout.Controls.Add(isObjectInModelData, 1, 2);
             schemaTabLayout.Dock = DockStyle.Fill;
             schemaTabLayout.Location = new Point(3, 3);
             schemaTabLayout.Name = "schemaTabLayout";
@@ -188,6 +191,7 @@
             // 
             schemaIdData.AutoSize = true;
             schemaIdData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            schemaTabLayout.SetColumnSpan(schemaIdData, 2);
             schemaIdData.Dock = DockStyle.Fill;
             schemaIdData.DropDownStyle = ComboBoxStyle.DropDownList;
             schemaIdData.HeaderText = "Schema";
@@ -198,40 +202,15 @@
             schemaIdData.TabIndex = 0;
             schemaIdData.Validated += SchemaIdData_Validated;
             // 
-            // objectScopeData
-            // 
-            objectScopeData.AutoSize = true;
-            objectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            objectScopeData.Dock = DockStyle.Fill;
-            objectScopeData.DropDownStyle = ComboBoxStyle.DropDownList;
-            objectScopeData.HeaderText = "Object Scope";
-            objectScopeData.Location = new Point(3, 80);
-            objectScopeData.Name = "objectScopeData";
-            objectScopeData.ReadOnly = false;
-            objectScopeData.Size = new Size(516, 46);
-            objectScopeData.TabIndex = 1;
-            // 
-            // objectPathData
-            // 
-            objectPathData.AutoSize = true;
-            objectPathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            objectPathData.Dock = DockStyle.Fill;
-            objectPathData.HeaderText = "Object";
-            objectPathData.Location = new Point(3, 132);
-            objectPathData.Name = "objectPathData";
-            objectPathData.ReadOnly = false;
-            objectPathData.SelectIcon = (Image)resources.GetObject("objectPathData.SelectIcon");
-            objectPathData.Size = new Size(516, 44);
-            objectPathData.TabIndex = 2;
-            // 
             // schemaToolStrip
             // 
+            schemaTabLayout.SetColumnSpan(schemaToolStrip, 2);
             schemaToolStrip.Items.AddRange(new ToolStripItem[] { schemaOpenCommand, schemaBuildCommand, schemaSaveCommand });
             schemaToolStrip.Location = new Point(0, 0);
             schemaToolStrip.Name = "schemaToolStrip";
             schemaToolStrip.Size = new Size(522, 25);
             schemaToolStrip.TabIndex = 3;
-            schemaToolStrip.Text = "toolStrip1";
+            schemaToolStrip.Text = "Schema ToolStrip";
             // 
             // schemaOpenCommand
             // 
@@ -263,6 +242,7 @@
             // schemaFileNameData
             // 
             schemaFileNameData.AutoSize = true;
+            schemaTabLayout.SetColumnSpan(schemaFileNameData, 2);
             schemaFileNameData.Dock = DockStyle.Fill;
             schemaFileNameData.HeaderText = "Data File Name";
             schemaFileNameData.Location = new Point(3, 232);
@@ -277,6 +257,7 @@
             // schemaFileContentData
             // 
             schemaFileContentData.AutoSize = true;
+            schemaTabLayout.SetColumnSpan(schemaFileContentData, 2);
             schemaFileContentData.Dock = DockStyle.Fill;
             schemaFileContentData.HeaderText = "Data File Content";
             schemaFileContentData.Location = new Point(3, 282);
@@ -291,6 +272,7 @@
             // dataFileLocationData
             // 
             dataFileLocationData.AutoSize = true;
+            schemaTabLayout.SetColumnSpan(dataFileLocationData, 2);
             dataFileLocationData.Dock = DockStyle.Fill;
             dataFileLocationData.HeaderText = "Data File Location";
             dataFileLocationData.Location = new Point(3, 182);
@@ -300,6 +282,46 @@
             dataFileLocationData.Size = new Size(516, 44);
             dataFileLocationData.TabIndex = 6;
             dataFileLocationData.WordWrap = true;
+            // 
+            // objectPathData
+            // 
+            objectPathData.AutoSize = true;
+            objectPathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            schemaTabLayout.SetColumnSpan(objectPathData, 2);
+            objectPathData.Dock = DockStyle.Fill;
+            objectPathData.HeaderText = "Object";
+            objectPathData.Location = new Point(3, 132);
+            objectPathData.Name = "objectPathData";
+            objectPathData.ReadOnly = false;
+            objectPathData.SelectIcon = (Image)resources.GetObject("objectPathData.SelectIcon");
+            objectPathData.Size = new Size(516, 44);
+            objectPathData.TabIndex = 2;
+            objectPathData.SelectCommand += ObjectPathData_SelectCommand;
+            // 
+            // objectScopeData
+            // 
+            objectScopeData.AutoSize = true;
+            objectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectScopeData.Dock = DockStyle.Fill;
+            objectScopeData.DropDownStyle = ComboBoxStyle.DropDownList;
+            objectScopeData.HeaderText = "Object Scope";
+            objectScopeData.Location = new Point(3, 80);
+            objectScopeData.Name = "objectScopeData";
+            objectScopeData.ReadOnly = false;
+            objectScopeData.Size = new Size(437, 46);
+            objectScopeData.TabIndex = 1;
+            // 
+            // isObjectInModelData
+            // 
+            isObjectInModelData.AutoSize = true;
+            isObjectInModelData.Dock = DockStyle.Bottom;
+            isObjectInModelData.Enabled = false;
+            isObjectInModelData.Location = new Point(446, 107);
+            isObjectInModelData.Name = "isObjectInModelData";
+            isObjectInModelData.Size = new Size(73, 19);
+            isObjectInModelData.TabIndex = 7;
+            isObjectInModelData.Text = "In Model";
+            isObjectInModelData.UseVisualStyleBackColor = true;
             // 
             // transformTab
             // 
@@ -602,5 +624,6 @@
         private BindingSource bindingDocument;
         private ErrorProvider errorProvider;
         private BindingSource bindingOther;
+        private CheckBox isObjectInModelData;
     }
 }
