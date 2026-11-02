@@ -100,6 +100,7 @@ namespace DataDictionary.Main
             manageTemplateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             menuNewTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
             menuTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
+            menuTemplateDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
             menuTemplateSchemaDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
             menuTemplateTransformDocument.Image = ScopeType.ApplicationDocument.GetImage(ButtonType.Default);
             menuTemplateNode.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Default);
@@ -362,7 +363,6 @@ namespace DataDictionary.Main
 
             securityAuthorization.Enabled = true;
         }
-
 
     }
 }

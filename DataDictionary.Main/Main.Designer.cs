@@ -143,6 +143,7 @@
             menuTemplateTransform = new ToolStripMenuItem();
             menuTemplateTransformDocument = new ToolStripMenuItem();
             bindingModel = new BindingSource(components);
+            menuTemplateDocument = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -920,9 +921,9 @@
             // 
             // templateContextMenu
             // 
-            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateSchemata, menuTemplateSchemaDocument, menuTemplateNode, menuTemplateTransform, menuTemplateTransformDocument });
+            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateDocument, menuTemplateSchemata, menuTemplateSchemaDocument, menuTemplateNode, menuTemplateTransform, menuTemplateTransformDocument });
             templateContextMenu.Name = "templateContextMenu";
-            templateContextMenu.Size = new Size(234, 180);
+            templateContextMenu.Size = new Size(234, 202);
             // 
             // menuNewTemplate
             // 
@@ -976,6 +977,13 @@
             // bindingModel
             // 
             bindingModel.ListChanged += BindingModel_ListChanged;
+            // 
+            // menuTemplateDocument
+            // 
+            menuTemplateDocument.Name = "menuTemplateDocument";
+            menuTemplateDocument.Size = new Size(233, 22);
+            menuTemplateDocument.Text = "browse Template Document";
+            menuTemplateDocument.Click += MenuTemplateDocument_Click;
             // 
             // Main
             // 
@@ -1130,5 +1138,6 @@
         private ToolStripMenuItem menuNewTemplate;
         private ToolStripMenuItem menuTemplateSchemaDocument;
         private ToolStripMenuItem menuTemplateTransformDocument;
+        private ToolStripMenuItem menuTemplateDocument;
     }
 }

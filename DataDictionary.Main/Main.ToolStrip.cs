@@ -289,6 +289,15 @@ namespace DataDictionary.Main
             { SelectedForm = (data) => new Forms.Scripting.Template(data) });
         }
 
+
+        private void MenuTemplateDocument_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                <TemplateDocumentValue, Forms.Scripting.TemplateDocument>
+                (ScopeType.ScriptingDocument, BusinessData.Templates.Documents)
+            { SelectedForm = (data) => new Forms.Scripting.TemplateDocument(data) });
+        }
+
         private void MenuTemplateTransform_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
