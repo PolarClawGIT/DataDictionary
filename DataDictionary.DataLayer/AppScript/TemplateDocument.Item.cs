@@ -58,15 +58,23 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public virtual Guid? TemplateId
         {
-            get { return GetValue<Guid>(nameof(TemplateId)); }
-            set { SetValue(nameof(TemplateId), value); }
+            get { return GetValue<Guid>(nameof(TemplateId)) ?? Guid.Empty; }
+            set
+            {
+                if (value == Guid.Empty) { SetValue(nameof(TemplateId), null); }
+                else { SetValue<Guid>(nameof(TemplateId), value); }
+            }
         }
 
         /// <inheritdoc/>
         public virtual Guid? SchemaId
         {
-            get { return GetValue<Guid>(nameof(SchemaId)); }
-            set { SetValue(nameof(SchemaId), value); }
+            get { return GetValue<Guid>(nameof(SchemaId)) ?? Guid.Empty; }
+            set
+            {
+                if (value == Guid.Empty) { SetValue(nameof(SchemaId), null); }
+                else { SetValue<Guid>(nameof(SchemaId), value); }
+            }
         }
 
         /// <inheritdoc/>
