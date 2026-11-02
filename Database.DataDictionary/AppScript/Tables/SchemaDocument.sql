@@ -2,7 +2,6 @@
 (	-- Document that is an ouput of the Schema (XML data)
 	-- This is a Sub-Type of Document using Roll-Down
 	[DocumentId]		UniqueIdentifier Not Null,
-	[TemplateId]		UniqueIdentifier Not Null,
 	[SchemaId]			UniqueIdentifier Not Null, 
 	[ObjectId]			UniqueIdentifier Null, -- Null = Fixed content
 	[DataFileName]		[AppGeneral].[uddtFileName] Not Null,
@@ -12,8 +11,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_SchemaDocument] PRIMARY KEY CLUSTERED ([DocumentId] ASC),
-	CONSTRAINT [AK_SchemaDocument] UNIQUE ([TemplateId] ASC, [DocumentId] ASC), -- Used by FK's
 	CONSTRAINT [AK_SchemaFileName] UNIQUE ([SchemaId] ASC, [DataFileName] ASC),
-	CONSTRAINT [FK_SchemaDocumentSchema] FOREIGN KEY ([TemplateId], [SchemaId]) REFERENCES [AppScript].[SchemaDefinition] ([TemplateId], [SchemaId]),
-	CONSTRAINT [FK_SchemaDocumentObject] FOREIGN KEY ([TemplateId], [ObjectId]) REFERENCES [AppScript].[TemplateObject] ([TemplateId], [ObjectId]),
+	CONSTRAINT [FK_SchemaDocumentSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppScript].[SchemaDefinition] ([SchemaId]),
+	CONSTRAINT [FK_SchemaDocumentObject] FOREIGN KEY ([ObjectId]) REFERENCES [AppScript].[TemplateObject] ([ObjectId]),
 )	WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsScript].[SchemaDocument]))

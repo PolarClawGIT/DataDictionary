@@ -13,7 +13,7 @@ With [Dates] As (
 	Where	[SysStart] != [SysEnd])
 Select	D.[NodeId], -- PK
 		D.[SchemaId],
-		F.[TemplateId],
+		FS.[TemplateId],
 		D.[ObjectScope],
 		D.[ObjectProperty],
 		D.[NodeName],
@@ -32,8 +32,6 @@ Select	D.[NodeId], -- PK
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppScript].[SchemaNode] D
-		Inner Join [AppScript].[SchemaDefinition] F
-		On	D.[SchemaId] = F.[SchemaId]
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
@@ -48,4 +46,15 @@ From	[AppScript].[SchemaNode] D
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
+		-- Not specifying a For System_Time returns the current value
+		-- For System_Time <some date> returns the value for that date
+		-- Otherwise the last value is returned
+		Outer Apply (
+			Select	Top 1
+					[TemplateId],
+					[SchemaId]
+			From	[AppScript].[SchemaDefinition]
+			Where	[SchemaId] = D.[SchemaId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FS
 GO

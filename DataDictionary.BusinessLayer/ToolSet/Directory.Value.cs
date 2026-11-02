@@ -28,6 +28,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <returns></returns>
         Boolean IsValid([NotNullWhen(false)] out Exception? exception);
+
+
+        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
+        /// <remarks>Allow parent class to call OnPropertyChanged.</remarks>
+        void OnPropertyChanged(String propertyName);
     }
 
     /// <summary>
@@ -98,8 +103,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
             }
         }
 
-
-
         /// <summary>
         /// Create an Instance of a DirectoryValue.
         /// </summary>
@@ -123,7 +126,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public virtual event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
-        protected virtual void OnPropertyChanged(String propertyName)
+        public virtual void OnPropertyChanged(String propertyName)
         { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
 
         /// <inheritdoc/>
@@ -166,5 +169,15 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
             return exception is null;
         }
+    }
+
+    /// <summary>
+    /// Extensions for DirectoryValue.
+    /// </summary>
+    public static class DirectoryValueExtension
+    {
+        /// <inheritdoc cref="IDirectoryValue.IsValid(out Exception?)"/>
+        public static Boolean IsDirectoryValid(this IDirectoryValue directory, [NotNullWhen(false)] out Exception? exception)
+        { return directory.IsValid(out exception); }
     }
 }

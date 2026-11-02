@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 
@@ -80,13 +81,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            public void LoadValue(TemplateIndex key, out SchemaDefinitionIndex schema)
+            public Boolean TryCreate(TemplateIndex templateIndex, ref SchemaDefinitionIndex schema, [NotNullWhen(false)] out Exception? exception)
             {
-                SchemaDefinitionValue value = new SchemaDefinitionValue(key);
-                GetData().Schemata.Add(value);
-                schema = new SchemaDefinitionIndex(value);
-                LoadValue(schema);
+                if (GetData().TryCreate(templateIndex, out SchemaDefinitionValue? value, out exception))
+                { schema = new SchemaDefinitionIndex(value); }
+
+                return exception is null;
             }
+
 
             protected void RemoveValue(SchemaDefinitionIndex key)
             {
@@ -104,7 +106,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public void SaveDocuments()
             {
-                if(SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema))
+                if (SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema))
                 {
                     foreach (var document in DocumentData)
                     {
@@ -114,6 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                 }
             }
+
 
         }
     }

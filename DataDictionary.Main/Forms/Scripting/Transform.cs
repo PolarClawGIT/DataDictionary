@@ -23,13 +23,13 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingTransform);
+            formBinding = new FormBinding(bindingTemplate, bindingTransform, bindingDocument);
 
             SetRowState(bindingTransform);
             SetTitle(bindingTransform);
             SetIcon(bindingTransform);
 
-            SetCommand(ButtonType.Open, ButtonType.Save, ButtonType.Delete);
+            SetCommand(ButtonType.Open, ButtonType.Save);
 
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
@@ -49,34 +49,25 @@ namespace DataDictionary.Main.Forms.Scripting
             Func<ITemplateData> getData) : this(template, transform)
         { formBinding.GetData = getData; }
 
-        public Transform(ITransformComposite transform) : this(transform, transform)
-        { }
+        public Transform(ITransformComposite transform) : this(transform, transform) { }
+
+        public Transform(ITransformComposite transform, Func<ITemplateData> getData) : this(transform, transform, getData) { }
 
         private void Transform_Load(object sender, EventArgs e)
         {
             if (transformIndex.HasValue)
-            { formBinding.LoadValue(transformIndex); }
-            else
             {
-                if (templateIndex.HasValue)
-                {
-                    TransformValue value = new TransformValue(templateIndex);
-                    formBinding.TransformData.Add(value);
-                    transformIndex = new TransformIndex(value);
-                    formBinding.LoadValue(transformIndex);
-                    SendMessage(new RefreshNavigation());
-                }
-                else
-                {   // This should never occur.
-                    Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(templateIndex), templateIndex);
-                    throw ex;
-                }
+                formBinding.LoadValue(transformIndex);
+                DoBinding();
             }
-
-            if (formBinding.TransformData.TryGetCurrent(out TransformValue? _))
-            { DoBinding(); }
-            else { IsLocked(true); }
+            else if (formBinding.TryCreate(templateIndex, ref transformIndex, out Exception? exception))
+            {
+                formBinding.LoadValue(transformIndex);
+                SendMessage(new RefreshNavigation());
+                DoBinding();
+            }
+            else
+            { IsLocked(true); throw exception; }
 
             void DoBinding()
             {
@@ -85,7 +76,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 DirectoryTypeList.Load(rootFolderData);
                 formBinding.TransformData.AddBinding(rootFolderData, e => e.RootFolder, DirectoryTypeList.NullValue);
-
                 formBinding.TransformData.AddBinding(relativePathData, e => e.RelativePath);
                 formBinding.TransformData.AddBinding(filePrefixData, e => e.FilePrefix);
                 formBinding.TransformData.AddBinding(fileSuffixData, e => e.FileSuffix);
@@ -93,28 +83,22 @@ namespace DataDictionary.Main.Forms.Scripting
                 FileFormatList.Load(fileExtensionData, TransformDocumentValue.FileFormats, formBinding.TransformData.Select(s => s.FileExtension));
                 formBinding.TransformData.AddBinding(fileExtensionData, e => e.FileExtension, FileFormatList.NullValue);
 
-                formBinding.TransformData.AddBinding(localPathData, e => e.InitialDirectory);
+                formBinding.TemplateData.AddBinding(transformLocalPath, e => e.InitialDirectory);
+                formBinding.TransformData.AddBinding(documentLocalPathData, e => e.InitialDirectory);
 
                 formBinding.TransformData.AddBinding(scriptFileNameData, e => e.TransformFileName);
                 formBinding.TransformData.AddBinding(scriptData, e => e.FileContent);
 
-                ValidateFile();
+                SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData, "<Select Schema>");
+                formBinding.TransformData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
+
+                formBinding.DocumentData.AddBinding(documentData);
 
                 // Security
+                ValidateChildren();
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
             }
-        }
-
-        protected override void AddCommand_Click(Object? sender, EventArgs e)
-        {
-            base.AddCommand_Click(sender, e);
-        }
-
-        private void DocumentNewCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
@@ -126,7 +110,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                ValidateFile();
+                ValidateChildren();
 
                 if (args.Error is not null)
                 { throw args.Error; }
@@ -147,15 +131,16 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void DocumentNewCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.TransformDocument(transformIndex, formBinding.GetData)); }
+
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
-        }
-
-        private void RootFolderData_Validated(object sender, EventArgs e)
-        {
-            ValidateFile();
+            if (formBinding.DocumentData.TryGetCurrent(out TransformDocumentValue? value))
+            {
+                DocumentIndex key = new DocumentIndex(value);
+                Activate(() => new Forms.Scripting.TransformDocument(key, formBinding.GetData), o => o.IsOpenItem(key));
+            }
         }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
@@ -167,64 +152,109 @@ namespace DataDictionary.Main.Forms.Scripting
                 folderBrowserDialog.InitialDirectory = current.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
-                {
-                    current.InitialDirectory = folderBrowserDialog.SelectedPath;
-                    ValidateFile();
-                }
+                { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
             }
         }
 
         private void ScriptFileNameData_SelectCommand(object sender, EventArgs e)
         {
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
-            {
-                openFileDialog.SelectDialog(directory, file);
-                ValidateFile();
-            }
+            { openFileDialog.SelectDialog(directory, file); }
         }
 
-        private Boolean ValidateFile()
+        private void ScriptFileNameData_Validated(object sender, EventArgs e)
         {
-            CommandButtons[ButtonType.Open].Enabled = true;
-            CommandButtons[ButtonType.Save].Enabled = true;
-            Boolean result = true;
-
-            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
             errorProvider.SetError(scriptFileNameData.ErrorControl, String.Empty);
-            errorProvider.SetError(scriptData.ErrorControl, String.Empty);
 
-            if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
-            {
-                if (directory.RootFolder is DirectoryType.Null)
-                {
-                    errorProvider.SetError(rootFolderData.ErrorControl, "Not Defined");
-                    CommandButtons[ButtonType.Open].Enabled = false;
-                    CommandButtons[ButtonType.Save].Enabled = false;
-                    result = false;
-                }
-
-                if (!file.IsValid(out Exception? fileException))
-                {
-                    errorProvider.SetError(scriptFileNameData.ErrorControl, fileException);
-                    CommandButtons[ButtonType.Save].Enabled = false;
-                    result = false;
-                }
-
-                if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform))
-                {
-                    if (transform.ContentException is not null)
-                    {
-                        errorProvider.SetError(scriptData.ErrorControl, transform.ContentException);
-                        CommandButtons[ButtonType.Save].Enabled = false;
-                        result = false;
-                    }
-                }
-            }
-            else { throw new InvalidOperationException(); } // Should not get here.
-
-            return result;
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform)
+                && !transform.IsFileValid(out Exception? exception))
+            { errorProvider.SetError(scriptFileNameData.ErrorControl, exception); }
         }
 
+        private void TransformLocalPath_Validated(object sender, EventArgs e)
+        {
+            errorProvider.SetError(transformLocalPath.ErrorControl, String.Empty);
+            Boolean directoryValid = true;
+            CommandButtons[ButtonType.Save].Enabled = false;
+            CommandButtons[ButtonType.Open].Enabled = false;
+
+            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? template)
+                && !template.IsDirectoryValid(out Exception? exception))
+            { errorProvider.SetError(transformLocalPath.ErrorControl, exception); directoryValid = false; }
+
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform))
+            {
+                CommandButtons[ButtonType.Save].Enabled = directoryValid
+                    && !String.IsNullOrWhiteSpace(transform.FileContent)
+                    && !String.IsNullOrWhiteSpace(transform.TransformFileName);
+
+                CommandButtons[ButtonType.Open].Enabled = directoryValid;
+            }
+        }
+
+        private void RootFolderData_Validated(object sender, EventArgs e)
+        {
+            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
+
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform)
+                && transform.RootFolder is DirectoryType.Null)
+            { errorProvider.SetError(rootFolderData.ErrorControl, "Not Defined"); }
+        }
+
+        private void RelativePathData_Validated(object sender, EventArgs e)
+        {
+            errorProvider.SetError(relativePathData.ErrorControl, String.Empty);
+
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform)
+                && !transform.IsFileValid(out Exception? exception))
+            { errorProvider.SetError(relativePathData.ErrorControl, exception); }
+        }
+
+        private void SchemaIdData_Validated(object sender, EventArgs e)
+        {
+            errorProvider.SetError(schemaIdData.ErrorControl, String.Empty);
+
+            if (formBinding.TransformData.TryGetCurrent(out TransformValue? transform))
+            {
+                if (!new SchemaDefinitionIndex(transform).HasValue)
+                { errorProvider.SetError(schemaIdData.ErrorControl, "Missing Value"); }
+            }
+        }
+
+        private void BindingTemplate_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? template)
+                && formBinding.TransformData.TryGetCurrent(out TransformValue? transform))
+            {
+                if (template.RootFolder is not DirectoryType.Null
+                    && transform.RootFolder is DirectoryType.Null)
+                {
+                    transform.RootFolder = template.RootFolder;
+                    rootFolderData.ValidateChildren();
+                }
+
+                if(!String.IsNullOrWhiteSpace(template.RelativePath)
+                    && String.IsNullOrWhiteSpace(transform.RelativePath))
+                {
+                    transform.RelativePath = template.RelativePath;
+                    relativePathData.ValidateChildren();
+                }
+
+                if (template.IsDirectoryValid(out _)
+                    && !String.IsNullOrWhiteSpace(template.RelativePath)
+                    && !String.IsNullOrWhiteSpace(transform.TransformFileName)
+                    && (Path.GetDirectoryName(transform.TransformFileName) ?? String.Empty).
+                        Equals(template.RelativePath ?? String.Empty)
+                    )
+                {   // Not enough information to determine what the current full path is to what the new one would be.
+                    // Just reset the file name as a safe alternative.
+                    transform.TransformFileName = Path.GetFileName(transform.TransformFileName);
+                    scriptFileNameData.ValidateChildren();
+                }
+            }
+
+            transformLocalPath.ValidateChildren();
+        }
 
     }
 }

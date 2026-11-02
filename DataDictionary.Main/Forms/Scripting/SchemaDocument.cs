@@ -5,6 +5,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -39,32 +40,33 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         public SchemaDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
-        { documentIndex = new DocumentIndex(document); }
+        {
+            documentIndex = new DocumentIndex(document);
+            formBinding.GetData = getData;
+        }
 
         public SchemaDocument(ISchemaDefinitionIndex schema, Func<ITemplateData> getData) : this()
-        { schemaIndex = new SchemaDefinitionIndex(schema); }
-
+        {
+            schemaIndex = new SchemaDefinitionIndex(schema);
+            formBinding.GetData = getData;
+        }
 
         private void SchemaDocument_Load(object sender, EventArgs e)
         {
             if (documentIndex.HasValue)
             {
                 formBinding.LoadValue(documentIndex);
+                DoBinding();
             }
-            else if (schemaIndex.HasValue)
+            else if (formBinding.TryCreate(schemaIndex, ref documentIndex, out Exception? exception))
             {
-                formBinding.LoadValue(schemaIndex, out documentIndex);
+                formBinding.LoadValue(documentIndex);
+                SendMessage(new RefreshNavigation());
+                DoBinding();
             }
             else
-            {   // This should never occur.
-                Exception ex = new InvalidOperationException("SchemaDefinition not found");
-                ex.Data.Add(nameof(schemaIndex), schemaIndex);
-                throw ex;
-            }
+            { IsLocked(true); throw exception; }
 
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? _))
-            { DoBinding(); }
-            else { IsLocked(true); }
 
             void DoBinding()
             {
@@ -93,7 +95,7 @@ namespace DataDictionary.Main.Forms.Scripting
             base.OpenCommand_Click(sender, e);
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
-            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); } 
+            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -190,7 +192,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetFile(out IDirectoryValue? directory, out IFileValue? file))
             {
-                if(!directory.IsValid(out Exception? dirException))
+                if (!directory.IsValid(out Exception? dirException))
                 {
                     errorProvider.SetError(localPathData.ErrorControl, dirException);
                     CommandButtons[ButtonType.Open].Enabled = false;

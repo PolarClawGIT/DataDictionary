@@ -3,6 +3,8 @@
 	[TemplateId]            UNIQUEIDENTIFIER Not Null CONSTRAINT [DF_TemplateId] DEFAULT (newid()),
 	[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,
 	[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
+	[RootFolder]			[AppGeneral].[uddtFileRoot] Null, -- Name of the Special Folder used as the Root defined in the Application.
+	[RelativePath]			[AppGeneral].[uddtFilePath] Null,
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Template_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Template_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

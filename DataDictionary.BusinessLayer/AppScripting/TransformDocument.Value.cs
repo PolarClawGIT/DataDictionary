@@ -101,7 +101,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc cref="TransformDocumentItem.TransformDocumentItem(ITemplateKey, ITransformKey)"/>
-        public TransformDocumentValue(ITransformComposite transform) : base(transform, transform)
+        public TransformDocumentValue(ITemplateIndex template,  ITransformIndex transform) : base(template, transform)
         {
             pathValue = new PathValue(this)
             {

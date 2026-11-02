@@ -11,6 +11,37 @@ namespace DataDictionary.Main.Controls.ComboBoxList
     /// <typeparam name="T"></typeparam>
     class BindingComboList<T> : BindingList<T>
     {
+        class Comparer : IEqualityComparer<T>
+        {   // This does the same thing as EqualityComparer<T>.Create
+            // The issue is that ToList and similar uses the IEqualityComparer before it is constructed by Create.
+            // When this happens, a "not supported" exception is thrown.
+            // By making a physical implementation, instead of LINQ statement, this is not an issue.
+            Func<T, T, Boolean>? funcEqual = (a, b) => false;
+
+            public Comparer(Func<T, T, Boolean>? areEqual) : base()
+            { funcEqual = areEqual; }
+
+            public Boolean Equals(T? x, T? y)
+            {   // Note: Most Indexes/Keys consider the empty object (String.Empty, GUID.Empty, ...)
+                // to be not equal to anything. The EmptyItem in the list must be handled differently.
+                if (x is null || y is null || funcEqual is null) { return false; }
+                else { return funcEqual(x, y); }
+            }
+
+            public Int32 GetHashCode([DisallowNull] T obj)
+            { return obj.GetHashCode(); }
+        }
+
+        /// <summary>
+        /// Method executed before the ListChange event is applied. Used to Save the Selected Item.
+        /// </summary>
+        Action OnChanging = () => { };
+
+        /// <summary>
+        /// Method executed after the ListChange event is applied. Used to Restore the Selected Item
+        /// </summary>
+        Action OnChanged = () => { };
+
         /// <summary>
         /// Binds the ComboBox control
         /// </summary>
@@ -24,6 +55,26 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.ValueMember = valueMember();
             control.DisplayMember = displayMember();
             control.DataSource = this;
+
+            T? currentValue = default;
+            OnChanging = onListChanging;
+            OnChanged = onListChanged;
+
+            void onListChanging()
+            {
+                if (control.SelectedItem is T value)
+                { currentValue = value; }
+                else { currentValue = default; }
+            }
+
+            void onListChanged()
+            {
+                if (currentValue is T value
+                    && control.Items.Contains(value))
+                { control.SelectedItem = value; }
+                else
+                { control.SelectedIndex = 0; }
+            }
         }
 
         /// <summary>
@@ -39,6 +90,26 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.ValueMember = valueMember();
             control.DisplayMember = displayMember();
             control.DataSource = this;
+
+            T? currentValue = default;
+            OnChanging = onListChanging;
+            OnChanged = onListChanged;
+
+            void onListChanging()
+            {
+                if (control.SelectedItem is T value)
+                { currentValue = value; }
+                else { currentValue = default; }
+            }
+
+            void onListChanged()
+            {
+                if (currentValue is T value
+                    && control.Items.Contains(value))
+                { control.SelectedItem = value; }
+                else
+                { control.SelectedIndex = 0; }
+            }
         }
 
         /// <summary>
@@ -50,44 +121,88 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         public void BindTo(DataGridViewComboBoxColumn control,
             Func<String> valueMember,
             Func<String> displayMember)
-        {
+        {   // Not verified.
             control.ValueMember = valueMember();
             control.DisplayMember = displayMember();
             control.DataSource = this;
+
+            //T? currentValue = default;
+            OnChanging = onListChanging;
+            OnChanged = onListChanged;
+
+            // TODO: DataGridViewComboBoxColumn does not give access to the underlining ComboBox.
+            // It may not be necessary to do anything as the internal ComboBox is built on the fly upon cell entry.
+
+            void onListChanging()
+            {
+                Exception ex = new NotSupportedException();
+                if(control.DataGridView is not null)
+                { ex.Data.Add(nameof(control.DataGridView), control.DataGridView.Name); }
+                
+                ex.Data.Add(nameof(control.Name), control.Name);
+                ex.Data.Add(nameof(control.DataPropertyName), control.DataPropertyName);
+                throw ex;
+
+                //if(control.DataGridView is DataGridView view
+                //    && view.CurrentCell is DataGridViewCell cell
+                //    && cell.Value is T value) 
+                //{ currentValue = value; }
+                //else { currentValue = default; }
+            }
+
+            void onListChanged()
+            {
+                Exception ex = new NotSupportedException();
+                if (control.DataGridView is not null)
+                { ex.Data.Add(nameof(control.DataGridView), control.DataGridView.Name); }
+
+                ex.Data.Add(nameof(control.Name), control.Name);
+                ex.Data.Add(nameof(control.DataPropertyName), control.DataPropertyName);
+                throw ex;
+
+                //if (currentValue is T value
+                //    && control.Items.Contains(value)
+                //    && control.DataGridView is DataGridView view
+                //    && view.CurrentCell is DataGridViewCell cell)
+                //{ cell.Value = value; }
+                //else
+                //{ }
+            }
         }
 
         /// <summary>
-        /// Fills the ComboBox List.
+        /// Builds the List for the ComboBox. The list is assigned on the BindTo call.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source"></param>
-        /// <param name="constructor"></param>
-        /// <param name="onItemChanged"></param>
-        /// <param name="filterBy"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="areEqual"></param>
-        /// <param name="emptyValue"></param>
+        /// <param name="constructor">Call to create an item from the Source. This should be a constructor call.</param>
+        /// <param name="areEqual">Call used to determine if items are equal. Use the Index class for the items.</param>
+        /// <param name="emptyValue">Call to create the Empty Item. Null = no empty item added.</param>
+        /// <param name="onItemChanged">Action to be performed if a change in the item (such as a title change) occurs.</param>
+        /// <param name="filterBy">Filters the Source before adding it to the items.</param>
+        /// <param name="orderBy">Orders the Source before adding it to the items.</param>
         public void BuildList<TSource>(
             IBindingList<TSource> source,
             Func<TSource, T> constructor,
+            Func<T, T, Boolean> areEqual,
+            Func<T>? emptyValue = null,
             Action<TSource, T>? onItemChanged = null,
             Func<TSource, Boolean>? filterBy = null,
-            Func<T, Object>? orderBy = null,
-            Func<T, T, Boolean>? areEqual = null,
-            Func<T>? emptyValue = null)
+            Func<T, Object>? orderBy = null)
             where TSource : IBindingPropertyChanged
         {
             filterBy = filterBy ?? (f => 1 == 1);
             orderBy = orderBy ?? (o => 1);
             areEqual = areEqual ?? ((a, b) => false);
             onItemChanged = onItemChanged ?? ((t, s) => { });
+
             Func<IReadOnlyList<T>> getList = () => source.
                     Where(w => filterBy(w)).
                     Select(s => constructor(s)).
                     OrderBy(orderBy).
                     ToList().
                     AsReadOnly();
-            
+
             Boolean isRaised = RaiseListChangedEvents;
             RaiseListChangedEvents = false;
             T? emptyItem = default;
@@ -107,6 +222,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
             void ListChanged(Object? sender, ListChangedEventArgs e)
             {
+                OnChanging();
+
                 switch (e.ListChangedType)
                 {
                     case ListChangedType.Reset:
@@ -128,16 +245,19 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         }
                         break;
                     case ListChangedType.ItemDeleted:
-                        List<T> disired = source.
+                        // Need to compare what is currently in the source and what is currently in the list in the BindingComboList
+                        // The ones that are missing in the source should be removed from the BindingComboList.
+                        List<T> desired = source.
                             Where(w => filterBy(w)).
                             Select(s => constructor(s)).
                             ToList();
 
                         List<T> current = this.
-                            Where(w => !(emptyItem is not null && areEqual(w, emptyItem))).
+                            // Don't compare the Empty Item.
+                            Where(w => !(emptyItem is not null && Object.ReferenceEquals(w, emptyItem))). 
                             ToList();
 
-                        this.RemoveRange(current.Except(disired));
+                        this.RemoveRange(current.Except(desired, new Comparer(areEqual)));
                         break;
                     case ListChangedType.ItemChanged:
                         if (filterBy(source[e.NewIndex]))
@@ -162,11 +282,13 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                         ex.Data.Add(nameof(e.PropertyDescriptor), e.PropertyDescriptor);
                         throw ex;
                 }
+
+                OnChanged();
             }
         }
 
         /// <summary>
-        /// Switchs the order of two items in the list and calls the Moved ChangedList event.
+        /// Switches the order of two items in the list and calls the Moved ChangedList event.
         /// </summary>
         /// <param name="oldIndex"></param>
         /// <param name="newIndex"></param>
@@ -223,7 +345,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
     static class BindingComboListExtension
     {
         /// <summary>
-        /// Trys to Get the Selected Item from the Control.
+        /// Try to Get the Selected Item from the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -237,7 +359,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// Try to Set the Selected Item of the Control to the first value that matches.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -252,7 +374,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the list of Items of the Control.
+        /// Tries to Get the list of Items of the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -282,7 +404,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the Selected Item from the Control.
+        /// Try to Get the Selected Item from the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -296,7 +418,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// Try to Set the Selected Item of the Control to the first value that matches.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -311,7 +433,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the list of Items of the Control.
+        /// Tries to Get the list of Items of the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -357,7 +479,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// Try to Set the Selected Item of the Control to the first value that matches.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
@@ -374,7 +496,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         }
 
         /// <summary>
-        /// Trys to Get the list of Items of the Control.
+        /// Try to Get the list of Items of the Control.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>

@@ -40,17 +40,22 @@ namespace DataDictionary.Main.Controls
         /// <param name="provider"></param>
         /// <param name="control"></param>
         /// <param name="exception"></param>
-        public static void SetError(this ErrorProvider provider, Control control, Exception exception)
+        public static void SetError(this ErrorProvider provider, Control control, Exception? exception)
         {
-            StringBuilder builder = new StringBuilder(exception.Message);
-
-            foreach (var item in exception.Data.Cast<DictionaryEntry>().ToDictionary(k => k.Key, v => v.Value))
+            if (exception is null)
+            { provider.SetError(control, String.Empty); }
+            else
             {
-                builder.AppendLine();
-                builder.Append(String.Concat(item.Key.ToString(), ":", (item.Value ?? String.Empty).ToString()));
-            }
+                StringBuilder builder = new StringBuilder(exception.Message);
 
-            provider.SetError(control, builder.ToString());
+                foreach (var item in exception.Data.Cast<DictionaryEntry>().ToDictionary(k => k.Key, v => v.Value))
+                {
+                    builder.AppendLine();
+                    builder.Append(String.Concat(item.Key.ToString(), ":", (item.Value ?? String.Empty).ToString()));
+                }
+
+                provider.SetError(control, builder.ToString());
+            }
         }
     }
 }

@@ -57,6 +57,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <returns></returns>
         Boolean IsValid([NotNullWhen(false)] out Exception? exception);
+
+        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
+        /// <remarks>Allow parent class to call OnPropertyChanged.</remarks>
+        void OnPropertyChanged(String propertyName);
     }
 
     /// <summary>
@@ -101,7 +105,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public virtual event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
-        protected virtual void OnPropertyChanged(String propertyName)
+        public virtual void OnPropertyChanged(String propertyName)
         { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
 
         /// <summary>
@@ -242,6 +246,32 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 exception.Data.Add(nameof(fileName), fileName);
                 exception.Data.Add(nameof(directories), String.Join("//", directories));
             }
+
+            return exception is null;
+        }
+    }
+
+    /// <summary>
+    /// Extensions for FileValue.
+    /// </summary>
+    public static class FileValueExtension
+    {
+        /// <inheritdoc cref="IFileValue.IsValid(out Exception?)"/>
+        public static Boolean IsFileValid(this IFileValue file, [NotNullWhen(false)] out Exception? exception)
+        { return file.IsValid(out exception); }
+
+        /// <summary>
+        /// Performs a TryParse on the selected FileValue into XML.
+        /// If successfully parsed, the file content is updated to the content of the XDocument.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public static Boolean TryParseXml(this IFileValue value, [NotNullWhen(false)] out Exception? exception)
+        {
+            exception = null;
+            if (value.FileContent.TryParse(out XDocument? document, out exception))
+            { value.FileContent = document.Format(); }
 
             return exception is null;
         }

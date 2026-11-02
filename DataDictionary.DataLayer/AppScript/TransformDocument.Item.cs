@@ -30,7 +30,8 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public virtual Guid? TemplateId
-        {
+        {   // Database Layer determines TemplateId from the TransformId.
+            // Business Layer cannot make this determination.
             get { return GetValue<Guid>(nameof(TemplateId)); }
             protected set { SetValue(nameof(TemplateId), value); }
         }

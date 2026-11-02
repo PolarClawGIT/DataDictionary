@@ -56,6 +56,18 @@ namespace Toolbox.BindingTable
     /// </summary>
     public interface IBindingRowColumns
     {
+        /// <summary>
+        /// Returns the List of Columns for the implementing class.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// TODO: This is currently a "code smell".
+        /// The application needs to create a empty instance of the class that
+        /// implements this interface in order to call ColumnDefinitions.
+        /// Downstream this causes the generic types to require new() constraint.
+        /// Functionally, the ColumnDefinitions is Static within the downstream concrete class.
+        /// BindingTable (and other places) needs to be able to call the static method for the specific concrete class.
+        /// </remarks>
         IReadOnlyList<DataColumn> ColumnDefinitions();
     }
 

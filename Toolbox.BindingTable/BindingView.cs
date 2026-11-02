@@ -16,7 +16,7 @@ namespace Toolbox.BindingTable
     /// The base BindingList occurs first followed by the BindingView events.
     /// </remarks>
     public class BindingView<TRow> : BindingList<TRow>,
-        IDataErrorInfo, INotifyDataErrorInfo
+        IDataErrorInfo, INotifyDataErrorInfo, IBindingList<TRow>
         where TRow : class, IBindingPropertyChanged
     {
         Func<Int32> BaseCount { get; set; }

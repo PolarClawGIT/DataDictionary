@@ -650,6 +650,13 @@
     <Build Include="Obsolete\Stored Procedures\procGetSchemaNodeOwner.sql" />
     <Build Include="Obsolete\Stored Procedures\procSetSchemaNodeOwner.sql" />
     <Build Include="Obsolete\Views\SchemaNodeOwner.HS.sql" />
+    <Build Include="AppScript\Tables\TemplateDocument.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttTemplateDocument.sql" />
+    <Build Include="AppScript\Views\TemplateDocument.HS.sql" />
+    <Build Include="HsScript\Tables\TemplateDocument.sql" />
+    <Build Include="AppScript\Triggers\trigTemplateDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTemplateDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetTemplateDocument.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

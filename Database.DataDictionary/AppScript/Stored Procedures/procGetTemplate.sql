@@ -9,6 +9,8 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[TemplateId],
 		[TemplateTitle],
 		[TemplateDescription],
+		[RootFolder],
+		[RelativePath],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

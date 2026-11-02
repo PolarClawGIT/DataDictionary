@@ -101,11 +101,13 @@ Begin Try
 	-- Build Values
 	Insert Into @Values
 	Select	X.[DocumentId],
-			IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
+			S.[TemplateId],
 			D.[SchemaId],
 			O.[ObjectId],
 			NullIf(Trim(D.[DataFileName]),'') As [DataFileName]
 	From	@Data D
+			Inner Join [AppScript].[SchemaDefinition] S
+			On	D.[SchemaId] = S.[SchemaId]
 			Left Join [AppScript].[TemplateModel] M
 			On	D.[TemplateId] = M.[TemplateId] And
 				@ModelId = M.[ModelId]
@@ -117,7 +119,7 @@ Begin Try
 				D.[ObjectScope] = O.[ObjectScope] And
 				P.[QualifiedName] = O.[ObjectPath]
 	Where	P.[IsBase] = 1 And
-			(@TemplateId is Null Or @TemplateId = IsNull(D.[TemplateId], @TemplateId)) And
+			(@TemplateId is Null Or @TemplateId = IsNull(S.[TemplateId], @TemplateId)) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -129,13 +131,15 @@ Begin Try
 
 	Delete From [AppScript].[SchemaDocument]
 	From	[AppScript].[SchemaDocument] T
+			Inner Join [AppScript].[SchemaDefinition] P
+			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S
 			On	T.[DocumentId] = S.[DocumentId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](P.[TemplateId], 1)
 	Where	S.[DocumentId] is Null And
 			(@TemplateId is Not Null Or @ModelId is Not Null) And
-			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
-			(@ModelId is Null Or T.[TemplateId] In (
+			(@TemplateId is Null Or @TemplateId = P.[TemplateId])  And
+			(@ModelId is Null Or P.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[TemplateModel]
 				Where	[ModelId] = @ModelId))
@@ -143,18 +147,20 @@ Begin Try
 
 	;With [Delta] As (
 		Select	[DocumentId],
-				--[TemplateId],
+				[TemplateId],
 				[SchemaId],
 				[ObjectId],
 				[DataFileName]
 		From	@Values
 		Except
 		Select	[DocumentId],
-				--[TemplateId],
-				[SchemaId],
+				P.[TemplateId],
+				C.[SchemaId],
 				[ObjectId],
 				[DataFileName]
-		From	[AppScript].[SchemaDocument])
+		From	[AppScript].[SchemaDocument] C
+				Inner Join [AppScript].[SchemaDefinition] P
+				On	C.[SchemaId] = P.[SchemaId])
 	Update [AppScript].[SchemaDocument]
 	Set		--[TemplateId] = S.[TemplateId],
 			[SchemaId] = S.[SchemaId],
@@ -163,17 +169,15 @@ Begin Try
 	From	[AppScript].[SchemaDocument] T
 			Inner Join [Delta] S
 			On	T.[DocumentId] = S.[DocumentId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Print FormatMessage ('Update [AppScript].[SchemaDocument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[SchemaDocument] (
 			[DocumentId],
-			[TemplateId],
 			[SchemaId],
 			[ObjectId],
 			[DataFileName])
 	Select	S.[DocumentId],
-			S.[TemplateId],
 			S.[SchemaId],
 			S.[ObjectId],
 			S.[DataFileName]

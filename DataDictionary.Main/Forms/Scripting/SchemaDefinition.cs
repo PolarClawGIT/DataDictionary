@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
@@ -68,22 +69,18 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SchemaDefinition_Load(object sender, EventArgs e)
         {
             if (schemaIndex.HasValue)
-            { formBinding.LoadValue(schemaIndex); }
-            else if (templateIndex.HasValue)
             {
-                formBinding.LoadValue(templateIndex, out schemaIndex);
+                formBinding.LoadValue(schemaIndex);
+                DoBinding();
+            }
+            else if (formBinding.TryCreate(templateIndex, ref schemaIndex, out Exception? exception))
+            {
+                formBinding.LoadValue(schemaIndex);
                 SendMessage(new RefreshNavigation());
+                DoBinding();
             }
             else
-            {   // This should never occur.
-                Exception ex = new InvalidOperationException("Template not found");
-                ex.Data.Add(nameof(templateIndex), templateIndex);
-                throw ex;
-            }
-
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? _))
-            { DoBinding(); }
-            else { IsLocked(true); }
+            { IsLocked(true); throw exception; }
 
             void DoBinding()
             {
@@ -132,6 +129,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 documentDeleteCommand.Enabled = false;
                 documentSaveCommand.Enabled = false;
                 formBinding.DocumentData.AddBinding(documentData);
+
+                ValidateFile();
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -253,13 +252,7 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)
-        {
-            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? value))
-            {
-                
-            }
-            else { localPathData.Text = String.Empty; }
-        }
+        { ValidateFile(); }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
         {
@@ -273,6 +266,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
             }
         }
+
+
+        private void RelativePathData_Validated(object sender, EventArgs e)
+        { }
 
         protected override void HandleMessage(RefreshRow message)
         {
@@ -328,5 +325,14 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void ValidateFile()
+        {
+            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
+
+            if (formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? schema)
+                 && schema is IDirectoryValue directory
+                 && !directory.IsValid(out Exception? exception))
+            { errorProvider.SetError(rootFolderData.ErrorControl, exception); }
+        }
     }
 }

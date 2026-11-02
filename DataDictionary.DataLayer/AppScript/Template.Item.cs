@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DataDictionary.Resource.Enumerations;
+using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
@@ -7,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template
     /// </summary>
-    public interface ITemplateItem : ITemplateKeyName, ITemplateKey
+    public interface ITemplateItem : ITemplateKeyName, ITemplateKey, IDocumentDirectory
     {
         /// <summary>
         /// Description of the Scripting Template
@@ -43,6 +44,27 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
+        public virtual DirectoryType RootFolder
+        {
+            get
+            {
+                String? value = GetValue(nameof(RootFolder));
+                if (value.TryParse(out DirectoryType result))
+                { return result; }
+                else { return DirectoryType.Null; }
+            }
+            set
+            { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
+        }
+
+        /// <inheritdoc/>
+        public virtual String? RelativePath
+        {
+            get { return GetValue(nameof(RelativePath)); }
+            set { SetValue(nameof(RelativePath), value); }
+        }
+
+        /// <inheritdoc/>
         public ITemporal Temporal { get; }
 
         /// <summary>
@@ -66,6 +88,8 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateDescription), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RootFolder), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RelativePath), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

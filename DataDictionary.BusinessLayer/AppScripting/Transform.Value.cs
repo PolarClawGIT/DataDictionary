@@ -9,7 +9,8 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITransformValue : ITransformItem, ITransformComposite,
+    public interface ITransformValue : ITransformItem, 
+        ITemplateIndex, ISchemaDefinitionIndex, ITransformIndex, ITransformComposite,
         IScopeType, ITemporal, IDirectoryValue, IFileValue
     { }
 
@@ -87,6 +88,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     && !String.IsNullOrWhiteSpace(TransformFileName)
                     && TransformFileName.StartsWith(relativeTo))
                 { TransformFileName = Path.GetRelativePath(relativeTo, TransformFileName); }
+
+                OnPropertyChanged(nameof(InitialDirectory));
             }
         }
 
@@ -107,6 +110,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 else if (!String.IsNullOrWhiteSpace(TransformFileName)
                     && !String.IsNullOrWhiteSpace(value))
                 { TransformFileName = Path.GetRelativePath(value, TransformFileName); }
+
+                OnPropertyChanged(nameof(InitialDirectory));
+                directory.OnPropertyChanged(nameof(directory.InitialDirectory));
             }
         }
 
@@ -117,8 +123,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             set
             {
                 base.RootFolder = value;
-                // Causes InitialDirectory and RootPath to be adjusted based on change in RootFolder
-                InitialDirectory = directory.InitialDirectory;
+                OnPropertyChanged(nameof(InitialDirectory));
+                directory.OnPropertyChanged(nameof(directory.InitialDirectory));
             }
         }
 

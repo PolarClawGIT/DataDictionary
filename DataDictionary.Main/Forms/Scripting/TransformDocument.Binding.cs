@@ -1,0 +1,156 @@
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.ToolSet;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Xml;
+using System.Xml.Xsl;
+using Toolbox.BindingTable;
+
+namespace DataDictionary.Main.Forms.Scripting
+{
+    partial class TransformDocument
+    {
+        class FormBinding : PresenterData<DocumentIndex>
+        {
+            public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
+            public DataBinding<TemplateValue> TemplateData { get; }
+            public DataBinding<TransformValue> TransformData { get; }
+            public DataBinding<TransformDocumentValue> DocumentData { get; }
+
+            public IBindingList<SchemaDocumentValue> SchemaDocumentData { get; private set; }
+
+
+            public FormBinding(
+                BindingSource templateBinding,
+                BindingSource transformBinding,
+                BindingSource documentBinding) : base()
+            {
+
+                TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
+                TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
+                DocumentData = new DataBinding<TransformDocumentValue>(documentBinding, () => GetData().TransformDocuments);
+                SchemaDocumentData = new BindingView<SchemaDocumentValue>(GetData().SchemaDocuments, w => false);
+
+                GetLocked = TemplateData.GetLocked;
+                GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
+            }
+
+            public override void LoadValue(DocumentIndex key)
+            {
+                TemplateIndex templateKey = new TemplateIndex();
+                TransformIndex transformKey = new TransformIndex();
+                SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex();
+
+                DocumentData.LoadBinding(w => key.Equals(w));
+
+                if (DocumentData.TryGetSingle(out TransformDocumentValue? documentValue))
+                {
+                    templateKey = new TemplateIndex(documentValue);
+                    transformKey = new TransformIndex(documentValue);
+
+                    TemplateData.LoadBinding(w => templateKey.Equals(w));
+                    TransformData.LoadBinding(w => transformKey.Equals(w));
+
+                    if (TransformData.TryGetCurrent(out TransformValue? transform))
+                    {
+                        SchemaDefinitionIndex schema = new SchemaDefinitionIndex(transform);
+                        SchemaDocumentData = new BindingView<SchemaDocumentValue>(GetData().SchemaDocuments, (w => schema.Equals(w)));
+
+                        transform.PropertyChanged += Transform_PropertyChanged;
+
+                        void Transform_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                        {
+                            if (String.Equals(e.PropertyName, nameof(transform.SchemaId)))
+                            {
+                                schema = new SchemaDefinitionIndex(transform);
+                                SchemaDocumentData.RaiseListChangedEvents = false;
+                                SchemaDocumentData = new BindingView<SchemaDocumentValue>(GetData().SchemaDocuments, (w => schema.Equals(w)));
+                                SchemaDocumentData.RaiseListChangedEvents = true;
+                                SchemaDocumentData.ResetBindings();
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            public Boolean TryCreate(TransformIndex transform, ref DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
+            {
+                if (GetData().TryCreate(transform, out TransformDocumentValue? value, out exception))
+                { document = new DocumentIndex(value); }
+
+                return exception is null;
+            }
+
+            public Boolean TryGetSchemaDirectory([NotNullWhen(true)] out IDirectoryValue? directory)
+            {
+                directory = null;
+
+                if (TransformData.TryGetCurrent(out TransformValue? transform)
+                    && GetData().Schemata.
+                        TryGetSingle(w => new SchemaDefinitionIndex(transform).Equals(w),out SchemaDefinitionValue? value))
+                { directory = value; }
+
+                return directory is not null;
+            }
+
+            public Boolean TryGetSchemaDocument([NotNullWhen(true)] out SchemaDocumentValue? schemaDocument)
+            {
+                schemaDocument = null;
+
+                if(DocumentData.TryGetCurrent(out TransformDocumentValue? transformDocument))
+                {
+                     return SchemaDocumentData.TryGetSingle(
+                         w => String.Equals(transformDocument.DataFileName, w.DataFileName, StringComparison.CurrentCultureIgnoreCase),
+                         out schemaDocument);
+                }
+                else { return false; }
+            }
+
+            public Boolean TryExecuteTransform([NotNullWhen(false)] out Exception? exception )
+            {
+                exception = null;
+
+                if(TryGetSchemaDocument(out SchemaDocumentValue? source)
+                    && TransformData.TryGetCurrent(out TransformValue? transform)
+                    && DocumentData.TryGetCurrent(out TransformDocumentValue? result))
+                {
+                    // Setup the XML Transform
+                    XslCompiledTransform xslt = new XslCompiledTransform();
+                    using (StringReader xsltReader = new StringReader(transform.FileContent))
+                    using (XmlReader xmlReader = XmlReader.Create(xsltReader))
+                    { xslt.Load(xmlReader); }
+
+                    // Execute the XML Transform
+                    using (StringReader xmlInputReader = new StringReader(source.FileContent))
+                    using (XmlReader xmlReader = XmlReader.Create(xmlInputReader))
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        try
+                        { xslt.Transform(xmlReader, null, stringWriter); }
+                        catch (Exception ex)
+                        {
+                            ex.Data.Add(nameof(source.DataFileName), source.DataFileName);
+                            ex.Data.Add(nameof(transform.TransformFileName), transform.TransformFileName);
+                            exception = ex;
+                        }
+
+                        result.FileContent = stringWriter.ToString();
+                    }
+                }
+                else
+                {   // Should not occur
+                    exception = new InvalidOperationException();
+                    exception.Data.Add(nameof(SchemaDocumentData), SchemaDocumentData.Count());
+                    exception.Data.Add(nameof(TransformData), TransformData.Count());
+                    exception.Data.Add(nameof(DocumentData), DocumentData.Count());
+                }
+
+                return exception is null;
+            }
+        }
+    }
+}

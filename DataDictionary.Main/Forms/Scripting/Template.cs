@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -51,6 +52,7 @@ namespace DataDictionary.Main.Forms.Scripting
             transformNewCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
             transformDeleteCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Delete);
 
+            documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
 
@@ -68,19 +70,18 @@ namespace DataDictionary.Main.Forms.Scripting
             if (temporalIndex is null)
             {
                 if (templateIndex.HasValue)
-                { formBinding.LoadValue(templateIndex); }
-                else
                 {
-                    TemplateValue value = new TemplateValue();
-                    formBinding.TemplateData.Add(value);
-                    templateIndex = new TemplateIndex(value);
+                    formBinding.LoadValue(templateIndex);
+                    DoBinding();
+                }
+                else if (formBinding.TryCreate(ref templateIndex, out Exception? exception))
+                {
                     formBinding.LoadValue(templateIndex);
                     SendMessage(new RefreshNavigation());
+                    DoBinding();
                 }
-
-                if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
-                { DoBinding(); }
-                else { IsLocked(true); }
+                else
+                { IsLocked(true); throw exception; }
             }
             else
             { formBinding.LoadData(templateIndex, temporalIndex, onCompleting); }
@@ -93,9 +94,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     CommandButtons[ButtonType.Delete].Enabled = false;
                     CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
 
-                    if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? _))
-                    { DoBinding(); }
-                    else { IsLocked(true); }
+                    DoBinding();
                 }
             }
 
@@ -103,6 +102,11 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.TemplateData.AddBinding(templateDescriptionData, e => e.TemplateDescription);
+
+                DirectoryTypeList.Load(rootFolderData);
+                formBinding.TemplateData.AddBinding(rootFolderData, e => e.RootFolder, DirectoryTypeList.NullValue);
+                formBinding.TemplateData.AddBinding(relativePathData, e => e.RelativePath);
+                formBinding.TemplateData.AddBinding(localPathData, e => e.InitialDirectory);
 
                 // Schema Tab
                 formBinding.SchemaData.AddBinding(schemaData);
@@ -122,6 +126,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
 
                 // Security
+                ValidateChildren();
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
             }
@@ -269,11 +274,42 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+
+        private void DocumentNewCommand_Click(object sender, EventArgs e)
+        {
+            Activate(() => new Forms.Scripting.TemplateDocument(
+                template: templateIndex,
+                document: null,
+                getData: formBinding.GetData));
+        }
+
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
 
+        private void RootFolderData_Validated(object sender, EventArgs e)
+        {
+            errorProvider.SetError(rootFolderData.ErrorControl, String.Empty);
+
+            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? template)
+                 && template is IDirectoryValue directory
+                 && !directory.IsValid(out Exception? exception))
+            { errorProvider.SetError(rootFolderData.ErrorControl, exception); }
+        }
+
+        private void RelativePathData_SelectCommand(object sender, EventArgs e)
+        {
+            if (formBinding.TemplateData.TryGetCurrent(out TemplateValue? current))
+            {
+                folderBrowserDialog.Reset();
+                folderBrowserDialog.RootFolder = current.RootFolder.GetSystemFolder();
+                folderBrowserDialog.InitialDirectory = current.InitialDirectory;
+
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+                { current.InitialDirectory = folderBrowserDialog.SelectedPath; }
+            }
+        }
 
     }
 }

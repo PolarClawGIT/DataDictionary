@@ -26,12 +26,16 @@ Begin Try
 		[TemplateId]            UniqueIdentifier Not Null,
 		[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,
 		[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
+		[RootFolder]			[AppGeneral].[uddtFileRoot] Null, -- Name of the Special Folder used as the Root defined in the Application.
+		[RelativePath]			[AppGeneral].[uddtFilePath] Null,
 		Primary Key([TemplateId]))
 
 	Insert Into @Values
 	Select	X.[TemplateId],
 			NullIf(Trim(D.[TemplateTitle]),'') As [TemplateTitle],
-			NullIf(Trim(D.[TemplateDescription]),'') As [TemplateDescription]
+			NullIf(Trim(D.[TemplateDescription]),'') As [TemplateDescription],
+			NullIf(Trim(D.[RootFolder]),'') As [RootFolder],
+			NullIf(Trim(D.[RelativePath]),'') As [RelativePath]
 	From	@Data D
 			Cross Apply (
 				Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId]) X
@@ -104,16 +108,22 @@ Begin Try
 	;With [Delta] As (
 		Select	[TemplateId],
 				[TemplateTitle],
-				[TemplateDescription]
+				[TemplateDescription],
+				[RootFolder],
+				[RelativePath]
 		From	@Values
 		Except
 		Select	[TemplateId],
 				[TemplateTitle],
-				[TemplateDescription]
+				[TemplateDescription],
+				[RootFolder],
+				[RelativePath]
 		From	[AppScript].[Template])
 	Update [AppScript].[Template]
 	Set		[TemplateTitle] = S.[TemplateTitle],
-			[TemplateDescription] = S.[TemplateDescription]
+			[TemplateDescription] = S.[TemplateDescription],
+			[RootFolder] = S.[RootFolder],
+			[RelativePath] = S.[RelativePath]
 	From	[AppScript].[Template] T
 			Inner Join [Delta] S
 			On	T.[TemplateId] = S.[TemplateId]
@@ -123,10 +133,14 @@ Begin Try
 	Insert Into [AppScript].[Template] (
 			[TemplateId],
 			[TemplateTitle],
-			[TemplateDescription])
+			[TemplateDescription],
+			[RootFolder],
+			[RelativePath])
 	Select	S.[TemplateId],
 			S.[TemplateTitle],
-			S.[TemplateDescription]
+			S.[TemplateDescription],
+			S.[RootFolder],
+			S.[RelativePath]
 	From	@Values S
 			Left Join [AppScript].[Template] T
 			On	S.[TemplateId] = T.[TemplateId]

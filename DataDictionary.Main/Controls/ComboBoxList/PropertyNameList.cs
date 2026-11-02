@@ -58,14 +58,14 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             comboList.BuildList(
                 source: BusinessData.Model.Properties,
                 constructor: (c) => new PropertyNameList(c),
+                areEqual: (a, b) => new PropertyIndex(a).Equals(b),
+                emptyValue: () => new PropertyNameList(emptyText),
                 onItemChanged: (s, t) =>
                 {
                     t.PropertyTitle = s.PropertyTitle ?? String.Empty;
                     t.OnPropertyChanged(t.PropertyChanged, nameof(t.PropertyTitle));
                 },
-                orderBy: (o) => o.PropertyTitle,
-                areEqual: (a, b) => new PropertyIndex(a).Equals(b),
-                emptyValue: () => new PropertyNameList(emptyText));
+                orderBy: (o) => o.PropertyTitle);
 
             return comboList;
         }

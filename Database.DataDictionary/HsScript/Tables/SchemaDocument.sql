@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [HsScript].[SchemaDocument]
 (	
 	[DocumentId]		UniqueIdentifier Not Null,
-	[TemplateId]		UniqueIdentifier Not Null,
 	[SchemaId]			UniqueIdentifier Not Null, 
 	[ObjectId]			UniqueIdentifier Null, -- Null = Fixed content
 	[DataFileName]		[AppGeneral].[uddtFileName] Not Null,

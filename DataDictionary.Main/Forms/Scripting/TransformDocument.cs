@@ -1,5 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -8,13 +11,18 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Xsl;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
     partial class TransformDocument : ApplicationData
     {
         DocumentIndex documentIndex = new DocumentIndex();
+        TransformIndex transformIndex = new TransformIndex();
         TemporalIndex? temporalIndex = null;
+        FormBinding formBinding;
 
         public override Boolean IsOpenItem(object? item)
         { return item is IDocumentIndex key && documentIndex.Equals(key); }
@@ -23,19 +31,100 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingDocument);
+            formBinding = new FormBinding(bindingTemplate, bindingTransform, bindingDocument);
 
-            SetCommand(Enumerations.ButtonType.Delete);
+            SetRowState(bindingDocument);
+            SetTitle(bindingDocument);
+            SetIcon(bindingDocument);
+            SetCommand(ButtonType.Export, ButtonType.Save);
+
+            selectDataFileCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Select);
+            reloadDataFileCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Refresh);
+        }
+
+        public TransformDocument(IDocumentIndex document, Func<ITemplateData> getData) : this()
+        {
+            documentIndex = new DocumentIndex(document);
+            formBinding.GetData = getData;
+        }
+
+        public TransformDocument(ITransformIndex transform, Func<ITemplateData> getData) : this()
+        {
+            transformIndex = new TransformIndex(transform);
+            formBinding.GetData = getData;
         }
 
         private void TransformDocument_Load(object sender, EventArgs e)
         {
+            if (documentIndex.HasValue)
+            {
+                formBinding.LoadValue(documentIndex);
+                DoBinding();
+            }
+            else if (formBinding.TryCreate(transformIndex, ref documentIndex, out Exception? exception))
+            {
+                formBinding.LoadValue(documentIndex);
+                SendMessage(new RefreshNavigation());
+                DoBinding();
+            }
+            else
+            { IsLocked(true); throw exception; }
+
+            void DoBinding()
+            {
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.TransformData.AddBinding(transformTitleData, e => e.TransformTitle);
+
+                // Source Tab
+                dataFileNameData.ValueMember = nameof(ISchemaDocumentValue.DataFileName);
+                dataFileNameData.DataSource = formBinding.SchemaDocumentData;
+                formBinding.DocumentData.AddBinding(dataFileNameData, e => e.DataFileName, String.Empty);
+
+                // Special Handling for FK related values.
+                if (formBinding.TryGetSchemaDirectory(out IDirectoryValue? directory))
+                { schemaDocumentPathData.Text = directory.InitialDirectory; }
+                else { schemaDocumentPathData.Text = String.Empty; }
+
+                if (formBinding.TryGetSchemaDocument(out SchemaDocumentValue? schemaDocument))
+                {
+                    schemaSourceObjectData.Text = schemaDocument.ObjectPath ?? String.Empty;
+                    sourceDocumentData.Text = schemaDocument.FileContent;
+                }
+                else
+                {
+                    schemaSourceObjectData.Text = String.Empty;
+                    sourceDocumentData.Text = String.Empty;
+                }
+
+                // Transform Tab
+                formBinding.TransformData.AddBinding(transformFileDirectoryData, e => e.InitialDirectory);
+                formBinding.TransformData.AddBinding(transformFileNameData, e => e.TransformFileName);
+                formBinding.TransformData.AddBinding(transformScriptData, e => e.FileContent);
+
+                // Result Tab
+                formBinding.DocumentData.AddBinding(documentFileNameData, e => e.ScriptedFileName);
+                formBinding.DocumentData.AddBinding(documentFileContentData, e => e.FileContent);
+
+
+                // Security
+                ValidateChildren();
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.Authorize);
+            }
 
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+        }
+
+        protected override void ExportCommand_Click(Object? sender, EventArgs e)
+        {
+            base.ExportCommand_Click(sender, e);
+
+            formBinding.TryExecuteTransform(out Exception? exception);
+            errorProvider.SetError(documentFileContentData, exception);
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
@@ -61,6 +150,43 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+        }
+
+        private void SelectDataFileCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ReloadDataFileCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BindingSchemaDocument_CurrentChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BindingTransform_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetSchemaDirectory(out IDirectoryValue? directory))
+            { schemaDocumentPathData.Text = directory.InitialDirectory; }
+            else { schemaDocumentPathData.Text = String.Empty; }
+
+        }
+
+        private void DataFileNameData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetSchemaDocument(out SchemaDocumentValue? schemaDocument))
+            {
+                schemaSourceObjectData.Text = schemaDocument.ObjectPath ?? String.Empty;
+                sourceDocumentData.Text = schemaDocument.FileContent;
+            }
+            else
+            {
+                schemaSourceObjectData.Text = String.Empty;
+                sourceDocumentData.Text = String.Empty;
+            }
         }
     }
 }
