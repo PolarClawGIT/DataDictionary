@@ -705,7 +705,11 @@ namespace DataDictionary.Main.Forms
                         }
                         else
                         {   // If the DataPropertyName is not in the dataset, the DataGridView just shows the column as blank.
+
+                            var x = properties.OfType<PropertyDescriptor>().Select(s => s.Name);
+
                             Exception ex = new ArgumentException("Property not found in Dataset");
+                            ex.Data.Add(nameof(formControl), formControl.Name);
                             ex.Data.Add(nameof(item.DataPropertyName), item.DataPropertyName);
                             throw ex;
                         }

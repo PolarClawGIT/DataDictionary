@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -27,7 +28,9 @@ namespace DataDictionary.Main.Forms.Scripting
             public required TryGetCurrent<TransformValue> GetTransform { private get; init; }
             public required TryGetCurrent<TemplateDocumentValue> GetDocument { private get; init; }
 
-            public String SchemaDirectory
+            IDirectoryValue emptyDirectory = new DirectoryValue();
+
+            public IDirectoryValue SchemaDirectory
             {
                 get
                 {
@@ -35,16 +38,16 @@ namespace DataDictionary.Main.Forms.Scripting
                     {
                         if (new SchemaDefinitionIndex(document).HasValue
                             && GetSchema(out SchemaDefinitionValue? schema))
-                        { return schema.InitialDirectory; }
+                        { return schema; }
                         else if (GetTemplate(out TemplateValue? template))
-                        { return template.InitialDirectory; }
-                        else { return String.Empty; }
+                        { return template; }
+                        else { return emptyDirectory; }
                     }
-                    else { return String.Empty; }
+                    else { return emptyDirectory; }
                 }
             }
 
-            public String TransformDirectory
+            public IDirectoryValue TransformDirectory
             {
                 get
                 {
@@ -52,14 +55,14 @@ namespace DataDictionary.Main.Forms.Scripting
                     {
                         if (new TransformIndex(document).HasValue
                             && GetTemplate(out TemplateValue? template))
-                        { return template.InitialDirectory; }
-                        else { return String.Empty; }
+                        { return template; }
+                        else { return emptyDirectory; }
                     }
-                    else { return String.Empty; }
+                    else { return emptyDirectory; }
                 }
             }
 
-            public String ScriptedDirectory
+            public IDirectoryValue ScriptedDirectory
             {
                 get
                 {
@@ -67,12 +70,12 @@ namespace DataDictionary.Main.Forms.Scripting
                     {
                         if (new TransformIndex(document).HasValue
                             && GetTransform(out TransformValue? transform))
-                        { return transform.InitialDirectory; }
+                        { return transform; }
                         else if (GetTemplate(out TemplateValue? template))
-                        { return template.InitialDirectory; }
-                        else { return String.Empty; }
+                        { return template; }
+                        else { return emptyDirectory; }
                     }
-                    else { return String.Empty; }
+                    else { return emptyDirectory; }
 
                 }
             }
