@@ -88,7 +88,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         internal Action<String> SetContent { private get; init; }
 
         /// <inheritdoc/>
-        public IEnumerable<FileFormatType> FileFormats { get; } = Enum.GetValues<FileFormatType>();
+        public IEnumerable<FileFormatType> FileFormats { get; init; } = Enum.GetValues<FileFormatType>();
 
         /// <summary>
         /// Function representing Get function for the FileName.

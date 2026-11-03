@@ -96,19 +96,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
             DataFile = new FileValue()
             {
                 GetFileName = () => DataFileName ?? String.Empty,
-                SetFileName = (value) => DataFileName = value
+                SetFileName = (value) => DataFileName = value,
+                FileFormats = new List<FileFormatType>() { FileFormatType.XMLData }
             };
 
             TransformFile = new FileValue()
             {
                 GetFileName = () => TransformFileName ?? String.Empty,
-                SetFileName = (value) => TransformFileName = value
+                SetFileName = (value) => TransformFileName = value,
+                FileFormats = new List<FileFormatType>() { FileFormatType.XSLTransform }
             };
 
             ScriptedFile = new FileValue()
             {
                 GetFileName = () => ScriptedFileName ?? String.Empty,
-                SetFileName = (value) => ScriptedFileName = value
+                SetFileName = (value) => ScriptedFileName = value,
+                FileFormats = Enum.GetValues<FileFormatType>().
+                        Except(new List<FileFormatType>() { FileFormatType.Other, FileFormatType.XSLTransform })
             };
         }
 

@@ -56,13 +56,15 @@ namespace DataDictionary.Main.Controls
                 }
 
             }
-            else if (directory.IsValid(out _) && !file.IsValid(out _)
-                && dialog.ShowDialog(directory, file) is DialogResult.OK)
+            else if (directory.IsValid(out _) && !file.IsValid(out _))
             {
-                file.FileName = Path.GetRelativePath(directory.InitialDirectory, dialog.FileName);
+                if(dialog.ShowDialog(directory, file) is DialogResult.OK)
+                {
+                    file.FileName = Path.GetRelativePath(directory.InitialDirectory, dialog.FileName);
 
-                FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
-                work.AddRange(file.Open(fileInfo));
+                    FileInfo fileInfo = new FileInfo(Path.Combine(directory.InitialDirectory, file.FileName));
+                    work.AddRange(file.Open(fileInfo));
+                }
             }
             else
             {

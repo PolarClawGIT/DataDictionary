@@ -171,7 +171,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
             {
-                document.ScriptedFile.IsValid(out Exception? exception);
+                document.DataFile.IsValid(out Exception? exception);
                 errorProvider.SetError(schemaFileNameData.ErrorControl, exception);
             }
             else { throw ThrowDataNotFound(sender); } // Should never occur
@@ -222,6 +222,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
+                schemaFileNameData.ValidateChildren();
+                schemaFileContentData.ValidateChildren();
+
                 if (args.Error is not null)
                 { throw args.Error; }
             }
