@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<TransformValue> TransformData { get; }
-            //public DataBinding<DocumentValue> DocumentData { get; }
+            public DataBinding<TemplateDocumentValue> DocumentData { get; }
 
             public FormBinding(
                 BindingSource templateBinding,
@@ -26,6 +26,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, () => GetData());
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
+                DocumentData = new DataBinding<TemplateDocumentValue>(documentBinding, () => GetData().Documents);
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
@@ -35,6 +36,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.LoadBinding(w => key.Equals(w));
                 SchemaData.LoadBinding(w => key.Equals(w));
                 TransformData.LoadBinding(w => key.Equals(w));
+                DocumentData.LoadBinding(w => key.Equals(w));
             }
 
             public Boolean TryCreate(ref TemplateIndex template, [NotNullWhen(false)] out Exception? exception)

@@ -119,9 +119,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 transformDeleteCommand.Enabled = false;
 
                 // Document Tab
-
-                //documentData.AutoGenerateColumns = false;
-                //documentData.DataSource = bindingTransform;
+                formBinding.DocumentData.AddBinding(documentData);
 
 
 
@@ -285,7 +283,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? value))
+            {
+                Activate(() => new Forms.Scripting.TemplateDocument(
+                    template: templateIndex,
+                    document: value,
+                    getData: formBinding.GetData));
+            }
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)

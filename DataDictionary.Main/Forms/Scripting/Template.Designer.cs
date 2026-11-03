@@ -34,6 +34,7 @@
             TableLayoutPanel schemaLayout;
             TableLayoutPanel transformLayout;
             TableLayoutPanel documentLayout;
+            localPathData = new DataDictionary.Main.Controls.TextBoxData();
             relativePathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             rootFolderData = new DataDictionary.Main.Controls.ComboBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
@@ -58,7 +59,6 @@
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             documentData = new DataGridView();
-            FileNameColumn = new DataGridViewTextBoxColumn();
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingTransform = new BindingSource(components);
@@ -68,7 +68,7 @@
             folderBrowserDialog = new FolderBrowserDialog();
             openFileDialog = new OpenFileDialog();
             errorProvider = new ErrorProvider(components);
-            localPathData = new DataDictionary.Main.Controls.TextBoxData();
+            documentTitleColumn = new DataGridViewTextBoxColumn();
             templateLayout = new TableLayoutPanel();
             schemaLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
@@ -117,6 +117,20 @@
             templateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             templateLayout.Size = new Size(470, 608);
             templateLayout.TabIndex = 4;
+            // 
+            // localPathData
+            // 
+            localPathData.AutoSize = true;
+            templateLayout.SetColumnSpan(localPathData, 2);
+            localPathData.Dock = DockStyle.Fill;
+            localPathData.HeaderText = "Local Path";
+            localPathData.Location = new Point(3, 241);
+            localPathData.Multiline = false;
+            localPathData.Name = "localPathData";
+            localPathData.ReadOnly = true;
+            localPathData.Size = new Size(464, 44);
+            localPathData.TabIndex = 12;
+            localPathData.WordWrap = false;
             // 
             // relativePathData
             // 
@@ -281,7 +295,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(456, 321);
+            transformTab.Size = new Size(456, 286);
             transformTab.TabIndex = 0;
             transformTab.Text = "Transforms";
             // 
@@ -297,7 +311,7 @@
             transformLayout.RowCount = 2;
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformLayout.Size = new Size(450, 315);
+            transformLayout.Size = new Size(450, 280);
             transformLayout.TabIndex = 6;
             // 
             // transformToolStrip
@@ -348,7 +362,7 @@
             transformsData.Location = new Point(3, 28);
             transformsData.Name = "transformsData";
             transformsData.ReadOnly = true;
-            transformsData.Size = new Size(444, 284);
+            transformsData.Size = new Size(444, 249);
             transformsData.TabIndex = 5;
             // 
             // transformTitleColumn
@@ -366,7 +380,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(456, 321);
+            documentTab.Size = new Size(456, 286);
             documentTab.TabIndex = 3;
             documentTab.Text = "Documents";
             // 
@@ -382,7 +396,7 @@
             documentLayout.RowCount = 2;
             documentLayout.RowStyles.Add(new RowStyle());
             documentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            documentLayout.Size = new Size(450, 315);
+            documentLayout.Size = new Size(450, 280);
             documentLayout.TabIndex = 8;
             // 
             // documentToolStrip
@@ -419,21 +433,13 @@
             documentData.AllowUserToAddRows = false;
             documentData.AllowUserToDeleteRows = false;
             documentData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            documentData.Columns.AddRange(new DataGridViewColumn[] { FileNameColumn });
+            documentData.Columns.AddRange(new DataGridViewColumn[] { documentTitleColumn });
             documentData.Dock = DockStyle.Fill;
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(444, 284);
+            documentData.Size = new Size(444, 249);
             documentData.TabIndex = 7;
-            // 
-            // FileNameColumn
-            // 
-            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            FileNameColumn.DataPropertyName = "FileName";
-            FileNameColumn.HeaderText = "File Name";
-            FileNameColumn.Name = "FileNameColumn";
-            FileNameColumn.ReadOnly = true;
             // 
             // bindingSchema
             // 
@@ -457,19 +463,13 @@
             // 
             errorProvider.ContainerControl = this;
             // 
-            // localPathData
+            // DocumentTitleColumn
             // 
-            localPathData.AutoSize = true;
-            templateLayout.SetColumnSpan(localPathData, 2);
-            localPathData.Dock = DockStyle.Fill;
-            localPathData.HeaderText = "Local Path";
-            localPathData.Location = new Point(3, 241);
-            localPathData.Multiline = false;
-            localPathData.Name = "localPathData";
-            localPathData.ReadOnly = true;
-            localPathData.Size = new Size(464, 44);
-            localPathData.TabIndex = 12;
-            localPathData.WordWrap = false;
+            documentTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentTitleColumn.DataPropertyName = "DocumentTitle";
+            documentTitleColumn.HeaderText = "Document Name";
+            documentTitleColumn.Name = "documentTitleColumn";
+            documentTitleColumn.ReadOnly = true;
             // 
             // Template
             // 
@@ -522,7 +522,6 @@
         private DataGridViewTextBoxColumn transformTitleColumn;
         private DataGridViewTextBoxColumn schemaTitleColumn;
         private DataGridView documentData;
-        private DataGridViewTextBoxColumn FileNameColumn;
         private TabControl templateTabs;
         private TabPage schemaTab;
         private TabPage transformTab;
@@ -551,5 +550,6 @@
         private ErrorProvider errorProvider;
         private ToolStripButton documentNewCommand;
         private Controls.TextBoxData localPathData;
+        private DataGridViewTextBoxColumn documentTitleColumn;
     }
 }
