@@ -93,10 +93,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public event PropertyChangedEventHandler? PropertyChanged;
 
             public virtual void OnPropertyChanged(String propertyName)
-            {
-                if (PropertyChanged is PropertyChangedEventHandler handler)
-                { handler(this, new PropertyChangedEventArgs(propertyName)); }
-            }
+            { this.OnPropertyChanged(PropertyChanged, propertyName); }
 
             // Needed for DataBinding class, but not actually used.
             public event EventHandler<RowStateEventArgs>? RowStateChanged;
