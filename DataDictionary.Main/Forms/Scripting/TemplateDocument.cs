@@ -140,22 +140,10 @@ namespace DataDictionary.Main.Forms.Scripting
             base.HistoryCommand_Click(sender, e);
         }
 
-        private void DocumentOpenSchemaCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.SchemaDocument());
-        }
-
-        private void DocumentOpenTransformCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
-        }
 
         private void SchemaIdData_Validated(object sender, EventArgs e)
         {
             errorProvider.SetError(schemaIdData.ErrorControl, String.Empty);
-            schemaFileLocationData.Text = String.Empty;
 
             if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
             {
