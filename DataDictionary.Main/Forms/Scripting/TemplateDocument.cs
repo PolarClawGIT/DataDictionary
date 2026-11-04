@@ -92,15 +92,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData.AsBindingList());
                 formBinding.DocumentData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
 
-                formBinding.OtherData.AddBinding(schemaFileLocationData, e => e.SchemaDirectory.InitialDirectory);
+                formBinding.OtherData.AddBinding(schemaFileLocationData, e => e.SchemaDirectory);
+                //formBinding.OtherData.AddBinding(schemaFileLocationData, e => e.SchemaDebugging.InitialDirectory);
 
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
                 formBinding.OtherData.AddBinding(isObjectInModelData, e => e.IsObjectInModel);
 
-                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName);
-                formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent);
+                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName); // TODO: This may have same issue as SchemaDebugging.InitialDirectory
+                formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent); 
 
                 ValidateChildren();
 
@@ -204,9 +205,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaOpenCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.OtherData.TryGetCurrent(out OtherBinding? directory)
-                && formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
-            { DoWork(openFileDialog.OpenDialog(directory.SchemaDirectory, document.DataFile), onCompleting); }
+            if (formBinding.OtherData.TryGetCurrent(out OtherBinding? other)
+                && formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document)
+                && other.TryGetSchemaDirectory(out IDirectoryValue? directory))
+            { DoWork(openFileDialog.OpenDialog(directory, document.DataFile), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -220,22 +222,31 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingOther_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (formBinding.OtherData.TryGetCurrent(out OtherBinding? directory))
+            if (formBinding.OtherData.TryGetCurrent(out OtherBinding? otherData))
             {
-                directory.SchemaDirectory.IsValid(out Exception? schema);
-                schemaOpenCommand.Enabled = schema is null;
-                schemaSaveCommand.Enabled = schema is null;
-                errorProvider.SetError(schemaFileLocationData.ErrorControl, schema);
+                if(otherData.TryGetSchemaDirectory(out IDirectoryValue? schemaDirectory))
+                {
+                    schemaDirectory.IsValid(out Exception? schema);
+                    schemaOpenCommand.Enabled = schema is null;
+                    schemaSaveCommand.Enabled = schema is null;
+                    errorProvider.SetError(schemaFileLocationData.ErrorControl, schema);
+                }
 
-                directory.TransformDirectory.IsValid(out Exception? transform);
-                transformOpenCommand.Enabled = transform is null;
-                transformSaveCommand.Enabled = transform is null;
-                errorProvider.SetError(transformFileLocationData.ErrorControl, transform);
+                if (otherData.TryGetTransformDirectory(out IDirectoryValue? transformDirectory))
+                {
+                    transformDirectory.IsValid(out Exception? transform);
+                    transformOpenCommand.Enabled = transform is null;
+                    transformSaveCommand.Enabled = transform is null;
+                    errorProvider.SetError(transformFileLocationData.ErrorControl, transform);
+                }
 
-                directory.ScriptedDirectory.IsValid(out Exception? scripted);
-                scriptedOpenCommand.Enabled = transform is null;
-                scriptedSaveCommand.Enabled = transform is null;
-                errorProvider.SetError(scriptedFileLocationData.ErrorControl, transform);
+                if (otherData.TryGetScriptedDirectory(out IDirectoryValue? scriptedDirectory))
+                {
+                    scriptedDirectory.IsValid(out Exception? scripted);
+                    scriptedOpenCommand.Enabled = scripted is null;
+                    scriptedSaveCommand.Enabled = scripted is null;
+                    errorProvider.SetError(scriptedFileLocationData.ErrorControl, scripted);
+                }
             }
             else { throw ThrowDataNotFound(sender); } // Should never occur
         }

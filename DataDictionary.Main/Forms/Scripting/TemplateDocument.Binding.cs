@@ -16,11 +16,18 @@ namespace DataDictionary.Main.Forms.Scripting
         /// Class contains supplemental binding values.
         /// </summary>
         class OtherBinding : IBindingPropertyChanged, IBindingRowState, INotifyPropertyChanged
-        {   // This feels like a "code smell".
-            // This is a wrapper class to create additional properties that don't exist in the business layer.
+        {   // This is a wrapper class to create additional properties that don't exist in the business layer.
+            // They also need to be "simplified" so Data Binding would work.
             // 
             // To get this to work, OnPropertyChanged needs to be called from outside.
             // DataBinding then sees the change and updates the field.
+            // 
+            // Could not bind using IDirectoryValue.
+            // FindGoodRow throws exceptions during OnPropertyChanged.
+            // It is suspected the use of an interface.
+            // Other possibility is that OnPropertyChanged passed with the complex types
+            // while the actual binding is a child of the complex type.
+            // 
             // TODO: Would prefer to implement this in the Business Layer but don't know how it would work.
 
             public required TryGetCurrent<TemplateValue> GetTemplate { private get; init; }
@@ -28,57 +35,94 @@ namespace DataDictionary.Main.Forms.Scripting
             public required TryGetCurrent<TransformValue> GetTransform { private get; init; }
             public required TryGetCurrent<TemplateDocumentValue> GetDocument { private get; init; }
 
-            IDirectoryValue emptyDirectory = new DirectoryValue();
-
-            public IDirectoryValue SchemaDirectory
+            public String SchemaDirectory
             {
                 get
                 {
-                    if (GetDocument(out TemplateDocumentValue? document))
-                    {
-                        if (new SchemaDefinitionIndex(document).HasValue
-                            && GetSchema(out SchemaDefinitionValue? schema))
-                        { return schema; }
-                        else if (GetTemplate(out TemplateValue? template))
-                        { return template; }
-                        else { return emptyDirectory; }
-                    }
-                    else { return emptyDirectory; }
+                    if (TryGetSchemaDirectory(out IDirectoryValue? directory))
+                    { return directory.InitialDirectory; }
+                    else { return String.Empty; }
                 }
             }
 
-            public IDirectoryValue TransformDirectory
+            public Boolean TryGetSchemaDirectory([NotNullWhen(true)] out IDirectoryValue? directory)
+            {
+                directory = null;
+
+                if (GetDocument(out TemplateDocumentValue? document))
+                {
+                    if (new SchemaDefinitionIndex(document).HasValue
+                        && GetSchema(out SchemaDefinitionValue? schema))
+                    { directory = schema; }
+                    else if (GetTemplate(out TemplateValue? template))
+                    { directory = template; }
+                }
+
+                return directory is not null;
+            }
+
+            public IDirectoryValue SchemaDebugging
+            {   // TODO: Trying to figure out when this is an issue.
+
+                get
+                {
+                    if (TryGetSchemaDirectory(out IDirectoryValue? value))
+                    { return value; }
+                    else { return emptyDirectory; }
+                }
+            }
+            static IDirectoryValue emptyDirectory = new DirectoryValue();
+
+            public String TransformDirectory
             {
                 get
                 {
-                    if (GetDocument(out TemplateDocumentValue? document))
-                    {
-                        if (new TransformIndex(document).HasValue
-                            && GetTemplate(out TemplateValue? template))
-                        { return template; }
-                        else { return emptyDirectory; }
-                    }
-                    else { return emptyDirectory; }
+                    if (TryGetTransformDirectory(out IDirectoryValue? directory))
+                    { return directory.InitialDirectory; }
+                    else { return String.Empty; }
                 }
             }
 
-            public IDirectoryValue ScriptedDirectory
+            public Boolean TryGetTransformDirectory([NotNullWhen(true)] out IDirectoryValue? directory)
+            {
+                directory = null;
+
+                if (GetDocument(out TemplateDocumentValue? document))
+                {
+                    if (new TemplateIndex(document).HasValue
+                        && GetTemplate(out TemplateValue? template))
+                    { directory = template; }
+                }
+
+                return directory is not null;
+            }
+
+            public String ScriptedDirectory
             {
                 get
                 {
-                    if (GetDocument(out TemplateDocumentValue? document))
-                    {
-                        if (new TransformIndex(document).HasValue
-                            && GetTransform(out TransformValue? transform))
-                        { return transform; }
-                        else if (GetTemplate(out TemplateValue? template))
-                        { return template; }
-                        else { return emptyDirectory; }
-                    }
-                    else { return emptyDirectory; }
-
+                    if (TryGetScriptedDirectory(out IDirectoryValue? directory))
+                    { return directory.InitialDirectory; }
+                    else { return String.Empty; }
                 }
             }
+
+            public Boolean TryGetScriptedDirectory([NotNullWhen(true)] out IDirectoryValue? directory)
+            {
+                directory = null;
+
+                if (GetDocument(out TemplateDocumentValue? document))
+                {
+                    if (new TransformIndex(document).HasValue
+                        && GetTransform(out TransformValue? transform))
+                    { directory = transform; }
+                    else if (GetTemplate(out TemplateValue? template))
+                    { directory = template; }
+                }
+
+                return directory is not null;
+            }
+
 
             public Boolean IsObjectInModel
             {
@@ -176,12 +220,15 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (e.PropertyDescriptor is PropertyDescriptor property)
                     {
                         if (property.Name == nameof(TemplateDocumentValue.SchemaId))
-                        { otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory)); }
+                        {
+                            otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory));
+                            //otherValue.OnPropertyChanged("SchemaDebugging.InitialDirectory");
+                        }
 
                         if (property.Name == nameof(TemplateDocumentValue.TransformId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory)); }
 
-                        if(property.Name == nameof(TemplateDocumentValue.ObjectPath))
+                        if (property.Name == nameof(TemplateDocumentValue.ObjectPath))
                         { otherValue.OnPropertyChanged(nameof(otherValue.IsObjectInModel)); }
                     }
                 }
