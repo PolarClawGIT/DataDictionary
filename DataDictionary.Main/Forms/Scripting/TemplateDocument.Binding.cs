@@ -61,18 +61,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 return directory is not null;
             }
 
-            public IDirectoryValue SchemaDebugging
-            {   // TODO: Trying to figure out when this is an issue.
-
-                get
-                {
-                    if (TryGetSchemaDirectory(out IDirectoryValue? value))
-                    { return value; }
-                    else { return emptyDirectory; }
-                }
-            }
-            static IDirectoryValue emptyDirectory = new DirectoryValue();
-
             public String TransformDirectory
             {
                 get
@@ -153,7 +141,6 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<TransformValue> TransformData { get; }
 
-
             public DataBinding<TemplateDocumentValue> DocumentData { get; }
 
             /// <summary>
@@ -173,7 +160,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 BindingSource documentBinding,
                 BindingSource otherBinding) : base()
             {
-
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);

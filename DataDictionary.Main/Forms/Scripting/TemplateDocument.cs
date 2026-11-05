@@ -91,9 +91,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 // Schema Tab (Input)
                 SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData.AsBindingList());
                 formBinding.DocumentData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
-
                 formBinding.OtherData.AddBinding(schemaFileLocationData, e => e.SchemaDirectory);
-                //formBinding.OtherData.AddBinding(schemaFileLocationData, e => e.SchemaDebugging.InitialDirectory);
 
                 ScopeNameList.Load(objectScopeData);
                 formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
