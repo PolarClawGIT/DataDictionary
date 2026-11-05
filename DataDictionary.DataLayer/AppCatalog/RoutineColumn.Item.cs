@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation of the Database Routine Column
     /// </summary>
     [Serializable]
-    public class RoutineColumnItem : BindingTableRow, IRoutineColumnItem, INotifyPropertyChanged, ISerializable,
+    public class RoutineColumnItem : BindingTableRow, IRoutineColumnItem, ISerializable,
         IInfomationSchemaItem<IRoutineColumn, RoutineColumnItem>
     {
         /// <inheritdoc/>

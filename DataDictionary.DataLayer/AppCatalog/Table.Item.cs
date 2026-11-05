@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation of Database Column Item
     /// </summary>
     [Serializable]
-    public class TableItem : BindingTableRow, ITableItem, INotifyPropertyChanged, ISerializable,
+    public class TableItem : BindingTableRow, ITableItem, ISerializable,
         IInfomationSchemaItem<ITable, TableItem>
     {
         /// <inheritdoc/>

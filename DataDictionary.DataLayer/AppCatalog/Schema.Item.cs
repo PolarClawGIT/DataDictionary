@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Catalog Schema Item
     /// </summary>
     [Serializable]
-    public class SchemaItem : BindingTableRow, ISchemaItem, INotifyPropertyChanged, ISerializable,
+    public class SchemaItem : BindingTableRow, ISchemaItem, ISerializable,
         IInfomationSchemaItem<ISchema, SchemaItem>
     {
         /// <inheritdoc/>
