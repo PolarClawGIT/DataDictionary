@@ -503,21 +503,7 @@ namespace DataDictionary.Main.Forms
                     // Property Name check
                     if (properties.Find(fieldName, false) is PropertyDescriptor property)
                     {
-                        if (property.PropertyType.IsInterface
-                            && false // Does not work as expected.
-                            )
-                        {   // TODO: This needs more research.
-                            // The problem more appears that a complex type is in the middle. An interface is an example of that.
-                            // I think, Data Binding can throw the Invalid Operation exception on FindGoodRow.
-                            // The error shows up on the OnPropertyChange event.
-                            // The fix is to bind only to simple types (String, Integer, ...) that are properties of the object.
-                            exception = new ArgumentException("Interfaces cannot be used as part of Data Binding. Keep to Simple types.", controlBinding);
-                            exception.Data.Add(nameof(formControl), formControl.Name);
-                            exception.Data.Add(nameof(controlBinding), controlBinding);
-                            exception.Data.Add(nameof(property.PropertyType), property.PropertyType.ToString());
-                        }
-
-                        else if (fieldName == bindingProperty.Last()) // Check the details on the child most property only.
+                        if (fieldName == bindingProperty.Last()) // Check the details on the child most property only.
                         {
                             // Property Type Check
                             if (bindingProperty.Count == 0 && property.PropertyType != typeof(TProperty))
@@ -559,7 +545,7 @@ namespace DataDictionary.Main.Forms
                         }
                         else
                         {
-                            // TODO: May be an issue with OnPropertyChanged not being able to handle child properties.
+                            // TODO: This is a Nested or reference. This can cause issues but a Trap has not been worked out.
                         }
 
 

@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Scripting
         /// <summary>
         /// Class contains supplemental binding values.
         /// </summary>
-        class OtherBinding : IBindingPropertyChanged, IBindingRowState, INotifyPropertyChanged
+        class OtherBinding : IBindingPropertyChanged, IBindingRowState
         {   // This is a wrapper class to create additional properties that don't exist in the business layer.
             // They also need to be "simplified" so Data Binding would work.
             // 
@@ -136,6 +136,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public event PropertyChangedEventHandler? PropertyChanged;
 
+            /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
             public virtual void OnPropertyChanged(String propertyName)
             { this.OnPropertyChanged(PropertyChanged, propertyName); }
 
@@ -145,7 +146,7 @@ namespace DataDictionary.Main.Forms.Scripting
             { throw new InvalidOperationException(); }
         }
 
-        class FormBinding : PresenterData<DocumentIndex>, INotifyPropertyChanged
+        class FormBinding : PresenterData<DocumentIndex>
         {
             public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
             public DataBinding<TemplateValue> TemplateData { get; }
@@ -220,10 +221,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (e.PropertyDescriptor is PropertyDescriptor property)
                     {
                         if (property.Name == nameof(TemplateDocumentValue.SchemaId))
-                        {
-                            otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory));
-                            //otherValue.OnPropertyChanged("SchemaDebugging.InitialDirectory");
-                        }
+                        { otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory)); }
 
                         if (property.Name == nameof(TemplateDocumentValue.TransformId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory)); }
@@ -260,14 +258,6 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                 }
             }
-
-            public event PropertyChangedEventHandler? PropertyChanged;
-            protected virtual void OnPropertyChanged(String propertyName)
-            {
-                if (PropertyChanged is PropertyChangedEventHandler handler)
-                { handler(this, new PropertyChangedEventArgs(propertyName)); }
-            }
-
 
             public Boolean TryCreate(TemplateIndex template, ref DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
             {

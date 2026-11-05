@@ -180,7 +180,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged(IBindingPropertyChanged, PropertyChangedEventHandler?, String?)"/>
+        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
         protected virtual void OnPropertyChanged(String propertyName)
         { this.OnPropertyChanged(PropertyChanged, propertyName); }
 

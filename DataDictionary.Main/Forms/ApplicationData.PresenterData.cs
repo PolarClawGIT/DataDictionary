@@ -89,7 +89,7 @@ namespace DataDictionary.Main.Forms
         protected abstract class PresenterData<TKey>: PresenterData
             where TKey : class, IKey, IKeyEquality<TKey>
         {   // This is the simple form of the Presenter.
-            // This is used with Child Forms where anouther form provides the data.
+            // This is used with Child Forms where another form provides the data.
 
             /// <summary>
             /// Load the data from the main data store to the local.

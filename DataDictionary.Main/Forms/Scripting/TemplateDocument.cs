@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
                 formBinding.OtherData.AddBinding(isObjectInModelData, e => e.IsObjectInModel);
 
-                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName); // TODO: This may have same issue as SchemaDebugging.InitialDirectory
+                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName);
                 formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent); 
 
                 ValidateChildren();
