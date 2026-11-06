@@ -82,6 +82,7 @@ class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>,
             new ScopeEnumeration(ScopeType.ModelDefinition,            ScopeType.Model,          "Model.Definition"),
             new ScopeEnumeration(ScopeType.ModelSubjectArea,           ScopeType.Model,          "Model.SubjectArea"),
             new ScopeEnumeration(ScopeType.ModelNameSpace,             ScopeType.Model,          "Model.NameSpace"),
+            new ScopeEnumeration(ScopeType.ModelObject,                ScopeType.Model,          "Model.Object"),
             new ScopeEnumeration(ScopeType.ModelAlias,                 ScopeType.Model,          "Model.Alias"),
 
             new ScopeEnumeration(ScopeType.ModelAttribute,             ScopeType.Model,          "Model.Attribute"),

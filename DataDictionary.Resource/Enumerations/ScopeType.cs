@@ -80,11 +80,6 @@
         Model,
 
         /// <summary>
-        /// Application Model Subject Area
-        /// </summary>
-        ModelSubjectArea,
-
-        /// <summary>
         /// Application Model Attribute
         /// </summary>
         ModelAttribute,
@@ -188,6 +183,16 @@
         /// Alias for the Model
         /// </summary>
         ModelAlias,
+
+        /// <summary>
+        /// Application Model Subject Area
+        /// </summary>
+        ModelSubjectArea,
+
+        /// <summary>
+        /// Generic Model Object. Entity, Attribute, or Property.
+        /// </summary>
+        ModelObject,
 
         /// <summary>
         /// .Net Library

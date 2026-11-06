@@ -60,7 +60,9 @@ namespace DataDictionary.Main.Enumerations
             { ScopeType.ModelSubjectArea,           Resources.Icon_Diagram },
             { ScopeType.ModelDefinition,            Resources.Icon_RichTextBox },
             { ScopeType.ModelProperty,              Resources.Icon_Property },
+            { ScopeType.ModelObject,                Resources.Icon_Object },
             { ScopeType.ModelAlias,                 Resources.Icon_Synonym },
+
             { ScopeType.ModelAttribute,             Resources.Icon_Attribute },
             { ScopeType.ModelAttributeAlias,        Resources.Icon_Synonym },
             { ScopeType.ModelAttributeProperty,     Resources.Icon_Property },

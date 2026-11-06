@@ -50,6 +50,8 @@ namespace DataDictionary.Main.Forms.Scripting
             scriptedOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
             scriptedBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             scriptedSaveCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Save);
+
+            objectPathData.SelectIcon = ScopeType.ModelObject.GetImage(ButtonType.Select);
         }
 
         public TemplateDocument(ITemplateIndex template, IDocumentIndex? document, Func<ITemplateData> getData) : this()
