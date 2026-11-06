@@ -101,7 +101,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.OtherData.AddBinding(isObjectInModelData, e => e.IsObjectInModel);
 
                 formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName);
-                formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent); 
+                formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent);
 
                 ValidateChildren();
 
@@ -151,7 +151,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 SchemaDefinitionIndex key = new SchemaDefinitionIndex(document);
 
                 if (key.HasValue)
-                { formBinding.SchemaData.TrySetCurrent(w => key.Equals(w)); }
+                {
+                    formBinding.SchemaData.TrySetCurrent(w => key.Equals(w));
+                    objectPathData.ValidateChildren();
+                }
             }
             else { throw ThrowDataNotFound(sender); } // Should never occur
         }
@@ -180,28 +183,48 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ObjectPathData_SelectCommand(object sender, EventArgs e)
         {
             if (bindingDocument is not null
-                && formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? fileValue))
+                && formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
             {
                 using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.MultiSelect = false;
                     dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
 
-                    dialog.BuildData(new List<PathItem>() { new PathItem(fileValue.ObjectPath) });
+                    dialog.BuildData(new List<PathItem>() { new PathItem(document.ObjectPath) });
 
                     if (dialog.ShowDialog(this) is DialogResult.OK
                         && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))
                     {
-                        fileValue.DocumentTitle = selected.Path.Member;
-                        fileValue.ObjectPath = selected.Path.MemberFullPath;
-                        fileValue.ObjectScope = selected.Scope;
+                        document.DocumentTitle = selected.Path.Member;
+                        document.ObjectPath = selected.Path.MemberFullPath;
+                        document.ObjectScope = selected.Scope;
 
                         if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
-                        { fileValue.DataFileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension); }
+                        {
+                            document.DataFile.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+                            objectPathData.ValidateChildren();
+                            schemaFileNameData.ValidateChildren();
+                        }
                     }
                 }
             }
         }
+
+        private void ObjectScopeData_Validated(object sender, EventArgs e)
+        { objectPathData.ValidateChildren(); }
+
+        private void ObjectPathData_Validated(object sender, EventArgs e)
+        {
+            schemaBuildCommand.Enabled = false;
+
+            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document)
+                && formBinding.OtherData.TryGetCurrent(out OtherBinding? other))
+            {
+                schemaBuildCommand.Enabled = other.IsObjectInModel
+                    && new SchemaDefinitionIndex(document).HasValue;
+            }
+        }
+
 
         private void SchemaOpenCommand_Click(object sender, EventArgs e)
         {
@@ -220,11 +243,17 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        private void SchemaBuildCommand_Click(object sender, EventArgs e)
+        {
+            formBinding.BuildFileContent();
+            schemaFileContentData.ValidateChildren();
+        }
+
         private void BindingOther_CurrentItemChanged(object sender, EventArgs e)
         {
             if (formBinding.OtherData.TryGetCurrent(out OtherBinding? otherData))
             {
-                if(otherData.TryGetSchemaDirectory(out IDirectoryValue? schemaDirectory))
+                if (otherData.TryGetSchemaDirectory(out IDirectoryValue? schemaDirectory))
                 {
                     schemaDirectory.IsValid(out Exception? schema);
                     schemaOpenCommand.Enabled = schema is null;
@@ -264,5 +293,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             return result;
         }
+
+
     }
 }

@@ -232,6 +232,7 @@
             schemaBuildCommand.Name = "schemaBuildCommand";
             schemaBuildCommand.Size = new Size(23, 22);
             schemaBuildCommand.Text = "Build Schema";
+            schemaBuildCommand.Click += SchemaBuildCommand_Click;
             // 
             // schemaSaveCommand
             // 
@@ -299,6 +300,7 @@
             objectPathData.SelectIcon = (Image)resources.GetObject("objectPathData.SelectIcon");
             objectPathData.Size = new Size(516, 44);
             objectPathData.TabIndex = 2;
+            objectPathData.Validated += ObjectPathData_Validated;
             objectPathData.SelectCommand += ObjectPathData_SelectCommand;
             // 
             // objectScopeData
@@ -313,6 +315,7 @@
             objectScopeData.ReadOnly = false;
             objectScopeData.Size = new Size(437, 46);
             objectScopeData.TabIndex = 1;
+            objectScopeData.Validated += ObjectScopeData_Validated;
             // 
             // isObjectInModelData
             // 
@@ -333,7 +336,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(528, 531);
+            transformTab.Size = new Size(192, 72);
             transformTab.TabIndex = 1;
             transformTab.Text = "Transform (process)";
             // 
@@ -355,7 +358,7 @@
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformLayout.Size = new Size(522, 525);
+            transformLayout.Size = new Size(186, 66);
             transformLayout.TabIndex = 0;
             // 
             // transformFileNameData
@@ -367,7 +370,7 @@
             transformFileNameData.Multiline = false;
             transformFileNameData.Name = "transformFileNameData";
             transformFileNameData.ReadOnly = false;
-            transformFileNameData.Size = new Size(516, 44);
+            transformFileNameData.Size = new Size(180, 44);
             transformFileNameData.TabIndex = 1;
             transformFileNameData.WordWrap = true;
             // 
@@ -381,7 +384,7 @@
             transformIdData.Location = new Point(3, 28);
             transformIdData.Name = "transformIdData";
             transformIdData.ReadOnly = false;
-            transformIdData.Size = new Size(516, 46);
+            transformIdData.Size = new Size(180, 46);
             transformIdData.TabIndex = 0;
             // 
             // transformToolStrip
@@ -389,7 +392,7 @@
             transformToolStrip.Items.AddRange(new ToolStripItem[] { transformOpenCommand, transformSaveCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(522, 25);
+            transformToolStrip.Size = new Size(186, 25);
             transformToolStrip.TabIndex = 2;
             transformToolStrip.Text = "toolStrip1";
             // 
@@ -420,7 +423,7 @@
             transformFileContentData.Multiline = true;
             transformFileContentData.Name = "transformFileContentData";
             transformFileContentData.ReadOnly = false;
-            transformFileContentData.Size = new Size(516, 342);
+            transformFileContentData.Size = new Size(180, 1);
             transformFileContentData.TabIndex = 3;
             transformFileContentData.WordWrap = true;
             // 
@@ -433,7 +436,7 @@
             transformFileLocationData.Multiline = false;
             transformFileLocationData.Name = "transformFileLocationData";
             transformFileLocationData.ReadOnly = true;
-            transformFileLocationData.Size = new Size(516, 44);
+            transformFileLocationData.Size = new Size(180, 44);
             transformFileLocationData.TabIndex = 4;
             transformFileLocationData.WordWrap = true;
             // 

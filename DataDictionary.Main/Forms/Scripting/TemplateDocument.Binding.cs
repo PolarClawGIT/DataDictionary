@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -52,7 +53,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (GetDocument(out TemplateDocumentValue? document))
                 {
                     if (new SchemaDefinitionIndex(document).HasValue
-                        && GetSchema(out SchemaDefinitionValue? schema))
+                        && GetSchema(out SchemaDefinitionValue? schema)
+                        && schema.IsDirectoryValid(out _))
                     { directory = schema; }
                     else if (GetTemplate(out TemplateValue? template))
                     { directory = template; }
@@ -102,7 +104,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (GetDocument(out TemplateDocumentValue? document))
                 {
                     if (new TransformIndex(document).HasValue
-                        && GetTransform(out TransformValue? transform))
+                        && GetTransform(out TransformValue? transform) 
+                        && transform.IsDirectoryValid(out _))
                     { directory = transform; }
                     else if (GetTemplate(out TemplateValue? template))
                     { directory = template; }
@@ -110,7 +113,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 return directory is not null;
             }
-
 
             public Boolean IsObjectInModel
             {
@@ -206,20 +208,21 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (e.PropertyDescriptor is PropertyDescriptor property)
                     {
-                        if (property.Name == nameof(TemplateDocumentValue.SchemaId))
+                        if (property.Name is nameof(TemplateDocumentValue.SchemaId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory)); }
 
-                        if (property.Name == nameof(TemplateDocumentValue.TransformId))
+                        if (property.Name is nameof(TemplateDocumentValue.TransformId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory)); }
 
-                        if (property.Name == nameof(TemplateDocumentValue.ObjectPath))
+                        if (property.Name is nameof(TemplateDocumentValue.ObjectPath) or nameof(TemplateDocumentValue.ObjectScope))
                         { otherValue.OnPropertyChanged(nameof(otherValue.IsObjectInModel)); }
                     }
                 }
 
                 void TemplateData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    if (e.PropertyDescriptor is PropertyDescriptor property && property.Name == nameof(TemplateValue.InitialDirectory))
+                    if (e.PropertyDescriptor is PropertyDescriptor property
+                        && property.Name is nameof(TemplateValue.InitialDirectory) or nameof(TemplateValue.RelativePath) or nameof(TemplateValue.RootFolder))
                     {
                         otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory));
                         otherValue.OnPropertyChanged(nameof(otherValue.TransformDirectory));
@@ -229,7 +232,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void SchemaData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    if (e.PropertyDescriptor is PropertyDescriptor property && property.Name == nameof(SchemaDefinitionValue.InitialDirectory))
+                    if (e.PropertyDescriptor is PropertyDescriptor property
+                        && property.Name is nameof(SchemaDefinitionValue.InitialDirectory) or nameof(SchemaDefinitionValue.RelativePath) or nameof(SchemaDefinitionValue.RootFolder))
                     {
                         otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory));
                     }
@@ -237,7 +241,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void TransformData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    if (e.PropertyDescriptor is PropertyDescriptor property && property.Name == nameof(TransformValue.InitialDirectory))
+                    if (e.PropertyDescriptor is PropertyDescriptor property
+                        && property.Name is nameof(TransformValue.InitialDirectory) or nameof(TransformValue.RelativePath) or nameof(TransformValue.RootFolder))
                     {
                         otherValue.OnPropertyChanged(nameof(otherValue.TransformDirectory));
                         otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory));
@@ -251,6 +256,21 @@ namespace DataDictionary.Main.Forms.Scripting
                 { document = new DocumentIndex(value); }
 
                 return exception is null;
+            }
+
+            public void BuildFileContent()
+            {
+                if (DocumentData.TryGetCurrent(out TemplateDocumentValue? value))
+                {
+                    SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(value);
+                    XmlBuilderData nodeValues = new XmlBuilderData();
+                    nodeValues.Load(schemaKey, GetData().SchemataNodes);
+                   
+                    var builder = BusinessData.Model.GetBuilder(value);
+
+                    if (builder is not null)
+                    { value.DataFile.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
+                }
             }
 
             // TODO: Add other functions that are dependent on if a value is selected.
