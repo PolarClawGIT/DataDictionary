@@ -127,7 +127,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
         /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
         public virtual void OnPropertyChanged(String propertyName)
-        { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
+        { this.OnPropertyChanged(PropertyChanged, propertyName); }
 
         /// <inheritdoc/>
         public Boolean IsValid([NotNullWhen(false)] out Exception? exception)
