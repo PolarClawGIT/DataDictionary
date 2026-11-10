@@ -80,8 +80,12 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public virtual Guid? TransformId
         {
-            get { return GetValue<Guid>(nameof(TransformId)); }
-            set { SetValue(nameof(TransformId), value); }
+            get { return GetValue<Guid>(nameof(TransformId)) ?? Guid.Empty; }
+            set
+            {
+                if (value == Guid.Empty) { SetValue(nameof(TransformId), null); }
+                else { SetValue(nameof(TransformId), value); }
+            }
         }
 
         /// <inheritdoc/>

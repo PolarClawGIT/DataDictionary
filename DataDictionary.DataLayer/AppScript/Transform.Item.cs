@@ -8,15 +8,10 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Transform
     /// </summary>
-    public interface ITransformItem : ITransformKey, ITemplateKey,
+    public interface ITransformItem : ITransformKey, ITemplateKey, ITransformKeyName,
         ISchemaDefinitionKey,
         IDocumentDirectory, IDocumentFilePattern
     {
-        /// <summary>
-        /// Title of the Scripting Transform (aka Name of the Transform)
-        /// </summary>
-        String? TransformTitle { get; }
-
         /// <summary>
         /// XSLT Transform Script.
         /// </summary>

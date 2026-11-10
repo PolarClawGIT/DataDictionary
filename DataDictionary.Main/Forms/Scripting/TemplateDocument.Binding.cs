@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls.ComboBoxList;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -46,6 +47,40 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            public String SchemaFileName
+            {
+                get
+                {
+                    if (TryGetSchemaFile(out IFileValue? file))
+                    { return file.FileName; }
+                    else { return String.Empty; }
+                }
+                set
+                {
+                    if (TryGetSchemaFile(out IFileValue? file))
+                    { file.FileName = value; }
+
+                    OnPropertyChanged(nameof(SchemaFileName));
+                }
+            }
+
+            public String SchemaFileContent
+            {
+                get
+                {
+                    if (TryGetSchemaFile(out IFileValue? file))
+                    { return file.FileContent; }
+                    else { return String.Empty; }
+                }
+                set
+                {
+                    if (TryGetSchemaFile(out IFileValue? file))
+                    { file.FileContent = value; }
+
+                    OnPropertyChanged(nameof(TransformFileContent));
+                }
+            }
+
             public Boolean TryGetSchemaDirectory([NotNullWhen(true)] out IDirectoryValue? directory)
             {
                 directory = null;
@@ -63,6 +98,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 return directory is not null;
             }
 
+            public Boolean TryGetSchemaFile([NotNullWhen(true)] out IFileValue? file)
+            {
+                file = null;
+
+                if (GetDocument(out TemplateDocumentValue? document))
+                { file = document.DataFile; }
+
+                return file is not null;
+            }
+
             public String TransformDirectory
             {
                 get
@@ -70,6 +115,44 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (TryGetTransformDirectory(out IDirectoryValue? directory))
                     { return directory.InitialDirectory; }
                     else { return String.Empty; }
+                }
+            }
+
+            public String TransformFileName
+            {
+                get
+                {
+                    if (TryGetTransformFile(out IFileValue? file))
+                    { return file.FileName; }
+                    else { return String.Empty; }
+                }
+                set
+                {
+                    if (TryGetTransformFile(out IFileValue? file))
+                    { }
+                    else if (GetDocument(out TemplateDocumentValue? document))
+                    { document.TransformFile.FileName = value; }
+
+                    OnPropertyChanged(nameof(TransformFileName));
+                }
+            }
+
+            public String TransformFileContent
+            {
+                get
+                {
+                    if (TryGetTransformFile(out IFileValue? file))
+                    { return file.FileContent; }
+                    else { return String.Empty; }
+                }
+                set
+                {
+                    if (TryGetTransformFile(out IFileValue? file))
+                    { }
+                    else if (GetDocument(out TemplateDocumentValue? document))
+                    { document.TransformFile.FileContent = value; }
+
+                    OnPropertyChanged(nameof(TransformFileContent));
                 }
             }
 
@@ -85,6 +168,21 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
 
                 return directory is not null;
+            }
+
+            public Boolean TryGetTransformFile([NotNullWhen(true)] out IFileValue? file)
+            {
+                file = null;
+
+                if (GetDocument(out TemplateDocumentValue? document))
+                {
+                    if (new TransformIndex(document).HasValue
+                        && GetTransform(out TransformValue? transform))
+                    { file = transform; }
+                    else { file = document.TransformFile; }
+                }
+
+                return file is not null;
             }
 
             public String ScriptedDirectory
@@ -104,7 +202,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (GetDocument(out TemplateDocumentValue? document))
                 {
                     if (new TransformIndex(document).HasValue
-                        && GetTransform(out TransformValue? transform) 
+                        && GetTransform(out TransformValue? transform)
                         && transform.IsDirectoryValid(out _))
                     { directory = transform; }
                     else if (GetTemplate(out TemplateValue? template))
@@ -265,7 +363,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(value);
                     XmlBuilderData nodeValues = new XmlBuilderData();
                     nodeValues.Load(schemaKey, GetData().SchemataNodes);
-                   
+
                     var builder = BusinessData.Model.GetBuilder(value);
 
                     if (builder is not null)

@@ -242,6 +242,7 @@
             schemaSaveCommand.Name = "schemaSaveCommand";
             schemaSaveCommand.Size = new Size(23, 22);
             schemaSaveCommand.Text = "Save Schema";
+            schemaSaveCommand.Click += SchemaSaveCommand_Click;
             // 
             // schemaFileNameData
             // 
@@ -336,7 +337,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(192, 72);
+            transformTab.Size = new Size(528, 531);
             transformTab.TabIndex = 1;
             transformTab.Text = "Transform (process)";
             // 
@@ -358,7 +359,7 @@
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformLayout.Size = new Size(186, 66);
+            transformLayout.Size = new Size(522, 525);
             transformLayout.TabIndex = 0;
             // 
             // transformFileNameData
@@ -370,7 +371,7 @@
             transformFileNameData.Multiline = false;
             transformFileNameData.Name = "transformFileNameData";
             transformFileNameData.ReadOnly = false;
-            transformFileNameData.Size = new Size(180, 44);
+            transformFileNameData.Size = new Size(516, 44);
             transformFileNameData.TabIndex = 1;
             transformFileNameData.WordWrap = true;
             // 
@@ -384,15 +385,16 @@
             transformIdData.Location = new Point(3, 28);
             transformIdData.Name = "transformIdData";
             transformIdData.ReadOnly = false;
-            transformIdData.Size = new Size(180, 46);
+            transformIdData.Size = new Size(516, 46);
             transformIdData.TabIndex = 0;
+            transformIdData.Validated += TransformIdData_Validated;
             // 
             // transformToolStrip
             // 
             transformToolStrip.Items.AddRange(new ToolStripItem[] { transformOpenCommand, transformSaveCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(186, 25);
+            transformToolStrip.Size = new Size(522, 25);
             transformToolStrip.TabIndex = 2;
             transformToolStrip.Text = "toolStrip1";
             // 
@@ -404,6 +406,7 @@
             transformOpenCommand.Name = "transformOpenCommand";
             transformOpenCommand.Size = new Size(23, 22);
             transformOpenCommand.Text = "Transform Open";
+            transformOpenCommand.Click += TransformOpenCommand_Click;
             // 
             // transformSaveCommand
             // 
@@ -413,6 +416,7 @@
             transformSaveCommand.Name = "transformSaveCommand";
             transformSaveCommand.Size = new Size(23, 22);
             transformSaveCommand.Text = "Transform Save";
+            transformSaveCommand.Click += TransformSaveCommand_Click;
             // 
             // transformFileContentData
             // 
@@ -423,7 +427,7 @@
             transformFileContentData.Multiline = true;
             transformFileContentData.Name = "transformFileContentData";
             transformFileContentData.ReadOnly = false;
-            transformFileContentData.Size = new Size(180, 1);
+            transformFileContentData.Size = new Size(516, 342);
             transformFileContentData.TabIndex = 3;
             transformFileContentData.WordWrap = true;
             // 
@@ -436,7 +440,7 @@
             transformFileLocationData.Multiline = false;
             transformFileLocationData.Name = "transformFileLocationData";
             transformFileLocationData.ReadOnly = true;
-            transformFileLocationData.Size = new Size(180, 44);
+            transformFileLocationData.Size = new Size(516, 44);
             transformFileLocationData.TabIndex = 4;
             transformFileLocationData.WordWrap = true;
             // 

@@ -635,7 +635,7 @@ namespace DataDictionary.Main.Forms
             {
                 if (ValidateProperty(formControl, expression, out Exception? exception))
                 {
-                    formControl.DataBindings.Add(CreateBinding(nameof(formControl.SelectedValue), expression));
+                    formControl.DataBindings.Add(CreateBinding(nameof(formControl.SelectedValue), expression, nullValue));
 
                     // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
                     if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple
@@ -660,7 +660,7 @@ namespace DataDictionary.Main.Forms
             {
                 if (ValidateProperty(formControl, expression, out Exception? exception))
                 {
-                    formControl.DataBindings.Add(CreateBinding(nameof(formControl.SelectedValue), expression));
+                    formControl.DataBindings.Add(CreateBinding(nameof(formControl.SelectedValue), expression, nullValue));
 
                     // If this is an editable Dropdown with a simple value, the Text property also needs to be bound.
                     if (formControl.DropDownStyle is ComboBoxStyle.DropDown or ComboBoxStyle.Simple

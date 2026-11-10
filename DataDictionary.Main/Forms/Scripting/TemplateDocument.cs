@@ -103,6 +103,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName);
                 formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent);
 
+                // Transform Tab
+                TransformList.Load(transformIdData, formBinding.TransformData.AsBindingList());
+                formBinding.DocumentData.AddBinding(transformIdData, e => e.TransformId, TransformList.NullValue);
+                formBinding.OtherData.AddBinding(transformFileLocationData, e => e.TransformDirectory);
+
+                formBinding.OtherData.AddBinding(transformFileNameData, e => e.TransformFileName);
+                formBinding.OtherData.AddBinding(transformFileContentData, e => e.TransformFileContent);
+
                 ValidateChildren();
 
                 // Security
@@ -229,9 +237,9 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SchemaOpenCommand_Click(object sender, EventArgs e)
         {
             if (formBinding.OtherData.TryGetCurrent(out OtherBinding? other)
-                && formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document)
-                && other.TryGetSchemaDirectory(out IDirectoryValue? directory))
-            { DoWork(openFileDialog.OpenDialog(directory, document.DataFile), onCompleting); }
+                && other.TryGetSchemaDirectory(out IDirectoryValue? directory)
+                && other.TryGetSchemaFile(out IFileValue? file))
+            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -241,6 +249,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (args.Error is not null)
                 { throw args.Error; }
             }
+        }
+
+        private void SchemaSaveCommand_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void SchemaBuildCommand_Click(object sender, EventArgs e)
@@ -278,6 +291,48 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
             else { throw ThrowDataNotFound(sender); } // Should never occur
+        }
+
+        private void TransformIdData_Validated(object sender, EventArgs e)
+        {
+            errorProvider.SetError(transformIdData.ErrorControl, String.Empty);
+
+            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            {
+                TransformIndex key = new TransformIndex(document);
+
+                if (key.HasValue)
+                { formBinding.TransformData.TrySetCurrent(w => key.Equals(w)); }
+
+                if (formBinding.OtherData.TryGetCurrent(out OtherBinding? other))
+                {
+                    other.OnPropertyChanged(nameof(other.TransformFileName));
+                    other.OnPropertyChanged(nameof(other.TransformFileContent));
+                }
+            }
+            else { throw ThrowDataNotFound(sender); } // Should never occur
+        }
+
+        private void TransformOpenCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.OtherData.TryGetCurrent(out OtherBinding? other)
+                && other.TryGetTransformDirectory(out IDirectoryValue? directory)
+                && other.TryGetTransformFile(out IFileValue? file))
+            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                other.OnPropertyChanged(nameof(other.TransformFileName));
+                other.OnPropertyChanged(nameof(other.TransformFileContent));
+
+                if (args.Error is not null)
+                { throw args.Error; }
+            }
+        }
+
+        private void TransformSaveCommand_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private Exception ThrowDataNotFound(object source, params IEnumerable<KeyValuePair<String, String>> data)
