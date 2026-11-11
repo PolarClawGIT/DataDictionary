@@ -14,6 +14,25 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class TemplateDocument : ApplicationData
     {
+        // TODO (POC):  This brought out a design flaw.
+        // This works for a single object and file. 
+        // That covers the Visual Studio output where there a 1:1 relationship between object and file.
+        // This does not cover an Excel story where there is M:1 relationship between objects and file.
+        // This does cover the necessary coding elements and shows it all can be done.
+        //
+        // Possible Fix is to add a list of Objects. This will need a new table "Document Object".
+        // One schema would be used as it can already define the structures for multiple object types (Attribute, Entity, and Process).
+        //
+        // A second issue was identified is that XSML is not supported by browsers anymore.
+        // This means I cannot test the XML Transform in the browser.
+        // The move appears to be to go with JSON for data (replacing XML).
+        // But JSON has nothing that does the job of an XML Transform.
+        // Instead JSON depends on just in time scripting by 3rd party processing (like JINT).
+        // The schema would need to use System.Text.Json.Nodes.
+        // See: https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom
+        // This is an area that I don't know anything about and will take considerable research.
+
+
         TemplateIndex templateIndex = new TemplateIndex();
         DocumentIndex documentIndex = new DocumentIndex();
         TemporalIndex? temporalIndex = null;
