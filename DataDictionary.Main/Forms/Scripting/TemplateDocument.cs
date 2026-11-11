@@ -7,13 +7,7 @@ using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -110,6 +104,11 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 formBinding.OtherData.AddBinding(transformFileNameData, e => e.TransformFileName);
                 formBinding.OtherData.AddBinding(transformFileContentData, e => e.TransformFileContent);
+
+                // Scripted Tab
+                formBinding.OtherData.AddBinding(scriptedFileLocationData, e => e.ScriptedDirectory);
+                formBinding.OtherData.AddBinding(scriptedFileName, e => e.ScriptedFileName);
+                formBinding.OtherData.AddBinding(scriptedFileContent, e => e.ScriptedFileContent);
 
                 ValidateChildren();
 
@@ -331,6 +330,39 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void TransformSaveCommand_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ScriptedOpenCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.OtherData.TryGetCurrent(out OtherBinding? other)
+                && other.TryGetScriptedDirectory(out IDirectoryValue? directory)
+                && other.TryGetScriptedFile(out IFileValue? file))
+            { DoWork(openFileDialog.OpenDialog(directory, file), onCompleting); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                other.OnPropertyChanged(nameof(other.ScriptedFileName));
+                other.OnPropertyChanged(nameof(other.ScriptedFileContent));
+
+                if (args.Error is not null)
+                { throw args.Error; }
+            }
+        }
+
+        private void ScriptedBuildCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.OtherData.TryGetCurrent(out OtherBinding? other))
+            {
+                other.TryExecuteTransform(out Exception? exception);
+                other.OnPropertyChanged(nameof(other.ScriptedFileContent));
+                errorProvider.SetError(scriptedFileContent.ErrorControl, exception);
+            }
+            else { throw ThrowDataNotFound(sender); } // Should never occur
+        }
+
+        private void ScriptedSaveCommand_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }

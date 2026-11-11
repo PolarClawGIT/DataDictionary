@@ -1,10 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Controls.ComboBoxList;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Xsl;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -195,6 +196,40 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            public String ScriptedFileName
+            {
+                get
+                {
+                    if (TryGetScriptedFile(out IFileValue? file))
+                    { return file.FileName; }
+                    else { return String.Empty; }
+                }
+                set
+                {
+                    if (TryGetScriptedFile(out IFileValue? file))
+                    { file.FileName = value; }
+
+                    OnPropertyChanged(nameof(ScriptedFileName));
+                }
+            }
+
+            public String ScriptedFileContent
+            {
+                get
+                {
+                    if (TryGetScriptedFile(out IFileValue? file))
+                    { return file.FileContent; }
+                    else { return String.Empty; }
+                }
+                set
+                {
+                    if (TryGetScriptedFile(out IFileValue? file))
+                    { file.FileContent = value; }
+
+                    OnPropertyChanged(nameof(ScriptedFileContent));
+                }
+            }
+
             public Boolean TryGetScriptedDirectory([NotNullWhen(true)] out IDirectoryValue? directory)
             {
                 directory = null;
@@ -212,6 +247,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 return directory is not null;
             }
 
+            public Boolean TryGetScriptedFile([NotNullWhen(true)] out IFileValue? file)
+            {
+                file = null;
+
+                if (GetDocument(out TemplateDocumentValue? document))
+                { file = document.ScriptedFile; }
+
+                return file is not null;
+            }
+
             public Boolean IsObjectInModel
             {
                 get
@@ -220,6 +265,48 @@ namespace DataDictionary.Main.Forms.Scripting
                     { return BusinessData.Model.IsInModel(document); }
                     else { return false; }
                 }
+            }
+
+            public Boolean TryExecuteTransform([NotNullWhen(false)] out Exception? exception)
+            {
+                exception = null;
+
+                if(TryGetSchemaFile(out IFileValue? source)
+                    && TryGetTransformFile(out IFileValue? process)
+                    && TryGetScriptedFile(out IFileValue? result))
+                {
+                    // Setup the XML Transform
+                    XslCompiledTransform xslt = new XslCompiledTransform();
+                    using (StringReader xsltReader = new StringReader(process.FileContent))
+                    using (XmlReader xmlReader = XmlReader.Create(xsltReader))
+                    { xslt.Load(xmlReader); }
+
+                    // Execute the XML Transform
+                    using (StringReader xmlInputReader = new StringReader(source.FileContent))
+                    using (XmlReader xmlReader = XmlReader.Create(xmlInputReader))
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        try
+                        { xslt.Transform(xmlReader, null, stringWriter); }
+                        catch (Exception ex)
+                        {
+                            ex.Data.Add(nameof(SchemaFileName), source.FileName);
+                            ex.Data.Add(nameof(TransformFileName), process.FileName);
+                            exception = ex;
+                        }
+
+                        result.FileContent = stringWriter.ToString();
+                    }
+                }
+                else
+                {   // Should not occur
+                    exception = new InvalidOperationException();
+                    exception.Data.Add(nameof(SchemaFileName), SchemaFileName);
+                    exception.Data.Add(nameof(TransformFileName), TransformFileName);
+                    exception.Data.Add(nameof(ScriptedFileName), ScriptedFileName);
+                }
+
+                return exception is null;
             }
 
             public event PropertyChangedEventHandler? PropertyChanged;
