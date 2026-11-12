@@ -53,6 +53,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetCommand(ButtonType.Delete);
 
+            objectAddCommand.Image = ScopeType.ModelObject.GetImage(ButtonType.Add);
+            objectDeleteCommand.Image = ScopeType.ModelObject.GetImage(ButtonType.Delete);
+            objectPathData.SelectIcon = ScopeType.ModelObject.GetImage(ButtonType.Select);
+
             schemaOpenCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
             schemaBuildCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
             schemaSaveCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Save);
@@ -64,7 +68,7 @@ namespace DataDictionary.Main.Forms.Scripting
             scriptedBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             scriptedSaveCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Save);
 
-            objectPathData.SelectIcon = ScopeType.ModelObject.GetImage(ButtonType.Select);
+
         }
 
         public TemplateDocument(ITemplateIndex template, IDocumentIndex? document, Func<ITemplateData> getData) : this()
@@ -249,6 +253,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 schemaBuildCommand.Enabled = other.IsObjectInModel
                     && new SchemaDefinitionIndex(document).HasValue;
             }
+        }
+
+        private void ObjectAddCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ObjectDeleteCommand_Click(object sender, EventArgs e)
+        {
+
         }
 
 
