@@ -660,6 +660,17 @@
     <Build Include="Obsolete\Stored Procedures\procGetTemplateDocument.sql" />
     <Build Include="Obsolete\Stored Procedures\procSetTemplateDocument.sql" />
     <Build Include="Obsolete\History\TemplateDocument.sql" />
+    <Build Include="AppScript\Triggers\trigDocumentObject.sql" />
+    <Build Include="AppScript\Triggers\trigDocument.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttDocumentObject.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttDocument.sql" />
+    <Build Include="HsScript\Tables\Document.sql" />
+    <Build Include="HsScript\Tables\DocumentObject.sql" />
+    <Build Include="AppScript\Views\DocumentObject.HS.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetDocumentObject.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetDocumentObject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

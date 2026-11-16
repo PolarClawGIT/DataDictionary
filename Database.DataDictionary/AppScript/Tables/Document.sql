@@ -5,7 +5,7 @@
 	[DocumentTitle]		[AppGeneral].[uddtTitle] Not Null, -- Title, independet of the file names.
 	-- Input
 	[SchemaId]			UniqueIdentifier Null, -- Null = External XML (Sub-Type)
-	[DataFileName]		[AppGeneral].[uddtFileName] Null, -- Normally, Not Null.
+	[SchemaFileName]	[AppGeneral].[uddtFileName] Null, -- Normally, Not Null. (AKA, the Data File)
 	-- Process
 	[TransformId]		UniqueIdentifier Null, -- Null = External Transform XSLT (Sub-Type)
 	[TransformFileName]	[AppGeneral].[uddtFileName] Null, -- Normally, Not Null.
@@ -21,4 +21,4 @@
 	CONSTRAINT [FK_Document] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	CONSTRAINT [FK_DocumentTransform] FOREIGN KEY ([TransformId]) REFERENCES [AppScript].[Transform] ([TransformId]),
 	CONSTRAINT [FK_DocumentSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppScript].[SchemaDefinition] ([SchemaId]),
-)
+)	WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsScript].[Document]))

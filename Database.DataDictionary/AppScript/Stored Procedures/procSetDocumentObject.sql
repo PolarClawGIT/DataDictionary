@@ -1,0 +1,190 @@
+﻿CREATE PROCEDURE [AppScript].[procSetDocumentObject]
+		@ModelId UniqueIdentifier = Null,
+		@TemplateId UniqueIdentifier = Null,
+		@Data [AppScript].[udttDocumentObject] ReadOnly
+AS
+-- Transaction Handling
+Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
+
+Begin Try
+	-- Begin Transaction
+	If @@TranCount = 0
+	  Begin -- Not in a nested/distributed transaction, need to start a transaction
+		Begin Transaction
+		Select	@TRN_IsNewTran = 1
+	  End; -- Begin Transaction
+
+	-- Validation
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcScriptingAuthorization]([TemplateId], 0))
+	Throw 601020, 'Template Not Authorized', 2;
+
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[DocumentId]		UniqueIdentifier Not Null,
+		[TemplateId]		UniqueIdentifier Not Null,
+		[ObjectId]			UniqueIdentifier Not Null,
+		Primary Key([DocumentId], [ObjectId]))
+
+	-- Handles Objects
+	Declare @Objects [AppScript].[udttTemplateObject]
+
+	;With [Object] As (
+		Select	[TemplateId],
+				[ObjectId],
+				[ObjectScope],
+				[AppScript].[funcObjectPath] ([ObjectId]) As [ObjectPath]
+		From	[AppScript].[TemplateObject]
+		Where	[ObjectScope] is Not Null And
+				[TemplateId] In (
+					Select	[TemplateId]
+					From	@Data
+					Union	
+					Select	@TemplateId
+					Where	@TemplateId is Not Null) And
+				([IsExcluded] = 1 Or [KeepOrphaned] = 1)),
+	[Data] As (
+		Select	IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
+				D.[ObjectScope],
+				P.[QualifiedName] As [ObjectPath]
+		From	@Data D
+				Cross Apply [AppGeneral].[funcParseName](D.[ObjectPath]) P
+		Where	P.[IsBase] = 1 And
+				D.[ObjectPath] is Not Null And
+				D.[ObjectScope] is Not Null),
+	[Combine] As (
+		Select	[TemplateId],
+				[ObjectScope],
+				[ObjectPath]
+		From	[Object]
+		Union	
+		Select	[TemplateId],
+				[ObjectScope],
+				[ObjectPath]
+		From	[Data] D)
+	Insert Into @Objects (
+			[TemplateId],
+			[ObjectId],
+			[ObjectScope],
+			[ObjectPath],
+			[IsExcluded],
+			[KeepOrphaned])
+	Select	C.[TemplateId],
+			IsNull(O.[ObjectId], NewId()) As [ObjectId],
+			C.[ObjectScope],
+			C.[ObjectPath],
+			0 As [IsExcluded],
+			0 As [KeepOrphaned]
+	From	[Combine] C
+			Left Join [Data] D
+			On	C.[TemplateId] = D.[TemplateId] And
+				C.[ObjectScope] = D.[ObjectScope] And
+				C.[ObjectPath] = D.[ObjectPath]
+			Left Join [Object] O
+			On	C.[TemplateId] = O.[TemplateId] And
+				C.[ObjectScope] = O.[ObjectScope] And
+				C.[ObjectPath] = O.[ObjectPath]
+	Group By C.[TemplateId],
+			O.[ObjectId],
+			C.[ObjectScope],
+			C.[ObjectPath]
+	Print FormatMessage ('@Objects: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Build Values
+	Insert Into @Values
+	Select	X.[DocumentId],
+			IsNull(D.[TemplateId], @TemplateId) [TemplateId],
+			O.[ObjectId]
+	From	@Data D
+			Left Join [AppScript].[TemplateModel] M
+			On	D.[TemplateId] = M.[TemplateId] And
+				@ModelId = M.[ModelId]
+			Cross Apply  [AppGeneral].[funcParseName](D.[ObjectPath]) P
+			Left Join @Objects O
+			On	IsNull(D.[TemplateId], @TemplateId) = O.[TemplateId] And
+				D.[ObjectScope] = O.[ObjectScope] And
+				P.[QualifiedName] = O.[ObjectPath]
+			Cross Apply (
+				Select	Coalesce(D.[DocumentId], NewId()) As [DocumentId]) X
+	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
+			(@ModelId is Null Or M.[ModelId] is Not Null)
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
+
+	-- Apply Changes
+	Exec [AppScript].[procSetTemplateObject] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Objects
+
+	Delete From [AppScript].[DocumentObject]
+	From	[AppScript].[DocumentObject] T
+			Inner Join [AppScript].[Document] P
+			On	T.[DocumentId] = P.[DocumentId]
+			Left Join @Values S
+			On	T.[DocumentId] = S.[DocumentId] And
+				T.[ObjectId] = S.[ObjectId]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](P.[TemplateId], 1)
+	Where	S.[DocumentId] is Null And
+			(@TemplateId is Not Null Or @ModelId is Not Null) And
+			(@TemplateId is Null Or @TemplateId = P.[TemplateId])  And
+			(@ModelId is Null Or P.[TemplateId] In (
+				Select	[TemplateId]
+				From	[AppScript].[TemplateModel]
+				Where	[ModelId] = @ModelId))
+	Print FormatMessage ('Delete [AppScript].[DocumentObject]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [AppScript].[DocumentObject] (
+			[DocumentId],
+			[ObjectId])
+	Select	S.[DocumentId],
+			S.[ObjectId]
+	From	@Values S
+			Left Join [AppScript].[DocumentObject] T
+			On	S.[DocumentId] = T.[DocumentId] And
+				S.[ObjectId] = T.[ObjectId]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
+	Where	T.[DocumentId] is Null
+	Print FormatMessage ('Insert [AppScript].[DocumentObject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Commit Transaction
+	If @TRN_IsNewTran = 1
+	  Begin -- If this is the outer transaction, commit it
+		If XAct_State() = -1 Throw 103930, 'The current transaction cannot be committed and cannot support operations that write to the log file. Roll back the transaction. (Msg- 3930)', 100
+		Commit Transaction
+		Print FormatMessage ('Commit Transaction Issued ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
+	  End -- Commit Transaction
+	  -- This is a nested transaction, must be committed by outer transaction
+	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
+End Try
+Begin Catch
+	-- Debug Data
+	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
+	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
+	Print FormatMessage (' Number- %i', ERROR_NUMBER())
+	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
+	Print FormatMessage (' State- %i', ERROR_STATE())
+	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
+	Print FormatMessage (' Line- %i', ERROR_LINE())
+	Print FormatMessage (' @@TranCount - %i', @@TranCount)
+	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
+	Print FormatMessage (' Original_Login - %s', Original_Login())
+	Print FormatMessage (' Current_User - %s', Current_User)
+	Print FormatMessage (' XAct_State - %i', XAct_State())
+	Print '*** Debug Report ***'
+
+	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
+
+	-- Rollback Transaction
+	If @TRN_IsNewTran = 1
+	  Begin -- If this is the outer transaction, roll it back
+		Rollback Transaction
+		Print FormatMessage ('Rollback Transaction Issued ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
+	  End -- Rollback Transaction
+	-- This is a nested transaction, must be rolled back by outer transaction
+	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
+
+	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+End Catch
+GO
