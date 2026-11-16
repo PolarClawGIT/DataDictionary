@@ -1,4 +1,4 @@
-﻿CREATE TYPE [AppScript].[udttTemplateDocument] AS TABLE
+﻿CREATE TYPE [Obsolete].[udttTemplateDocument] AS TABLE
 (	-- POC Table. Replaces [SchemaDocument] & [TransformDocument]
 	[DocumentId]			UniqueIdentifier Null,
 	[DocumentTitle]			[AppGeneral].[uddtTitle] Null,

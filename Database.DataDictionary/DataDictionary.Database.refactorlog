@@ -5669,4 +5669,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[DataFileName]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="fa815b9e-7120-4db7-9267-0ba4f3bceb57" ChangeDateTime="11/16/2026 15:44:43">
+    <Property Name="ElementName" Value="[Obsolete].[TemplateDocument]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[Obsolete]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateDocument_POC]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="881dc372-46ab-4e8e-a487-40315c689241" ChangeDateTime="11/16/2026 15:45:46">
+    <Property Name="ElementName" Value="[Obsolete].[TemplateDocument_POC]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[Obsolete]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateDocument]" />
+  </Operation>
 </Operations>

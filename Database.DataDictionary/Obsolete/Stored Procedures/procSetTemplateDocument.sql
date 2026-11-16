@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetTemplateDocument]
+﻿CREATE PROCEDURE [Obsolete].[procSetTemplateDocument]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttTemplateDocument] ReadOnly
+		@Data [Obsolete].[udttTemplateDocument] ReadOnly
 AS
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
@@ -137,8 +137,8 @@ Begin Try
 	-- Apply Changes
 	Exec [AppScript].[procSetTemplateObject] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Objects
 
-	Delete From [AppScript].[TemplateDocument]
-	From	[AppScript].[TemplateDocument] T
+	Delete From [Obsolete].[TemplateDocument]
+	From	[Obsolete].[TemplateDocument] T
 			Inner Join [AppScript].[Transform] P
 				On	T.[TransformId] = P.[TransformId] 
 			Left Join @Values S
@@ -174,8 +174,8 @@ Begin Try
 				[TransformId],
 				[TransformFileName],
 				[ScriptedFileName]
-		From	[AppScript].[TemplateDocument] D)
-	Update [AppScript].[TemplateDocument]
+		From	[Obsolete].[TemplateDocument] D)
+	Update [Obsolete].[TemplateDocument]
 	Set		--[DocumentId] = S.[DocumentId],
 			--[TemplateId] = S.[TemplateId],
 			[DocumentTitle] = S.[DocumentTitle],
@@ -185,13 +185,13 @@ Begin Try
 			[TransformId] = S.[TransformId],
 			[TransformFileName] = S.[TransformFileName],
 			[ScriptedFileName] = S.[ScriptedFileName]
-	From	[AppScript].[TemplateDocument] T
+	From	[Obsolete].[TemplateDocument] T
 			Inner Join [Delta] S
 			On	T.[DocumentId] = S.[DocumentId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Print FormatMessage ('Update [AppScript].[TemplateDocument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[TemplateDocument] (
+	Insert Into [Obsolete].[TemplateDocument] (
 			[DocumentId],
 			[TemplateId],
 			[DocumentTitle],
@@ -211,7 +211,7 @@ Begin Try
 			S.[TransformFileName],
 			S.[ScriptedFileName]
 	From	@Values S
-			Left Join [AppScript].[TemplateDocument] T
+			Left Join [Obsolete].[TemplateDocument] T
 			On	S.[DocumentId] = T.[DocumentId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Where	T.[DocumentId] is Null
