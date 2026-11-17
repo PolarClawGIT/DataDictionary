@@ -12,6 +12,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Schema Document
     /// </summary>
+    [Obsolete]
     public interface ITemplateDocumentItem : IDocumentKey, ITemplateKey, ITransformKey, ISchemaDefinitionKey
     {
         /// <summary>
@@ -38,7 +39,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting Schema Document.
     /// </summary>
-    [Serializable]
+    [Serializable, Obsolete]
     public class TemplateDocumentItem : BindingTableRow, ITemplateDocumentItem, ISerializable
     {
         /// <inheritdoc/>

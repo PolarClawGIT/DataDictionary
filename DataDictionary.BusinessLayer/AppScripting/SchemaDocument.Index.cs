@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public SchemaDocumentIndex(ISchemaDocumentIndex source) : base(source) { }
 
         /// <inheritdoc cref="SchemaDocumentKeyName"/>
-        public SchemaDocumentIndex(ISchemaDefinitionIndex schema, IDocumentNameKey document) : base(schema, document) { }
+        public SchemaDocumentIndex(ISchemaDefinitionIndex schema, IDocumentNameKey_Old document) : base(schema, document) { }
 
         /// <inheritdoc/>
         public Boolean Equals(ISchemaDocumentIndex? other)

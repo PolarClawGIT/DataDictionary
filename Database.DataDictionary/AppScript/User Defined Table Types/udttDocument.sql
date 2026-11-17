@@ -4,8 +4,8 @@
 	[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
 	[TemplateId]			UniqueIdentifier Null,
 	[SchemaId]				UniqueIdentifier Null,
-	[StructuredFileName]	[AppGeneral].[uddtFileName] Null, -- Input
 	[TransformId]			UniqueIdentifier Null,
+	[StructuredFileName]	[AppGeneral].[uddtFileName] Null, -- Input
 	[TransformFileName]		[AppGeneral].[uddtFileName] Null, -- Process
 	[ScriptedFileName]		[AppGeneral].[uddtFileName] Null, -- Output
 	-- Temporal Data

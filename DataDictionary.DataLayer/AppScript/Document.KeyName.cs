@@ -8,17 +8,20 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Document Data File Key
     /// </summary>
+    [Obsolete]
     public interface IDocumentNameKey : IKey
     {
         /// <summary>
         /// The name of the Schema File (XML).
         /// </summary>
+        [Obsolete]
         String DataFileName { get; }
     }
 
     /// <summary>
     /// Implementation for the unique Name of a Data File.
     /// </summary>
+    [Obsolete]
     public class DocumentNameKey : IDocumentNameKey,
         IKeyComparable<IDocumentNameKey>, IKeyComparable<DocumentNameKey>
     {
