@@ -4,7 +4,7 @@
 	[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
 	[TemplateId]			UniqueIdentifier Null,
 	[SchemaId]				UniqueIdentifier Null,
-	[SchemaFileName]		[AppGeneral].[uddtFileName] Null, -- Input
+	[StructuredFileName]	[AppGeneral].[uddtFileName] Null, -- Input
 	[TransformId]			UniqueIdentifier Null,
 	[TransformFileName]		[AppGeneral].[uddtFileName] Null, -- Process
 	[ScriptedFileName]		[AppGeneral].[uddtFileName] Null, -- Output

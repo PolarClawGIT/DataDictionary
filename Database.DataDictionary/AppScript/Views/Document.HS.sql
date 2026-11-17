@@ -15,7 +15,7 @@ Select	D.[DocumentId], -- PK
 		D.[DocumentTitle],
 		D.[TemplateId],
 		D.[SchemaId],
-		D.[SchemaFileName],
+		D.[StructuredFileName],
 		D.[TransformId],
 		D.[TransformFileName],
 		D.[ScriptedFileName],

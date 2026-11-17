@@ -23,14 +23,14 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[DocumentId]		UniqueIdentifier Not Null,
-		[TemplateId]		UniqueIdentifier Not Null,
-		[DocumentTitle]		[AppGeneral].[uddtTitle] Not Null,
-		[SchemaId]			UniqueIdentifier Null,
-		[SchemaFileName]	[AppGeneral].[uddtFileName] Null,
-		[TransformId]		UniqueIdentifier Null,
-		[TransformFileName]	[AppGeneral].[uddtFileName] Null,
-		[ScriptedFileName]	[AppGeneral].[uddtFileName] Null,
+		[DocumentId]			UniqueIdentifier Not Null,
+		[TemplateId]			UniqueIdentifier Not Null,
+		[DocumentTitle]			[AppGeneral].[uddtTitle] Not Null,
+		[SchemaId]				UniqueIdentifier Null,
+		[StructuredFileName]	[AppGeneral].[uddtFileName] Null,
+		[TransformId]			UniqueIdentifier Null,
+		[TransformFileName]		[AppGeneral].[uddtFileName] Null,
+		[ScriptedFileName]		[AppGeneral].[uddtFileName] Null,
 		Primary Key([DocumentId]))
 
 	-- Build Values
@@ -39,7 +39,7 @@ Begin Try
 			D.[TemplateId],
 			NullIf(Trim(D.[DocumentTitle]),'') As [DocumentTitle],
 			D.[SchemaId],
-			NullIf(Trim(D.[SchemaFileName]),'') As [SchemaFileName],
+			NullIf(Trim(D.[StructuredFileName]),'') As [StructuredFileName],
 			D.[TransformId],
 			NullIf(Trim(D.[TransformFileName]),'') As [TransformFileName],
 			NullIf(Trim(D.[ScriptedFileName]),'') As [ScriptedFileName]
@@ -83,7 +83,7 @@ Begin Try
 				[TemplateId],
 				[DocumentTitle],
 				[SchemaId],
-				[SchemaFileName],
+				[StructuredFileName],
 				[TransformId],
 				[TransformFileName],
 				[ScriptedFileName]
@@ -93,7 +93,7 @@ Begin Try
 				[TemplateId],
 				[DocumentTitle],
 				[SchemaId],
-				[SchemaFileName],
+				[StructuredFileName],
 				[TransformId],
 				[TransformFileName],
 				[ScriptedFileName]
@@ -103,7 +103,7 @@ Begin Try
 			--[TemplateId] = S.[TemplateId],
 			[DocumentTitle] = S.[DocumentTitle],
 			[SchemaId] = S.[SchemaId],
-			[SchemaFileName] = S.[SchemaFileName],
+			[StructuredFileName] = S.[StructuredFileName],
 			[TransformId] = S.[TransformId],
 			[TransformFileName] = S.[TransformFileName],
 			[ScriptedFileName] = S.[ScriptedFileName]
@@ -118,7 +118,7 @@ Begin Try
 			[TemplateId],
 			[DocumentTitle],
 			[SchemaId],
-			[SchemaFileName],
+			[StructuredFileName],
 			[TransformId],
 			[TransformFileName],
 			[ScriptedFileName])
@@ -126,7 +126,7 @@ Begin Try
 			S.[TemplateId],
 			S.[DocumentTitle],
 			S.[SchemaId],
-			S.[SchemaFileName],
+			S.[StructuredFileName],
 			S.[TransformId],
 			S.[TransformFileName],
 			S.[ScriptedFileName]

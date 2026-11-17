@@ -5683,4 +5683,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[TemplateDocument]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a813a262-8d66-4b5f-ac22-711be4c54790" ChangeDateTime="11/17/2026 15:08:51">
+    <Property Name="ElementName" Value="[AppScript].[Document].[SchemaFileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[Document]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[StructuredFileName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bd5a9fb0-10b2-4f7e-9aea-78c01fa9e9fc" ChangeDateTime="11/17/2026 15:13:09">
+    <Property Name="ElementName" Value="[HsScript].[Document].[SchemaFileName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[Document]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[StructuredFileName]" />
+  </Operation>
 </Operations>
