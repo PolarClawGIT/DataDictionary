@@ -356,6 +356,11 @@
         ScriptingDocument,
 
         /// <summary>
+        /// Scripting Document
+        /// </summary>
+        ScriptingObject,
+
+        /// <summary>
         /// Scripting Template
         /// </summary>
         ScriptingTemplate,

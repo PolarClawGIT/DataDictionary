@@ -9,7 +9,6 @@ namespace DataDictionary.DataLayer.AppScript
     /// Generic Base class for Scripting Document Objects
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    [Obsolete]
     public class DocumentObjectCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,

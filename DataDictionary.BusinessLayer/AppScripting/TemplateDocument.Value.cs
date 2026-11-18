@@ -10,12 +10,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
 
     /// <inheritdoc/>
+    [Obsolete]
     public interface ITemplateDocumentValue : ITemplateDocumentItem,
         IDocumentIndex, ITemplateIndex, ISchemaDefinitionIndex, ITransformIndex, ITemplateObjectIndex,
         IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>
+    [Obsolete]
     public class TemplateDocumentValue : TemplateDocumentItem, ITemplateDocumentValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue

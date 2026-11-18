@@ -10,6 +10,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting TemplateDocument
     /// </summary>
+    [Obsolete]
     public interface ITemplateDocumentData :
         IBindingData<TemplateDocumentValue>,
         IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
@@ -18,6 +19,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IDeleteData, IRemoveData<ISchemaDefinitionIndex>, IRemoveData<ITransformIndex>, IRemoveData<IDocumentIndex>
     { }
 
+    [Obsolete]
     class TemplateDocumentData : TemplateDocumentCollection<TemplateDocumentValue>, ITemplateDocumentData
     {
         /// <inheritdoc/>
