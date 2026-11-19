@@ -12,7 +12,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class TemplateDocument : ApplicationData
+    partial class Document : ApplicationData
     {
         // TODO (POC):  This brought out a design flaw.
         // This works for a single object and file. 
@@ -41,11 +41,17 @@ namespace DataDictionary.Main.Forms.Scripting
         public override Boolean IsOpenItem(object? item)
         { return item is ITemplateIndex key && templateIndex.Equals(key); }
 
-        public TemplateDocument() : base()
+        public Document() : base()
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingTransform, bindingDocument, bindingOther);
+            formBinding = new FormBinding(
+                templateBinding: bindingTemplate,
+                schemaBinding: bindingSchema,
+                transformBinding: bindingTransform,
+                documentBinding: bindingDocument,
+                objectBinding: bindingObject,
+                otherBinding: bindingOther);
 
             SetRowState(bindingDocument);
             SetIcon(bindingDocument);
@@ -71,7 +77,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         }
 
-        public TemplateDocument(ITemplateIndex template, IDocumentIndex? document, Func<ITemplateData> getData) : this()
+        public Document(ITemplateIndex template, IDocumentIndex? document, Func<ITemplateData> getData) : this()
         {
             templateIndex = new TemplateIndex(template);
             formBinding.GetData = getData;
@@ -80,10 +86,10 @@ namespace DataDictionary.Main.Forms.Scripting
             { documentIndex = new DocumentIndex(key); }
         }
 
-        public TemplateDocument(IDocumentIndex document) : this()
+        public Document(IDocumentIndex document) : this()
         { documentIndex = new DocumentIndex(document); }
 
-        public TemplateDocument(IDocumentIndex document, Func<ITemplateData> getData) : this(document)
+        public Document(IDocumentIndex document, Func<ITemplateData> getData) : this(document)
         { formBinding.GetData = getData; }
 
         private void Document_Load(object sender, EventArgs e)
@@ -113,12 +119,12 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.OtherData.AddBinding(schemaFileLocationData, e => e.SchemaDirectory);
 
                 ScopeNameList.Load(objectScopeData);
-                formBinding.DocumentData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
-                formBinding.DocumentData.AddBinding(objectPathData, e => e.ObjectPath);
+                formBinding.ObjectData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+                formBinding.ObjectData.AddBinding(objectPathData, e => e.ObjectPath);
                 formBinding.OtherData.AddBinding(isObjectInModelData, e => e.IsObjectInModel);
 
-                formBinding.DocumentData.AddBinding(schemaFileNameData, e => e.DataFile.FileName);
-                formBinding.DocumentData.AddBinding(schemaFileContentData, e => e.DataFile.FileContent);
+                formBinding.DocumentData.AddBinding(structuredFileNameData, e => e.StructuredFile.FileName);
+                formBinding.DocumentData.AddBinding(structuredFileContentData, e => e.StructuredFile.FileContent);
 
                 // Transform Tab
                 TransformList.Load(transformIdData, formBinding.TransformData.AsBindingList());
@@ -176,7 +182,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             errorProvider.SetError(schemaIdData.ErrorControl, String.Empty);
 
-            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            if (formBinding.DocumentData.TryGetCurrent(out DocumentValue? document))
             {
                 SchemaDefinitionIndex key = new SchemaDefinitionIndex(document);
 
@@ -191,54 +197,54 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaFileNameData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            if (formBinding.DocumentData.TryGetCurrent(out DocumentValue? document))
             {
-                document.DataFile.IsValid(out Exception? exception);
-                errorProvider.SetError(schemaFileNameData.ErrorControl, exception);
+                document.StructuredFile.IsValid(out Exception? exception);
+                errorProvider.SetError(structuredFileNameData.ErrorControl, exception);
             }
             else { throw ThrowDataNotFound(sender); } // Should never occur
         }
 
         private void SchemaFileContentData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            if (formBinding.DocumentData.TryGetCurrent(out DocumentValue? document))
             {
-                document.DataFile.TryParseXml(out Exception? exception);
-                errorProvider.SetError(schemaFileContentData.ErrorControl, exception);
+                document.StructuredFile.TryParseXml(out Exception? exception);
+                errorProvider.SetError(structuredFileContentData.ErrorControl, exception);
             }
             else { throw ThrowDataNotFound(sender); } // Should never occur
         }
 
 
-        private void ObjectPathData_SelectCommand(object sender, EventArgs e)
-        {
-            if (bindingDocument is not null
-                && formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
-            {
-                using (SelectionDialog dialog = new SelectionDialog(this))
-                {
-                    dialog.MultiSelect = false;
-                    dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
+        //private void ObjectPathData_SelectCommand(object sender, EventArgs e)
+        //{
+        //    if (bindingDocument is not null
+        //        && formBinding.DocumentData.TryGetCurrent(out DocumentValue? document))
+        //    {
+        //        using (SelectionDialog dialog = new SelectionDialog(this))
+        //        {
+        //            dialog.MultiSelect = false;
+        //            dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
 
-                    dialog.BuildData(new List<PathItem>() { new PathItem(document.ObjectPath) });
+        //            dialog.BuildData(new List<PathItem>() { new PathItem(document.ObjectPath) });
 
-                    if (dialog.ShowDialog(this) is DialogResult.OK
-                        && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))
-                    {
-                        document.DocumentTitle = selected.Path.Member;
-                        document.ObjectPath = selected.Path.MemberFullPath;
-                        document.ObjectScope = selected.Scope;
+        //            if (dialog.ShowDialog(this) is DialogResult.OK
+        //                && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))
+        //            {
+        //                document.DocumentTitle = selected.Path.Member;
+        //                document.ObjectPath = selected.Path.MemberFullPath;
+        //                document.ObjectScope = selected.Scope;
 
-                        if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
-                        {
-                            document.DataFile.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
-                            objectPathData.ValidateChildren();
-                            schemaFileNameData.ValidateChildren();
-                        }
-                    }
-                }
-            }
-        }
+        //                if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
+        //                {
+        //                    document.DataFile.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+        //                    objectPathData.ValidateChildren();
+        //                    structuredFileNameData.ValidateChildren();
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         private void ObjectScopeData_Validated(object sender, EventArgs e)
         { objectPathData.ValidateChildren(); }
@@ -247,7 +253,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             schemaBuildCommand.Enabled = false;
 
-            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document)
+            if (formBinding.DocumentData.TryGetCurrent(out DocumentValue? document)
                 && formBinding.OtherData.TryGetCurrent(out OtherBinding? other))
             {
                 schemaBuildCommand.Enabled = other.IsObjectInModel
@@ -275,8 +281,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                schemaFileNameData.ValidateChildren();
-                schemaFileContentData.ValidateChildren();
+                structuredFileNameData.ValidateChildren();
+                structuredFileContentData.ValidateChildren();
 
                 if (args.Error is not null)
                 { throw args.Error; }
@@ -291,7 +297,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SchemaBuildCommand_Click(object sender, EventArgs e)
         {
             formBinding.BuildFileContent();
-            schemaFileContentData.ValidateChildren();
+            structuredFileContentData.ValidateChildren();
         }
 
         private void BindingOther_CurrentItemChanged(object sender, EventArgs e)
@@ -329,7 +335,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             errorProvider.SetError(transformIdData.ErrorControl, String.Empty);
 
-            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? document))
+            if (formBinding.DocumentData.TryGetCurrent(out DocumentValue? document))
             {
                 TransformIndex key = new TransformIndex(document);
 

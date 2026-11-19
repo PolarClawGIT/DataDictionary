@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<TransformValue> TransformData { get; }
-            public DataBinding<TemplateDocumentValue> DocumentData { get; }
+            public DataBinding<DocumentValue> DocumentData { get; }
 
             public FormBinding(
                 BindingSource templateBinding,
@@ -26,7 +26,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, () => GetData());
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
-                DocumentData = new DataBinding<TemplateDocumentValue>(documentBinding, () => GetData().Documents);
+                DocumentData = new DataBinding<DocumentValue>(documentBinding, () => GetData().Documents);
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }

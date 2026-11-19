@@ -293,9 +293,9 @@ namespace DataDictionary.Main
         private void MenuTemplateDocument_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                <TemplateDocumentValue, Forms.Scripting.TemplateDocument>
+                <TemplateDocumentValue, Forms.Scripting.Document>
                 (ScopeType.ScriptingDocument, BusinessData.Templates.Documents)
-            { SelectedForm = (data) => new Forms.Scripting.TemplateDocument(data) });
+            { SelectedForm = (data) => new Forms.Scripting.Document(data) });
         }
 
         private void MenuTemplateTransform_Click(object sender, EventArgs e)

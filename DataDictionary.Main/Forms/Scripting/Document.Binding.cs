@@ -10,7 +10,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class TemplateDocument
+    partial class Document
     {
         // Allows the DataBinding.TryGetCurrent function to be passed in.
         delegate Boolean TryGetCurrent<TOut>([NotNullWhen(true)] out TOut? outputValue);
@@ -36,7 +36,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public required TryGetCurrent<TemplateValue> GetTemplate { private get; init; }
             public required TryGetCurrent<SchemaDefinitionValue> GetSchema { private get; init; }
             public required TryGetCurrent<TransformValue> GetTransform { private get; init; }
-            public required TryGetCurrent<TemplateDocumentValue> GetDocument { private get; init; }
+            public required TryGetCurrent<DocumentValue> GetDocument { private get; init; }
 
             public String SchemaDirectory
             {
@@ -86,7 +86,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 directory = null;
 
-                if (GetDocument(out TemplateDocumentValue? document))
+                if (GetDocument(out DocumentValue? document))
                 {
                     if (new SchemaDefinitionIndex(document).HasValue
                         && GetSchema(out SchemaDefinitionValue? schema)
@@ -103,8 +103,8 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 file = null;
 
-                if (GetDocument(out TemplateDocumentValue? document))
-                { file = document.DataFile; }
+                if (GetDocument(out DocumentValue? document))
+                { file = document.StructuredFile; }
 
                 return file is not null;
             }
@@ -131,7 +131,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (TryGetTransformFile(out IFileValue? file))
                     { }
-                    else if (GetDocument(out TemplateDocumentValue? document))
+                    else if (GetDocument(out DocumentValue? document))
                     { document.TransformFile.FileName = value; }
 
                     OnPropertyChanged(nameof(TransformFileName));
@@ -150,7 +150,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (TryGetTransformFile(out IFileValue? file))
                     { }
-                    else if (GetDocument(out TemplateDocumentValue? document))
+                    else if (GetDocument(out DocumentValue? document))
                     { document.TransformFile.FileContent = value; }
 
                     OnPropertyChanged(nameof(TransformFileContent));
@@ -161,7 +161,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 directory = null;
 
-                if (GetDocument(out TemplateDocumentValue? document))
+                if (GetDocument(out DocumentValue? document))
                 {
                     if (new TemplateIndex(document).HasValue
                         && GetTemplate(out TemplateValue? template))
@@ -175,7 +175,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 file = null;
 
-                if (GetDocument(out TemplateDocumentValue? document))
+                if (GetDocument(out DocumentValue? document))
                 {
                     if (new TransformIndex(document).HasValue
                         && GetTransform(out TransformValue? transform))
@@ -234,7 +234,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 directory = null;
 
-                if (GetDocument(out TemplateDocumentValue? document))
+                if (GetDocument(out DocumentValue? document))
                 {
                     if (new TransformIndex(document).HasValue
                         && GetTransform(out TransformValue? transform)
@@ -251,7 +251,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 file = null;
 
-                if (GetDocument(out TemplateDocumentValue? document))
+                if (GetDocument(out DocumentValue? document))
                 { file = document.ScriptedFile; }
 
                 return file is not null;
@@ -261,9 +261,10 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (GetDocument(out TemplateDocumentValue? document))
-                    { return BusinessData.Model.IsInModel(document); }
-                    else { return false; }
+                    throw new NotImplementedException();
+                    //if (GetDocument(out DocumentValue? document))
+                    //{ return BusinessData.Model.IsInModel(document); }
+                    //else { return false; }
                 }
             }
 
@@ -327,8 +328,8 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<TransformValue> TransformData { get; }
-
-            public DataBinding<TemplateDocumentValue> DocumentData { get; }
+            public DataBinding<DocumentValue> DocumentData { get; }
+            public DataBinding<DocumentObjectValue> ObjectData { get; }
 
             /// <summary>
             /// This is additional data elements for Data Binding.
@@ -345,12 +346,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 BindingSource schemaBinding,
                 BindingSource transformBinding,
                 BindingSource documentBinding,
+                BindingSource objectBinding,
                 BindingSource otherBinding) : base()
             {
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
-                DocumentData = new DataBinding<TemplateDocumentValue>(documentBinding, () => GetData().Documents);
+                DocumentData = new DataBinding<DocumentValue>(documentBinding, () => GetData().Documents);
+                ObjectData = new DataBinding<DocumentObjectValue>(documentBinding, () => GetData().DocumentObjects);
 
                 otherValue = new OtherBinding()
                 {
@@ -371,8 +374,9 @@ namespace DataDictionary.Main.Forms.Scripting
             public override void LoadValue(DocumentIndex key)
             {
                 DocumentData.LoadBinding(w => key.Equals(w));
+                ObjectData.LoadBinding(w => key.Equals(w));
 
-                if (DocumentData.TryGetSingle(out TemplateDocumentValue? document))
+                if (DocumentData.TryGetSingle(out DocumentValue? document))
                 {
                     TemplateIndex templateKey = new TemplateIndex(document);
 
@@ -393,14 +397,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (e.PropertyDescriptor is PropertyDescriptor property)
                     {
-                        if (property.Name is nameof(TemplateDocumentValue.SchemaId))
+                        if (property.Name is nameof(DocumentValue.SchemaId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.SchemaDirectory)); }
 
-                        if (property.Name is nameof(TemplateDocumentValue.TransformId))
+                        if (property.Name is nameof(DocumentValue.TransformId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory)); }
 
-                        if (property.Name is nameof(TemplateDocumentValue.ObjectPath) or nameof(TemplateDocumentValue.ObjectScope))
-                        { otherValue.OnPropertyChanged(nameof(otherValue.IsObjectInModel)); }
+                        //if (property.Name is nameof(DocumentValue.ObjectPath) or nameof(TemplateDocumentValue.ObjectScope))
+                        //{ otherValue.OnPropertyChanged(nameof(otherValue.IsObjectInModel)); }
                     }
                 }
 
@@ -437,7 +441,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean TryCreate(TemplateIndex template, ref DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
             {
-                if (GetData().TryCreate(template, out TemplateDocumentValue? value, out exception))
+                if (GetData().TryCreate(template, out DocumentValue? value, out exception))
                 { document = new DocumentIndex(value); }
 
                 return exception is null;
@@ -445,17 +449,19 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public void BuildFileContent()
             {
-                if (DocumentData.TryGetCurrent(out TemplateDocumentValue? value))
-                {
-                    SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(value);
-                    XmlBuilderData nodeValues = new XmlBuilderData();
-                    nodeValues.Load(schemaKey, GetData().SchemataNodes);
+                throw new NotImplementedException();
 
-                    var builder = BusinessData.Model.GetBuilder(value);
+                //if (DocumentData.TryGetCurrent(out DocumentValue? value))
+                //{
+                //    SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(value);
+                //    XmlBuilderData nodeValues = new XmlBuilderData();
+                //    nodeValues.Load(schemaKey, GetData().SchemataNodes);
 
-                    if (builder is not null)
-                    { value.DataFile.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
-                }
+                //    var builder = BusinessData.Model.GetBuilder(value);
+
+                //    if (builder is not null)
+                //    { value.StructuredFileName.FileContent = new XDocument(new XDeclaration("1.0", "utf-8", null), builder(nodeValues)).Format(); }
+                //}
             }
 
             // TODO: Add other functions that are dependent on if a value is selected.

@@ -275,7 +275,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentNewCommand_Click(object sender, EventArgs e)
         {
-            Activate(() => new Forms.Scripting.TemplateDocument(
+            Activate(() => new Forms.Scripting.Document(
                 template: templateIndex,
                 document: null,
                 getData: formBinding.GetData));
@@ -283,9 +283,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentOpenCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.DocumentData.TryGetCurrent(out TemplateDocumentValue? value))
+            if (formBinding.DocumentData.TryGetCurrent(out DocumentValue? value))
             {
-                Activate(() => new Forms.Scripting.TemplateDocument(
+                Activate(() => new Forms.Scripting.Document(
                     template: templateIndex,
                     document: value,
                     getData: formBinding.GetData));

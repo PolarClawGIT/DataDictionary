@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class TemplateDocument
+    partial class Document
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@
             TableLayoutPanel documentLayout;
             TabControl documentTabs;
             TableLayoutPanel objectLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TemplateDocument));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Document));
             TableLayoutPanel schemaTabLayout;
             TableLayoutPanel transformLayout;
             TableLayoutPanel objectOptionLayout;
@@ -52,8 +52,8 @@
             schemaOpenCommand = new ToolStripButton();
             schemaBuildCommand = new ToolStripButton();
             schemaSaveCommand = new ToolStripButton();
-            schemaFileNameData = new DataDictionary.Main.Controls.TextBoxData();
-            schemaFileContentData = new DataDictionary.Main.Controls.TextBoxData();
+            structuredFileNameData = new DataDictionary.Main.Controls.TextBoxData();
+            structuredFileContentData = new DataDictionary.Main.Controls.TextBoxData();
             schemaFileLocationData = new DataDictionary.Main.Controls.TextBoxData();
             transformTab = new TabPage();
             transformFileNameData = new DataDictionary.Main.Controls.TextBoxData();
@@ -302,8 +302,8 @@
             schemaTabLayout.ColumnStyles.Add(new ColumnStyle());
             schemaTabLayout.Controls.Add(schemaIdData, 0, 1);
             schemaTabLayout.Controls.Add(schemaToolStrip, 0, 0);
-            schemaTabLayout.Controls.Add(schemaFileNameData, 0, 3);
-            schemaTabLayout.Controls.Add(schemaFileContentData, 0, 4);
+            schemaTabLayout.Controls.Add(structuredFileNameData, 0, 3);
+            schemaTabLayout.Controls.Add(structuredFileContentData, 0, 4);
             schemaTabLayout.Controls.Add(schemaFileLocationData, 0, 2);
             schemaTabLayout.Dock = DockStyle.Fill;
             schemaTabLayout.Location = new Point(3, 3);
@@ -376,33 +376,33 @@
             // 
             // schemaFileNameData
             // 
-            schemaFileNameData.AutoSize = true;
-            schemaTabLayout.SetColumnSpan(schemaFileNameData, 2);
-            schemaFileNameData.Dock = DockStyle.Fill;
-            schemaFileNameData.HeaderText = "Data File Name";
-            schemaFileNameData.Location = new Point(3, 130);
-            schemaFileNameData.Multiline = false;
-            schemaFileNameData.Name = "schemaFileNameData";
-            schemaFileNameData.ReadOnly = false;
-            schemaFileNameData.Size = new Size(180, 44);
-            schemaFileNameData.TabIndex = 4;
-            schemaFileNameData.WordWrap = true;
-            schemaFileNameData.Validated += SchemaFileNameData_Validated;
+            structuredFileNameData.AutoSize = true;
+            schemaTabLayout.SetColumnSpan(structuredFileNameData, 2);
+            structuredFileNameData.Dock = DockStyle.Fill;
+            structuredFileNameData.HeaderText = "Data File Name";
+            structuredFileNameData.Location = new Point(3, 130);
+            structuredFileNameData.Multiline = false;
+            structuredFileNameData.Name = "schemaFileNameData";
+            structuredFileNameData.ReadOnly = false;
+            structuredFileNameData.Size = new Size(180, 44);
+            structuredFileNameData.TabIndex = 4;
+            structuredFileNameData.WordWrap = true;
+            structuredFileNameData.Validated += SchemaFileNameData_Validated;
             // 
             // schemaFileContentData
             // 
-            schemaFileContentData.AutoSize = true;
-            schemaTabLayout.SetColumnSpan(schemaFileContentData, 2);
-            schemaFileContentData.Dock = DockStyle.Fill;
-            schemaFileContentData.HeaderText = "Data File Content";
-            schemaFileContentData.Location = new Point(3, 180);
-            schemaFileContentData.Multiline = true;
-            schemaFileContentData.Name = "schemaFileContentData";
-            schemaFileContentData.ReadOnly = false;
-            schemaFileContentData.Size = new Size(180, 1);
-            schemaFileContentData.TabIndex = 5;
-            schemaFileContentData.WordWrap = true;
-            schemaFileContentData.Validated += SchemaFileContentData_Validated;
+            structuredFileContentData.AutoSize = true;
+            schemaTabLayout.SetColumnSpan(structuredFileContentData, 2);
+            structuredFileContentData.Dock = DockStyle.Fill;
+            structuredFileContentData.HeaderText = "Data File Content";
+            structuredFileContentData.Location = new Point(3, 180);
+            structuredFileContentData.Multiline = true;
+            structuredFileContentData.Name = "schemaFileContentData";
+            structuredFileContentData.ReadOnly = false;
+            structuredFileContentData.Size = new Size(180, 1);
+            structuredFileContentData.TabIndex = 5;
+            structuredFileContentData.WordWrap = true;
+            structuredFileContentData.Validated += SchemaFileContentData_Validated;
             // 
             // schemaFileLocationData
             // 
@@ -753,8 +753,8 @@
         private TableLayoutPanel schemaTabLayout;
         private Controls.ComboBoxData schemaIdData;
         private ToolStrip schemaToolStrip;
-        private Controls.TextBoxData schemaFileNameData;
-        private Controls.TextBoxData schemaFileContentData;
+        private Controls.TextBoxData structuredFileNameData;
+        private Controls.TextBoxData structuredFileContentData;
         private Controls.TextBoxData transformFileNameData;
         private Controls.ComboBoxData transformIdData;
         private ToolStrip transformToolStrip;
