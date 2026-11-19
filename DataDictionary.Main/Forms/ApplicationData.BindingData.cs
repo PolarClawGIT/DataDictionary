@@ -279,11 +279,18 @@ namespace DataDictionary.Main.Forms
             /// <remarks>Starts RaiseListChangedEvents</remarks>
             public event EventHandler LoadBindingComplete;
 
-            /// <inheritdoc/>
+            /// <inheritdoc cref="BindingSource.ListChanged"/>
             public event ListChangedEventHandler ListChanged
             {
                 add { BindingData.ListChanged += value; }
                 remove { BindingData.ListChanged -= value; }
+            }
+
+            /// <inheritdoc cref="BindingSource.CurrentChanged"/>
+            public event EventHandler CurrentChanged
+            {
+                add { BindingData.CurrentChanged += value; }
+                remove { BindingData.CurrentChanged -= value; }
             }
 
             /// <inheritdoc/>

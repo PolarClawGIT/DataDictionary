@@ -37,6 +37,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public required TryGetCurrent<SchemaDefinitionValue> GetSchema { private get; init; }
             public required TryGetCurrent<TransformValue> GetTransform { private get; init; }
             public required TryGetCurrent<DocumentValue> GetDocument { private get; init; }
+            public required TryGetCurrent<DocumentObjectValue> GetObject { private get; init; }
 
             public String SchemaDirectory
             {
@@ -257,17 +258,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 return file is not null;
             }
 
-            public Boolean IsObjectInModel
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                    //if (GetDocument(out DocumentValue? document))
-                    //{ return BusinessData.Model.IsInModel(document); }
-                    //else { return false; }
-                }
-            }
-
             public Boolean TryExecuteTransform([NotNullWhen(false)] out Exception? exception)
             {
                 exception = null;
@@ -308,6 +298,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
 
                 return exception is null;
+            }
+
+            public Boolean IsObjectInModel
+            {
+                get
+                {
+
+                    if (GetObject(out DocumentObjectValue? value))
+                    { return BusinessData.Model.IsInModel(value); }
+                    else { return false; }
+                }
             }
 
             public event PropertyChangedEventHandler? PropertyChanged;
@@ -353,14 +354,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
                 DocumentData = new DataBinding<DocumentValue>(documentBinding, () => GetData().Documents);
-                ObjectData = new DataBinding<DocumentObjectValue>(documentBinding, () => GetData().DocumentObjects);
+                ObjectData = new DataBinding<DocumentObjectValue>(objectBinding, () => GetData().DocumentObjects);
 
                 otherValue = new OtherBinding()
                 {
                     GetTemplate = TemplateData.TryGetCurrent,
                     GetSchema = SchemaData.TryGetCurrent,
                     GetTransform = TransformData.TryGetCurrent,
-                    GetDocument = DocumentData.TryGetCurrent
+                    GetDocument = DocumentData.TryGetCurrent,
+                    GetObject = ObjectData.TryGetCurrent
                 };
 
                 IBindingList<OtherBinding> otherValues = new BindingView<OtherBinding>(new BindingList<OtherBinding>()) { otherValue };
@@ -392,6 +394,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.ListChanged += TemplateData_ListChanged;
                 SchemaData.ListChanged += SchemaData_ListChanged;
                 TransformData.ListChanged += TransformData_ListChanged;
+                ObjectData.CurrentChanged += ObjectData_CurrentChanged;
 
                 void DocumentData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
@@ -402,9 +405,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         if (property.Name is nameof(DocumentValue.TransformId))
                         { otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory)); }
-
-                        //if (property.Name is nameof(DocumentValue.ObjectPath) or nameof(TemplateDocumentValue.ObjectScope))
-                        //{ otherValue.OnPropertyChanged(nameof(otherValue.IsObjectInModel)); }
                     }
                 }
 
@@ -437,7 +437,13 @@ namespace DataDictionary.Main.Forms.Scripting
                         otherValue.OnPropertyChanged(nameof(otherValue.ScriptedDirectory));
                     }
                 }
+
+                void ObjectData_CurrentChanged(Object? sender, EventArgs e)
+                {
+                    otherValue.OnPropertyChanged(nameof(otherValue.IsObjectInModel));
+                }
             }
+
 
             public Boolean TryCreate(TemplateIndex template, ref DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
             {

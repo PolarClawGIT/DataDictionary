@@ -113,15 +113,19 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
                 formBinding.DocumentData.AddBinding(documentTitleData, e => e.DocumentTitle);
 
+                // Object tab (Input)
+                ScopeNameList.Load(objectScopeColumn, XmlBuilder.SupportedScopes());
+                ScopeNameList.Load(objectScopeData, XmlBuilder.SupportedScopes());
+
+                formBinding.ObjectData.AddBinding(objectData);
+                formBinding.ObjectData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
+                formBinding.ObjectData.AddBinding(objectPathData, e => e.ObjectPath);
+                formBinding.OtherData.AddBinding(isObjectInModelData, e => e.IsObjectInModel);
+
                 // Schema Tab (Input)
                 SchemaDefinitionList.Load(schemaIdData, formBinding.SchemaData.AsBindingList());
                 formBinding.DocumentData.AddBinding(schemaIdData, e => e.SchemaId, SchemaDefinitionList.NullValue);
                 formBinding.OtherData.AddBinding(schemaFileLocationData, e => e.SchemaDirectory);
-
-                ScopeNameList.Load(objectScopeData);
-                formBinding.ObjectData.AddBinding(objectScopeData, e => e.ObjectScope, ScopeNameList.NullValue);
-                formBinding.ObjectData.AddBinding(objectPathData, e => e.ObjectPath);
-                formBinding.OtherData.AddBinding(isObjectInModelData, e => e.IsObjectInModel);
 
                 formBinding.DocumentData.AddBinding(structuredFileNameData, e => e.StructuredFile.FileName);
                 formBinding.DocumentData.AddBinding(structuredFileContentData, e => e.StructuredFile.FileContent);

@@ -5,7 +5,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface IDocumentObjectValue : IDocumentObjectItem,
-        IDocumentIndex,
+        IDocumentIndex, ITemplateObjectIndex,
         IScopeType
     { }
 
