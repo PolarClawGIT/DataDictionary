@@ -220,35 +220,37 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
 
-        //private void ObjectPathData_SelectCommand(object sender, EventArgs e)
-        //{
-        //    if (bindingDocument is not null
-        //        && formBinding.DocumentData.TryGetCurrent(out DocumentValue? document))
-        //    {
-        //        using (SelectionDialog dialog = new SelectionDialog(this))
-        //        {
-        //            dialog.MultiSelect = false;
-        //            dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
+        private void ObjectPathData_SelectCommand(object sender, EventArgs e)
+        {
+            if (bindingDocument is not null
+                && formBinding.ObjectData.TryGetCurrent(out DocumentObjectValue? value))
+            {
+                using (SelectionDialog dialog = new SelectionDialog(this))
+                {
+                    dialog.FilterScopes.AddRange(XmlBuilder.SupportedScopes());
 
-        //            dialog.BuildData(new List<PathItem>() { new PathItem(document.ObjectPath) });
+                    dialog.BuildData(formBinding.ObjectData.Select(s => new PathIndex(new TemplateObjectIndex(s))));
 
-        //            if (dialog.ShowDialog(this) is DialogResult.OK
-        //                && dialog.SelectedByNamedScope().TryGetSingle(out INamedScopeValue? selected))
-        //            {
-        //                document.DocumentTitle = selected.Path.Member;
-        //                document.ObjectPath = selected.Path.MemberFullPath;
-        //                document.ObjectScope = selected.Scope;
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    {
+                        foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
+                        {
+                            if(value.ObjectScope is ScopeType.Null
+                                && formBinding.DocumentData.TryGetCurrent(out DocumentValue? document)
+                                && formBinding.SchemaData.TryGetCurrent(out SchemaDefinitionValue? schemaValue))
+                            {
+                                    document.DocumentTitle = item.Path.Member;
+                                    document.StructuredFile.FileName = String.Concat(schemaValue.FilePrefix, item.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
+                            }
 
-        //                if (formBinding.SchemaData.TryGetSingle(out SchemaDefinitionValue? schemaValue))
-        //                {
-        //                    document.DataFile.FileName = String.Concat(schemaValue.FilePrefix, selected.Path.Member, schemaValue.FileSuffix, ".", schemaValue.FileExtension);
-        //                    objectPathData.ValidateChildren();
-        //                    structuredFileNameData.ValidateChildren();
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+                            // TODO: add new, remove old, handle current
+                        }
+
+
+                    }
+                }
+            }
+        }
 
         private void ObjectScopeData_Validated(object sender, EventArgs e)
         { objectPathData.ValidateChildren(); }

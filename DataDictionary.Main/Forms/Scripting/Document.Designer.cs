@@ -216,6 +216,7 @@
             objectPathData.SelectIcon = (Image)resources.GetObject("objectPathData.SelectIcon");
             objectPathData.Size = new Size(516, 44);
             objectPathData.TabIndex = 9;
+            objectPathData.SelectCommand += ObjectPathData_SelectCommand;
             // 
             // objectScopeData
             // 

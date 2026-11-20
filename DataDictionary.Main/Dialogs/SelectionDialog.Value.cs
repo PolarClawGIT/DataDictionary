@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Dialogs
         public required Func<INamedScopeSourceValue, String> GetValue { get; set; }
     }
 
-    class SelectionDialogValue : IBindingPropertyChanged
+    class SelectionDialogValue : IBindingPropertyChanged, IPathIndex
     {
         public NamedScopeIndex Index { get; }
         public INamedScopeValue NamedScope { get; }

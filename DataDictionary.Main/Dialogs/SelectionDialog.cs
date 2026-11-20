@@ -114,6 +114,17 @@ namespace DataDictionary.Main.Dialogs
             { if (!Selected.Contains(item)) { Selected.Add(item); } }
         }
 
+        public void BuildData(IEnumerable<PathIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
+        {
+            BuildData(getDescription);
+
+            foreach (NamedScopeIndex item in formData.
+                Where(w => selected.Contains(new PathIndex(w))).
+                Select(s => s.Index))
+            { if (!Selected.Contains(item)) { Selected.Add(item); } }
+        }
+
+
         public void BuildData<TValue>(IEnumerable<TValue> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
             where TValue : INamedScopeSourceValue
         {
